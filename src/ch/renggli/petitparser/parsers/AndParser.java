@@ -9,9 +9,9 @@ import ch.renggli.petitparser.Parser;
  *
  * @author renggli@gmail.com (Lukas Renggli)
  */
-public class AndParser<T> extends DelegateParser<T> {
+public class AndParser<I, S, O> extends DelegateParser<I, S, O> {
 
-  AndParser(Parser<T> parser) {
+  AndParser(Parser<I, S, O> parser) {
     super(parser);
   }
 

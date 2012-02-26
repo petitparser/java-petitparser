@@ -8,11 +8,11 @@ import ch.renggli.petitparser.Parser;
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class DelegateParser<T> implements Parser<T> {
+public class DelegateParser<I, S, O> extends AbstractParser<I, S, O> {
 
-  private final Parser<T> parser;
+  private final Parser<I, S, O> parser;
 
-  DelegateParser(Parser<T> parser) {
+  DelegateParser(Parser<I, S, O> parser) {
     this.parser = parser;
   }
 

@@ -9,9 +9,9 @@ import ch.renggli.petitparser.Parser;
  *
  * @author renggli@gmail.com (Lukas Renggli)
  */
-public class NotParser<T> extends DelegateParser<T> {
+public class NotParser<I, S, O> extends DelegateParser<I, S, O> {
 
-  NotParser(Parser<T> parser) {
+  NotParser(Parser<I, S, O> parser) {
     super(parser);
   }
 
@@ -22,7 +22,7 @@ public class NotParser<T> extends DelegateParser<T> {
     context.input().setPosition(position);
     if (context.output().isError()) {
       context.output().pop();
-      context.output().push(new ParseResult<T>());
+      context.output().push(new ParseResult<I, O>());
     } else {
       context.output().push()
     }
