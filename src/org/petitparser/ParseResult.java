@@ -1,4 +1,4 @@
-package ch.renggli.petitparser;
+package org.petitparser;
 
 import java.text.ParseException;
 

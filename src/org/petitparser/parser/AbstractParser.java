@@ -1,21 +1,21 @@
-package ch.renggli.petitparser.parsers;
+package org.petitparser.parser;
 
-import ch.renggli.petitparser.Parser;
+import org.petitparser.Parser;
 
 /**
  * An abstract parser that forms the root of all parsers in this package.
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public abstract class AbstractParser<I, S, O> implements Parser<I, S, O> {
+public abstract class AbstractParser<I, O> implements Parser<I, O> {
 
   /**
    * Returns a new parser that is simply wrapped.
    *
    * @category operators
    */
-  AbstractParser<I, S, O> wrapped() {
-    return new DelegateParser<I, S, O>(this);
+  AbstractParser<I, O> wrapped() {
+    return new DelegateParser<I, O>(this);
   }
 
   /**
@@ -24,8 +24,8 @@ public abstract class AbstractParser<I, S, O> implements Parser<I, S, O> {
    *
    * @category operators
    */
-  AbstractParser<I, S, O> and() {
-    return new AndParser<I, S, O>(this);
+  AbstractParser<I, O> and() {
+    return new AndParser<I, O>(this);
   }
 
   /**
@@ -34,8 +34,8 @@ public abstract class AbstractParser<I, S, O> implements Parser<I, S, O> {
    *
    * @category operators
    */
-  AbstractParser<I, S, O> not() {
-    return new NotParser<I, S, O>(this);
+  AbstractParser<I, O> not() {
+    return new NotParser<I, O>(this);
   }
 
 }
