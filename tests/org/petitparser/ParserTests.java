@@ -1,13 +1,12 @@
-/**
- *
- */
 package org.petitparser;
 
-import static org.junit.Assert.fail;
+import static org.petitparser.ParserAssertions.assertFail;
+import static org.petitparser.ParserAssertions.assertParse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
-import org.petitparser.Parser;
-import org.petitparser.Parsers;
 
 /**
  * Tests {@link Parser} and {@link Parsers} and all implementing classes.
@@ -17,8 +16,10 @@ import org.petitparser.Parsers;
 public class ParserTests {
 
   @Test
-  public void test() {
-    fail("Not yet implemented");
+  public void testAnd() {
+    Parser<List<String>> parser = string("foo").seq(string("bar"));
+    assertParse(parser, "foobar", new ArrayList("foo", "bar"), 3);
+    assertFail(parser, "foobaz");
   }
 
 }
