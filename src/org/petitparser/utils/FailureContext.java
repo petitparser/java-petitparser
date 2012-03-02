@@ -1,6 +1,8 @@
-package org.petitparser.context;
+package org.petitparser.utils;
 
 import org.petitparser.buffer.Buffer;
+import org.petitparser.context.Context;
+import org.petitparser.context.ParseError;
 
 /**
  * Represents a parse failure.
@@ -27,7 +29,7 @@ public class FailureContext<T> extends Context<T> {
 
   @Override
   public T get() {
-    throw new IllegalStateException(getMessage());
+    throw new ParseError(this);
   }
 
 }

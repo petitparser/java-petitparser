@@ -1,6 +1,7 @@
 package org.petitparser.context;
 
 import org.petitparser.buffer.Buffer;
+import org.petitparser.utils.FailureContext;
 
 /**
  * Abstract parse context with result type {@code T}.
