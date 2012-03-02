@@ -1,32 +1,35 @@
 package org.petitparser;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.petitparser.context.Context;
+
 /**
  * A parser that parses a sequence of parsers.
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class SequenceParser<T> extends AbstractParser<T[]> {
+public class SequenceParser<T> extends AbstractParser<List<T>> {
 
-  final Parser<? extends T>[] parsers;
+  private final List<Parser<T>> parsers;
 
-  SequenceParser(Parser<? extends T>... parsers) {
+  public SequenceParser(List<Parser<T>> parsers) {
     this.parsers = parsers;
   }
 
   @Override
-  public boolean parse(Context context) {
-    int position = context.position;
-    Object[] elements = new Object[parsers.length];
-    for (int index = 0; index < parsers.length; index++) {
-      if (parsers[index].parse(context)) {
-        elements[index] = context.result;
-      } else {
-        context.position = position;
-        return false;
+  public Context<List<T>> parse(Context<?> context) {
+    Context<T> current = context.cast();
+    List<T> elements = new ArrayList<T>(parsers.size());
+    for (Parser<T> parser : parsers) {
+      current = parser.parse(current);
+      if (current.isFailure()) {
+        return current.cast();
       }
+      elements.add(current.get());
     }
-    context.result = elements;
-    return true;
+    return context.success(elements);
   }
 
 }

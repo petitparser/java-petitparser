@@ -1,5 +1,6 @@
 package org.petitparser;
 
+import org.petitparser.context.Context;
 
 /**
  * Parses a sequence of characters.
@@ -8,24 +9,15 @@ package org.petitparser;
  */
 public class StringParser extends AbstractParser<String> {
 
-  final String string;
+  private final String string;
 
   public StringParser(String string) {
     this.string = string;
   }
 
   @Override
-  public boolean parse(Context context) {
-    int position = context.position;
-    //if (context.match(string)) {
-    //  context.result = string;
-    //  return true;
-    //} else {
-    //  context.position = position;
-    //  context.message = string + " expected";
-    //  return false;
-   // }
-    return false;
+  public Context<String> parse(Context<?> context) {
+    return context.success(string);
   }
 
 }

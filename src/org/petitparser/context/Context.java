@@ -52,8 +52,8 @@ public class Context<T> {
   /**
    * Returns a successful parse result.
    */
-  public <S> SuccessContext<S> success(S result) {
-    return new SuccessContext<S>(getBuffer(), getPosition(), result);
+  public <U> SuccessContext<U> success(U result) {
+    return new SuccessContext<U>(getBuffer(), getPosition(), result);
   }
 
   /**
@@ -67,8 +67,16 @@ public class Context<T> {
    * Returns a parse failure on the receiving context with the provided
    * {@code message}.
    */
-  public FailureContext failure(String message) {
-    return new FailureContext(getBuffer(), getPosition(), message);
+  public <U> FailureContext<U> failure(String message) {
+    return new FailureContext<U>(getBuffer(), getPosition(), message);
+  }
+
+  /**
+   * Casts the type of the receiving type.
+   */
+  @SuppressWarnings("unchecked")
+  public <U> Context<U> cast() {
+    return (Context<U>) this;
   }
 
 }

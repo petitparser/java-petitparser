@@ -1,5 +1,6 @@
 package org.petitparser;
 
+import org.petitparser.context.Context;
 import org.petitparser.utils.Function;
 
 /**
@@ -8,24 +9,24 @@ import org.petitparser.utils.Function;
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class ActionParser<T, S> extends DelegateParser<T> {
+public class ActionParser<T, S> extends AbstractParser<S> {
 
-  final Function<T, S> function;
+  private final Parser<T> parser;
+  private final Function<T, S> function;
 
-  ActionParser(Parser<T> delegate, Function<T, S> function) {
-    super(delegate);
+  public ActionParser(Parser<T> parser, Function<T, S> function) {
+    this.parser = parser;
     this.function = function;
   }
 
   @Override
-  public boolean parse(Context context) {
-    boolean success = super.parse(context);
-    if (success) {
-      @SuppressWarnings("unchecked")
-      T result = (T) context.result;
-      context.result = function.apply(result);
+  public Context<S> parse(Context<?> context) {
+    Context<T> result = parser.parse(context);
+    if (result.isSuccess()) {
+      return result.success(function.apply(result.get()));
+    } else {
+      return result.cast();
     }
-    return success;
   }
 
 }

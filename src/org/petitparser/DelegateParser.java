@@ -1,5 +1,7 @@
 package org.petitparser;
 
+import org.petitparser.context.Context;
+
 /**
  * A parser that delegates to another one.
  *
@@ -7,14 +9,14 @@ package org.petitparser;
  */
 public class DelegateParser<T> extends AbstractParser<T> {
 
-  final Parser<T> delegate;
+  private final Parser<T> delegate;
 
-  DelegateParser(Parser<T> delegate) {
+  public DelegateParser(Parser<T> delegate) {
     this.delegate = delegate;
   }
 
   @Override
-  public boolean parse(Context context) {
+  public Context<T> parse(Context<?> context) {
     return delegate.parse(context);
   }
 

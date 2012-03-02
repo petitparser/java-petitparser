@@ -1,5 +1,7 @@
 package org.petitparser;
 
+import org.petitparser.context.Context;
+
 /**
  * The and-predicate, a parser that succeeds whenever its delegate does, but
  * does not consume the input stream [Parr 1994, 1995].
@@ -8,16 +10,18 @@ package org.petitparser;
  */
 public class AndParser<T> extends DelegateParser<T> {
 
-  AndParser(Parser<T> delegate) {
+  public AndParser(Parser<T> delegate) {
     super(delegate);
   }
 
   @Override
-  public boolean parse(Context context) {
-    int position = context.position;
-    boolean result = super.parse(context);
-    context.position = position;
-    return result;
+  public Context<T> parse(Context<?> context) {
+    Context<T> result = super.parse(context);
+    if (result.isSuccess()) {
+      return context.success(result.get());
+    } else {
+      return result.cast();
+    }
   }
 
 }

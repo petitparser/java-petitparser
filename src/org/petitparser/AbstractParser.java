@@ -1,5 +1,7 @@
 package org.petitparser;
 
+import java.util.List;
+
 /**
  * An abstract parser that forms the root of all parsers in this package.
  *
@@ -12,7 +14,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
    *
    * @category operators
    */
-  AbstractParser<T> wrapped() {
+  public AbstractParser<T> wrapped() {
     return new DelegateParser<T>(this);
   }
 
@@ -20,9 +22,9 @@ public abstract class AbstractParser<T> implements Parser<T> {
    * Returns a new parser (logical and-predicate) that succeeds whenever the
    * receiver does, but never consumes input.
    *
-   * @category logical operators
+   * @category operators
    */
-  AbstractParser<T> and() {
+  public AbstractParser<T> and() {
     return new AndParser<T>(this);
   }
 
@@ -30,10 +32,19 @@ public abstract class AbstractParser<T> implements Parser<T> {
    * Returns a new parser (logical not-predicate) that succeeds whenever the
    * receiver fails, but never consumes input.
    *
-   * @category logical operators
+   * @category operators
    */
-  AbstractParser<T> not() {
-    return new NotParser<T>(this);
+  public AbstractParser<T> not(String message) {
+    return new NotParser<T>(this, message);
+  }
+
+  /**
+   * Returns a new parser that parses the receiver, if possible.
+   *
+   * @category operators
+   */
+  public AbstractParser<T> optional() {
+    return new OptionalParser<T>(this);
   }
 
   /**
@@ -43,7 +54,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
    *
    * @category repeating operators
    */
-  AbstractParser<T> star() {
+  public AbstractParser<List<T>> star() {
     return new RepeatingParser<T>(this, 0, Integer.MAX_VALUE);
   }
 
@@ -52,7 +63,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
    *
    * @category repeating operators
    */
-  AbstractParser<T> plus() {
+  public AbstractParser<List<T>> plus() {
     return new RepeatingParser<T>(this, 1, Integer.MAX_VALUE);
   }
 

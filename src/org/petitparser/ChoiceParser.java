@@ -1,5 +1,9 @@
 package org.petitparser;
 
+import java.util.List;
+
+import org.petitparser.context.Context;
+
 /**
  * A parser that uses the first parser that succeeds.
  *
@@ -7,20 +11,22 @@ package org.petitparser;
  */
 public class ChoiceParser<T> extends AbstractParser<T> {
 
-  final Parser<? extends T>[] parsers;
+  private final List<Parser<T>> parsers;
 
-  ChoiceParser(Parser<? extends T>... parsers) {
+  public ChoiceParser(List<Parser<T>> parsers) {
     this.parsers = parsers;
   }
 
   @Override
-  public boolean parse(Context context) {
-    for (Parser<?> parser : parsers) {
-      if (parser.parse(context)) {
-        return true;
+  public Context<T> parse(Context<?> context) {
+    Context<T> current = context.cast();
+    for (Parser<T> parser : parsers) {
+      current = parser.parse(context);
+      if (current.isSuccess()) {
+        return current;
       }
     }
-    return false;
+    return current;
   }
 
 }

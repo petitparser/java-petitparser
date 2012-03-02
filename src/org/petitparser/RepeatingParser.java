@@ -3,52 +3,43 @@ package org.petitparser;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.petitparser.context.Context;
+
 /**
  * A parser that parses a sequence of parsers.
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class RepeatingParser<T> extends DelegateParser<T> {
+public class RepeatingParser<T> extends AbstractParser<List<T>> {
 
-  final int min;
-  final int max;
+  private final Parser<T> parser;
+  private final int min, max;
 
-  RepeatingParser(Parser<T> parser) {
-    this(parser, 0, Integer.MAX_VALUE);
-  }
-
-  RepeatingParser(Parser<T> parser, int min, int max) {
-    super(parser);
+  public RepeatingParser(Parser<T> parser, int min, int max) {
+    this.parser = parser;
     this.min = min;
     this.max = max;
   }
 
   @Override
-  public boolean parse(Context context) {
-    int position = context.position;
+  public Context<List<T>> parse(Context<?> context) {
+    Context<T> current = context.cast();
     List<T> elements = new ArrayList<T>();
     while (elements.size() < min) {
-      if (super.parse(context)) {
-        @SuppressWarnings("unchecked")
-        T element = (T) context.result;
-        elements.add(element);
-      } else {
-        context.position = position;
-        return false;
+      current = parser.parse(current);
+      if (current.isFailure()) {
+        return current.cast();
       }
+      elements.add(current.get());
     }
     while (elements.size() < max) {
-      if (super.parse(context)) {
-        @SuppressWarnings("unchecked")
-        T element = (T) context.result;
-        elements.add(element);
-      } else {
-        context.result = elements;
-        return true;
+      current = parser.parse(current);
+      if (current.isFailure()) {
+        return current.cast();
       }
+      elements.add(current.get());
     }
-    context.result = elements;
-    return true;
+    return current.success(elements);
   }
 
 }

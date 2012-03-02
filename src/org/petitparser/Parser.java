@@ -1,5 +1,7 @@
 package org.petitparser;
 
+import org.petitparser.context.Context;
+
 /**
  * Generic interface of all parsers.
  *
@@ -11,6 +13,6 @@ public interface Parser<T> {
   /**
    * Apply the parser on the given {@code context}.
    */
-  boolean parse(Context context);
+  Context<T> parse(Context<?> context);
 
 }

@@ -7,7 +7,7 @@ import org.petitparser.buffer.Buffer;
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class FailureContext extends Context<Void> {
+public class FailureContext<T> extends Context<T> {
 
   private final String message;
 
@@ -26,7 +26,7 @@ public class FailureContext extends Context<Void> {
   }
 
   @Override
-  public Void get() {
+  public T get() {
     throw new IllegalStateException(getMessage());
   }
 
