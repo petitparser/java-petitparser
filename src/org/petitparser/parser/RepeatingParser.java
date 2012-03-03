@@ -36,7 +36,7 @@ public class RepeatingParser<T> extends AbstractParser<List<T>> {
     while (elements.size() < max) {
       current = parser.parse(current);
       if (current.isFailure()) {
-        return current.cast();
+        return current.success(elements);
       }
       elements.add(current.get());
     }

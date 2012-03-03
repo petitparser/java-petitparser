@@ -1,7 +1,6 @@
 package org.petitparser;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.petitparser.buffer.StringBuffer;
@@ -13,26 +12,24 @@ public class ParserAssertions {
 
   }
 
-  public static <T> void assertParse(Parser<T> parser, String input, T result) {
-    assertParse(parser, input, result, input.length());
+  public static <T> void assertSuccess(Parser<T> parser, String input, T result) {
+    assertSuccess(parser, input, result, input.length());
   }
 
-  public static <T> void assertParse(Parser<T> parser, String input, T result,
-      int position) {
-    Context<T> context = new Context<T>(new StringBuffer(input), 0);
+  public static <T> void assertSuccess(Parser<T> parser, String input,
+      T result, int position) {
+    Context<T> context = new Context<T>(new StringBuffer(input));
     context = parser.parse(context);
-    assertTrue(context.isSuccess());
-    assertFalse(context.isFailure());
-    assertEquals(position, context.getPosition());
-    assertEquals(result, context.get());
+    assertTrue("Expected parse success", context.isSuccess());
+    assertEquals("Position", position, context.getPosition());
+    assertEquals("Result", result, context.get());
   }
 
-  public static <T> void assertFail(Parser<T> parser, String input) {
-    Context<T> context = new Context<T>(new StringBuffer(input), 0);
+  public static <T> void assertFailure(Parser<T> parser, String input) {
+    Context<T> context = new Context<T>(new StringBuffer(input));
     context = parser.parse(context);
-    assertFalse(context.isSuccess());
-    assertTrue(context.isFailure());
-    assertEquals(0, context.getPosition());
+    assertTrue("Expected parse failure", context.isFailure());
+    assertEquals("Position", 0, context.getPosition());
   }
 
 }

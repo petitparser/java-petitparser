@@ -14,6 +14,13 @@ public class Context<T> {
   private final int position;
 
   /**
+   * Constructs an immutable context with a {@code buffer}.
+   */
+  public Context(Buffer buffer) {
+    this(buffer, 0);
+  }
+
+  /**
    * Constructs an immutable context with a {@code buffer} and a
    * {@code position}.
    */

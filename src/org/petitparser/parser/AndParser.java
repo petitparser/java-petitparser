@@ -21,7 +21,7 @@ public class AndParser<T> extends DelegateParser<T> {
     if (result.isSuccess()) {
       return context.success(result.get());
     } else {
-      return result.cast();
+      return result;
     }
   }
 

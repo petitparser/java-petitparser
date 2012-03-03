@@ -24,7 +24,7 @@ public class NotParser<T> extends DelegateParser<T> {
     if (result.isFailure()) {
       return context.success(null);
     } else {
-      return result.failure(message);
+      return context.failure(message);
     }
   }
 
