@@ -1,6 +1,8 @@
-package org.petitparser;
+package org.petitparser.parser;
 
 import java.util.List;
+
+import org.petitparser.Parser;
 
 /**
  * An abstract parser that forms the root of all parsers in this package.
@@ -22,7 +24,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
    * Returns a new parser (logical and-predicate) that succeeds whenever the
    * receiver does, but never consumes input.
    *
-   * @category operators
+   * @category logical operators
    */
   public AbstractParser<T> and() {
     return new AndParser<T>(this);
@@ -32,10 +34,20 @@ public abstract class AbstractParser<T> implements Parser<T> {
    * Returns a new parser (logical not-predicate) that succeeds whenever the
    * receiver fails, but never consumes input.
    *
-   * @category operators
+   * @category logical operators
    */
   public AbstractParser<T> not(String message) {
     return new NotParser<T>(this, message);
+  }
+
+  /**
+   * Returns a new parser consumes any input token but the receiver.
+   *
+   * @category logical operators
+   */
+  public AbstractParser<T> negate() {
+    // tood(renggli): ^ self not , #any asParser ==> #second
+    throw new IllegalStateException("Not yet implemented");
   }
 
   /**

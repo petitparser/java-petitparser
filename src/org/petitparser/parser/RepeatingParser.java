@@ -1,8 +1,9 @@
-package org.petitparser;
+package org.petitparser.parser;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.petitparser.Parser;
 import org.petitparser.context.Context;
 
 /**

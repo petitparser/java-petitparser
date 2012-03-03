@@ -54,7 +54,14 @@ public class Context<T> {
    * Returns a successful parse result.
    */
   public <U> SuccessContext<U> success(U result) {
-    return new SuccessContext<U>(getBuffer(), getPosition(), result);
+    return success(result, getPosition());
+  }
+
+  /**
+   * Returns a successful parse result, with the next {@code position} set.
+   */
+  public <U> SuccessContext<U> success(U result, int position) {
+    return new SuccessContext<U>(getBuffer(), position, result);
   }
 
   /**

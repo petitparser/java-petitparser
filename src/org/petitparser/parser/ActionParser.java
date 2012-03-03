@@ -1,5 +1,6 @@
-package org.petitparser;
+package org.petitparser.parser;
 
+import org.petitparser.Parser;
 import org.petitparser.context.Context;
 import org.petitparser.utils.Function;
 
