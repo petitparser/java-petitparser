@@ -12,8 +12,6 @@ public class Parsers {
 
   /**
    * Returns a parser that parses a specific {@code character}.
-   *
-   * @category characters
    */
   public static CharPredicateParser character(final char character) {
     return new CharPredicateParser(new CharPredicate() {
@@ -26,8 +24,6 @@ public class Parsers {
 
   /**
    * Returns a parser that parses any character.
-   *
-   * @category characters
    */
   public static CharPredicateParser any() {
     return new CharPredicateParser(new CharPredicate() {
@@ -40,8 +36,6 @@ public class Parsers {
 
   /**
    * Returns a parser that parses a single digit.
-   *
-   * @category characters
    */
   public static CharPredicateParser digit() {
     return new CharPredicateParser(new CharPredicate() {
@@ -54,8 +48,6 @@ public class Parsers {
 
   /**
    * Returns a parser that parses a single letter.
-   *
-   * @category characters
    */
   public static CharPredicateParser letter() {
     return new CharPredicateParser(new CharPredicate() {
@@ -68,8 +60,6 @@ public class Parsers {
 
   /**
    * Returns a parser that parses a single letter or digit.
-   *
-   * @category characters
    */
   public static CharPredicateParser word() {
     return new CharPredicateParser(new CharPredicate() {
@@ -82,8 +72,6 @@ public class Parsers {
 
   /**
    * Returns a parser that parses an lower-case letter.
-   *
-   * @category characters
    */
   public static CharPredicateParser lowerCase() {
     return new CharPredicateParser(new CharPredicate() {
@@ -96,8 +84,6 @@ public class Parsers {
 
   /**
    * Returns a parser that parses an upper-case letter.
-   *
-   * @category characters
    */
   public static CharPredicateParser upperCase() {
     return new CharPredicateParser(new CharPredicate() {
@@ -110,8 +96,6 @@ public class Parsers {
 
   /**
    * Returns a parser that parses a single whitespace.
-   *
-   * @category characters
    */
   public static CharPredicateParser whitespace() {
     return new CharPredicateParser(new CharPredicate() {

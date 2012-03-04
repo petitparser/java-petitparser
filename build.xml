@@ -28,9 +28,7 @@
     </fileset>
   </path>
 
-  <target name="all" description="Create all build artifacts." depends="compile, test, checkstyle, javadoc">
-    <echo>Finished creating all build artifacts.</echo>
-  </target>
+  <target name="all" description="Create all build artifacts." depends="compile, test, checkstyle, javadoc" />
 
   <target name="clean" description="Delete all build artifacts.">
     <delete dir="${build}" />
@@ -43,7 +41,6 @@
 
   <target name="test" description="Run all JUnit tests." depends="compile">
     <mkdir dir="${build.test}" />
-    <get src="http://cloud.github.com/downloads/KentBeck/junit/junit-4.10.jar" dest="${lib}" skipexisting="true" />
     <javac srcdir="${test}" destdir="${build.bin}" includeantruntime="false" classpathref="classpath" />
     <junit haltonerror="no" haltonfailure="no">
       <classpath refid="classpath" />
@@ -59,7 +56,6 @@
 
   <target name="checkstyle" description="Generate a Checkstyle report.">
     <mkdir dir="${build.checkstyle}" />
-    <get src="http://mirrors.ibiblio.org/pub/mirrors/maven2/checkstyle/checkstyle/5.0/checkstyle-5.0.jar" dest="${lib}" skipexisting="true" />
     <java classname="com.puppycrawl.tools.checkstyle.Main" output="${build.checkstyle}/checkstyle.xml">
       <classpath refid="classpath" />
       <arg value="-f" /><arg value="xml" />

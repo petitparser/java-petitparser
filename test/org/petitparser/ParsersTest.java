@@ -130,19 +130,19 @@ public class ParsersTest {
   @Test
   public void testStar() {
     Parser<List<Character>> parser = character('a').star();
-    assertSuccess(parser, "", Arrays.<Character>asList());
-    assertSuccess(parser, "a", Arrays.<Character>asList('a'));
-    assertSuccess(parser, "aa", Arrays.<Character>asList('a', 'a'));
-    assertSuccess(parser, "aaa", Arrays.<Character>asList('a', 'a', 'a'));
+    assertSuccess(parser, "", Arrays.<Character> asList());
+    assertSuccess(parser, "a", Arrays.<Character> asList('a'));
+    assertSuccess(parser, "aa", Arrays.<Character> asList('a', 'a'));
+    assertSuccess(parser, "aaa", Arrays.<Character> asList('a', 'a', 'a'));
   }
 
   @Test
   public void testPlus() {
     Parser<List<Character>> parser = character('a').plus();
     assertFailure(parser, "");
-    assertSuccess(parser, "a", Arrays.<Character>asList('a'));
-    assertSuccess(parser, "aa", Arrays.<Character>asList('a', 'a'));
-    assertSuccess(parser, "aaa", Arrays.<Character>asList('a', 'a', 'a'));
+    assertSuccess(parser, "a", Arrays.<Character> asList('a'));
+    assertSuccess(parser, "aa", Arrays.<Character> asList('a', 'a'));
+    assertSuccess(parser, "aaa", Arrays.<Character> asList('a', 'a', 'a'));
   }
 
 }

@@ -11,8 +11,6 @@ public abstract class AbstractParser<T> implements Parser<T> {
 
   /**
    * Returns a new parser that is simply wrapped.
-   *
-   * @category operators
    */
   public DelegateParser<T> wrapped() {
     return new DelegateParser<T>(this);
@@ -21,8 +19,6 @@ public abstract class AbstractParser<T> implements Parser<T> {
   /**
    * Returns a new parser (logical and-predicate) that succeeds whenever the
    * receiver does, but never consumes input.
-   *
-   * @category logical operators
    */
   public AndParser<T> and() {
     return new AndParser<T>(this);
@@ -31,8 +27,6 @@ public abstract class AbstractParser<T> implements Parser<T> {
   /**
    * Returns a new parser (logical not-predicate) that succeeds whenever the
    * receiver fails, but never consumes input.
-   *
-   * @category logical operators
    */
   public NotParser<T> not(String message) {
     return new NotParser<T>(this, message);
@@ -40,8 +34,6 @@ public abstract class AbstractParser<T> implements Parser<T> {
 
   /**
    * Returns a new parser consumes any input token but the receiver.
-   *
-   * @category logical operators
    */
   public AbstractParser<T> negate() {
     // tood(renggli): ^ self not , #any asParser ==> #second
@@ -50,8 +42,6 @@ public abstract class AbstractParser<T> implements Parser<T> {
 
   /**
    * Returns a new parser that parses the receiver, if possible.
-   *
-   * @category operators
    */
   public OptionalParser<T> optional() {
     return new OptionalParser<T>(this);
@@ -61,8 +51,6 @@ public abstract class AbstractParser<T> implements Parser<T> {
    * Returns a new parser that parses the receiver zero or more times. This is a
    * greedy and blind implementation that tries to consume as much input as
    * possible and it does not consider what comes afterwards.
-   *
-   * @category repeating operators
    */
   public RepeatingParser<T> star() {
     return new RepeatingParser<T>(this, 0, Integer.MAX_VALUE);
@@ -70,8 +58,6 @@ public abstract class AbstractParser<T> implements Parser<T> {
 
   /**
    * Returns a new parser that parses the receiver one or more times.
-   *
-   * @category repeating operators
    */
   public RepeatingParser<T> plus() {
     return new RepeatingParser<T>(this, 1, Integer.MAX_VALUE);
