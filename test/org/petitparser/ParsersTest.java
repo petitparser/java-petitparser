@@ -21,7 +21,7 @@ import org.junit.Test;
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class ParsersTests {
+public class ParsersTest {
 
   @Test
   public void testCharacter() {
