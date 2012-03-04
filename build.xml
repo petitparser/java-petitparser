@@ -1,27 +1,25 @@
 <project name="PetitParser" default="all" basedir=".">
 
-  <description>
-    Dynamic Grammars for Java
-  </description>
-
   <!-- external properties -->
   <property file="build.properties" />
 
   <!-- build properties -->
   <property name="app.version" value="1.0" />
   <property name="app.name" value="PetitParser" />
+  <description>Dynamic Grammars for Java</description>
 
   <!-- input directories -->
   <property name="src" location="src" />
   <property name="lib" location="lib" />
   <property name="test" location="test" />
-  
+
   <!-- output directories -->
   <property name="build" location="build" />
   <property name="build.bin" location="${build}/bin" />
   <property name="build.doc" location="${build}/doc" />
   <property name="build.test" location="${build}/test" />
-  
+  <property name="build.checkstyle" location="${build}/checkstyle" />
+
   <!-- classpath definition -->
   <path id="classpath">
     <pathelement location="${build.bin}" />
@@ -30,15 +28,15 @@
     </fileset>
   </path>
 
-  <target name="all" description="Create all build artifacts." depends="compile, test, javadoc">
+  <target name="all" description="Create all build artifacts." depends="compile, test, checkstyle, javadoc">
     <echo>Finished creating all build artifacts.</echo>
   </target>
 
   <target name="clean" description="Delete all build artifacts.">
     <delete dir="${build}" />
   </target>
-  
-  <target name="compile" description="Compile source files and place beside source.">
+
+  <target name="compile" description="Compile source files.">
     <mkdir dir="${build.bin}" />
     <javac srcdir="${src}" destdir="${build.bin}" includeantruntime="false" classpathref="classpath" />
   </target>
@@ -57,14 +55,24 @@
       </batchtest>
     </junit>
   </target>
-  
+
+  <target name="checkstyle" description="Generate a Checkstyle report.">
+    <mkdir dir="${build.checkstyle}" />
+    <java classname="com.puppycrawl.tools.checkstyle.Main" output="${build.checkstyle}/checkstyle.xml">
+      <classpath refid="classpath" />
+      <arg value="-f" /><arg value="xml" />
+      <arg value="-r" /><arg file="${src}" />
+      <arg value="-c" /><arg file="checkstyle.xml" />
+    </java>
+  </target>
+
   <target name="javadoc" description="Generate the JavaDoc files.">
     <mkdir dir="${build.doc}" />
-    <javadoc sourcepath="${src}" destdir="${build.doc}" >
+    <javadoc sourcepath="${src}" destdir="${build.doc}">
       <link href="http://java.sun.com/javase/6/docs/api/" />
       <header><![CDATA[<b>${app.name} ${app.version}</b>]]></header>
       <doctitle><![CDATA[<h1>${app.name} ${app.version}</h1>]]></doctitle>
     </javadoc>
-  </target>  
+  </target>
 
 </project>
