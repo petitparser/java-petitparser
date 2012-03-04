@@ -2,4 +2,5 @@
 .project
 .settings/
 bin/
+build/
 target/

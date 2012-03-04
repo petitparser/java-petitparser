@@ -1,179 +1,70 @@
-<project name="PetitParser" default='all' basedir=".">
+<project name="PetitParser" default="all" basedir=".">
 
   <description>
     Dynamic Grammars for Java
   </description>
 
-  <!-- Override default property values with an external properties file, if present. -->
-  <property file='build.properties' />
+  <!-- external properties -->
+  <property file="build.properties" />
 
-  <!-- Default property values, if not overridden elsewhere: -->
-  <property name='build' location='build' />
-  <property name='app.version' value='1.0' />
-  <property name='app.name' value='PetitParser' />
-  <property name='distro-name' value='petitparser-${app.version}' />
-  <tstamp>
-    <format property='build.time' pattern='yyyy-MM-dd HH:mm:ss' />
-  </tstamp>
+  <!-- build properties -->
+  <property name="app.version" value="1.0" />
+  <property name="app.name" value="PetitParser" />
 
-  <path id='compile.classpath'>
-    <fileset dir='lib'>
-      <include name='*.jar' />
+  <!-- input directories -->
+  <property name="src" location="src" />
+  <property name="lib" location="lib" />
+  <property name="test" location="test" />
+  
+  <!-- output directories -->
+  <property name="build" location="build" />
+  <property name="build.bin" location="${build}/bin" />
+  <property name="build.doc" location="${build}/doc" />
+  <property name="build.test" location="${build}/test" />
+  
+  <!-- classpath definition -->
+  <path id="classpath">
+    <pathelement location="${build.bin}" />
+    <fileset dir="${lib}">
+      <include name="*.jar" />
     </fileset>
   </path>
 
-  <!-- Simply extends the compile.classpath with your own compiled classes. -->
-  <path id='run.classpath'>
-    <path refid='compile.classpath' />
-    <path location='src' />
-  </path>
-
-  <fileset id='class.files' dir='src'>
-    <include name='**/*.class' />
-  </fileset>
-
-  <fileset id='files.for.jar' dir='src'>
-    <exclude name='**/*.java' />
-    <exclude name='**/doc-files/' />
-  </fileset>
-
-  <fileset id='test.classes' dir='src'>
-    <include name='**/TEST*.java' />
-  </fileset>
-
-  <!-- Text files using Ant's '@' syntax are here called template files. -->
-  <fileset id='template.files' dir='.'>
-    <include name='**/*_template.*' />
-  </fileset>
-
-  <!-- Inspect the environment, to see if a deployment host is currently running. -->
-  <condition property='deployment.server.running' value='true' else='false'>
-    <socket port='8081' server='127.0.0.1' />
-  </condition>
-
-  <!-- A connection to this URL is used when building javadoc. -->
-  <condition property='jdk.javadoc.visible' value='true' else='false'>
-    <http url='http://java.sun.com/javase/6/docs/api/' />
-  </condition>
-
-  <echo>
-    Application: ${app.name} ${app.version}
-    Build File : ${ant.file} 
-    Run Date   : ${build.time}
-    Run by     : ${user.name}
-    Build Dir  : ${build}
-    Base Dir   : ${basedir}
-    Java Home  : ${java.home}
-    Deployment host running: ${deployment.server.running}
-    Connected to the web   : ${jdk.javadoc.visible}
-  </echo>
-
-  <echo message='Create build directory, and its subdirectories.' />
-  <mkdir dir="${build}/javadoc" />
-  <mkdir dir="${build}/dist" />
-  <mkdir dir="${build}/templates" />
-
-  <!-- Now define the targets, which use the properties and datatypes defined above. -->
-
-  <target name='clean' description="Delete all build artifacts.">
-    <delete dir='${build}' />
-    <delete>
-      <fileset refid='class.files' />
-    </delete>
-    <mkdir dir="${build}/javadoc" />
-    <mkdir dir="${build}/dist" />
-    <mkdir dir="${build}/templates" />
+  <target name="all" description="Create all build artifacts." depends="compile, test, javadoc">
+    <echo>Finished creating all build artifacts.</echo>
   </target>
 
-  <target name='compile' description='Compile source files and place beside source.'>
-    <javac srcdir="src">
-      <classpath refid='compile.classpath' />
-    </javac>
-    <!-- Here's a simple way of debugging a path, fileset, or patternset, using its refid: -->
-    <echo>Classpath: ${toString:compile.classpath}</echo>
+  <target name="clean" description="Delete all build artifacts.">
+    <delete dir="${build}" />
+  </target>
+  
+  <target name="compile" description="Compile source files and place beside source.">
+    <mkdir dir="${build.bin}" />
+    <javac srcdir="${src}" destdir="${build.bin}" includeantruntime="false" classpathref="classpath" />
   </target>
 
-  <target name='test' description='Run all JUnit tests.' depends='compile'>
-    <junit haltonfailure='false'>
-      <classpath>
-        <pathelement location="src" />
-      </classpath>
-      <batchtest>
-        <fileset refid='test.classes' />
+  <target name="test" description="Run all JUnit tests." depends="compile">
+    <mkdir dir="${build.test}" />
+    <javac srcdir="${test}" destdir="${build.bin}" includeantruntime="false" classpathref="classpath" />
+    <junit haltonerror="no" haltonfailure="no">
+      <classpath refid="classpath" />
+      <batchtest todir="${build.test}">
+        <formatter type="xml" />
+        <formatter type="plain" usefile="false" />
+        <fileset dir="${test}">
+          <include name="**/*Test.java" />
+        </fileset>
       </batchtest>
-      <formatter type='brief' usefile='no' />
     </junit>
   </target>
-
-  <target name='launch' description='Build and run the program.' depends='compile, test'>
-    <java classname='hirondelle.ante.Launcher' classpathref='run.classpath' failonerror='true'>
-      <arg value="Solar System" />
-    </java>
-  </target>
-
-  <target name='jar' description='Create a jar file for distribution.' depends='compile'>
-    <jar destfile='${build}/dist/${distro-name}.jar' manifest='MANIFEST.MF' duplicate='preserve'>
-      <fileset refid='files.for.jar' />
-      <!-- The static manifest.mf file is merged with additional dynamic items, specified here : -->
-      <manifest>
-        <attribute name='Specification-Version' value='${app.version}' />
-        <attribute name='Specification-Title' value='${app.name}' />
-        <attribute name='Implementation-Version' value='${app.version}' />
-        <attribute name='Implementation-Title' value='${app.name}' />
-      </manifest>
-    </jar>
-  </target>
-
-  <target name='javadoc' description='Generate javadoc.'>
-    <javadoc use='true' author='true' version='true' overview='overview.html' access='package' sourcepath='src' packagenames='*.*' destdir='${build}/javadoc' windowtitle='${app.name} ${app.version}' noqualifier='java.*:javax.*:com.sun.*' linksource='true'>
-      <classpath refid='compile.classpath' />
-      <link href='http://java.sun.com/javase/6/docs/api/' />
-      <header>
-        <![CDATA[<h1>${app.name} ${app.version}</h1>]]></header>
-  </javadoc>
-</target>
-
-<target name='text-templates' description='Process template files, and assign values to @ variables.'>
-  <copy overwrite='true' todir='${build}/templates'>
-    <fileset refid='template.files' />
-    <!-- New files have 'template' removed from their name : -->
-    <globmapper from='*_template.txt' to='*.txt' />
-    <filterset>
-      <filter token='app.name' value='${app.name}' />
-      <filter token='app.version' value='${app.version}' />
-      <filter token='build.time' value='${build.time}' />
-    </filterset>
-  </copy>
-</target>
-
-<target name='distro-binary' description='Create zip file with executable jar, docs.' depends='jar, javadoc, text-templates'>
-  <zip destfile='${build}/dist/${distro-name}-binary.zip' duplicate='preserve'>
-    <zipfileset dir='${build}/dist/' includes='${distro-name}.jar' />
-    <zipfileset dir='${build}/javadoc' prefix='javadoc' />
-    <zipfileset dir='${build}/templates' includes='README.txt' />
-  </zip>
-</target>
-
-<target name='distro-source' description='Create zip file with project source code.'>
-  <zip destfile='${build}/dist/${distro-name}-src.zip' duplicate='preserve'>
-    <!-- exclude items specific to the author's IDE setup: -->
-    <zipfileset dir='.' excludes='.classpath, .project' />
-  </zip>
-</target>
-
-<!-- Add mail.jar and activation.jar to your ANT_HOME/lib! -->
-<!-- Please edit, using values appropriate to your environment. -->
-<target name='email'>
-  <mail mailhost='smtp.blah.com' mailport='25' user='blah@blah.com' password='blah' messageMimeType='text/html' tolist='blah@whatever.com' from='blah@blah.com' subject='Build completed.'>
-    <message>
-      <![CDATA[ Test email. <P>
-      <a href='http://www.google.com'>link</a> ]]>
-      </message>
-  </mail>
-</target>
-
-<target name='all' description='Create all build artifacts.' depends='clean, compile, test, jar, javadoc, distro-binary, distro-source'>
-  <echo>Finished creating all build artifacts.</echo>
-</target>
+  
+  <target name="javadoc" description="Generate the JavaDoc files.">
+    <mkdir dir="${build.doc}" />
+    <javadoc sourcepath="${src}" destdir="${build.doc}" >
+      <link href="http://java.sun.com/javase/6/docs/api/" />
+      <header><![CDATA[<b>${app.name} ${app.version}</b>]]></header>
+      <doctitle><![CDATA[<h1>${app.name} ${app.version}</h1>]]></doctitle>
+    </javadoc>
+  </target>  
 
 </project>
