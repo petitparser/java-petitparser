@@ -12,22 +12,22 @@ import org.petitparser.context.Context;
  */
 public class ChoiceParser<T> extends AbstractParser<T> {
 
-  private final List<Parser<T>> parsers;
+  private final List<Parser<? extends T>> parsers;
 
-  public ChoiceParser(List<Parser<T>> parsers) {
+  public ChoiceParser(List<Parser<? extends T>> parsers) {
     this.parsers = parsers;
   }
 
   @Override
   public Context<T> parse(Context<?> context) {
-    Context<T> current = context.cast();
-    for (Parser<T> parser : parsers) {
+    Context<?> current = context;
+    for (Parser<?> parser : parsers) {
       current = parser.parse(context);
       if (current.isSuccess()) {
-        return current;
+        return current.cast();
       }
     }
-    return current;
+    return current.cast();
   }
 
 }

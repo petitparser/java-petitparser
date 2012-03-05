@@ -1,7 +1,12 @@
 package org.petitparser;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.petitparser.parser.AbstractParser;
 import org.petitparser.parser.CharPredicateParser;
 import org.petitparser.parser.CharPredicateParser.CharPredicate;
+import org.petitparser.parser.ChoiceParser;
 
 /**
  * Factory for common types of parsers.
@@ -11,21 +16,9 @@ import org.petitparser.parser.CharPredicateParser.CharPredicate;
 public class Parsers {
 
   /**
-   * Returns a parser that parses a specific {@code character}.
-   */
-  public static CharPredicateParser character(final char character) {
-    return new CharPredicateParser(new CharPredicate() {
-      @Override
-      public boolean apply(char input) {
-        return character == input;
-      }
-    }, character + " expected");
-  }
-
-  /**
    * Returns a parser that parses any character.
    */
-  public static CharPredicateParser any() {
+  public static AbstractParser<Character> any() {
     return new CharPredicateParser(new CharPredicate() {
       @Override
       public boolean apply(char input) {
@@ -35,9 +28,21 @@ public class Parsers {
   }
 
   /**
+   * Returns a parser that parses a specific {@code character}.
+   */
+  public static AbstractParser<Character> character(final char character) {
+    return new CharPredicateParser(new CharPredicate() {
+      @Override
+      public boolean apply(char input) {
+        return character == input;
+      }
+    }, character + " expected");
+  }
+
+  /**
    * Returns a parser that parses a single digit.
    */
-  public static CharPredicateParser digit() {
+  public static AbstractParser<Character> digit() {
     return new CharPredicateParser(new CharPredicate() {
       @Override
       public boolean apply(char input) {
@@ -49,7 +54,7 @@ public class Parsers {
   /**
    * Returns a parser that parses a single letter.
    */
-  public static CharPredicateParser letter() {
+  public static AbstractParser<Character> letter() {
     return new CharPredicateParser(new CharPredicate() {
       @Override
       public boolean apply(char input) {
@@ -61,7 +66,7 @@ public class Parsers {
   /**
    * Returns a parser that parses a single letter or digit.
    */
-  public static CharPredicateParser word() {
+  public static AbstractParser<Character> word() {
     return new CharPredicateParser(new CharPredicate() {
       @Override
       public boolean apply(char input) {
@@ -73,7 +78,7 @@ public class Parsers {
   /**
    * Returns a parser that parses an lower-case letter.
    */
-  public static CharPredicateParser lowerCase() {
+  public static AbstractParser<Character> lowerCase() {
     return new CharPredicateParser(new CharPredicate() {
       @Override
       public boolean apply(char input) {
@@ -85,7 +90,7 @@ public class Parsers {
   /**
    * Returns a parser that parses an upper-case letter.
    */
-  public static CharPredicateParser upperCase() {
+  public static AbstractParser<Character> upperCase() {
     return new CharPredicateParser(new CharPredicate() {
       @Override
       public boolean apply(char input) {
@@ -97,13 +102,28 @@ public class Parsers {
   /**
    * Returns a parser that parses a single whitespace.
    */
-  public static CharPredicateParser whitespace() {
+  public static AbstractParser<Character> whitespace() {
     return new CharPredicateParser(new CharPredicate() {
       @Override
       public boolean apply(char input) {
         return Character.isWhitespace(input);
       }
     }, "whitespace expected");
+  }
+
+  /**
+   * Returns a new parser that tries with the {@code first} parser, and if that
+   * fails it retries with {@code second} (ordered-choice).
+   */
+  public static <T> AbstractParser<T> or(Parser<? extends T> first, Parser<? extends T> second,
+      Parser<? extends T>... remaining) {
+    List<Parser<? extends T>> parsers = new ArrayList<Parser<? extends T>>(2 + remaining.length);
+    parsers.add(first);
+    parsers.add(second);
+    for (Parser<? extends T> parser : remaining) {
+      parsers.add(parser);
+    }
+    return new ChoiceParser<T>(parsers);
   }
 
 }
