@@ -1,19 +1,17 @@
-package org.petitparser.utils;
+package org.petitparser.context;
 
 import org.petitparser.buffer.Buffer;
-import org.petitparser.context.Context;
-import org.petitparser.context.ParseError;
 
 /**
- * Represents a parse failure.
+ * An immutable parse failure.
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class FailureContext<T> extends Context<T> {
+public class Failure<T> extends Result<T> {
 
   private final String message;
 
-  public FailureContext(Buffer buffer, int position, String message) {
+  Failure(Buffer buffer, int position, String message) {
     super(buffer, position);
     this.message = message;
   }
@@ -30,6 +28,11 @@ public class FailureContext<T> extends Context<T> {
   @Override
   public T get() {
     throw new ParseError(this);
+  }
+
+  @Override
+  public String toString() {
+    return "Failure[" + getPosition() + "]: " + getMessage();
   }
 
 }

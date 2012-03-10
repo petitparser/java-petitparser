@@ -1,32 +1,40 @@
 package org.petitparser.context;
 
 import org.petitparser.buffer.Buffer;
-import org.petitparser.utils.FailureContext;
 
 /**
- * Abstract parse context with result type {@code T}.
+ * Abstract parse context.
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class Context<T> {
+public class Context {
 
   private final Buffer buffer;
   private final int position;
 
   /**
-   * Constructs an immutable context with a {@code buffer}.
+   * Constructs an immutable parse context at the default position.
+   *
+   * @param buffer the buffer this context is using
    */
   public Context(Buffer buffer) {
     this(buffer, 0);
   }
 
   /**
-   * Constructs an immutable context with a {@code buffer} and a
-   * {@code position}.
+   * Constructs an immutable parse context.
+   *
+   * @param buffer the buffer this context is using
+   * @param position the position this context is pointing at
    */
   public Context(Buffer buffer, int position) {
     this.buffer = buffer;
     this.position = position;
+  }
+
+  @Override
+  public String toString() {
+    return "Context[" + getPosition() + "]";
   }
 
   /**
@@ -51,27 +59,6 @@ public class Context<T> {
   }
 
   /**
-   * Returns the result of this parse context.
-   */
-  public T get() {
-    return null;
-  }
-
-  /**
-   * Returns a successful parse result.
-   */
-  public <U> SuccessContext<U> success(U result) {
-    return success(result, getPosition());
-  }
-
-  /**
-   * Returns a successful parse result, with the next {@code position} set.
-   */
-  public <U> SuccessContext<U> success(U result, int position) {
-    return new SuccessContext<U>(getBuffer(), position, result);
-  }
-
-  /**
    * Tests if the receiver is a failure.
    */
   public boolean isFailure() {
@@ -79,19 +66,45 @@ public class Context<T> {
   }
 
   /**
-   * Returns a parse failure on the receiving context with the provided
-   * {@code message}.
+   * Returns a successful parse result at the current position.
+   *
+   * @param <T> the type of the parse result
+   * @param value the value of the parse result
    */
-  public <U> FailureContext<U> failure(String message) {
-    return new FailureContext<U>(getBuffer(), getPosition(), message);
+  public <T> Success<T> success(T value) {
+    return success(value, getPosition());
   }
 
   /**
-   * Casts the type of the receiving type.
+   * Returns a successful parse result.
+   *
+   * @param <T> the type of the parse result
+   * @param value the value of the parse result
+   * @param position the position of the parse result
    */
-  @SuppressWarnings("unchecked")
-  public <U> Context<U> cast() {
-    return (Context<U>) this;
+  public <T> Success<T> success(T value, int position) {
+    return new Success<T>(buffer, position, value);
+  }
+
+  /**
+   * Returns a parse failure at the current position.
+   *
+   * @param <T> the type of the parse result
+   * @param message the error message of the parse result
+   */
+  public <T> Failure<T> failure(String message) {
+    return failure(message, position);
+  }
+
+  /**
+   * Returns a successful parse result.
+   *
+   * @param <T> the type of the parse result
+   * @param message the error message of the parse result
+   * @param position the position of the parse result
+   */
+  public <T> Failure<T> failure(String message, int position) {
+    return new Failure<T>(buffer, position, message);
   }
 
 }

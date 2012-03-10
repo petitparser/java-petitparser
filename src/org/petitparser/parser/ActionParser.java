@@ -2,6 +2,7 @@ package org.petitparser.parser;
 
 import org.petitparser.Parser;
 import org.petitparser.context.Context;
+import org.petitparser.context.Result;
 import org.petitparser.utils.Function;
 
 /**
@@ -21,8 +22,8 @@ public class ActionParser<T, S> extends AbstractParser<S> {
   }
 
   @Override
-  public Context<S> parse(Context<?> context) {
-    Context<T> result = parser.parse(context);
+  public Result<S> parse(Context context) {
+    Result<T> result = parser.parse(context);
     if (result.isSuccess()) {
       return result.success(function.apply(result.get()));
     } else {

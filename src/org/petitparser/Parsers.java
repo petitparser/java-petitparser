@@ -1,12 +1,8 @@
 package org.petitparser;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.petitparser.parser.AbstractParser;
 import org.petitparser.parser.CharPredicateParser;
 import org.petitparser.parser.CharPredicateParser.CharPredicate;
-import org.petitparser.parser.ChoiceParser;
 
 /**
  * Factory for common types of parsers.
@@ -109,21 +105,6 @@ public class Parsers {
         return Character.isWhitespace(input);
       }
     }, "whitespace expected");
-  }
-
-  /**
-   * Returns a new parser that tries with the {@code first} parser, and if that
-   * fails it retries with {@code second} (ordered-choice).
-   */
-  public static <T> AbstractParser<T> or(Parser<? extends T> first, Parser<? extends T> second,
-      Parser<? extends T>... remaining) {
-    List<Parser<? extends T>> parsers = new ArrayList<Parser<? extends T>>(2 + remaining.length);
-    parsers.add(first);
-    parsers.add(second);
-    for (Parser<? extends T> parser : remaining) {
-      parsers.add(parser);
-    }
-    return new ChoiceParser<T>(parsers);
   }
 
 }

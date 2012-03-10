@@ -2,6 +2,7 @@ package org.petitparser.parser;
 
 import org.petitparser.Parser;
 import org.petitparser.context.Context;
+import org.petitparser.context.Result;
 
 /**
  * The not-predicate, a parser that succeeds whenever its delegate does not, but
@@ -19,8 +20,8 @@ public class NotParser<T> extends DelegateParser<T> {
   }
 
   @Override
-  public Context<T> parse(Context<?> context) {
-    Context<T> result = super.parse(context);
+  public Result<T> parse(Context context) {
+    Result<T> result = super.parse(context);
     if (result.isFailure()) {
       return context.success(null);
     } else {

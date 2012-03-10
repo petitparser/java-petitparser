@@ -2,6 +2,7 @@ package org.petitparser.parser;
 
 import org.petitparser.buffer.Buffer;
 import org.petitparser.context.Context;
+import org.petitparser.context.Result;
 
 /**
  * Parses a sequence of characters.
@@ -23,7 +24,7 @@ public class CharPredicateParser extends AbstractParser<Character> {
   }
 
   @Override
-  public Context<Character> parse(Context<?> context) {
+  public Result<Character> parse(Context context) {
     Buffer buffer = context.getBuffer();
     if (context.getPosition() < buffer.size()) {
       char result = buffer.charAt(context.getPosition());

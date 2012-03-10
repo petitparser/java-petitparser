@@ -1,6 +1,7 @@
 package org.petitparser.parser;
 
 import org.petitparser.context.Context;
+import org.petitparser.context.Result;
 
 /**
  * A parser that consumes nothing and always fails.
@@ -16,7 +17,7 @@ public class FailureParser<T> extends AbstractParser<T> {
   }
 
   @Override
-  public Context<T> parse(Context<?> context) {
+  public Result<T> parse(Context context) {
     return context.failure(message);
   }
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.petitparser.Parser;
 import org.petitparser.context.Context;
+import org.petitparser.context.Result;
 
 /**
  * A parser that parses a sequence of parsers.
@@ -23,22 +24,24 @@ public class RepeatingParser<T> extends AbstractParser<List<T>> {
   }
 
   @Override
-  public Context<List<T>> parse(Context<?> context) {
-    Context<T> current = context.cast();
+  public Result<List<T>> parse(Context context) {
+    Context current = context;
     List<T> elements = new ArrayList<T>();
     while (elements.size() < min) {
-      current = parser.parse(current);
-      if (current.isFailure()) {
-        return current.cast();
+      Result<T> result = parser.parse(current);
+      if (result.isFailure()) {
+        return result.cast();
       }
-      elements.add(current.get());
+      elements.add(result.get());
+      current = result;
     }
     while (elements.size() < max) {
-      current = parser.parse(current);
-      if (current.isFailure()) {
-        return current.success(elements);
+      Result<T> result = parser.parse(current);
+      if (result.isFailure()) {
+        return result.success(elements);
       }
-      elements.add(current.get());
+      elements.add(result.get());
+      current = result;
     }
     return current.success(elements);
   }

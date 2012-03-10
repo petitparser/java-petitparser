@@ -1,6 +1,7 @@
 package org.petitparser.parser;
 
 import org.petitparser.context.Context;
+import org.petitparser.context.Result;
 
 /**
  * A parser that consumes nothing and always succeeds.
@@ -10,7 +11,7 @@ import org.petitparser.context.Context;
 public class EpsilonParser<T> extends AbstractParser<T> {
 
   @Override
-  public Context<T> parse(Context<?> context) {
+  public Result<T> parse(Context context) {
     return context.success(null);
   }
 

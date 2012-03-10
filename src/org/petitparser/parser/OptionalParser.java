@@ -2,6 +2,7 @@ package org.petitparser.parser;
 
 import org.petitparser.Parser;
 import org.petitparser.context.Context;
+import org.petitparser.context.Result;
 
 /**
  * A parser that optionally parsers its delegate, or answers nil.
@@ -15,9 +16,13 @@ public class OptionalParser<T> extends DelegateParser<T> {
   }
 
   @Override
-  public Context<T> parse(Context<?> context) {
-    Context<T> result = super.parse(context);
-    return result.isFailure() ? context.<T> success(null) : result;
+  public Result<T> parse(Context context) {
+    Result<T> result = super.parse(context);
+    if (result.isSuccess()) {
+      return result;
+    } else {
+      return context.success(null);
+    }
   }
 
 }

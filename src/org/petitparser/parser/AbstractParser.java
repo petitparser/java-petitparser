@@ -1,9 +1,10 @@
 package org.petitparser.parser;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.petitparser.Parser;
-import org.petitparser.Parsers;
 
 /**
  * An abstract parser that forms the root of all parsers in this package.
@@ -67,11 +68,16 @@ public abstract class AbstractParser<T> implements Parser<T> {
   }
 
   /**
-   * Returns a new parser that parses the receiver, if the receiver fails try
-   * with aParser (ordered-choice).
+   * Returns a new parser that parses the receiver, if that fails try with the
+   * following parsers.
    */
-  public AbstractParser<? extends T> or(Parser<? extends T> parser) {
-    return Parsers.or(this, parser);
+  @SuppressWarnings("unchecked")
+  public <U> AbstractParser<U> or(Parser<? extends U> parser, Parser<? extends U>... more) {
+    List<Parser<? extends U>> list = new ArrayList<Parser<? extends U>>(1 + 1 + more.length);
+    list.add((Parser<? extends U>) this);
+    list.add(parser);
+    list.addAll(Arrays.asList(more));
+    return new ChoiceParser<U>(list);
   }
 
 }

@@ -3,15 +3,15 @@ package org.petitparser.context;
 import org.petitparser.buffer.Buffer;
 
 /**
- * Represents a parse success.
+ * An immutable parse success.
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class SuccessContext<T> extends Context<T> {
+public class Success<T> extends Result<T> {
 
   private final T result;
 
-  public SuccessContext(Buffer buffer, int position, T result) {
+  Success(Buffer buffer, int position, T result) {
     super(buffer, position);
     this.result = result;
   }
@@ -24,6 +24,11 @@ public class SuccessContext<T> extends Context<T> {
   @Override
   public T get() {
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return "Success[" + getPosition() + "]: " + get().toString();
   }
 
 }

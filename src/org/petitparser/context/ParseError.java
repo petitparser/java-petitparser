@@ -1,22 +1,25 @@
 package org.petitparser.context;
 
-import org.petitparser.utils.FailureContext;
 
-
+/**
+ * A parse error.
+ *
+ * @author Lukas Renggli (renggli@gmail.com)
+ */
 public class ParseError extends RuntimeException {
 
   private static final long serialVersionUID = 1865114289785709043L;
 
-  private final FailureContext<?> context;
+  private final Failure<?> context;
 
-  public ParseError(FailureContext<?> context) {
+  public ParseError(Failure<?> context) {
     super(context.getMessage());
     this.context = context;
   }
 
   @SuppressWarnings("unchecked")
-  public <T> FailureContext<T> getContext() {
-    return (FailureContext<T>) context;
+  public <T> Failure<T> getContext() {
+    return (Failure<T>) context;
   }
 
 }
