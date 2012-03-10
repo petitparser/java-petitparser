@@ -9,10 +9,6 @@ import org.petitparser.context.Result;
 
 public class ParserAssertions {
 
-  private ParserAssertions() {
-    // just a namespace
-  }
-
   public static <T> void assertSuccess(Parser<T> parser, String input, T result) {
     assertSuccess(parser, input, result, input.length());
   }

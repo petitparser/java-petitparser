@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
+import org.petitparser.utils.Function;
 
 /**
  * Tests {@link Parser} and {@link Parsers} and all implementing classes.
@@ -90,6 +91,16 @@ public class ParsersTest {
     assertSuccess(parser, " ", ' ');
     assertFailure(parser, "z");
     assertFailure(parser, "-");
+    assertFailure(parser, "");
+  }
+
+  @Test
+  public void testNegateDigit() {
+    Parser<Character> parser = digit().negate("no digit expected");
+    assertFailure(parser, "1");
+    assertFailure(parser, "9");
+    assertSuccess(parser, "a", 'a');
+    assertSuccess(parser, " ", ' ');
     assertFailure(parser, "");
   }
 
@@ -195,6 +206,33 @@ public class ParsersTest {
     assertSuccess(parser, "12", "12");
     assertSuccess(parser, "123", "123");
     assertSuccess(parser, "1234", "1234");
+  }
+
+  @Test
+  public void testMap() {
+    Parser<Integer> parser = digit().map(new Function<Character, Integer>() {
+      @Override
+      public Integer apply(Character argument) {
+        return Character.getNumericValue(argument);
+      }
+    });
+    assertSuccess(parser, "1", 1);
+    assertSuccess(parser, "4", 4);
+    assertSuccess(parser, "9", 9);
+    assertFailure(parser, "");
+    assertFailure(parser, "a");
+  }
+
+  @Test
+  public void testNegate() {
+    Parser<Character> parser = digit().or(upperCase()).negate("no diggit or uppercase expected");
+    assertFailure(parser, "1");
+    assertFailure(parser, "9");
+    assertFailure(parser, "A");
+    assertFailure(parser, "Z");
+    assertSuccess(parser, "a", 'a');
+    assertSuccess(parser, " ", ' ');
+    assertFailure(parser, "");
   }
 
 }

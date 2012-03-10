@@ -36,13 +36,13 @@ public class CharPredicateParser extends AbstractParser<Character> {
   }
 
   @Override
-  public AbstractParser<Character> negate() {
+  public AbstractParser<Character> negate(String message) {
     return new CharPredicateParser(new CharPredicate() {
       @Override
       public boolean apply(char argument) {
-        return predicate.apply(argument);
+        return !predicate.apply(argument);
       }
-    }, "no " + message);
+    }, message);
   }
 
 }

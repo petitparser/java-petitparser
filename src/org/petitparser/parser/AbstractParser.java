@@ -3,6 +3,9 @@ package org.petitparser.parser;
 import java.util.List;
 
 import org.petitparser.Parser;
+import org.petitparser.Parsers;
+import org.petitparser.utils.Function;
+import org.petitparser.utils.Functions;
 
 /**
  * An abstract parser that forms the root of all parsers in this package.
@@ -42,11 +45,11 @@ public abstract class AbstractParser<T> implements Parser<T> {
   }
 
   /**
-   * Returns a new parser consumes any input token but the receiver.
+   * Returns a new parser consumes any input character but the receiver.
    */
-  public AbstractParser<T> negate() {
-    // tood(renggli): ^ self not , #any asParser ==> #second
-    throw new IllegalStateException("Not yet implemented");
+  public AbstractParser<Character> negate(String message) {
+    AbstractParser<List<Character>> sequence = this.not(message).seq(Parsers.any());
+    return sequence.map(Functions.<Character> lastOfList());
   }
 
   /**
@@ -85,6 +88,13 @@ public abstract class AbstractParser<T> implements Parser<T> {
    */
   public <U> AbstractParser<List<U>> seq(Parser<?> parser) {
     return new SequenceParser<U>(this, parser);
+  }
+
+  /**
+   * Returns a new parser that performs the given function on success.
+   */
+  public <U> AbstractParser<U> map(Function<T, U> function) {
+    return new ActionParser<T, U>(this, function);
   }
 
 }
