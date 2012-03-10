@@ -186,4 +186,15 @@ public class ParsersTest {
     assertFailure(parser, "abx", 2);
   }
 
+  @Test
+  public void testFlatten() {
+    Parser<String> parser = digit().plus().flatten();
+    assertFailure(parser, "");
+    assertFailure(parser, "a");
+    assertSuccess(parser, "1", "1");
+    assertSuccess(parser, "12", "12");
+    assertSuccess(parser, "123", "123");
+    assertSuccess(parser, "1234", "1234");
+  }
+
 }

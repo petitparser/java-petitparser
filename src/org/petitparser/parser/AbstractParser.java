@@ -19,6 +19,13 @@ public abstract class AbstractParser<T> implements Parser<T> {
   }
 
   /**
+   * Returns a new parser that flattens to a {@link String}.
+   */
+  public AbstractParser<String> flatten() {
+    return new FlattenParser(this);
+  }
+
+  /**
    * Returns a new parser (logical and-predicate) that succeeds whenever the
    * receiver does, but never consumes input.
    */

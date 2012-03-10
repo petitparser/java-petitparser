@@ -28,4 +28,8 @@ public class StringBuffer implements Buffer {
     return sequence.charAt(index);
   }
 
+  @Override
+  public CharSequence subSequence(int start, int stop) {
+    return sequence.subSequence(start, stop);
+  }
 }
