@@ -19,7 +19,7 @@ public class ChoiceParser<T> extends AbstractParser<T> {
     this.parsers = parsers;
   }
 
-  public ChoiceParser(Parser<? extends T> first, Parser<? extends T> second) {
+  public ChoiceParser(Parser<?> first, Parser<?> second) {
     this.parsers = new Parser[] { first, second };
   }
 
@@ -36,7 +36,7 @@ public class ChoiceParser<T> extends AbstractParser<T> {
   }
 
   @Override
-  public <U> ChoiceParser<U> or(Parser<? extends U> parser) {
+  public <U> AbstractParser<U> or(Parser<? extends U> parser) {
     Parser<?>[] array = Arrays.copyOf(parsers, parsers.length + 1);
     array[parsers.length] = parser;
     return new ChoiceParser<U>(array);

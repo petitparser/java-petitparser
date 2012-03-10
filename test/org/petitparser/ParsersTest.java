@@ -164,4 +164,26 @@ public class ParsersTest {
     assertFailure(parser, "");
   }
 
+  @Test
+  public void testSequence2() {
+    Parser<List<Character>> parser = character('a').seq(character('b'));
+    assertSuccess(parser, "ab", Arrays.<Character> asList('a', 'b'));
+    assertFailure(parser, "");
+    assertFailure(parser, "x");
+    assertFailure(parser, "a", 1);
+    assertFailure(parser, "ax", 1);
+  }
+
+  @Test
+  public void testSequence3() {
+    Parser<List<Character>> parser = character('a').seq(character('b')).seq(character('c'));
+    assertSuccess(parser, "abc", Arrays.<Character> asList('a', 'b', 'c'));
+    assertFailure(parser, "");
+    assertFailure(parser, "x");
+    assertFailure(parser, "a", 1);
+    assertFailure(parser, "ax", 1);
+    assertFailure(parser, "ab", 2);
+    assertFailure(parser, "abx", 2);
+  }
+
 }

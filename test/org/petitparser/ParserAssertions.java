@@ -26,10 +26,14 @@ public class ParserAssertions {
   }
 
   public static <T> void assertFailure(Parser<T> parser, String input) {
+    assertFailure(parser, input, 0);
+  }
+
+  public static <T> void assertFailure(Parser<T> parser, String input, int position) {
     Context context = new Context(new StringBuffer(input));
     Result<T> result = parser.parse(context);
     assertTrue("Expected parse failure", result.isFailure());
-    assertEquals("Position", 0, result.getPosition());
+    assertEquals("Position", position, result.getPosition());
   }
 
 }

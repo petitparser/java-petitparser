@@ -69,9 +69,15 @@ public abstract class AbstractParser<T> implements Parser<T> {
    * Returns a new parser that parses the receiver, if that fails try with the
    * following parsers.
    */
-  @SuppressWarnings("unchecked")
-  public <U> ChoiceParser<U> or(Parser<? extends U> parser) {
-    return new ChoiceParser<U>((Parser<U>) this, parser);
+  public <U> AbstractParser<U> or(Parser<? extends U> parser) {
+    return new ChoiceParser<U>(this, parser);
+  }
+
+  /**
+   * Returns a new parser that first parses the receiver and then the argument.
+   */
+  public <U> AbstractParser<List<U>> seq(Parser<?> parser) {
+    return new SequenceParser<U>(this, parser);
   }
 
 }
