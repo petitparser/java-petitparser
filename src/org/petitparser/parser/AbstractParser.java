@@ -1,7 +1,5 @@
 package org.petitparser.parser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.petitparser.Parser;
@@ -72,12 +70,8 @@ public abstract class AbstractParser<T> implements Parser<T> {
    * following parsers.
    */
   @SuppressWarnings("unchecked")
-  public <U> AbstractParser<U> or(Parser<? extends U> parser, Parser<? extends U>... more) {
-    List<Parser<? extends U>> list = new ArrayList<Parser<? extends U>>(1 + 1 + more.length);
-    list.add((Parser<? extends U>) this);
-    list.add(parser);
-    list.addAll(Arrays.asList(more));
-    return new ChoiceParser<U>(list);
+  public <U> ChoiceParser<U> or(Parser<? extends U> parser) {
+    return new ChoiceParser<U>((Parser<U>) this, parser);
   }
 
 }

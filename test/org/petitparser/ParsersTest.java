@@ -145,4 +145,23 @@ public class ParsersTest {
     assertSuccess(parser, "aaa", Arrays.<Character> asList('a', 'a', 'a'));
   }
 
+  @Test
+  public void testChoice2() {
+    Parser<Character> parser = character('a').or(character('b'));
+    assertSuccess(parser, "a", 'a');
+    assertSuccess(parser, "b", 'b');
+    assertFailure(parser, "c");
+    assertFailure(parser, "");
+  }
+
+  @Test
+  public void testChoice3() {
+    Parser<Character> parser = character('a').or(character('b')).or(character('c'));
+    assertSuccess(parser, "a", 'a');
+    assertSuccess(parser, "b", 'b');
+    assertSuccess(parser, "c", 'c');
+    assertFailure(parser, "d");
+    assertFailure(parser, "");
+  }
+
 }
