@@ -130,4 +130,20 @@ public abstract class Parser implements Parsable {
     return new ActionParser<T, R>(this, function);
   }
 
+  /**
+   * Returns a new parser that succeeds at the end of the input and return the
+   * result of the receiver.
+   */
+  public Parser end() {
+    return end("end of input expected");
+  }
+
+  /**
+   * Returns a new parser that succeeds at the end of the input and return the
+   * result of the receiver.
+   */
+  public Parser end(String message) {
+    return new EndOfInputParser(this, message);
+  }
+
 }

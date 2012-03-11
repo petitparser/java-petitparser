@@ -52,6 +52,13 @@ public class Context {
   }
 
   /**
+   * Tests if we point to the end of the input.
+   */
+  public boolean atEnd() {
+    return buffer.size() <= position;
+  }
+
+  /**
    * Tests if the receiver is a successful parse.
    */
   public boolean isSuccess() {

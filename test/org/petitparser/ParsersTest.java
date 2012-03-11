@@ -144,19 +144,19 @@ public class ParsersTest {
   @Test
   public void testStar() {
     Parser parser = character('a').star();
-    assertSuccess(parser, "", Arrays. asList());
-    assertSuccess(parser, "a", Arrays. asList('a'));
-    assertSuccess(parser, "aa", Arrays. asList('a', 'a'));
-    assertSuccess(parser, "aaa", Arrays. asList('a', 'a', 'a'));
+    assertSuccess(parser, "", Arrays.asList());
+    assertSuccess(parser, "a", Arrays.asList('a'));
+    assertSuccess(parser, "aa", Arrays.asList('a', 'a'));
+    assertSuccess(parser, "aaa", Arrays.asList('a', 'a', 'a'));
   }
 
   @Test
   public void testPlus() {
     Parser parser = character('a').plus();
     assertFailure(parser, "", "a expected");
-    assertSuccess(parser, "a", Arrays. asList('a'));
-    assertSuccess(parser, "aa", Arrays. asList('a', 'a'));
-    assertSuccess(parser, "aaa", Arrays. asList('a', 'a', 'a'));
+    assertSuccess(parser, "a", Arrays.asList('a'));
+    assertSuccess(parser, "aa", Arrays.asList('a', 'a'));
+    assertSuccess(parser, "aaa", Arrays.asList('a', 'a', 'a'));
   }
 
   @Test
@@ -164,9 +164,9 @@ public class ParsersTest {
     Parser parser = character('a').repeat(2, 3);
     assertFailure(parser, "", "a expected");
     assertFailure(parser, "a", 1, "a expected");
-    assertSuccess(parser, "aa", Arrays. asList('a', 'a'));
-    assertSuccess(parser, "aaa", Arrays. asList('a', 'a', 'a'));
-    assertSuccess(parser, "aaaa", Arrays. asList('a', 'a', 'a'), 3);
+    assertSuccess(parser, "aa", Arrays.asList('a', 'a'));
+    assertSuccess(parser, "aaa", Arrays.asList('a', 'a', 'a'));
+    assertSuccess(parser, "aaaa", Arrays.asList('a', 'a', 'a'), 3);
   }
 
   @Test
@@ -191,7 +191,7 @@ public class ParsersTest {
   @Test
   public void testSequence2() {
     Parser parser = character('a').seq(character('b'));
-    assertSuccess(parser, "ab", Arrays. asList('a', 'b'));
+    assertSuccess(parser, "ab", Arrays.asList('a', 'b'));
     assertFailure(parser, "");
     assertFailure(parser, "x");
     assertFailure(parser, "a", 1);
@@ -201,7 +201,7 @@ public class ParsersTest {
   @Test
   public void testSequence3() {
     Parser parser = character('a').seq(character('b')).seq(character('c'));
-    assertSuccess(parser, "abc", Arrays. asList('a', 'b', 'c'));
+    assertSuccess(parser, "abc", Arrays.asList('a', 'b', 'c'));
     assertFailure(parser, "");
     assertFailure(parser, "x");
     assertFailure(parser, "a", 1);
@@ -238,7 +238,8 @@ public class ParsersTest {
 
   @Test
   public void testNegate() {
-    Parser parser = digit().or(upperCase()).negate("no diggit or uppercase expected");
+    Parser parser = digit().or(upperCase()).negate(
+        "no diggit or uppercase expected");
     assertFailure(parser, "1");
     assertFailure(parser, "9");
     assertFailure(parser, "A");
@@ -313,6 +314,14 @@ public class ParsersTest {
     assertFailure(parser, "b", "a expected");
     assertFailure(parser, "*b", 1, "a expected");
     assertFailure(parser, "**b", 2, "a expected");
+  }
+
+  @Test
+  public void testEndOfInput() {
+    Parser parser = character('a').end();
+    assertFailure(parser, "", "a expected");
+    assertSuccess(parser, "a", 'a');
+    assertFailure(parser, "aa", 1, "end of input expected");
   }
 
 }
