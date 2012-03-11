@@ -1,10 +1,11 @@
 package org.petitparser.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Constructor and utility methods for functions.
- * 
+ *
  * @author Lukas Renggli (renggli@gmail.com)
  */
 public class Functions {
@@ -28,21 +29,29 @@ public class Functions {
    * indexes are counted from the end of the list.
    */
   public static <T> Function<List<T>, T> nthOfList(final int index) {
-    if (index < 0) {
-      return new Function<List<T>, T>() {
-        @Override
-        public T apply(List<T> argument) {
-          return argument.get(argument.size() + index);
-        }
-      };
-    } else {
-      return new Function<List<T>, T>() {
-        @Override
-        public T apply(List<T> argument) {
-          return argument.get(index);
-        }
-      };
-    }
+    return new Function<List<T>, T>() {
+      @Override
+      public T apply(List<T> argument) {
+        return argument.get(index < 0 ? argument.size() + index : index);
+      }
+    };
   }
 
+  /**
+   * Returns a function that returns the permutation of a given list. Negative
+   * indexes are counted from the end of the list.
+   */
+  public static <T> Function<List<T>, List<T>> permutationOfList(
+      final int... indexes) {
+    return new Function<List<T>, List<T>>() {
+      @Override
+      public List<T> apply(List<T> argument) {
+        List<T> result = new ArrayList<T>(indexes.length);
+        for (int index : indexes) {
+          result.add(argument.get(index < 0 ? argument.size() + index : index));
+        }
+        return result;
+      }
+    };
+  }
 }

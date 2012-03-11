@@ -20,17 +20,16 @@ import org.petitparser.utils.Functions;
  */
 public class ExampleTest {
 
-  private static Parser IDENTIFIER = letter().seq(word().star())
-      .flatten();
+  private static Parser IDENTIFIER = letter().seq(word().star()).flatten();
 
-  private static Parser NUMBER = character('-').optional()
-      .seq(digit().plus()).seq(character('.')
-      .seq(digit().plus()).optional())
-      .flatten();
+  private static Parser NUMBER = character('-').optional().seq(digit().plus())
+      .seq(character('.').seq(digit().plus()).optional()).flatten();
+
+  private static Parser STRING = character('"')
+      .seq(character('"').negate().star()).seq(character('"')).flatten();
 
   private static Parser RETURN = string("return")
-      .seq(whitespace().plus().flatten())
-      .seq(IDENTIFIER.or(NUMBER))
+      .seq(whitespace().plus().flatten()).seq(IDENTIFIER.or(NUMBER).or(STRING))
       .map(Functions.lastOfList());
 
   @Test
@@ -91,6 +90,31 @@ public class ExampleTest {
   }
 
   @Test
+  public void testStringSuccess() {
+    assertSuccess(STRING, "\"\"", "\"\"");
+    assertSuccess(STRING, "\"a\"", "\"a\"");
+    assertSuccess(STRING, "\"ab\"", "\"ab\"");
+    assertSuccess(STRING, "\"abc\"", "\"abc\"");
+  }
+
+  @Test
+  public void testStringIncomplete() {
+    assertSuccess(STRING, "\"\"x", "\"\"", 2);
+    assertSuccess(STRING, "\"a\"x", "\"a\"", 3);
+    assertSuccess(STRING, "\"ab\"x", "\"ab\"", 4);
+    assertSuccess(STRING, "\"abc\"x", "\"abc\"", 5);
+  }
+
+  @Test
+  public void testStringFailure() {
+    assertFailure(STRING, "\"", 1, "\" expected");
+    assertFailure(STRING, "\"a", 2, "\" expected");
+    assertFailure(STRING, "\"ab", 3, "\" expected");
+    assertFailure(STRING, "a\"", "\" expected");
+    assertFailure(STRING, "ab\"", "\" expected");
+  }
+
+  @Test
   public void testReturnSuccess() {
     assertSuccess(RETURN, "return f", "f");
     assertSuccess(RETURN, "return  f", "f");
@@ -100,13 +124,15 @@ public class ExampleTest {
     assertSuccess(RETURN, "return  1", "1");
     assertSuccess(RETURN, "return -2.3", "-2.3");
     assertSuccess(RETURN, "return    -2.3", "-2.3");
+    assertSuccess(RETURN, "return \"a\"", "\"a\"");
+    assertSuccess(RETURN, "return  \"a\"", "\"a\"");
   }
 
   @Test
   public void testReturnFailure() {
     assertFailure(RETURN, "retur f", 0, "return expected");
     assertFailure(RETURN, "return1", 6, "whitespace expected");
-    assertFailure(RETURN, "return  $", 8, "digit expected");
+    assertFailure(RETURN, "return  $", 8, "\" expected");
   }
 
 }

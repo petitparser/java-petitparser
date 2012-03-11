@@ -43,7 +43,14 @@ public abstract class Parser implements Parsable {
   }
 
   /**
-   * Returns a new parser consumes any input character but the receiver.
+   * Returns a new parser that consumes any input character but the receiver.
+   */
+  public Parser negate() {
+    return negate(null);
+  }
+
+  /**
+   * Returns a new parser that consumes any input character but the receiver.
    */
   public Parser negate(String message) {
     Parser sequence = this.not(message).seq(Parsers.any());
