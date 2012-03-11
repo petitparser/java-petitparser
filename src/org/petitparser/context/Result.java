@@ -20,6 +20,13 @@ public abstract class Result<T> extends Context {
   public abstract T get();
 
   /**
+   * Returns the message of this parse context, only set in case of failure.
+   */
+  public String getMessage() {
+    return null;
+  }
+
+  /**
    * Unchecked cast from {@code T} to {@code U}.
    */
   @SuppressWarnings("unchecked")

@@ -16,6 +16,7 @@ public class Failure<T> extends Result<T> {
     this.message = message;
   }
 
+  @Override
   public String getMessage() {
     return message;
   }
