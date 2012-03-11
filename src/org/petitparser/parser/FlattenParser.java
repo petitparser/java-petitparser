@@ -21,8 +21,8 @@ public class FlattenParser extends AbstractParser<String> {
   public Result<String> parse(Context context) {
     Result<?> result = delegate.parse(context);
     if (result.isSuccess()) {
-      CharSequence flattened = context.getBuffer().subSequence(context.getPosition(), result.getPosition());
-      return result.success(flattened.toString());
+      String flattened = context.getBuffer().subSequence(context.getPosition(), result.getPosition());
+      return result.success(flattened);
     } else {
       return result.cast();
     }

@@ -7,6 +7,8 @@ import static org.petitparser.Parsers.character;
 import static org.petitparser.Parsers.digit;
 import static org.petitparser.Parsers.letter;
 import static org.petitparser.Parsers.lowerCase;
+import static org.petitparser.Parsers.string;
+import static org.petitparser.Parsers.stringIgnoreCase;
 import static org.petitparser.Parsers.upperCase;
 import static org.petitparser.Parsers.whitespace;
 import static org.petitparser.Parsers.word;
@@ -233,6 +235,27 @@ public class ParsersTest {
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, " ", ' ');
     assertFailure(parser, "");
+  }
+
+  @Test
+  public void testString() {
+    Parser<String> parser = string("foo");
+    assertSuccess(parser, "foo", "foo");
+    assertFailure(parser, "");
+    assertFailure(parser, "f");
+    assertFailure(parser, "fo");
+    assertFailure(parser, "Foo");
+  }
+
+  @Test
+  public void testStringIgnoreCase() {
+    Parser<String> parser = stringIgnoreCase("foo");
+    assertSuccess(parser, "foo", "foo");
+    assertSuccess(parser, "FOO", "FOO");
+    assertSuccess(parser, "fOo", "fOo");
+    assertFailure(parser, "");
+    assertFailure(parser, "f");
+    assertFailure(parser, "Fo");
   }
 
 }

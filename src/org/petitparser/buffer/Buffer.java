@@ -24,9 +24,9 @@ public interface Buffer {
   char charAt(int index);
 
   /**
-   * Returns a character sequence between {@code start} and {@code stop}, throws
-   * an error if this is not a character buffer.
+   * Returns a {@link String} between {@code start} and {@code stop}, throws an
+   * error if this is not a character buffer.
    */
-  CharSequence subSequence(int start, int stop);
+  String subSequence(int start, int stop);
 
 }

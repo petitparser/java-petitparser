@@ -3,6 +3,8 @@ package org.petitparser;
 import org.petitparser.parser.AbstractParser;
 import org.petitparser.parser.CharPredicateParser;
 import org.petitparser.parser.CharPredicateParser.CharPredicate;
+import org.petitparser.parser.StringPredicateParser;
+import org.petitparser.parser.StringPredicateParser.StringPredicate;
 
 /**
  * Factory for common types of parsers.
@@ -105,6 +107,30 @@ public class Parsers {
         return Character.isWhitespace(input);
       }
     }, "whitespace expected");
+  }
+
+  /**
+   * Returns a parser that parsers a specific string.
+   */
+  public static AbstractParser<String> string(final String string) {
+    return new StringPredicateParser(string.length(), new StringPredicate() {
+      @Override
+      public boolean apply(String argument) {
+        return string.equals(argument);
+      }
+    }, string + " expected");
+  }
+
+  /**
+   * Returns a parser that parsers a specific string case-insensitive.
+   */
+  public static AbstractParser<String> stringIgnoreCase(final String string) {
+    return new StringPredicateParser(string.length(), new StringPredicate() {
+      @Override
+      public boolean apply(String argument) {
+        return string.equalsIgnoreCase(argument);
+      }
+    }, string + " expected");
   }
 
 }

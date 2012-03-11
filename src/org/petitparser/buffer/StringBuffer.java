@@ -7,29 +7,29 @@ package org.petitparser.buffer;
  */
 public class StringBuffer implements Buffer {
 
-  private final CharSequence sequence;
+  private final String string;
 
-  public StringBuffer(CharSequence sequence) {
-    this.sequence = sequence;
+  public StringBuffer(String sequence) {
+    this.string = sequence;
   }
 
   @Override
   public int size() {
-    return sequence.length();
+    return string.length();
   }
 
   @Override
   public Object at(int index) {
-    return sequence.charAt(index);
+    return string.charAt(index);
   }
 
   @Override
   public char charAt(int index) {
-    return sequence.charAt(index);
+    return string.charAt(index);
   }
 
   @Override
-  public CharSequence subSequence(int start, int stop) {
-    return sequence.subSequence(start, stop);
+  public String subSequence(int start, int stop) {
+    return string.substring(start, stop);
   }
 }
