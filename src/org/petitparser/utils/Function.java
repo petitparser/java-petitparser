@@ -2,7 +2,7 @@ package org.petitparser.utils;
 
 /**
  * Generic function definition.
- *
+ * 
  * @author Lukas Renggli (renggli@gmail.com)
  * @param <T> The type of the function argument.
  * @param <R> The type of the function result.

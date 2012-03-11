@@ -4,7 +4,7 @@ import org.petitparser.buffer.Buffer;
 
 /**
  * Abstract parse context.
- *
+ * 
  * @author Lukas Renggli (renggli@gmail.com)
  */
 public class Context {
@@ -14,7 +14,7 @@ public class Context {
 
   /**
    * Constructs an immutable parse context at the default position.
-   *
+   * 
    * @param buffer the buffer this context is using
    */
   public Context(Buffer buffer) {
@@ -23,7 +23,7 @@ public class Context {
 
   /**
    * Constructs an immutable parse context.
-   *
+   * 
    * @param buffer the buffer this context is using
    * @param position the position this context is pointing at
    */
@@ -67,7 +67,7 @@ public class Context {
 
   /**
    * Returns a successful parse result at the current position.
-   *
+   * 
    * @param <T> the type of the parse result
    * @param value the value of the parse result
    */
@@ -77,7 +77,7 @@ public class Context {
 
   /**
    * Returns a successful parse result.
-   *
+   * 
    * @param <T> the type of the parse result
    * @param value the value of the parse result
    * @param position the position of the parse result
@@ -88,7 +88,7 @@ public class Context {
 
   /**
    * Returns a parse failure at the current position.
-   *
+   * 
    * @param <T> the type of the parse result
    * @param message the error message of the parse result
    */
@@ -98,7 +98,7 @@ public class Context {
 
   /**
    * Returns a successful parse result.
-   *
+   * 
    * @param <T> the type of the parse result
    * @param message the error message of the parse result
    * @param position the position of the parse result

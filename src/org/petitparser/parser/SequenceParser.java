@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.petitparser.Parser;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 
 /**
  * A parser that parses a sequence of parsers.
- *
+ * 
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class SequenceParser<T> extends AbstractParser<List<T>> {
+public class SequenceParser<T> extends Parser<List<T>> {
 
   private final Parser<?>[] parsers;
 
@@ -41,7 +40,7 @@ public class SequenceParser<T> extends AbstractParser<List<T>> {
   }
 
   @Override
-  public <U> AbstractParser<List<U>> seq(Parser<?> parser) {
+  public <U> Parser<List<U>> seq(Parser<?> parser) {
     Parser<?>[] array = Arrays.copyOf(parsers, parsers.length + 1);
     array[parsers.length] = parser;
     return new SequenceParser<U>(array);

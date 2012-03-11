@@ -5,10 +5,10 @@ import org.petitparser.context.Result;
 
 /**
  * A parser that consumes nothing and always fails.
- *
+ * 
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class FailureParser<T> extends AbstractParser<T> {
+public class FailureParser<T> extends Parser<T> {
 
   private final String message;
 

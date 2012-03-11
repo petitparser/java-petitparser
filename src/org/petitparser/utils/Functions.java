@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * Constructor and utility methods for functions.
- *
+ * 
  * @author Lukas Renggli (renggli@gmail.com)
  */
 public class Functions {

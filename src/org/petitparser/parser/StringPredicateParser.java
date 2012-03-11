@@ -6,10 +6,10 @@ import org.petitparser.context.Result;
 
 /**
  * Parses a sequence of characters.
- *
+ * 
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class StringPredicateParser extends AbstractParser<String> {
+public class StringPredicateParser extends Parser<String> {
 
   public interface StringPredicate {
     boolean apply(String argument);
@@ -19,7 +19,8 @@ public class StringPredicateParser extends AbstractParser<String> {
   private final StringPredicate predicate;
   private final String message;
 
-  public StringPredicateParser(int size, StringPredicate predicate, String message) {
+  public StringPredicateParser(int size, StringPredicate predicate,
+      String message) {
     this.size = size;
     this.predicate = predicate;
     this.message = message;

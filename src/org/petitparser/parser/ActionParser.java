@@ -1,6 +1,5 @@
 package org.petitparser.parser;
 
-import org.petitparser.Parser;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.utils.Function;
@@ -8,10 +7,10 @@ import org.petitparser.utils.Function;
 /**
  * A parser that performs a transformation with a given function on the
  * successful parse result of the delegate.
- *
+ * 
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class ActionParser<T, S> extends AbstractParser<S> {
+public class ActionParser<T, S> extends Parser<S> {
 
   private final Parser<T> parser;
   private final Function<T, S> function;

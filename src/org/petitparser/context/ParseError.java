@@ -1,9 +1,8 @@
 package org.petitparser.context;
 
-
 /**
  * A parse error.
- *
+ * 
  * @author Lukas Renggli (renggli@gmail.com)
  */
 public class ParseError extends RuntimeException {

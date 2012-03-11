@@ -1,15 +1,14 @@
 package org.petitparser.parser;
 
-import org.petitparser.Parser;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 
 /**
  * A parser that delegates to another one.
- *
+ * 
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class DelegateParser<T> extends AbstractParser<T> {
+public class DelegateParser<T> extends Parser<T> {
 
   private final Parser<T> delegate;
 

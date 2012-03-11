@@ -6,10 +6,10 @@ import org.petitparser.context.Result;
 
 /**
  * Parses a sequence of characters.
- *
+ * 
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class CharPredicateParser extends AbstractParser<Character> {
+public class CharPredicateParser extends Parser<Character> {
 
   public interface CharPredicate {
     boolean apply(char argument);
@@ -36,7 +36,7 @@ public class CharPredicateParser extends AbstractParser<Character> {
   }
 
   @Override
-  public AbstractParser<Character> negate(String message) {
+  public Parser<Character> negate(String message) {
     return new CharPredicateParser(new CharPredicate() {
       @Override
       public boolean apply(char argument) {

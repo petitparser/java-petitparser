@@ -4,7 +4,7 @@ import org.petitparser.buffer.Buffer;
 
 /**
  * An immutable and abstract parse result.
- *
+ * 
  * @author Lukas Renggli (renggli@gmail.com)
  * @param <T> The type of the parse result.
  */

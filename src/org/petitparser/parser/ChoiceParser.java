@@ -2,16 +2,15 @@ package org.petitparser.parser;
 
 import java.util.Arrays;
 
-import org.petitparser.Parser;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 
 /**
  * A parser that uses the first parser that succeeds.
- *
+ * 
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class ChoiceParser<T> extends AbstractParser<T> {
+public class ChoiceParser<T> extends Parser<T> {
 
   private final Parser<?>[] parsers;
 
@@ -36,7 +35,7 @@ public class ChoiceParser<T> extends AbstractParser<T> {
   }
 
   @Override
-  public <U> AbstractParser<U> or(Parser<? extends U> parser) {
+  public <U> Parser<U> or(Parser<? extends U> parser) {
     Parser<?>[] array = Arrays.copyOf(parsers, parsers.length + 1);
     array[parsers.length] = parser;
     return new ChoiceParser<U>(array);

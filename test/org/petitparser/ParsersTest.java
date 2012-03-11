@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
+import org.petitparser.parser.Parser;
 import org.petitparser.utils.Function;
 
 /**

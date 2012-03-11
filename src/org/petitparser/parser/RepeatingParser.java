@@ -3,16 +3,15 @@ package org.petitparser.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.petitparser.Parser;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 
 /**
  * A parser that parses a sequence of parsers.
- *
+ * 
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class RepeatingParser<T> extends AbstractParser<List<T>> {
+public class RepeatingParser<T> extends Parser<List<T>> {
 
   private final Parser<T> parser;
   private final int min, max;

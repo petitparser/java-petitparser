@@ -13,11 +13,11 @@ import org.petitparser.context.Result;
 
 public class ParserAssertions {
 
-  public static <T> void assertSuccess(Parser<T> parser, String input, T result) {
+  public static <T> void assertSuccess(Parsable<T> parser, String input, T result) {
     assertSuccess(parser, input, result, input.length());
   }
 
-  public static <T> void assertSuccess(Parser<T> parser, String input, T expected, int position) {
+  public static <T> void assertSuccess(Parsable<T> parser, String input, T expected, int position) {
     Context context = new Context(new StringBuffer(input));
     Result<T> result = parser.parse(context);
     assertNotNull(result.toString());
@@ -27,19 +27,19 @@ public class ParserAssertions {
     assertNull("No message expected", result.getMessage());
   }
 
-  public static <T> void assertFailure(Parser<T> parser, String input) {
+  public static <T> void assertFailure(Parsable<T> parser, String input) {
     assertFailure(parser, input, 0);
   }
 
-  public static <T> void assertFailure(Parser<T> parser, String input, int position) {
+  public static <T> void assertFailure(Parsable<T> parser, String input, int position) {
     assertFailure(parser, input, position, null);
   }
 
-  public static <T> void assertFailure(Parser<T> parser, String input, String message) {
+  public static <T> void assertFailure(Parsable<T> parser, String input, String message) {
     assertFailure(parser, input, 0, message);
   }
 
-  public static <T> void assertFailure(Parser<T> parser, String input, int position, String message) {
+  public static <T> void assertFailure(Parsable<T> parser, String input, int position, String message) {
     Context context = new Context(new StringBuffer(input));
     Result<T> result = parser.parse(context);
     assertNotNull(result.toString());
