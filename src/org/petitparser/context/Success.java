@@ -28,7 +28,8 @@ public class Success<T> extends Result<T> {
 
   @Override
   public String toString() {
-    return "Success[" + getPosition() + "]: " + (get() == null ? "null" : get().toString());
+    String message = get() == null ? "null" : get().toString();
+    return "Success[" + getPosition() + "]: " + message;
   }
 
 }
