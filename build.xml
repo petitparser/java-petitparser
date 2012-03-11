@@ -47,7 +47,7 @@
       <classpath refid="classpath" />
       <batchtest todir="${build.test}">
         <formatter type="xml" />
-        <formatter type="plain" usefile="false" />
+        <formatter type="brief" usefile="false" />
         <fileset dir="${test}">
           <include name="**/*Test.java" />
         </fileset>

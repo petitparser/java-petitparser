@@ -16,7 +16,6 @@ import static org.petitparser.Parsers.whitespace;
 import static org.petitparser.Parsers.word;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
@@ -31,7 +30,7 @@ public class ParsersTest {
 
   @Test
   public void testCharacter() {
-    Parser<Character> parser = character('a');
+    Parser parser = character('a');
     assertSuccess(parser, "a", 'a');
     assertFailure(parser, "b");
     assertFailure(parser, "");
@@ -39,7 +38,7 @@ public class ParsersTest {
 
   @Test
   public void testAny() {
-    Parser<Character> parser = any();
+    Parser parser = any();
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, "b", 'b');
     assertFailure(parser, "", "input expected");
@@ -47,7 +46,7 @@ public class ParsersTest {
 
   @Test
   public void testDigit() {
-    Parser<Character> parser = digit();
+    Parser parser = digit();
     assertSuccess(parser, "1", '1');
     assertSuccess(parser, "9", '9');
     assertFailure(parser, "a", "digit expected");
@@ -56,7 +55,7 @@ public class ParsersTest {
 
   @Test
   public void testLetter() {
-    Parser<Character> parser = letter();
+    Parser parser = letter();
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, "X", 'X');
     assertFailure(parser, "0", "letter expected");
@@ -65,7 +64,7 @@ public class ParsersTest {
 
   @Test
   public void testWord() {
-    Parser<Character> parser = word();
+    Parser parser = word();
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, "0", '0');
     assertFailure(parser, "-", "letter or digit expected");
@@ -74,7 +73,7 @@ public class ParsersTest {
 
   @Test
   public void testLowerCase() {
-    Parser<Character> parser = lowerCase();
+    Parser parser = lowerCase();
     assertSuccess(parser, "a", 'a');
     assertFailure(parser, "A", "lowercase letter expected");
     assertFailure(parser, "0", "lowercase letter expected");
@@ -83,7 +82,7 @@ public class ParsersTest {
 
   @Test
   public void testUpperCase() {
-    Parser<Character> parser = upperCase();
+    Parser parser = upperCase();
     assertSuccess(parser, "Z", 'Z');
     assertFailure(parser, "z", "uppercase letter expected");
     assertFailure(parser, "0", "uppercase letter expected");
@@ -92,7 +91,7 @@ public class ParsersTest {
 
   @Test
   public void testWhitespace() {
-    Parser<Character> parser = whitespace();
+    Parser parser = whitespace();
     assertSuccess(parser, " ", ' ');
     assertFailure(parser, "z", "whitespace expected");
     assertFailure(parser, "-", "whitespace expected");
@@ -101,7 +100,7 @@ public class ParsersTest {
 
   @Test
   public void testNegateDigit() {
-    Parser<Character> parser = digit().negate("no digit expected");
+    Parser parser = digit().negate("no digit expected");
     assertFailure(parser, "1", 0, "no digit expected");
     assertFailure(parser, "9", 0, "no digit expected");
     assertSuccess(parser, "a", 'a');
@@ -111,7 +110,7 @@ public class ParsersTest {
 
   @Test
   public void testWrapped() {
-    Parser<Character> parser = character('a').wrapped();
+    Parser parser = character('a').wrapped();
     assertSuccess(parser, "a", 'a');
     assertFailure(parser, "b", "a expected");
     assertFailure(parser, "");
@@ -120,7 +119,7 @@ public class ParsersTest {
 
   @Test
   public void testAnd() {
-    Parser<Character> parser = character('a').and();
+    Parser parser = character('a').and();
     assertSuccess(parser, "a", 'a', 0);
     assertFailure(parser, "b", "a expected");
     assertFailure(parser, "");
@@ -128,7 +127,7 @@ public class ParsersTest {
 
   @Test
   public void testNot() {
-    Parser<Character> parser = character('a').not("not a expected");
+    Parser parser = character('a').not("not a expected");
     assertFailure(parser, "a", "not a expected");
     assertSuccess(parser, "b", null, 0);
     assertSuccess(parser, "", null);
@@ -136,7 +135,7 @@ public class ParsersTest {
 
   @Test
   public void testOptional() {
-    Parser<Character> parser = character('a').optional();
+    Parser parser = character('a').optional();
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, "b", null, 0);
     assertSuccess(parser, "", null);
@@ -144,35 +143,35 @@ public class ParsersTest {
 
   @Test
   public void testStar() {
-    Parser<List<Character>> parser = character('a').star();
-    assertSuccess(parser, "", Arrays.<Character> asList());
-    assertSuccess(parser, "a", Arrays.<Character> asList('a'));
-    assertSuccess(parser, "aa", Arrays.<Character> asList('a', 'a'));
-    assertSuccess(parser, "aaa", Arrays.<Character> asList('a', 'a', 'a'));
+    Parser parser = character('a').star();
+    assertSuccess(parser, "", Arrays. asList());
+    assertSuccess(parser, "a", Arrays. asList('a'));
+    assertSuccess(parser, "aa", Arrays. asList('a', 'a'));
+    assertSuccess(parser, "aaa", Arrays. asList('a', 'a', 'a'));
   }
 
   @Test
   public void testPlus() {
-    Parser<List<Character>> parser = character('a').plus();
+    Parser parser = character('a').plus();
     assertFailure(parser, "", "a expected");
-    assertSuccess(parser, "a", Arrays.<Character> asList('a'));
-    assertSuccess(parser, "aa", Arrays.<Character> asList('a', 'a'));
-    assertSuccess(parser, "aaa", Arrays.<Character> asList('a', 'a', 'a'));
+    assertSuccess(parser, "a", Arrays. asList('a'));
+    assertSuccess(parser, "aa", Arrays. asList('a', 'a'));
+    assertSuccess(parser, "aaa", Arrays. asList('a', 'a', 'a'));
   }
 
   @Test
   public void testRepeat() {
-    Parser<List<Character>> parser = character('a').repeat(2, 3);
+    Parser parser = character('a').repeat(2, 3);
     assertFailure(parser, "", "a expected");
     assertFailure(parser, "a", 1, "a expected");
-    assertSuccess(parser, "aa", Arrays.<Character> asList('a', 'a'));
-    assertSuccess(parser, "aaa", Arrays.<Character> asList('a', 'a', 'a'));
-    assertSuccess(parser, "aaaa", Arrays.<Character> asList('a', 'a', 'a'), 3);
+    assertSuccess(parser, "aa", Arrays. asList('a', 'a'));
+    assertSuccess(parser, "aaa", Arrays. asList('a', 'a', 'a'));
+    assertSuccess(parser, "aaaa", Arrays. asList('a', 'a', 'a'), 3);
   }
 
   @Test
   public void testChoice2() {
-    Parser<Character> parser = character('a').or(character('b'));
+    Parser parser = character('a').or(character('b'));
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, "b", 'b');
     assertFailure(parser, "c");
@@ -181,7 +180,7 @@ public class ParsersTest {
 
   @Test
   public void testChoice3() {
-    Parser<Character> parser = character('a').or(character('b')).or(character('c'));
+    Parser parser = character('a').or(character('b')).or(character('c'));
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, "b", 'b');
     assertSuccess(parser, "c", 'c');
@@ -191,8 +190,8 @@ public class ParsersTest {
 
   @Test
   public void testSequence2() {
-    Parser<List<Character>> parser = character('a').seq(character('b'));
-    assertSuccess(parser, "ab", Arrays.<Character> asList('a', 'b'));
+    Parser parser = character('a').seq(character('b'));
+    assertSuccess(parser, "ab", Arrays. asList('a', 'b'));
     assertFailure(parser, "");
     assertFailure(parser, "x");
     assertFailure(parser, "a", 1);
@@ -201,8 +200,8 @@ public class ParsersTest {
 
   @Test
   public void testSequence3() {
-    Parser<List<Character>> parser = character('a').seq(character('b')).seq(character('c'));
-    assertSuccess(parser, "abc", Arrays.<Character> asList('a', 'b', 'c'));
+    Parser parser = character('a').seq(character('b')).seq(character('c'));
+    assertSuccess(parser, "abc", Arrays. asList('a', 'b', 'c'));
     assertFailure(parser, "");
     assertFailure(parser, "x");
     assertFailure(parser, "a", 1);
@@ -213,7 +212,7 @@ public class ParsersTest {
 
   @Test
   public void testFlatten() {
-    Parser<String> parser = digit().plus().flatten();
+    Parser parser = digit().plus().flatten();
     assertFailure(parser, "");
     assertFailure(parser, "a");
     assertSuccess(parser, "1", "1");
@@ -224,7 +223,7 @@ public class ParsersTest {
 
   @Test
   public void testMap() {
-    Parser<Integer> parser = digit().map(new Function<Character, Integer>() {
+    Parser parser = digit().map(new Function<Character, Integer>() {
       @Override
       public Integer apply(Character argument) {
         return Character.getNumericValue(argument);
@@ -239,7 +238,7 @@ public class ParsersTest {
 
   @Test
   public void testNegate() {
-    Parser<Character> parser = digit().or(upperCase()).negate("no diggit or uppercase expected");
+    Parser parser = digit().or(upperCase()).negate("no diggit or uppercase expected");
     assertFailure(parser, "1");
     assertFailure(parser, "9");
     assertFailure(parser, "A");
@@ -251,7 +250,7 @@ public class ParsersTest {
 
   @Test
   public void testString() {
-    Parser<String> parser = string("foo");
+    Parser parser = string("foo");
     assertSuccess(parser, "foo", "foo");
     assertFailure(parser, "");
     assertFailure(parser, "f");
@@ -261,7 +260,7 @@ public class ParsersTest {
 
   @Test
   public void testStringIgnoreCase() {
-    Parser<String> parser = stringIgnoreCase("foo");
+    Parser parser = stringIgnoreCase("foo");
     assertSuccess(parser, "foo", "foo");
     assertSuccess(parser, "FOO", "FOO");
     assertSuccess(parser, "fOo", "fOo");
@@ -272,14 +271,14 @@ public class ParsersTest {
 
   @Test
   public void testEpsilon() {
-    Parser<String> parser = epsilon();
+    Parser parser = epsilon();
     assertSuccess(parser, "", null);
     assertSuccess(parser, "a", null, 0);
   }
 
   @Test
   public void testFailure() {
-    Parser<String> parser = failure("failure");
+    Parser parser = failure("failure");
     assertFailure(parser, "");
     assertFailure(parser, "a");
   }

@@ -7,38 +7,32 @@ import org.petitparser.context.Result;
 
 /**
  * A parser that uses the first parser that succeeds.
- * 
+ *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class ChoiceParser<T> extends Parser<T> {
+public class ChoiceParser extends ListParser {
 
-  private final Parser<?>[] parsers;
-
-  private ChoiceParser(Parser<?>... parsers) {
-    this.parsers = parsers;
-  }
-
-  public ChoiceParser(Parser<?> first, Parser<?> second) {
-    this.parsers = new Parser[] { first, second };
+  public ChoiceParser(Parser... parsers) {
+    super(parsers);
   }
 
   @Override
-  public Result<T> parse(Context context) {
-    Result<?> result = context.failure("Empty choice");
-    for (Parser<?> parser : parsers) {
+  public Result parse(Context context) {
+    Result result = context.failure("Empty choice");
+    for (Parser parser : parsers) {
       result = parser.parse(context);
       if (result.isSuccess()) {
-        return result.cast();
+        return result;
       }
     }
-    return result.cast();
+    return result;
   }
 
   @Override
-  public <U> Parser<U> or(Parser<? extends U> parser) {
-    Parser<?>[] array = Arrays.copyOf(parsers, parsers.length + 1);
-    array[parsers.length] = parser;
-    return new ChoiceParser<U>(array);
+  public Parser or(Parser... more) {
+    Parser[] array = Arrays.copyOf(parsers, parsers.length + more.length);
+    System.arraycopy(more, 0, array, parsers.length, more.length);
+    return new ChoiceParser(array);
   }
 
 }

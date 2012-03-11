@@ -20,18 +20,18 @@ import org.petitparser.utils.Functions;
  */
 public class ExampleTest {
 
-  private static Parser<String> IDENTIFIER = letter().seq(word().star())
+  private static Parser IDENTIFIER = letter().seq(word().star())
       .flatten();
 
-  private static Parser<String> NUMBER = character('-').optional()
+  private static Parser NUMBER = character('-').optional()
       .seq(digit().plus()).seq(character('.')
       .seq(digit().plus()).optional())
       .flatten();
 
-  private static Parser<String> RETURN = string("return")
+  private static Parser RETURN = string("return")
       .seq(whitespace().plus().flatten())
-      .<String> seq(IDENTIFIER.or(NUMBER))
-      .map(Functions.<String> lastOfList());
+      .seq(IDENTIFIER.or(NUMBER))
+      .map(Functions.lastOfList());
 
   @Test
   public void testIdentitiferSuccess() {

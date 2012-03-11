@@ -4,14 +4,14 @@ import org.petitparser.buffer.Buffer;
 
 /**
  * An immutable parse success.
- * 
+ *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class Success<T> extends Result<T> {
+public class Success extends Result {
 
-  private final T result;
+  private final Object result;
 
-  Success(Buffer buffer, int position, T result) {
+  Success(Buffer buffer, int position, Object result) {
     super(buffer, position);
     this.result = result;
   }
@@ -22,8 +22,9 @@ public class Success<T> extends Result<T> {
   }
 
   @Override
-  public T get() {
-    return result;
+  @SuppressWarnings("unchecked")
+  public <T> T get() {
+    return (T) result;
   }
 
   @Override

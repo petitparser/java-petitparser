@@ -5,15 +5,14 @@ import org.petitparser.context.Result;
 
 /**
  * Generic interface of all parsers.
- * 
+ *
  * @author Lukas Renggli (renggli@gmail.com)
- * @param <T> return type produced by this parser
  */
-public interface Parsable<T> {
+public interface Parsable {
 
   /**
    * Apply the parser on the given {@code context}.
    */
-  Result<T> parse(Context context);
+  Result parse(Context context);
 
 }

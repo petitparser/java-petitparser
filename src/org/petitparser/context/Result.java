@@ -4,11 +4,10 @@ import org.petitparser.buffer.Buffer;
 
 /**
  * An immutable and abstract parse result.
- * 
+ *
  * @author Lukas Renggli (renggli@gmail.com)
- * @param <T> The type of the parse result.
  */
-public abstract class Result<T> extends Context {
+public abstract class Result extends Context {
 
   Result(Buffer buffer, int position) {
     super(buffer, position);
@@ -16,22 +15,16 @@ public abstract class Result<T> extends Context {
 
   /**
    * Returns the result of this parse context.
+   *
+   * @param <T> The type of the parse result.
    */
-  public abstract T get();
+  public abstract <T> T get();
 
   /**
    * Returns the message of this parse context, only set in case of failure.
    */
   public String getMessage() {
     return null;
-  }
-
-  /**
-   * Unchecked cast from {@code T} to {@code U}.
-   */
-  @SuppressWarnings("unchecked")
-  public <U> Result<U> cast() {
-    return (Result<U>) this;
   }
 
 }

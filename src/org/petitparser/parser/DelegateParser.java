@@ -5,19 +5,19 @@ import org.petitparser.context.Result;
 
 /**
  * A parser that delegates to another one.
- * 
+ *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class DelegateParser<T> extends Parser<T> {
+public class DelegateParser extends Parser {
 
-  private final Parser<T> delegate;
+  private final Parser delegate;
 
-  public DelegateParser(Parser<T> delegate) {
+  public DelegateParser(Parser delegate) {
     this.delegate = delegate;
   }
 
   @Override
-  public Result<T> parse(Context context) {
+  public Result parse(Context context) {
     return delegate.parse(context);
   }
 

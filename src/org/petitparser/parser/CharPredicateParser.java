@@ -6,10 +6,10 @@ import org.petitparser.context.Result;
 
 /**
  * Parses a sequence of characters.
- * 
+ *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class CharPredicateParser extends Parser<Character> {
+public class CharPredicateParser extends Parser {
 
   public interface CharPredicate {
     boolean apply(char argument);
@@ -24,7 +24,7 @@ public class CharPredicateParser extends Parser<Character> {
   }
 
   @Override
-  public Result<Character> parse(Context context) {
+  public Result parse(Context context) {
     Buffer buffer = context.getBuffer();
     if (context.getPosition() < buffer.size()) {
       char result = buffer.charAt(context.getPosition());
@@ -36,7 +36,7 @@ public class CharPredicateParser extends Parser<Character> {
   }
 
   @Override
-  public Parser<Character> negate(String message) {
+  public Parser negate(String message) {
     return new CharPredicateParser(new CharPredicate() {
       @Override
       public boolean apply(char argument) {

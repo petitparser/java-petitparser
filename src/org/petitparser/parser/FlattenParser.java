@@ -5,26 +5,24 @@ import org.petitparser.context.Result;
 
 /**
  * A parser that answers a flat copy of the range my delegate parses.
- * 
+ *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class FlattenParser extends Parser<String> {
+public class FlattenParser extends DelegateParser {
 
-  private final Parser<?> delegate;
-
-  public FlattenParser(Parser<?> delegate) {
-    this.delegate = delegate;
+  public FlattenParser(Parser delegate) {
+    super(delegate);
   }
 
   @Override
-  public Result<String> parse(Context context) {
-    Result<?> result = delegate.parse(context);
+  public Result parse(Context context) {
+    Result result = super.parse(context);
     if (result.isSuccess()) {
       String flattened = context.getBuffer().subSequence(context.getPosition(),
           result.getPosition());
       return result.success(flattened);
     } else {
-      return result.cast();
+      return result;
     }
   }
 }

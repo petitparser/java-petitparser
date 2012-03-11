@@ -8,34 +8,33 @@ import org.petitparser.context.Result;
 
 /**
  * A parser that parses a sequence of parsers.
- * 
+ *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class RepeatingParser<T> extends Parser<List<T>> {
+public class RepeatingParser extends DelegateParser {
 
-  private final Parser<T> parser;
   private final int min, max;
 
-  public RepeatingParser(Parser<T> parser, int min, int max) {
-    this.parser = parser;
+  public RepeatingParser(Parser delegate, int min, int max) {
+    super(delegate);
     this.min = min;
     this.max = max;
   }
 
   @Override
-  public Result<List<T>> parse(Context context) {
+  public Result parse(Context context) {
     Context current = context;
-    List<T> elements = new ArrayList<T>();
+    List<Object> elements = new ArrayList<Object>();
     while (elements.size() < min) {
-      Result<T> result = parser.parse(current);
+      Result result = super.parse(current);
       if (result.isFailure()) {
-        return result.cast();
+        return result;
       }
       elements.add(result.get());
       current = result;
     }
     while (elements.size() < max) {
-      Result<T> result = parser.parse(current);
+      Result result = super.parse(current);
       if (result.isFailure()) {
         return result.success(elements);
       }

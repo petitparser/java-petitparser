@@ -4,10 +4,10 @@ import org.petitparser.buffer.Buffer;
 
 /**
  * An immutable parse failure.
- * 
+ *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class Failure<T> extends Result<T> {
+public class Failure extends Result {
 
   private final String message;
 
@@ -27,7 +27,7 @@ public class Failure<T> extends Result<T> {
   }
 
   @Override
-  public T get() {
+  public <T> T get() {
     throw new ParseError(this);
   }
 
