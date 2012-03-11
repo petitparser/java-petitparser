@@ -11,7 +11,7 @@ import org.petitparser.context.Context;
 import org.petitparser.context.ParseError;
 import org.petitparser.context.Result;
 
-public class ParserAssertions {
+public class Assertions {
 
   public static <T> void assertSuccess(Parsable parser, String input, T result) {
     assertSuccess(parser, input, result, input.length());

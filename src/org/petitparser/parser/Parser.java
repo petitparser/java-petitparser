@@ -27,6 +27,22 @@ public abstract class Parser implements Parsable {
   }
 
   /**
+   * Returns a new parser that consumes whitespace before and after the
+   * receiving parser.
+   */
+  public Parser trim() {
+    return trim(Parsers.whitespace());
+  }
+
+  /**
+   * Returns a new parser that consumes and ignores the {@code trimmer}
+   * repeatedly before and after the receiving parser.
+   */
+  public Parser trim(Parser trimmer) {
+    return new TrimmingParser(this, trimmer);
+  }
+
+  /**
    * Returns a new parser (logical and-predicate) that succeeds whenever the
    * receiver does, but never consumes input.
    */

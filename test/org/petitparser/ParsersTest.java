@@ -1,7 +1,7 @@
 package org.petitparser;
 
-import static org.petitparser.ParserAssertions.assertFailure;
-import static org.petitparser.ParserAssertions.assertSuccess;
+import static org.petitparser.Assertions.assertFailure;
+import static org.petitparser.Assertions.assertSuccess;
 import static org.petitparser.Parsers.any;
 import static org.petitparser.Parsers.character;
 import static org.petitparser.Parsers.digit;
@@ -281,6 +281,38 @@ public class ParsersTest {
     Parser parser = failure("failure");
     assertFailure(parser, "");
     assertFailure(parser, "a");
+  }
+
+  @Test
+  public void testTrim() {
+    Parser parser = character('a').trim();
+    assertSuccess(parser, "a", 'a');
+    assertSuccess(parser, " a", 'a');
+    assertSuccess(parser, "a ", 'a');
+    assertSuccess(parser, " a ", 'a');
+    assertSuccess(parser, "  a", 'a');
+    assertSuccess(parser, "a  ", 'a');
+    assertSuccess(parser, "  a  ", 'a');
+    assertFailure(parser, "", "a expected");
+    assertFailure(parser, "b", "a expected");
+    assertFailure(parser, " b", 1, "a expected");
+    assertFailure(parser, "  b", 2, "a expected");
+  }
+
+  @Test
+  public void testTrimCustom() {
+    Parser parser = character('a').trim(character('*'));
+    assertSuccess(parser, "a", 'a');
+    assertSuccess(parser, "*a", 'a');
+    assertSuccess(parser, "a*", 'a');
+    assertSuccess(parser, "*a*", 'a');
+    assertSuccess(parser, "**a", 'a');
+    assertSuccess(parser, "a**", 'a');
+    assertSuccess(parser, "**a**", 'a');
+    assertFailure(parser, "", "a expected");
+    assertFailure(parser, "b", "a expected");
+    assertFailure(parser, "*b", 1, "a expected");
+    assertFailure(parser, "**b", 2, "a expected");
   }
 
 }

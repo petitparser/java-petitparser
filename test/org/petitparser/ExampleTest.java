@@ -1,7 +1,7 @@
 package org.petitparser;
 
-import static org.petitparser.ParserAssertions.assertFailure;
-import static org.petitparser.ParserAssertions.assertSuccess;
+import static org.petitparser.Assertions.assertFailure;
+import static org.petitparser.Assertions.assertSuccess;
 import static org.petitparser.Parsers.character;
 import static org.petitparser.Parsers.digit;
 import static org.petitparser.Parsers.letter;
