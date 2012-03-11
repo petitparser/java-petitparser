@@ -5,6 +5,8 @@ import static org.petitparser.ParserAssertions.assertSuccess;
 import static org.petitparser.Parsers.any;
 import static org.petitparser.Parsers.character;
 import static org.petitparser.Parsers.digit;
+import static org.petitparser.Parsers.epsilon;
+import static org.petitparser.Parsers.failure;
 import static org.petitparser.Parsers.letter;
 import static org.petitparser.Parsers.lowerCase;
 import static org.petitparser.Parsers.string;
@@ -256,6 +258,20 @@ public class ParsersTest {
     assertFailure(parser, "");
     assertFailure(parser, "f");
     assertFailure(parser, "Fo");
+  }
+
+  @Test
+  public void testEpsilon() {
+    Parser<String> parser = epsilon();
+    assertSuccess(parser, "", null);
+    assertSuccess(parser, "a", null, 0);
+  }
+
+  @Test
+  public void testFailure() {
+    Parser<String> parser = failure("failure");
+    assertFailure(parser, "");
+    assertFailure(parser, "a");
   }
 
 }

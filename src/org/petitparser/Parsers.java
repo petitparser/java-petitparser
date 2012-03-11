@@ -3,6 +3,8 @@ package org.petitparser;
 import org.petitparser.parser.AbstractParser;
 import org.petitparser.parser.CharPredicateParser;
 import org.petitparser.parser.CharPredicateParser.CharPredicate;
+import org.petitparser.parser.EpsilonParser;
+import org.petitparser.parser.FailureParser;
 import org.petitparser.parser.StringPredicateParser;
 import org.petitparser.parser.StringPredicateParser.StringPredicate;
 
@@ -131,6 +133,20 @@ public class Parsers {
         return string.equalsIgnoreCase(argument);
       }
     }, string + " expected");
+  }
+
+  /**
+   * Returns a parser that always succeeds and never consumes anything.
+   */
+  public static <T> AbstractParser<T> epsilon() {
+    return new EpsilonParser<T>();
+  }
+
+  /**
+   * Returns a parser that always fails and never consumes anything.
+   */
+  public static <T> AbstractParser<T> failure(String message) {
+    return new FailureParser<T>(message);
   }
 
 }

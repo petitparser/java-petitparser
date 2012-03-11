@@ -38,4 +38,5 @@ public class StringPredicateParser extends AbstractParser<String> {
     }
     return context.failure(message);
   }
+
 }
