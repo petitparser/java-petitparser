@@ -68,18 +68,6 @@ public class Chars {
   }
 
   /**
-   * Returns a parser that parses a single letter or digit.
-   */
-  public static Parser word() {
-    return new CharParser(new CharPredicate() {
-      @Override
-      public boolean apply(char input) {
-        return Character.isLetterOrDigit(input);
-      }
-    }, "letter or digit expected");
-  }
-
-  /**
    * Returns a parser that parses an lower-case letter.
    */
   public static Parser lowerCase() {
@@ -91,41 +79,6 @@ public class Chars {
     }, "lowercase letter expected");
   }
 
-  /**
-   * Returns a parser that parses an upper-case letter.
-   */
-  public static Parser upperCase() {
-    return new CharParser(new CharPredicate() {
-      @Override
-      public boolean apply(char input) {
-        return Character.isUpperCase(input);
-      }
-    }, "uppercase letter expected");
-  }
-
-  /**
-   * Returns a parser that parses a single whitespace.
-   */
-  public static Parser whitespace() {
-    return new CharParser(new CharPredicate() {
-      @Override
-      public boolean apply(char input) {
-        return Character.isWhitespace(input);
-      }
-    }, "whitespace expected");
-  }
-
-  /**
-   * Returns a parser that parses a specific character range.
-   */
-  public static Parser range(final char start, final char stop) {
-    return new CharParser(new CharPredicate() {
-      @Override
-      public boolean apply(char input) {
-        return start <= input && input <= stop;
-      }
-    }, start + ".." + stop + " expected");
-  }
 
   private static Parser PATTERN_SIMPLE = any()
       .map(new Function<Character, Set<Integer>>() {
@@ -161,6 +114,7 @@ public class Chars {
         }
       }).end();
 
+
   /**
    * Returns a parser that parses a specific character pattern.
    */
@@ -177,6 +131,54 @@ public class Chars {
         return Arrays.binarySearch(array, input) >= 0;
       }
     }, pattern + " expected");
+  }
+
+  /**
+   * Returns a parser that parses a specific character range.
+   */
+  public static Parser range(final char start, final char stop) {
+    return new CharParser(new CharPredicate() {
+      @Override
+      public boolean apply(char input) {
+        return start <= input && input <= stop;
+      }
+    }, start + ".." + stop + " expected");
+  }
+
+  /**
+   * Returns a parser that parses an upper-case letter.
+   */
+  public static Parser upperCase() {
+    return new CharParser(new CharPredicate() {
+      @Override
+      public boolean apply(char input) {
+        return Character.isUpperCase(input);
+      }
+    }, "uppercase letter expected");
+  }
+
+  /**
+   * Returns a parser that parses a single whitespace.
+   */
+  public static Parser whitespace() {
+    return new CharParser(new CharPredicate() {
+      @Override
+      public boolean apply(char input) {
+        return Character.isWhitespace(input);
+      }
+    }, "whitespace expected");
+  }
+
+  /**
+   * Returns a parser that parses a single letter or digit.
+   */
+  public static Parser word() {
+    return new CharParser(new CharPredicate() {
+      @Override
+      public boolean apply(char input) {
+        return Character.isLetterOrDigit(input);
+      }
+    }, "letter or digit expected");
   }
 
 }
