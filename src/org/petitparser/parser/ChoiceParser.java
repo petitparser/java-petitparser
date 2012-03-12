@@ -2,6 +2,8 @@ package org.petitparser.parser;
 
 import java.util.Arrays;
 
+import org.petitparser.Combinators;
+import org.petitparser.Parsable;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 
@@ -12,14 +14,14 @@ import org.petitparser.context.Result;
  */
 public class ChoiceParser extends ListParser {
 
-  public ChoiceParser(Parser... parsers) {
+  public ChoiceParser(Parsable... parsers) {
     super(parsers);
   }
 
   @Override
   public Result parse(Context context) {
     Result result = context.failure("Empty choice");
-    for (Parser parser : parsers) {
+    for (Parsable parser : parsers) {
       result = parser.parse(context);
       if (result.isSuccess()) {
         return result;
@@ -29,10 +31,10 @@ public class ChoiceParser extends ListParser {
   }
 
   @Override
-  public Parser or(Parser... more) {
-    Parser[] array = Arrays.copyOf(parsers, parsers.length + more.length);
+  public ChoiceParser or(Parsable... more) {
+    Parsable[] array = Arrays.copyOf(parsers, parsers.length + more.length);
     System.arraycopy(more, 0, array, parsers.length, more.length);
-    return new ChoiceParser(array);
+    return Combinators.or(array);
   }
 
 }

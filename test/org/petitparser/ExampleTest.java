@@ -2,12 +2,12 @@ package org.petitparser;
 
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
-import static org.petitparser.Parsers.character;
-import static org.petitparser.Parsers.digit;
-import static org.petitparser.Parsers.letter;
+import static org.petitparser.Chars.character;
+import static org.petitparser.Chars.digit;
+import static org.petitparser.Chars.letter;
+import static org.petitparser.Chars.whitespace;
+import static org.petitparser.Chars.word;
 import static org.petitparser.Parsers.string;
-import static org.petitparser.Parsers.whitespace;
-import static org.petitparser.Parsers.word;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;

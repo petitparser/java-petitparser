@@ -1,6 +1,7 @@
 package org.petitparser.context;
 
 import org.petitparser.buffer.Buffer;
+import org.petitparser.buffer.StringBuffer;
 
 /**
  * Abstract parse context.
@@ -11,6 +12,15 @@ public class Context {
 
   private final Buffer buffer;
   private final int position;
+
+  /**
+   * Constructs an immutable parse context with a string.
+   *
+   * @param string the string this context is using
+   */
+  public Context(String string) {
+    this(new StringBuffer(string));
+  }
 
   /**
    * Constructs an immutable parse context at the default position.

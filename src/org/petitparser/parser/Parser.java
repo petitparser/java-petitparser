@@ -1,7 +1,8 @@
 package org.petitparser.parser;
 
+import org.petitparser.Combinators;
 import org.petitparser.Parsable;
-import org.petitparser.Parsers;
+import org.petitparser.Chars;
 import org.petitparser.utils.Function;
 import org.petitparser.utils.Functions;
 
@@ -31,7 +32,7 @@ public abstract class Parser implements Parsable {
    * receiving parser.
    */
   public Parser trim() {
-    return trim(Parsers.whitespace());
+    return trim(Chars.whitespace());
   }
 
   /**
@@ -69,7 +70,7 @@ public abstract class Parser implements Parsable {
    * Returns a new parser that consumes any input character but the receiver.
    */
   public Parser negate(String message) {
-    Parser sequence = this.not(message).seq(Parsers.any());
+    Parser sequence = this.not(message).seq(Chars.any());
     return sequence.map(Functions.lastOfList());
   }
 
@@ -106,21 +107,21 @@ public abstract class Parser implements Parsable {
    * Returns a new parser that parses the receiver, if that fails try with the
    * following parsers.
    */
-  public Parser or(Parser... parsers) {
-    Parser[] array = new Parser[1 + parsers.length];
+  public ChoiceParser or(Parsable... parsers) {
+    Parsable[] array = new Parsable[1 + parsers.length];
     array[0] = this;
     System.arraycopy(parsers, 0, array, 1, parsers.length);
-    return new ChoiceParser(array);
+    return Combinators.or(array);
   }
 
   /**
    * Returns a new parser that first parses the receiver and then the argument.
    */
-  public Parser seq(Parser... parsers) {
-    Parser[] array = new Parser[1 + parsers.length];
+  public SequenceParser seq(Parsable... parsers) {
+    Parsable[] array = new Parsable[1 + parsers.length];
     array[0] = this;
     System.arraycopy(parsers, 0, array, 1, parsers.length);
-    return new SequenceParser(array);
+    return Combinators.seq(array);
   }
 
   /**

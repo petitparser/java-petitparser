@@ -5,11 +5,11 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 
 /**
- * Parses a sequence of characters.
+ * Parses a single character satisfying a predicate.
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class CharPredicateParser extends Parser {
+public class CharParser extends Parser {
 
   public interface CharPredicate {
     boolean apply(char argument);
@@ -18,7 +18,7 @@ public class CharPredicateParser extends Parser {
   private final CharPredicate predicate;
   private final String message;
 
-  public CharPredicateParser(CharPredicate predicate, String message) {
+  public CharParser(CharPredicate predicate, String message) {
     this.predicate = predicate;
     this.message = message;
   }
@@ -37,7 +37,7 @@ public class CharPredicateParser extends Parser {
 
   @Override
   public Parser negate(String message) {
-    return new CharPredicateParser(new CharPredicate() {
+    return new CharParser(new CharPredicate() {
       @Override
       public boolean apply(char argument) {
         return !predicate.apply(argument);

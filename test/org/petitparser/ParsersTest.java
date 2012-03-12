@@ -2,18 +2,13 @@ package org.petitparser;
 
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
-import static org.petitparser.Parsers.any;
-import static org.petitparser.Parsers.character;
-import static org.petitparser.Parsers.digit;
+import static org.petitparser.Chars.character;
+import static org.petitparser.Chars.digit;
+import static org.petitparser.Chars.upperCase;
 import static org.petitparser.Parsers.epsilon;
 import static org.petitparser.Parsers.failure;
-import static org.petitparser.Parsers.letter;
-import static org.petitparser.Parsers.lowerCase;
 import static org.petitparser.Parsers.string;
 import static org.petitparser.Parsers.stringIgnoreCase;
-import static org.petitparser.Parsers.upperCase;
-import static org.petitparser.Parsers.whitespace;
-import static org.petitparser.Parsers.word;
 
 import java.util.Arrays;
 
@@ -22,81 +17,11 @@ import org.petitparser.parser.Parser;
 import org.petitparser.utils.Function;
 
 /**
- * Tests {@link Parser} and {@link Parsers} and all implementing classes.
+ * Tests {@link Parsers} factory.
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
 public class ParsersTest {
-
-  @Test
-  public void testCharacter() {
-    Parser parser = character('a');
-    assertSuccess(parser, "a", 'a');
-    assertFailure(parser, "b");
-    assertFailure(parser, "");
-  }
-
-  @Test
-  public void testAny() {
-    Parser parser = any();
-    assertSuccess(parser, "a", 'a');
-    assertSuccess(parser, "b", 'b');
-    assertFailure(parser, "", "input expected");
-  }
-
-  @Test
-  public void testDigit() {
-    Parser parser = digit();
-    assertSuccess(parser, "1", '1');
-    assertSuccess(parser, "9", '9');
-    assertFailure(parser, "a", "digit expected");
-    assertFailure(parser, "");
-  }
-
-  @Test
-  public void testLetter() {
-    Parser parser = letter();
-    assertSuccess(parser, "a", 'a');
-    assertSuccess(parser, "X", 'X');
-    assertFailure(parser, "0", "letter expected");
-    assertFailure(parser, "");
-  }
-
-  @Test
-  public void testWord() {
-    Parser parser = word();
-    assertSuccess(parser, "a", 'a');
-    assertSuccess(parser, "0", '0');
-    assertFailure(parser, "-", "letter or digit expected");
-    assertFailure(parser, "");
-  }
-
-  @Test
-  public void testLowerCase() {
-    Parser parser = lowerCase();
-    assertSuccess(parser, "a", 'a');
-    assertFailure(parser, "A", "lowercase letter expected");
-    assertFailure(parser, "0", "lowercase letter expected");
-    assertFailure(parser, "");
-  }
-
-  @Test
-  public void testUpperCase() {
-    Parser parser = upperCase();
-    assertSuccess(parser, "Z", 'Z');
-    assertFailure(parser, "z", "uppercase letter expected");
-    assertFailure(parser, "0", "uppercase letter expected");
-    assertFailure(parser, "");
-  }
-
-  @Test
-  public void testWhitespace() {
-    Parser parser = whitespace();
-    assertSuccess(parser, " ", ' ');
-    assertFailure(parser, "z", "whitespace expected");
-    assertFailure(parser, "-", "whitespace expected");
-    assertFailure(parser, "");
-  }
 
   @Test
   public void testNegateDigit() {

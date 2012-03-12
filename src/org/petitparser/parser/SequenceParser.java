@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.petitparser.Combinators;
+import org.petitparser.Parsable;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 
@@ -14,7 +16,7 @@ import org.petitparser.context.Result;
  */
 public class SequenceParser extends ListParser {
 
-  public SequenceParser(Parser... parsers) {
+  public SequenceParser(Parsable... parsers) {
     super(parsers);
   }
 
@@ -22,7 +24,7 @@ public class SequenceParser extends ListParser {
   public Result parse(Context context) {
     Context current = context;
     List<Object> elements = new ArrayList<Object>(parsers.length);
-    for (Parser parser : parsers) {
+    for (Parsable parser : parsers) {
       Result result = parser.parse(current);
       if (result.isFailure()) {
         return result;
@@ -34,10 +36,10 @@ public class SequenceParser extends ListParser {
   }
 
   @Override
-  public Parser seq(Parser... more) {
-    Parser[] array = Arrays.copyOf(parsers, parsers.length + more.length);
+  public SequenceParser seq(Parsable... more) {
+    Parsable[] array = Arrays.copyOf(parsers, parsers.length + more.length);
     System.arraycopy(more, 0, array, parsers.length, more.length);
-    return new SequenceParser(array);
+    return Combinators.seq(array);
   }
 
 }
