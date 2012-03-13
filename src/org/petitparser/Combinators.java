@@ -1,6 +1,7 @@
 package org.petitparser;
 
 import org.petitparser.parser.ChoiceParser;
+import org.petitparser.parser.Parser;
 import org.petitparser.parser.SequenceParser;
 
 /**
@@ -11,16 +12,16 @@ import org.petitparser.parser.SequenceParser;
 public class Combinators {
 
   /**
-   * Returns an ordered-choice of the {@code parsers}.
+   * Returns an ordered-choice of the provided {@code parsers}.
    */
-  public static ChoiceParser or(Parsable... parsers) {
-    return new ChoiceParser(parsers);
+  public static Parser or(Parser... parsers) {
+    return parsers.length == 1 ? parsers[0] : new ChoiceParser(parsers);
   }
 
   /**
-   * Returns a sequence of the {@code parsers}.
+   * Returns an ordered-sequence of the provided {@code parsers}.
    */
-  public static SequenceParser seq(Parsable... parsers) {
+  public static Parser seq(Parser... parsers) {
     return new SequenceParser(parsers);
   }
 

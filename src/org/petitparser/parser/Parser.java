@@ -1,8 +1,9 @@
 package org.petitparser.parser;
 
-import org.petitparser.Combinators;
-import org.petitparser.Parsable;
 import org.petitparser.Chars;
+import org.petitparser.Combinators;
+import org.petitparser.context.Context;
+import org.petitparser.context.Result;
 import org.petitparser.utils.Function;
 import org.petitparser.utils.Functions;
 
@@ -11,7 +12,12 @@ import org.petitparser.utils.Functions;
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public abstract class Parser implements Parsable {
+public abstract class Parser {
+
+  /**
+   * Apply the parser on the given {@code context}.
+   */
+  public abstract Result parse(Context context);
 
   /**
    * Returns a new parser that is simply wrapped.
@@ -107,8 +113,8 @@ public abstract class Parser implements Parsable {
    * Returns a new parser that parses the receiver, if that fails try with the
    * following parsers.
    */
-  public ChoiceParser or(Parsable... parsers) {
-    Parsable[] array = new Parsable[1 + parsers.length];
+  public Parser or(Parser... parsers) {
+    Parser[] array = new Parser[1 + parsers.length];
     array[0] = this;
     System.arraycopy(parsers, 0, array, 1, parsers.length);
     return Combinators.or(array);
@@ -117,8 +123,8 @@ public abstract class Parser implements Parsable {
   /**
    * Returns a new parser that first parses the receiver and then the argument.
    */
-  public SequenceParser seq(Parsable... parsers) {
-    Parsable[] array = new Parsable[1 + parsers.length];
+  public Parser seq(Parser... parsers) {
+    Parser[] array = new Parser[1 + parsers.length];
     array[0] = this;
     System.arraycopy(parsers, 0, array, 1, parsers.length);
     return Combinators.seq(array);

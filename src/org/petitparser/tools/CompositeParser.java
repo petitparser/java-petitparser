@@ -19,7 +19,10 @@ public abstract class CompositeParser extends DelegateParser {
   public CompositeParser() {
     super(null);
     initializeFields(getFieldsAndInitializers());
+    initializeStart();
   }
+
+  public abstract Parser start();
 
   private Map<Field, Method> getFieldsAndInitializers() {
     Class<?> current = getClass();
@@ -76,6 +79,22 @@ public abstract class CompositeParser extends DelegateParser {
       } catch (InvocationTargetException exception) {
         exception.printStackTrace();
       }
+    }
+  }
+
+  private void initializeStart() {
+    try {
+      Field field = DelegateParser.class.getDeclaredField("delegate");
+      field.setAccessible(true);
+      field.set(this, start());
+    } catch (SecurityException exception) {
+      exception.printStackTrace();
+    } catch (NoSuchFieldException exception) {
+      exception.printStackTrace();
+    } catch (IllegalArgumentException exception) {
+      exception.printStackTrace();
+    } catch (IllegalAccessException exception) {
+      exception.printStackTrace();
     }
   }
 

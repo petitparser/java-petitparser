@@ -1,7 +1,5 @@
 package org.petitparser.parser;
 
-import org.petitparser.Parsable;
-
 /**
  * Abstract parser that parses a list of things in some way (to be specified by
  * the subclasses).
@@ -10,9 +8,9 @@ import org.petitparser.Parsable;
  */
 public abstract class ListParser extends Parser {
 
-  protected final Parsable[] parsers;
+  protected final Parser[] parsers;
 
-  public ListParser(Parsable... parsers) {
+  public ListParser(Parser... parsers) {
     this.parsers = parsers;
   }
 

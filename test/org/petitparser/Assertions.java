@@ -9,14 +9,15 @@ import static org.junit.Assert.fail;
 import org.petitparser.context.Context;
 import org.petitparser.context.ParseError;
 import org.petitparser.context.Result;
+import org.petitparser.parser.Parser;
 
 public class Assertions {
 
-  public static <T> void assertSuccess(Parsable parser, String input, T result) {
+  public static <T> void assertSuccess(Parser parser, String input, T result) {
     assertSuccess(parser, input, result, input.length());
   }
 
-  public static <T> void assertSuccess(Parsable parser, String input,
+  public static <T> void assertSuccess(Parser parser, String input,
       T expected, int position) {
     Context context = new Context(input);
     Result result = parser.parse(context);
@@ -27,21 +28,21 @@ public class Assertions {
     assertNull("No message expected", result.getMessage());
   }
 
-  public static <T> void assertFailure(Parsable parser, String input) {
+  public static <T> void assertFailure(Parser parser, String input) {
     assertFailure(parser, input, 0);
   }
 
-  public static <T> void assertFailure(Parsable parser, String input,
+  public static <T> void assertFailure(Parser parser, String input,
       int position) {
     assertFailure(parser, input, position, null);
   }
 
-  public static <T> void assertFailure(Parsable parser, String input,
+  public static <T> void assertFailure(Parser parser, String input,
       String message) {
     assertFailure(parser, input, 0, message);
   }
 
-  public static <T> void assertFailure(Parsable parser, String input,
+  public static <T> void assertFailure(Parser parser, String input,
       int position, String message) {
     Context context = new Context(input);
     Result result = parser.parse(context);
