@@ -207,7 +207,6 @@ public class ParserTest {
     assertSuccess(parser, "a", 'a');
     assertFailure(parser, "b", "a expected");
     assertFailure(parser, "");
-
   }
 
 }
