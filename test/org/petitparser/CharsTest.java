@@ -67,11 +67,29 @@ public class CharsTest {
   }
 
   @Test
-  public void testPattern() {
-    Parser parser = pattern("a-ce");
+  public void testPattern1() {
+    Parser parser = pattern("abc");
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, "b", 'b');
     assertSuccess(parser, "c", 'c');
+    assertFailure(parser, "d");
+  }
+
+  @Test
+  public void testPattern2() {
+    Parser parser = pattern("a-c");
+    assertSuccess(parser, "a", 'a');
+    assertSuccess(parser, "b", 'b');
+    assertSuccess(parser, "c", 'c');
+    assertFailure(parser, "d");
+  }
+
+  @Test
+  public void testPattern3() {
+    Parser parser = pattern("^a-cd");
+    assertFailure(parser, "a");
+    assertFailure(parser, "b");
+    assertFailure(parser, "c");
     assertFailure(parser, "d");
     assertSuccess(parser, "e", 'e');
   }

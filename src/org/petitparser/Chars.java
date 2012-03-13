@@ -125,6 +125,10 @@ public class Chars {
 
   /**
    * Returns a parser that parses a specific character pattern.
+   *
+   * Characters match themselves. A dash @code{-} between two
+   * characters matches the range of those characters. A caret
+   * @code{^} at the beginning negates the pattern.
    */
   public static Parser pattern(String pattern) {
     return pattern(pattern, pattern + " expected");
@@ -139,17 +143,21 @@ public class Chars {
   }
 
   private static CharPredicate orPredicate(final CharPredicate... predicates) {
-    return new CharPredicate() {
-      @Override
-      public boolean apply(char input) {
-        for (CharPredicate predicate : predicates) {
-          if (predicate.apply(input)) {
-            return true;
+    if (predicates.length == 1) {
+      return predicates[0];
+    } else {
+      return new CharPredicate() {
+        @Override
+        public boolean apply(char input) {
+          for (CharPredicate predicate : predicates) {
+            if (predicate.apply(input)) {
+              return true;
+            }
           }
+          return false;
         }
-        return false;
-      }
-    };
+      };
+    }
   }
 
   private static CharPredicate notPredicate(final CharPredicate predicate) {
@@ -189,7 +197,7 @@ public class Chars {
       .map(new Function<List<CharPredicate>, CharPredicate>() {
         @Override
         public CharPredicate apply(final List<CharPredicate> predicates) {
-          return predicates.get(0) == null ? predicates.get(0) : notPredicate(predicates.get(1));
+          return predicates.get(0) == null ? predicates.get(1) : notPredicate(predicates.get(1));
         }
       }).end();
 
