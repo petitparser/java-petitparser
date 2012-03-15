@@ -6,7 +6,8 @@ import org.petitparser.context.Context;
 import org.petitparser.parser.CharParser;
 import org.petitparser.parser.CharParser.CharPredicate;
 import org.petitparser.parser.Parser;
-import org.petitparser.utils.Function;
+
+import com.google.common.base.Function;
 
 /**
  * Factory for character parsers.

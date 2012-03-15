@@ -16,6 +16,7 @@
   <!-- output directories -->
   <property name="build" location="build" />
   <property name="build.bin" location="${build}/bin" />
+  <property name="build.lib" location="${build}/lib" />
   <property name="build.doc" location="${build}/doc" />
   <property name="build.test" location="${build}/test" />
   <property name="build.checkstyle" location="${build}/checkstyle" />
@@ -24,18 +25,45 @@
   <path id="classpath">
     <pathelement location="${build.bin}" />
     <pathelement location="${build.test}" />
+    <fileset dir="${build.bin}">
+      <include name="*.jar" />
+    </fileset>
     <fileset dir="${lib}">
       <include name="*.jar" />
     </fileset>
   </path>
-
+  
+  <!-- donwload from maven -->
+  <macrodef name="maven">
+    <attribute name="group-id" />
+    <attribute name="artifact-id" />
+    <attribute name="version" />
+    <attribute name="dest" default="${build.lib}" />
+    <sequential>
+      <get 
+        src="http://search.maven.org/remotecontent?filepath=@{group-id}/@{artifact-id}/@{version}/@{artifact-id}-@{version}.jar" 
+        dest="@{dest}@{artifact-id}-@{version}.jar" skipexisting="true" />
+      <get 
+        src="http://search.maven.org/remotecontent?filepath=@{group-id}/@{artifact-id}/@{version}/@{artifact-id}-@{version}-javadoc.jar" 
+        dest="@{dest}@{artifact-id}-@{version}-javadoc.jar" skipexisting="true" />
+      <get 
+        src="http://search.maven.org/remotecontent?filepath=@{group-id}/@{artifact-id}/@{version}/@{artifact-id}-@{version}-sources.jar" 
+        dest="@{dest}@{artifact-id}-@{version}-sources.jar" skipexisting="true" />
+    </sequential>
+  </macrodef>
+  
   <target name="all" description="Create all build artifacts." depends="compile, test, checkstyle, javadoc, dist" />
 
   <target name="clean" description="Delete all build artifacts.">
     <delete dir="${build}" />
   </target>
+    
+  <target name="libs" description="Downloads missing libraries.">
+    <maven group-id="junit" artifact-id="junit" version="4.10" />
+    <maven group-id="com/google/guava" artifact-id="guava" version="11.0.2" />
+  </target>
 
-  <target name="compile" description="Compile source files.">
+  <target name="compile" description="Compile source files." depends="libs">
     <mkdir dir="${build.bin}" />
     <javac srcdir="${src}" destdir="${build.bin}" includeantruntime="false" classpathref="classpath" />
   </target>
@@ -65,7 +93,7 @@
     </java>
   </target>
 
-  <target name="javadoc" description="Generate the JavaDoc files.">
+  <target name="javadoc" description="Generate the JavaDoc files." depends="libs">
     <mkdir dir="${build.doc}" />
     <javadoc sourcepath="${src}" destdir="${build.doc}">
       <link href="http://java.sun.com/javase/6/docs/api/" />

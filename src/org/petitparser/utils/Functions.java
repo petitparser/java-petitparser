@@ -3,6 +3,8 @@ package org.petitparser.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.base.Function;
+
 /**
  * Constructor and utility methods for functions.
  *

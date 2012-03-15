@@ -6,8 +6,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.petitparser.context.Context;
-import org.petitparser.context.Result;
 import org.petitparser.parser.DelegateParser;
 import org.petitparser.parser.Parser;
 
@@ -19,7 +17,7 @@ public abstract class CompositeParser extends DelegateParser {
   public CompositeParser() {
     super(null);
     initializeFields(getFieldsAndInitializers());
-    initializeStart();
+    replace(getDelegate(), start());
   }
 
   public abstract Parser start();
@@ -28,7 +26,7 @@ public abstract class CompositeParser extends DelegateParser {
     Class<?> current = getClass();
     Map<Field, Method> fields = new HashMap<Field, Method>();
     while (!current.equals(CompositeParser.class)) {
-      for (Field field : getClass().getDeclaredFields()) {
+      for (Field field : current.getDeclaredFields()) {
         Production annotation = field.getAnnotation(Production.class);
         if (annotation != null) {
           String name = annotation.value().isEmpty() ? field.getName()
@@ -70,7 +68,7 @@ public abstract class CompositeParser extends DelegateParser {
       try {
         entry.getValue().setAccessible(true);
         Parser parser = (Parser) entry.getValue().invoke(this);
-        parsers.get(entry.getKey()).delegate = parser;
+        parsers.get(entry.getKey()).setDelegate(parser);
         entry.getKey().set(this, parser);
       } catch (IllegalArgumentException exception) {
         exception.printStackTrace();
@@ -81,30 +79,5 @@ public abstract class CompositeParser extends DelegateParser {
       }
     }
   }
-
-  private void initializeStart() {
-    try {
-      Field field = DelegateParser.class.getDeclaredField("delegate");
-      field.setAccessible(true);
-      field.set(this, start());
-    } catch (SecurityException exception) {
-      exception.printStackTrace();
-    } catch (NoSuchFieldException exception) {
-      exception.printStackTrace();
-    } catch (IllegalArgumentException exception) {
-      exception.printStackTrace();
-    } catch (IllegalAccessException exception) {
-      exception.printStackTrace();
-    }
-  }
-
-  private static class DelegateParser extends Parser {
-    private Parser delegate;
-
-    @Override
-    public Result parse(Context context) {
-      return delegate.parse(context);
-    }
-  };
 
 }

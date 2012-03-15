@@ -4,8 +4,9 @@ import org.petitparser.Chars;
 import org.petitparser.Combinators;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
-import org.petitparser.utils.Function;
 import org.petitparser.utils.Functions;
+
+import com.google.common.base.Function;
 
 /**
  * An abstract parser that forms the root of all parsers in this package.
@@ -151,6 +152,21 @@ public abstract class Parser {
    */
   public Parser end(String message) {
     return new EndOfInputParser(this, message);
+  }
+
+  /**
+   * Replaces the referring parser {@code source} with {@code target}. Does
+   * nothing if the parser does not exist.
+   */
+  public void replace(Parser source, Parser target) {
+    // no referring parsers
+  }
+
+  /**
+   * Returns an of directly referring parsers.
+   */
+  public Parser[] children() {
+    return new Parser[0];
   }
 
 }

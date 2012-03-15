@@ -2,7 +2,8 @@ package org.petitparser.parser;
 
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
-import org.petitparser.utils.Function;
+
+import com.google.common.base.Function;
 
 /**
  * A parser that performs a transformation with a given function on the

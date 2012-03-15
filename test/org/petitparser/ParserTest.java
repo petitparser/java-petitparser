@@ -10,7 +10,8 @@ import java.util.Arrays;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
-import org.petitparser.utils.Function;
+
+import com.google.common.base.Function;
 
 /**
  * Tests {@link Parsers} factory.

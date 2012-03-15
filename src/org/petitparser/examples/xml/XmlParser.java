@@ -1,157 +1,112 @@
 package org.petitparser.examples.xml;
 
-import static org.petitparser.Chars.character;
-import static org.petitparser.Chars.pattern;
-import static org.petitparser.Parsers.string;
+import java.util.Collection;
+import java.util.List;
 
-import org.petitparser.Chars;
+import org.petitparser.examples.xml.ast.XmlAttribute;
+import org.petitparser.examples.xml.ast.XmlComment;
+import org.petitparser.examples.xml.ast.XmlDoctype;
+import org.petitparser.examples.xml.ast.XmlDocument;
+import org.petitparser.examples.xml.ast.XmlElement;
+import org.petitparser.examples.xml.ast.XmlName;
+import org.petitparser.examples.xml.ast.XmlNode;
+import org.petitparser.examples.xml.ast.XmlProcessing;
+import org.petitparser.examples.xml.ast.XmlText;
 import org.petitparser.parser.Parser;
-import org.petitparser.tools.CompositeParser;
-import org.petitparser.tools.Production;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
 
 /**
- * Basic XML grammar definition.
+ * XML parser definition.
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class XmlParser extends CompositeParser {
+public class XmlParser extends XmlGrammar {
 
   @Override
-  public Parser start() {
-    return document.end();
-  }
-
-  @Production Parser attribute;
-  @Production Parser attributeValue;
-  @Production Parser attributes;
-  @Production Parser comment;
-  @Production Parser content;
-  @Production Parser doctype;
-  @Production Parser document;
-  @Production Parser element;
-  @Production Parser processing;
-  @Production Parser qualified;
-
   Parser attribute() {
-    return qualified
-        .seq(whitespace.optional())
-        .seq(character('='))
-        .seq(whitespace.optional())
-        .seq(attributeValue);
+    return super.attribute().map(new Function<List<?>, XmlAttribute>() {
+      @Override
+      public XmlAttribute apply(List<?> argument) {
+        return new XmlAttribute((XmlName) argument.get(0),
+            (String) argument.get(1));
+      }
+    });
   }
 
-  Parser attributeValue() {
-    return or(
-        character('"').seq(character('"').negate().star().flatten()).seq(character('"')),
-        character('\'').seq(character('\'').negate().star().flatten()).seq(character('\'')));
-  }
-
-  Parser attributes() {
-    return whitespace.seq(attribute).star();
-  }
-
+  @Override
   Parser comment() {
-    return string("<!--")
-        .seq(string("-->").negate().star().flatten())
-        .seq(string("-->"));
+    return super.comment().map(new Function<String, XmlComment>() {
+      @Override
+      public XmlComment apply(String string) {
+        return new XmlComment(string);
+      }
+    });
   }
 
-  Parser content() {
-    return characterData.optional()
-        .seq(element.or(processing).or(comment))
-        .seq(characterData.optional())
-        .star();
-  }
-
+  @Override
   Parser doctype() {
-    return string("<!DOCTYPE")
-        .seq(whitespace.optional())
-        .seq(character('[').negate().star()
-            .seq(character('['))
-            .seq(character(']').negate().star())
-            .seq(character(']'))
-            .flatten())
-        .seq(whitespace.optional())
-        .seq(character('>'));
+    return super.doctype().map(new Function<String, XmlDoctype>() {
+      @Override
+      public XmlDoctype apply(String string) {
+        return new XmlDoctype(string);
+      }
+    });
   }
 
+  @Override
   Parser document() {
-    return processing.optional()
-        .seq(misc)
-        .seq(doctype.optional())
-        .seq(misc)
-        .seq(element)
-        .seq(misc);
+    return super.document().map(new Function<List<XmlNode>, XmlDocument>() {
+      @Override
+      public XmlDocument apply(List<XmlNode> nodes) {
+        return new XmlDocument(Collections2.filter(nodes, Predicates.notNull()));
+      }
+    });
   }
 
+  @Override
   Parser element() {
-    return character('<')
-        .seq(qualified)
-        .seq(attributes)
-        .seq(whitespace.optional())
-        .seq(string("/>")
-            .or(character('>')
-                .seq(content)
-                .seq(string("</"))
-                .seq(qualified)
-                .seq(whitespace.optional())
-                .seq(character('>'))));
+    return super.element().map(new Function<List<?>, XmlElement>() {
+      @Override
+      @SuppressWarnings("unchecked")
+      public XmlElement apply(List<?> list) {
+        return new XmlElement((XmlName) list.get(0),
+            (Collection<XmlAttribute>) list.get(1),
+            (Collection<XmlNode>) list.get(2));
+      }
+    });
   }
 
+  @Override
   Parser processing() {
-    return string("<?")
-        .seq(nameToken)
-        .seq(whitespace
-            .seq(string("?>").negate().star())
-            .optional()
-            .flatten())
-        .seq(string("?>"));
+    return super.processing().map(new Function<List<String>, XmlProcessing>() {
+      @Override
+      public XmlProcessing apply(List<String> list) {
+        return new XmlProcessing(list.get(1), list.get(2));
+      }
+    });
   }
 
+  @Override
   Parser qualified() {
-    return nameToken;
+    return super.qualified().map(new Function<String, XmlName>() {
+      @Override
+      public XmlName apply(String name) {
+        return new XmlName(name);
+      }
+    });
   }
 
-  @Production Parser characterData;
-  @Production Parser misc;
-  @Production Parser whitespace;
-
+  @Override
   Parser characterData() {
-    return character('<').negate().plus().flatten();
-  }
-
-  Parser misc() {
-    return whitespace.or(comment).or(processing).star();
-  }
-
-  Parser whitespace() {
-    return Chars.whitespace().plus();
-  }
-
-  private static final String NAME_START_CHARS = ":A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF"
-      + "\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001\uD7FF\uF900-\uFDCF"
-      + "\uFDF0-\uFFFD";
-  private static final String NAME_CHARS = "-.0-9\u00B7\u0300-\u036F\u203F-\u2040"
-      + NAME_START_CHARS;
-
-  @Production Parser nameToken;
-  @Production Parser nameStartChar;
-  @Production Parser nameChar;
-
-  Parser nameToken() {
-    return nameStartChar.seq(nameChar.star()).flatten();
-  }
-
-  Parser nameStartChar() {
-    return pattern(NAME_START_CHARS);
-  }
-
-  Parser nameChar() {
-    return pattern(NAME_CHARS);
-  }
-
-  public static void main(String[] args) {
-    new XmlParser();
+    return super.characterData().map(new Function<String, XmlText>() {
+      @Override
+      public XmlText apply(String data) {
+        return new XmlText(data);
+      }
+    });
   }
 
 }
