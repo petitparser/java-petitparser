@@ -77,7 +77,14 @@
 
   <target name="checkstyle" description="Generate a Checkstyle report.">
     <mkdir dir="${build.checkstyle}" />
-    <maven group-id="com/puppycrawl/tools" artifact-id="checkstyle" version="5.5" />
+    <get src="http://downloads.sourceforge.net/project/checkstyle/checkstyle/5.5/checkstyle-5.5-bin.zip"
+      dest="${build.lib}" skipexisting="true" verbose="off" />
+    <unzip src="${build.lib}/checkstyle-5.5-bin.zip" dest="${build.lib}" overwrite="no">
+      <patternset>
+        <include name="**/*-all.jar" />
+      </patternset>
+      <mapper type="flatten" />
+    </unzip>
     <java classname="com.puppycrawl.tools.checkstyle.Main" output="${build.checkstyle}/checkstyle.xml">
       <classpath refid="classpath" />
       <arg value="-f" /><arg value="xml" />
@@ -89,6 +96,7 @@
   <target name="javadoc" description="Generate the JavaDoc files.">
     <mkdir dir="${build.doc}" />
     <javadoc sourcepath="${src}" destdir="${build.doc}">
+      <classpath refid="classpath" />
       <link href="http://java.sun.com/javase/6/docs/api/" />
       <header><![CDATA[<b>${app.name} ${app.version}</b>]]></header>
       <doctitle><![CDATA[<h1>${app.name} ${app.version}</h1>]]></doctitle>

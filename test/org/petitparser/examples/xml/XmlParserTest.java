@@ -79,7 +79,6 @@ public class XmlParserTest {
     Result result = parser.parse(new Context(xml));
     assertTrue(result.isSuccess());
     XmlNode node = result.get();
-    System.out.println(node);
   }
 
 }
