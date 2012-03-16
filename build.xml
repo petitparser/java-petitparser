@@ -25,10 +25,7 @@
   <path id="classpath">
     <pathelement location="${build.bin}" />
     <pathelement location="${build.test}" />
-    <fileset dir="${build.bin}">
-      <include name="*.jar" />
-    </fileset>
-    <fileset dir="${lib}">
+    <fileset dir="${build.lib}">
       <include name="*.jar" />
     </fileset>
   </path>
@@ -40,15 +37,13 @@
     <attribute name="version" />
     <attribute name="dest" default="${build.lib}" />
     <sequential>
-      <get 
-        src="http://search.maven.org/remotecontent?filepath=@{group-id}/@{artifact-id}/@{version}/@{artifact-id}-@{version}.jar" 
-        dest="@{dest}@{artifact-id}-@{version}.jar" skipexisting="true" />
-      <get 
-        src="http://search.maven.org/remotecontent?filepath=@{group-id}/@{artifact-id}/@{version}/@{artifact-id}-@{version}-javadoc.jar" 
-        dest="@{dest}@{artifact-id}-@{version}-javadoc.jar" skipexisting="true" />
-      <get 
-        src="http://search.maven.org/remotecontent?filepath=@{group-id}/@{artifact-id}/@{version}/@{artifact-id}-@{version}-sources.jar" 
-        dest="@{dest}@{artifact-id}-@{version}-sources.jar" skipexisting="true" />
+      <mkdir dir="@{dest}" />
+      <get src="http://search.maven.org/remotecontent?filepath=@{group-id}/@{artifact-id}/@{version}/@{artifact-id}-@{version}.jar" 
+        dest="@{dest}/@{artifact-id}-@{version}.jar" skipexisting="true" verbose="off" />
+      <get src="http://search.maven.org/remotecontent?filepath=@{group-id}/@{artifact-id}/@{version}/@{artifact-id}-@{version}-javadoc.jar" 
+        dest="@{dest}/@{artifact-id}-@{version}-javadoc.jar" skipexisting="true" verbose="off" />
+      <get src="http://search.maven.org/remotecontent?filepath=@{group-id}/@{artifact-id}/@{version}/@{artifact-id}-@{version}-sources.jar" 
+        dest="@{dest}/@{artifact-id}-@{version}-sources.jar" skipexisting="true" verbose="off" />
     </sequential>
   </macrodef>
   
@@ -57,19 +52,16 @@
   <target name="clean" description="Delete all build artifacts.">
     <delete dir="${build}" />
   </target>
-    
-  <target name="libs" description="Downloads missing libraries.">
-    <maven group-id="junit" artifact-id="junit" version="4.10" />
-    <maven group-id="com/google/guava" artifact-id="guava" version="11.0.2" />
-  </target>
 
-  <target name="compile" description="Compile source files." depends="libs">
+  <target name="compile" description="Compile source files.">
     <mkdir dir="${build.bin}" />
+    <maven group-id="com/google/guava" artifact-id="guava" version="11.0.2" />
     <javac srcdir="${src}" destdir="${build.bin}" includeantruntime="false" classpathref="classpath" />
   </target>
 
   <target name="test" description="Run all JUnit tests." depends="compile">
     <mkdir dir="${build.test}" />
+    <maven group-id="junit" artifact-id="junit" version="4.10" />
     <javac srcdir="${test}" destdir="${build.test}" includeantruntime="false" classpathref="classpath" />
     <junit haltonerror="no" haltonfailure="no">
       <classpath refid="classpath" />
@@ -85,6 +77,7 @@
 
   <target name="checkstyle" description="Generate a Checkstyle report.">
     <mkdir dir="${build.checkstyle}" />
+    <maven group-id="com/puppycrawl/tools" artifact-id="checkstyle" version="5.5" />
     <java classname="com.puppycrawl.tools.checkstyle.Main" output="${build.checkstyle}/checkstyle.xml">
       <classpath refid="classpath" />
       <arg value="-f" /><arg value="xml" />
@@ -93,7 +86,7 @@
     </java>
   </target>
 
-  <target name="javadoc" description="Generate the JavaDoc files." depends="libs">
+  <target name="javadoc" description="Generate the JavaDoc files.">
     <mkdir dir="${build.doc}" />
     <javadoc sourcepath="${src}" destdir="${build.doc}">
       <link href="http://java.sun.com/javase/6/docs/api/" />
