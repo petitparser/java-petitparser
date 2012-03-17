@@ -4,6 +4,8 @@ import org.petitparser.buffer.Buffer;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 
+import com.google.common.base.CharMatcher;
+
 /**
  * Parses a single character satisfying a predicate.
  *
@@ -11,15 +13,11 @@ import org.petitparser.context.Result;
  */
 public class CharParser extends Parser {
 
-  public interface CharPredicate {
-    boolean apply(char argument);
-  }
-
-  private final CharPredicate predicate;
+  private final CharMatcher matcher;
   private final String message;
 
-  public CharParser(CharPredicate predicate, String message) {
-    this.predicate = predicate;
+  public CharParser(CharMatcher matcher, String message) {
+    this.matcher = matcher;
     this.message = message;
   }
 
@@ -28,7 +26,7 @@ public class CharParser extends Parser {
     Buffer buffer = context.getBuffer();
     if (context.getPosition() < buffer.size()) {
       char result = buffer.charAt(context.getPosition());
-      if (predicate.apply(result)) {
+      if (matcher.apply(result)) {
         return context.success(result, context.getPosition() + 1);
       }
     }
@@ -37,12 +35,7 @@ public class CharParser extends Parser {
 
   @Override
   public Parser negate(String message) {
-    return new CharParser(new CharPredicate() {
-      @Override
-      public boolean apply(char argument) {
-        return !predicate.apply(argument);
-      }
-    }, message);
+    return new CharParser(matcher.negate(), message);
   }
 
 }
