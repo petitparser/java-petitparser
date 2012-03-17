@@ -1,6 +1,8 @@
 package org.petitparser.examples.xml;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -12,6 +14,7 @@ import org.petitparser.context.Context;
 import org.petitparser.examples.xml.ast.XmlAttribute;
 import org.petitparser.examples.xml.ast.XmlDocument;
 import org.petitparser.examples.xml.ast.XmlElement;
+import org.petitparser.examples.xml.ast.XmlName;
 import org.petitparser.examples.xml.ast.XmlNode;
 import org.petitparser.parser.Parser;
 
@@ -177,6 +180,7 @@ public class XmlParserTest {
     assertParentInvariant(anXmlNode);
     assertForwardInvariant(anXmlNode);
     assertBackwardInvariant(anXmlNode);
+    assertNameInvariant(anXmlNode);
     assertAttributeInvariant(anXmlNode);
   }
 
@@ -184,18 +188,25 @@ public class XmlParserTest {
     for (XmlNode node : anXmlNode) {
       assertEquals(node, node);
       assertEquals(node.hashCode(), node.hashCode());
+      assertFalse(node.equals(null));
+      assertFalse(node.equals(node.getParent()));
+      for (XmlNode child : node.getChildren()) {
+        assertFalse(node.equals(child));
+      }
+      for (XmlNode child : node.getAttributes()) {
+        assertFalse(node.equals(child));
+      }
     }
   }
 
   private void assertDocumentInvariant(XmlNode anXmlNode) {
-    if (anXmlNode instanceof XmlDocument) {
-      XmlDocument document = (XmlDocument) anXmlNode;
-      assertTrue(document.getChildren().contains(document.getRootElement()));
-      for (XmlNode child : document) {
-        assertSame(child.getRoot(), document);
-        assertSame(child.getDocument(), document);
-      }
+    XmlNode root = anXmlNode.getRoot();
+    for (XmlNode child : anXmlNode) {
+      assertSame(child.getRoot(), root);
+      assertSame(child.getDocument(), root);
     }
+    XmlDocument document = (XmlDocument) anXmlNode;
+    assertTrue(document.getChildren().contains(document.getRootElement()));
   }
 
   private void assertParentInvariant(XmlNode anXmlNode) {
@@ -236,12 +247,37 @@ public class XmlParserTest {
     }
   }
 
+  private void assertNameInvariant(XmlNode anXmlNode) {
+    for (XmlNode node : anXmlNode) {
+      if (node instanceof XmlElement) {
+        XmlElement element = (XmlElement) node;
+        assertNameInvariant(element.getName());
+      }
+      if (node instanceof XmlAttribute) {
+        XmlAttribute attribute = (XmlAttribute) node;
+        assertNameInvariant(attribute.getName());
+      }
+    }
+  }
+
+  private void assertNameInvariant(XmlName anXmlName) {
+    assertFalse(anXmlName.getLocal().isEmpty());
+    assertTrue(anXmlName.getQualified().endsWith(anXmlName.getLocal()));
+    if (anXmlName.getPrefix() != null) {
+      assertFalse(anXmlName.getPrefix().isEmpty());
+      assertTrue(anXmlName.getQualified().startsWith(anXmlName.getPrefix()));
+      assertEquals(anXmlName.getPrefix().length(), anXmlName.getQualified().indexOf(':'));
+    }
+    assertEquals(anXmlName.getQualified(), anXmlName.toXmlString());
+    assertNotNull(anXmlName.toString());
+  }
+
   private void assertAttributeInvariant(XmlNode anXmlNode) {
     for (XmlNode node : anXmlNode) {
       if (node instanceof XmlElement) {
         XmlElement element = (XmlElement) node;
         for (XmlAttribute attribute : element.getAttributes()) {
-          assertSame(element.getAttribute(attribute.getName().getLocal()), attribute.getValue());
+          assertEquals(element.getAttribute(attribute.getName().getLocal()), attribute.getValue());
           assertSame(element.getAttributeNode(attribute.getName().getLocal()), attribute);
         }
         if (element.getAttributes().isEmpty()) {

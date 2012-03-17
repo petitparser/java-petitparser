@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Set;
 
 import org.petitparser.parser.DelegateParser;
 import org.petitparser.parser.Parser;
@@ -79,6 +80,16 @@ public abstract class CompositeParser extends DelegateParser {
         exception.printStackTrace();
       }
     }
+  }
+
+  @Override
+  public void replace(Parser source, Parser target) {
+    throw new IllegalStateException();
+  }
+
+  @Override
+  public Set<Parser> children() {
+    throw new IllegalStateException();
   }
 
 }

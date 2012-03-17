@@ -1,5 +1,7 @@
 package org.petitparser.parser;
 
+import java.util.Set;
+
 import org.petitparser.Chars;
 import org.petitparser.Combinators;
 import org.petitparser.context.Context;
@@ -7,6 +9,7 @@ import org.petitparser.context.Result;
 import org.petitparser.utils.Functions;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Sets;
 
 /**
  * An abstract parser that forms the root of all parsers in this package.
@@ -163,10 +166,10 @@ public abstract class Parser {
   }
 
   /**
-   * Returns an of directly referring parsers.
+   * Returns a list of directly referring parsers.
    */
-  public Parser[] children() {
-    return new Parser[0];
+  public Set<Parser> children() {
+    return Sets.newHashSet();
   }
 
 }

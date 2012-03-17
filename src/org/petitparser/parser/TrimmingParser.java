@@ -1,5 +1,7 @@
 package org.petitparser.parser;
 
+import java.util.Set;
+
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 
@@ -10,7 +12,7 @@ import org.petitparser.context.Result;
  */
 public class TrimmingParser extends DelegateParser {
 
-  private final Parser trimmer;
+  private Parser trimmer;
 
   public TrimmingParser(Parser delegate, Parser trimmer) {
     super(delegate);
@@ -32,6 +34,21 @@ public class TrimmingParser extends DelegateParser {
       current = trimmer.parse(current);
     } while (current.isSuccess());
     return current.success(result.get());
+  }
+
+  @Override
+  public void replace(Parser source, Parser target) {
+    super.replace(source, target);
+    if (trimmer == source) {
+      trimmer = target;
+    }
+  }
+
+  @Override
+  public Set<Parser> children() {
+    Set<Parser> children = super.children();
+    children.add(trimmer);
+    return children;
   }
 
 }

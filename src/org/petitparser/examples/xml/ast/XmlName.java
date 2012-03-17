@@ -11,13 +11,8 @@ public class XmlName implements Cloneable {
 
   private final String prefix;
   private final String local;
-  private final String uri;
 
   public XmlName(String name) {
-    this(name, null);
-  }
-
-  public XmlName(String name, String url) {
     int index = name.indexOf(':');
     if (index < 0) {
       this.prefix = null;
@@ -26,7 +21,6 @@ public class XmlName implements Cloneable {
       this.prefix = name.substring(0, index);
       this.local = name.substring(index + 1, name.length());
     }
-    this.uri = url;
   }
 
   public String getLocal() {
@@ -35,10 +29,6 @@ public class XmlName implements Cloneable {
 
   public String getPrefix() {
     return prefix;
-  }
-
-  public String getUri() {
-    return uri;
   }
 
   public String getQualified() {
