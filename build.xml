@@ -26,7 +26,7 @@
     <pathelement location="${build.bin}" />
     <pathelement location="${build.test}" />
     <fileset dir="${build.lib}">
-      <include name="*.jar" />
+      <include name="**/*.jar" />
     </fileset>
   </path>
   
@@ -46,7 +46,7 @@
          dest="@{dest}/@{artifact-id}-@{version}-sources.jar" skipexisting="true" verbose="off" />
     </sequential>
   </macrodef>
-  
+
   <target name="all" description="Create all build artifacts." depends="compile, test, checkstyle, javadoc, dist" />
 
   <target name="clean" description="Delete all build artifacts.">

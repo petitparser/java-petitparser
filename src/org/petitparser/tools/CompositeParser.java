@@ -4,25 +4,57 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.Set;
 
 import org.petitparser.parser.DelegateParser;
+import org.petitparser.parser.FailureParser;
 import org.petitparser.parser.Parser;
 
 import com.google.common.collect.Maps;
 
 /**
+ * Helper to compose complex grammars from various primitive parsers.
+ *
+ * To create a new complex grammar subclass {@link CompositeParser}. For every
+ * production create a method that returns its parser. Additionally every
+ * production requires a field of the same name, same type and an annotation
+ * {@link Production}, otherwise the production is not cached and cannot be
+ * used in recursive grammars. Productions should refer to each other by reading
+ * the respective fields.
+ *
+ * <code>
+ * @Production Parser identifier;
+ *
+ * Parser identifier() {
+ *   return letter().seq(word().star()).flatten();
+ * }
+ * </code>
+ *
+ * The start production is returned from {@link #start()}.
+ *
+ * <code>
+ * @Override
+ * Parser start() {
+ *   return identifier.end();
+ * }
+ * </code>
+ *
  * @author Lukas Renggli (renggli@gmail.com)
  */
 public abstract class CompositeParser extends DelegateParser {
 
+  /**
+   * Default constructor that triggers the magic to resolve recursive grammars.
+   */
   public CompositeParser() {
-    super(null);
+    super(new FailureParser("No parser defined"));
     initializeFields(getFieldsAndInitializers());
     replace(getDelegate(), start());
   }
 
-  public abstract Parser start();
+  /**
+   * Start production of the grammar.
+   */
+  protected abstract Parser start();
 
   private Map<Field, Method> getFieldsAndInitializers() {
     Class<?> current = getClass();
@@ -80,16 +112,6 @@ public abstract class CompositeParser extends DelegateParser {
         exception.printStackTrace();
       }
     }
-  }
-
-  @Override
-  public void replace(Parser source, Parser target) {
-    throw new IllegalStateException();
-  }
-
-  @Override
-  public Set<Parser> children() {
-    throw new IllegalStateException();
   }
 
 }
