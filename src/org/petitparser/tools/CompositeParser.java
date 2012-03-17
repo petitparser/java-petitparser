@@ -3,11 +3,12 @@ package org.petitparser.tools;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.petitparser.parser.DelegateParser;
 import org.petitparser.parser.Parser;
+
+import com.google.common.collect.Maps;
 
 /**
  * @author Lukas Renggli (renggli@gmail.com)
@@ -24,7 +25,7 @@ public abstract class CompositeParser extends DelegateParser {
 
   private Map<Field, Method> getFieldsAndInitializers() {
     Class<?> current = getClass();
-    Map<Field, Method> fields = new HashMap<Field, Method>();
+    Map<Field, Method> fields = Maps.newHashMap();
     while (!current.equals(CompositeParser.class)) {
       for (Field field : current.getDeclaredFields()) {
         Production annotation = field.getAnnotation(Production.class);
@@ -51,7 +52,7 @@ public abstract class CompositeParser extends DelegateParser {
   }
 
   private void initializeFields(Map<Field, Method> fields) {
-    Map<Field, DelegateParser> parsers = new HashMap<Field, DelegateParser>();
+    Map<Field, DelegateParser> parsers = Maps.newHashMap();
     for (Field field : fields.keySet()) {
       try {
         DelegateParser parser = new DelegateParser();

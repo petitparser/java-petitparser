@@ -42,7 +42,7 @@ public class XmlElement extends XmlParent {
 
   public XmlAttribute getAttributeNode(String key) {
     for (XmlAttribute attribute : attributes) {
-      if (attribute.getName().equals(key)) {
+      if (attribute.getName().getLocal().equals(key)) {
         return attribute;
       }
     }

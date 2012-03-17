@@ -23,7 +23,7 @@ public class XmlName implements Cloneable {
       this.prefix = null;
       this.local = name;
     } else {
-      this.prefix = name.substring(0, index - 1);
+      this.prefix = name.substring(0, index);
       this.local = name.substring(index + 1, name.length());
     }
     this.uri = url;

@@ -39,11 +39,11 @@
     <sequential>
       <mkdir dir="@{dest}" />
       <get src="http://search.maven.org/remotecontent?filepath=@{group-id}/@{artifact-id}/@{version}/@{artifact-id}-@{version}.jar" 
-        dest="@{dest}/@{artifact-id}-@{version}.jar" skipexisting="true" verbose="off" />
+         dest="@{dest}/@{artifact-id}-@{version}.jar" skipexisting="true" verbose="off" />
       <get src="http://search.maven.org/remotecontent?filepath=@{group-id}/@{artifact-id}/@{version}/@{artifact-id}-@{version}-javadoc.jar" 
-        dest="@{dest}/@{artifact-id}-@{version}-javadoc.jar" skipexisting="true" verbose="off" />
+         dest="@{dest}/@{artifact-id}-@{version}-javadoc.jar" skipexisting="true" verbose="off" />
       <get src="http://search.maven.org/remotecontent?filepath=@{group-id}/@{artifact-id}/@{version}/@{artifact-id}-@{version}-sources.jar" 
-        dest="@{dest}/@{artifact-id}-@{version}-sources.jar" skipexisting="true" verbose="off" />
+         dest="@{dest}/@{artifact-id}-@{version}-sources.jar" skipexisting="true" verbose="off" />
     </sequential>
   </macrodef>
   

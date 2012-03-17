@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 
 /**
  * Abstract XML node.
@@ -44,14 +44,21 @@ public abstract class XmlNode implements Iterable<XmlNode> {
   }
 
   /**
-   * Answer an iterator over the receiver, all attributes and children.
+   * Answer an iterator over the receiver, all attributes and nested children.
    */
   @Override
   public Iterator<XmlNode> iterator() {
-    return Iterators.concat(
-        Iterators.singletonIterator(this),
-        getAttributes().iterator(),
-        getChildren().iterator());
+    List<XmlNode> nodes = Lists.newArrayList();
+    allAllNodesTo(nodes);
+    return nodes.iterator();
+  }
+
+  private void allAllNodesTo(List<XmlNode> nodes) {
+    nodes.add(this);
+    nodes.addAll(getAttributes());
+    for (XmlNode node : getChildren()) {
+      node.allAllNodesTo(nodes);
+    }
   }
 
   /**
@@ -95,8 +102,12 @@ public abstract class XmlNode implements Iterable<XmlNode> {
       return null;
     }
     List<XmlNode> children = parent.getChildren();
-    int index = children.indexOf(this) + 1;
-    return 0 < index && index < children.size() ? children.get(index) : null;
+    for (int i = 0; i < children.size() - 1; i++) {
+      if (children.get(i) == this) {
+        return children.get(i + 1);
+      }
+    }
+    return null;
   }
 
   /**
@@ -108,8 +119,12 @@ public abstract class XmlNode implements Iterable<XmlNode> {
       return null;
     }
     List<XmlNode> children = parent.getChildren();
-    int index = children.indexOf(this) - 1;
-    return 0 <= index && index < children.size() ? children.get(index) : null;
+    for (int i = 1; i < children.size(); i++) {
+      if (children.get(i) == this) {
+        return children.get(i - 1);
+      }
+    }
+    return null;
   }
 
   /**
