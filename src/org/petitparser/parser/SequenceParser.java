@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.petitparser.Combinators;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 
@@ -38,7 +37,7 @@ public class SequenceParser extends ListParser {
   public Parser seq(Parser... more) {
     Parser[] array = Arrays.copyOf(parsers, parsers.length + more.length);
     System.arraycopy(more, 0, array, parsers.length, more.length);
-    return Combinators.seq(array);
+    return new SequenceParser(array);
   }
 
 }

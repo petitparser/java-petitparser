@@ -17,7 +17,7 @@ public class CharParser extends Parser {
   private final String message;
 
   public CharParser(CharMatcher matcher, String message) {
-    this.matcher = matcher;
+    this.matcher = matcher.precomputed();
     this.message = message;
   }
 

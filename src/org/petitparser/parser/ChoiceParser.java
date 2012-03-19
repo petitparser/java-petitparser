@@ -2,7 +2,6 @@ package org.petitparser.parser;
 
 import java.util.Arrays;
 
-import org.petitparser.Combinators;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 
@@ -33,7 +32,7 @@ public class ChoiceParser extends ListParser {
   public Parser or(Parser... more) {
     Parser[] array = Arrays.copyOf(parsers, parsers.length + more.length);
     System.arraycopy(more, 0, array, parsers.length, more.length);
-    return Combinators.or(array);
+    return new ChoiceParser(array);
   }
 
 }

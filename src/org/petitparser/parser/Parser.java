@@ -1,14 +1,15 @@
 package org.petitparser.parser;
 
+import java.util.List;
 import java.util.Set;
 
 import org.petitparser.Chars;
-import org.petitparser.Combinators;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.utils.Functions;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
@@ -106,11 +107,34 @@ public abstract class Parser {
   }
 
   /**
+   * Returns a new parser that parses the receiver exactly {@code count} times.
+   */
+  public Parser times(int count) {
+    return repeat(count, count);
+  }
+
+  /**
    * Returns a new parser that parses the receiver between {@code min} and
    * {@code max} times.
    */
   public Parser repeat(int min, int max) {
     return new RepeatingParser(this, min, max);
+  }
+
+  /**
+   * Returns a new parser that parses the receiver one or more times, separated
+   * by a {@code separator}.
+   */
+  public Parser separatedBy(Parser separator) {
+    return new SequenceParser(this, new SequenceParser(separator, this).star()).map(new Function<List<List<Object>>, List<Object>>() {
+      @Override
+      public List<Object> apply(List<List<Object>> input) {
+        List<Object> result = Lists.newArrayList();
+        result.add(input.get(0));
+        result.addAll(input.get(1));
+        return result;
+      }
+    });
   }
 
   /**
@@ -121,7 +145,7 @@ public abstract class Parser {
     Parser[] array = new Parser[1 + parsers.length];
     array[0] = this;
     System.arraycopy(parsers, 0, array, 1, parsers.length);
-    return Combinators.or(array);
+    return new ChoiceParser(array);
   }
 
   /**
@@ -131,7 +155,7 @@ public abstract class Parser {
     Parser[] array = new Parser[1 + parsers.length];
     array[0] = this;
     System.arraycopy(parsers, 0, array, 1, parsers.length);
-    return Combinators.seq(array);
+    return new SequenceParser(array);
   }
 
   /**

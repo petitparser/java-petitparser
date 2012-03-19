@@ -28,6 +28,17 @@ public class Chars {
   }
 
   /**
+   * Returns a parser that parses any of the provided characters.
+   */
+  public static Parser anyOf(String chars) {
+    return anyOf(chars, "any of " + chars + " expected");
+  }
+
+  public static Parser anyOf(String chars, String message) {
+    return new CharParser(CharMatcher.anyOf(chars), message);
+  }
+
+  /**
    * Returns a parser that parses a specific {@code character}.
    */
   public static Parser character(char character) {
@@ -48,7 +59,7 @@ public class Chars {
   }
 
   public static Parser digit(String message) {
-    return new CharParser(CharMatcher.DIGIT, message);
+    return new CharParser(CharMatcher.JAVA_DIGIT, message);
   }
 
   /**

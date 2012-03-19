@@ -29,6 +29,8 @@ public class XmlGrammar extends CompositeParser {
 
   @Production Parser attribute;
   @Production Parser attributeValue;
+  @Production Parser attributeValueDouble;
+  @Production Parser attributeValueSingle;
   @Production Parser attributes;
   @Production Parser comment;
   @Production Parser content;
@@ -48,14 +50,21 @@ public class XmlGrammar extends CompositeParser {
   }
 
   Parser attributeValue() {
-    return or(
-        character('"')
-            .seq(character('"').negate().star().flatten())
-            .seq(character('"')),
-        character('\'')
-            .seq(character('\'').negate().star().flatten())
-            .seq(character('\'')))
+    return attributeValueDouble
+        .or(attributeValueSingle)
         .map(Functions.nthOfList(1));
+  }
+
+  Parser attributeValueDouble() {
+    return character('"')
+        .seq(character('"').negate().star().flatten())
+        .seq(character('"'));
+  }
+
+  Parser attributeValueSingle() {
+    return character('\'')
+        .seq(character('\'').negate().star().flatten())
+        .seq(character('\''));
   }
 
   Parser attributes() {

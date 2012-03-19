@@ -129,6 +129,14 @@ public class ParserTest {
     assertSuccess(parser, "aaa", Arrays.asList('a', 'a', 'a'));
   }
 
+  public void testTimes() {
+    Parser parser = character('a').times(2);
+    assertFailure(parser, "", "a expected");
+    assertFailure(parser, "a", "a expected");
+    assertSuccess(parser, "aa", Arrays.asList('a', 'a'));
+    assertSuccess(parser, "aaa", Arrays.asList('a', 'a'), 2);
+  }
+
   @Test
   public void testRepeat() {
     Parser parser = character('a').repeat(2, 3);
