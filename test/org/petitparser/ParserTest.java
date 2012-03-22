@@ -218,4 +218,16 @@ public class ParserTest {
     assertFailure(parser, "");
   }
 
+  @Test
+  public void testSeparatedBy() {
+    Parser parser = character('a').separatedBy(character('b'));
+    assertFailure(parser, "", "a expected");
+    assertSuccess(parser, "a", Arrays.asList('a'));
+    assertSuccess(parser, "ab", Arrays.asList('a'), 2);
+    assertSuccess(parser, "aba", Arrays.asList('a', 'b', 'a'));
+    assertSuccess(parser, "abab", Arrays.asList('a', 'b', 'a'), 4);
+    assertSuccess(parser, "ababa", Arrays.asList('a', 'b', 'a', 'b', 'a'));
+    assertSuccess(parser, "ababab", Arrays.asList('a', 'b', 'a', 'b', 'a'), 6);
+  }
+
 }

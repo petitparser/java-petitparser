@@ -57,31 +57,31 @@ public class JsonParserTest {
 
   @Test
   public void testEmptyObject() {
-    Map<String, Integer> result = parse("{}").get();
+    Map<String, Double> result = parse("{}").get();
     assertTrue(result.isEmpty());
   }
 
   @Test
   public void testSmallObject() {
-    Map<String, Integer> result = parse("{\"a\":1}").get();
+    Map<String, Double> result = parse("{\"a\":1}").get();
     assertEquals(1, result.size());
-    assertEquals((Integer) 1, result.get("a"));
+    assertEquals(Double.valueOf(1.0), result.get("a"));
   }
 
   @Test
   public void testBigObject() {
-    Map<String, Integer> result = parse(" { \"a\" : 1 , \"b\" : 2 } ").get();
+    Map<String, Double> result = parse(" { \"a\" : 1 , \"b\" : 2 } ").get();
     assertEquals(2, result.size());
-    assertEquals((Integer) 1, result.get("a"));
-    assertEquals((Integer) 2, result.get("b"));
+    assertEquals(Double.valueOf(1.0), result.get("a"));
+    assertEquals(Double.valueOf(2.0), result.get("b"));
   }
 
   @Test
   public void testNestedObject() {
-    Map<String, Map<String, Integer>> result = parse("{\"object\":{\"1\": 2}}").get();
+    Map<String, Map<String, Double>> result = parse("{\"object\":{\"1\": 2}}").get();
     assertEquals(1, result.size());
     assertEquals(1, result.get("object").size());
-    assertEquals((Integer) 2, result.get("object").get("1"));
+    assertEquals(Double.valueOf(2.0), result.get("object").get("1"));
   }
 
   // literals
@@ -118,13 +118,13 @@ public class JsonParserTest {
 
   @Test
   public void testInteger() {
-    assertEquals(0, parse("0").get());
-    assertEquals(1, parse("1").get());
-    assertEquals(-1, parse("-1").get());
-    assertEquals(12, parse("12").get());
-    assertEquals(-12, parse("-12").get());
-    assertEquals(100, parse("1e2").get());
-    assertEquals(100, parse("1e+2").get());
+    assertEquals(0.0, parse("0").get());
+    assertEquals(1.0, parse("1").get());
+    assertEquals(-1.0, parse("-1").get());
+    assertEquals(12.0, parse("12").get());
+    assertEquals(-12.0, parse("-12").get());
+    assertEquals(100.0, parse("1e2").get());
+    assertEquals(100.0, parse("1e+2").get());
   }
 
   @Test
