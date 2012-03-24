@@ -33,10 +33,6 @@ public class DelegateParser extends Parser {
     return delegate;
   }
 
-  public void setDelegate(Parser delegate) {
-    this.delegate = delegate;
-  }
-
   @Override
   public void replace(Parser source, Parser target) {
     if (delegate == source) {

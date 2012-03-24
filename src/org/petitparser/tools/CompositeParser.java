@@ -102,7 +102,7 @@ public abstract class CompositeParser extends DelegateParser {
       try {
         entry.getValue().setAccessible(true);
         Parser parser = (Parser) entry.getValue().invoke(this);
-        parsers.get(entry.getKey()).setDelegate(parser);
+        parsers.get(entry.getKey()).replace(parsers.get(entry.getKey()).getDelegate(), parser);
         entry.getKey().set(this, parser);
       } catch (IllegalArgumentException exception) {
         exception.printStackTrace();

@@ -18,8 +18,8 @@ public class FlattenParser extends DelegateParser {
   public Result parse(Context context) {
     Result result = super.parse(context);
     if (result.isSuccess()) {
-      String flattened = context.getBuffer().subSequence(context.getPosition(),
-          result.getPosition());
+      String flattened = context.getBuffer()
+          .subSequence(context.getPosition(), result.getPosition());
       return result.success(flattened);
     } else {
       return result;
