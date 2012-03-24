@@ -1,6 +1,5 @@
 .classpath
 .project
 .settings/
-bin/
 build/
-target/
+lib/
