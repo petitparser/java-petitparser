@@ -36,7 +36,7 @@ public class RepeatingParser extends DelegateParser {
     while (elements.size() < max) {
       Result result = super.parse(current);
       if (result.isFailure()) {
-        return result.success(elements);
+        return current.success(elements);
       }
       elements.add(result.get());
       current = result;
