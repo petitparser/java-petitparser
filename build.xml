@@ -2,96 +2,81 @@
 <project name="PetitParser" default="all" xmlns:ivy="antlib:org.apache.ivy.ant">
 
   <!-- external properties -->
-  <property file="build.properties"/>
+  <property file="build.properties" />
 
   <!-- build properties -->
-  <property name="app.name" value="PetitParser"/>
-  <property name="app.version" value="1.0"/>
-  <description>Dynamic Grammars for Java</description>
+  <property name="app.name" value="PetitParser" />
+  <property name="app.version" value="1.0" />
+  <description>PetitParser -- Dynamic Grammars for Java</description>
 
   <!-- input directories -->
-  <property name="src" location="src"/>
-  <property name="lib" location="lib"/>
-  <property name="test" location="test"/>
-  <property name="examples" location="examples"/>
+  <property name="src" location="src" />
+  <property name="lib" location="lib" />
+  <property name="test" location="test" />
+  <property name="examples" location="examples" />
 
   <!-- output directories -->
-  <property name="build" location="build"/>
-  <property name="build.bin" location="${build}/bin"/>
-  <property name="build.doc" location="${build}/doc"/>
-  <property name="build.test" location="${build}/test"/>
-  <property name="build.checkstyle" location="${build}/checkstyle"/>
+  <property name="build" location="build" />
+  <property name="build.bin" location="${build}/bin" />
+  <property name="build.doc" location="${build}/doc" />
+  <property name="build.test" location="${build}/test" />
 
   <!-- classpath definition -->
   <path id="classpath">
-    <pathelement location="${build.bin}"/>
-    <pathelement location="${build.test}"/>
+    <pathelement location="${build.bin}" />
+    <pathelement location="${build.test}" />
     <fileset dir="${lib}">
-      <include name="**/*.jar"/>
+      <include name="**/*.jar" />
     </fileset>
   </path>
 
   <!-- ivy -->
-  <property name="ivy.version" value="2.2.0"/>
+  <property name="ivy.version" value="2.2.0" />
 
   <target name="ivy" description="Bootstrap dependencies through Ivy.">
-    <mkdir dir="${lib}"/>
-    <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar" dest="${lib}" usetimestamp="true"/>
-    <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${lib}/ivy-${ivy.version}.jar"/>
-    <ivy:retrieve sync="true" log="quiet"/>
+    <mkdir dir="${lib}" />
+    <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar" dest="${lib}" usetimestamp="true" />
+    <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${lib}/ivy-${ivy.version}.jar" />
+    <ivy:retrieve sync="true" log="quiet" />
   </target>
 
-  <!-- build targets -->
-  <target name="all" description="Create all build artifacts." depends="compile, test, checkstyle, javadoc, dist"/>
+  <!-- targets -->
+  <target name="all" description="Create all build artifacts." depends="compile, test, javadoc" />
 
   <target name="clean" description="Delete all build artifacts.">
-    <delete dir="${lib}"/>
-    <delete dir="${build}"/>
+    <delete dir="${lib}" />
+    <delete dir="${build}" />
   </target>
 
   <target name="compile" description="Compile source files." depends="ivy">
-    <mkdir dir="${build.bin}"/>
-    <javac srcdir="${src}" destdir="${build.bin}" includeantruntime="false" classpathref="classpath"/>
-    <javac srcdir="${examples}" destdir="${build.bin}" includeantruntime="false" classpathref="classpath"/>
+    <mkdir dir="${build.bin}" />
+    <javac srcdir="${src}" destdir="${build.bin}" includeantruntime="false" classpathref="classpath" />
+    <javac srcdir="${examples}" destdir="${build.bin}" includeantruntime="false" classpathref="classpath" />
   </target>
 
   <target name="test" description="Run all JUnit tests." depends="compile">
-    <mkdir dir="${build.test}"/>
-    <javac srcdir="${test}" destdir="${build.test}" includeantruntime="false" classpathref="classpath"/>
+    <mkdir dir="${build.test}" />
+    <javac srcdir="${test}" destdir="${build.test}" includeantruntime="false" classpathref="classpath" />
     <junit haltonerror="no" haltonfailure="no">
-      <classpath refid="classpath"/>
+      <classpath refid="classpath" />
       <batchtest todir="${build.test}">
-        <formatter type="xml"/>
-        <formatter type="brief" usefile="false"/>
+        <formatter type="xml" />
+        <formatter type="brief" usefile="false" />
         <fileset dir="${test}">
-          <include name="**/*Test.java"/>
+          <include name="**/*Test.java" />
         </fileset>
       </batchtest>
     </junit>
   </target>
 
-  <target name="checkstyle" description="Generate a Checkstyle report." depends="ivy">
-    <mkdir dir="${build.checkstyle}"/>
-    <java classname="com.puppycrawl.tools.checkstyle.Main" output="${build.checkstyle}/checkstyle.xml">
-      <classpath refid="classpath"/>
-      <arg value="-f"/><arg value="xml"/>
-      <arg value="-r"/><arg file="${src}"/>
-      <arg value="-c"/><arg file="checkstyle.xml"/>
-    </java>
-  </target>
-
   <target name="javadoc" description="Generate the JavaDoc files.">
-    <mkdir dir="${build.doc}"/>
+    <mkdir dir="${build.doc}" />
     <javadoc sourcepath="${src}" destdir="${build.doc}">
-      <classpath refid="classpath"/>
-      <link href="http://java.sun.com/javase/6/docs/api/"/>
+      <classpath refid="classpath" />
+      <link href="http://java.sun.com/javase/6/docs/api/" />
       <header><![CDATA[<b>${app.name} ${app.version}</b>]]></header>
       <doctitle><![CDATA[<h1>${app.name} ${app.version}</h1>]]></doctitle>
     </javadoc>
-  </target>
-
-  <target name="dist" description="Generate the distribution." depends="test">
-    <zip basedir="." destfile="${build}/${app.name}-${app.version}.zip" excludesfile=".gitignore"/>
   </target>
 
 </project>
