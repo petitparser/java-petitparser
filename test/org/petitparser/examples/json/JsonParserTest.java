@@ -65,15 +65,15 @@ public class JsonParserTest {
   public void testSmallObject() {
     Map<String, Double> result = parse("{\"a\":1}").get();
     assertEquals(1, result.size());
-    assertEquals(Double.valueOf(1.0), result.get("a"));
+    assertEquals(Long.valueOf(1), result.get("a"));
   }
 
   @Test
   public void testBigObject() {
     Map<String, Double> result = parse(" { \"a\" : 1 , \"b\" : 2 } ").get();
     assertEquals(2, result.size());
-    assertEquals(Double.valueOf(1.0), result.get("a"));
-    assertEquals(Double.valueOf(2.0), result.get("b"));
+    assertEquals(Long.valueOf(1), result.get("a"));
+    assertEquals(Long.valueOf(2), result.get("b"));
   }
 
   @Test
@@ -81,7 +81,7 @@ public class JsonParserTest {
     Map<String, Map<String, Double>> result = parse("{\"object\":{\"1\": 2}}").get();
     assertEquals(1, result.size());
     assertEquals(1, result.get("object").size());
-    assertEquals(Double.valueOf(2.0), result.get("object").get("1"));
+    assertEquals(Long.valueOf(2), result.get("object").get("1"));
   }
 
   // literals
@@ -118,13 +118,13 @@ public class JsonParserTest {
 
   @Test
   public void testInteger() {
-    assertEquals(0.0, parse("0").get());
-    assertEquals(1.0, parse("1").get());
-    assertEquals(-1.0, parse("-1").get());
-    assertEquals(12.0, parse("12").get());
-    assertEquals(-12.0, parse("-12").get());
-    assertEquals(100.0, parse("1e2").get());
-    assertEquals(100.0, parse("1e+2").get());
+    assertEquals(0L, parse("0").get());
+    assertEquals(1L, parse("1").get());
+    assertEquals(-1L, parse("-1").get());
+    assertEquals(12L, parse("12").get());
+    assertEquals(-12L, parse("-12").get());
+    assertEquals(100L, parse("1e2").get());
+    assertEquals(100L, parse("1e+2").get());
   }
 
   @Test

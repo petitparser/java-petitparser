@@ -148,7 +148,8 @@ public class XmlGrammar extends CompositeParser {
             .seq(string("?>").negate().star())
             .optional()
             .flatten())
-        .seq(string("?>"));
+        .seq(string("?>"))
+        .map(Functions.permutationOfList(1, 2));
   }
 
   Parser qualified() {

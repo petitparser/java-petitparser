@@ -82,10 +82,16 @@ public class JsonParser extends JsonGrammar {
 
   @Override
   Parser numberToken() {
-    return super.numberToken().map(new Function<String, Double>() {
+    return super.numberToken().map(new Function<String, Number>() {
       @Override
-      public Double apply(String input) {
-        return Double.valueOf(input);
+      public Number apply(String input) {
+        double floating = Double.parseDouble(input);
+        long integral = (long) floating;
+        if (floating == integral && input.indexOf('.') == -1) {
+          return Long.valueOf(integral);
+        } else {
+          return Double.valueOf(floating);
+        }
       }
     });
   }

@@ -84,7 +84,7 @@ public class XmlParser extends XmlGrammar {
     return super.processing().map(new Function<List<String>, XmlProcessing>() {
       @Override
       public XmlProcessing apply(List<String> list) {
-        return new XmlProcessing(list.get(1), list.get(2));
+        return new XmlProcessing(list.get(0), list.get(1));
       }
     });
   }
