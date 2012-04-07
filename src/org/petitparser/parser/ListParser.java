@@ -1,7 +1,7 @@
 package org.petitparser.parser;
 
 import java.util.Arrays;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Abstract parser that parses a list of things in some way (to be specified by
@@ -18,6 +18,13 @@ public abstract class ListParser extends Parser {
   }
 
   @Override
+  public Object clone() throws CloneNotSupportedException {
+    ListParser clone = (ListParser) super.clone();
+    clone.parsers = parsers.clone();
+    return clone;
+  }
+
+  @Override
   public void replace(Parser source, Parser target) {
     super.replace(source, target);
     for (int i = 0; i < parsers.length; i++) {
@@ -28,8 +35,8 @@ public abstract class ListParser extends Parser {
   }
 
   @Override
-  public Set<Parser> children() {
-    Set<Parser> children = super.children();
+  public List<Parser> getChildren() {
+    List<Parser> children = super.getChildren();
     children.addAll(Arrays.asList(parsers));
     return children;
   }

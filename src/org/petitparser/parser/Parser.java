@@ -1,7 +1,6 @@
 package org.petitparser.parser;
 
 import java.util.List;
-import java.util.Set;
 
 import org.petitparser.Chars;
 import org.petitparser.context.Context;
@@ -10,14 +9,13 @@ import org.petitparser.utils.Functions;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * An abstract parser that forms the root of all parsers in this package.
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public abstract class Parser {
+public abstract class Parser implements Cloneable {
 
   /**
    * Apply the parser on the given {@code context}.
@@ -184,6 +182,14 @@ public abstract class Parser {
   }
 
   /**
+   * Clones this parser.
+   */
+  @Override
+  public Object clone() throws CloneNotSupportedException {
+    return super.clone();
+  }
+
+  /**
    * Replaces the referring parser {@code source} with {@code target}. Does
    * nothing if the parser does not exist.
    */
@@ -194,8 +200,8 @@ public abstract class Parser {
   /**
    * Returns a list of directly referring parsers.
    */
-  public Set<Parser> children() {
-    return Sets.newHashSet();
+  public List<Parser> getChildren() {
+    return Lists.newArrayList();
   }
 
 }

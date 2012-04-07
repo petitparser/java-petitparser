@@ -1,6 +1,6 @@
 package org.petitparser.parser;
 
-import java.util.Set;
+import java.util.List;
 
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
@@ -45,8 +45,8 @@ public class TrimmingParser extends DelegateParser {
   }
 
   @Override
-  public Set<Parser> children() {
-    Set<Parser> children = super.children();
+  public List<Parser> getChildren() {
+    List<Parser> children = super.getChildren();
     children.add(trimmer);
     return children;
   }

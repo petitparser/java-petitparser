@@ -1,11 +1,9 @@
 package org.petitparser.parser;
 
-import java.util.Set;
+import java.util.List;
 
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
-
-import com.google.common.collect.Sets;
 
 /**
  * A parser that delegates to another one.
@@ -42,8 +40,10 @@ public class DelegateParser extends Parser {
   }
 
   @Override
-  public Set<Parser> children() {
-    return Sets.newHashSet(delegate);
+  public List<Parser> getChildren() {
+    List<Parser> children = super.getChildren();
+    children.add(delegate);
+    return children;
   }
 
 }
