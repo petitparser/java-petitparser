@@ -21,22 +21,22 @@ import com.google.common.collect.Maps;
  * used in recursive grammars. Productions should refer to each other by reading
  * the respective fields.
  *
- * <code>
+ * <pre>
  * @Production Parser identifier;
  *
  * Parser identifier() {
  *   return letter().seq(word().star()).flatten();
  * }
- * </code>
+ * </pre>
  *
  * The start production is returned from {@link #start()}.
  *
- * <code>
+ * <pre>
  * @Override
  * Parser start() {
  *   return identifier.end();
  * }
- * </code>
+ * </pre>
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */

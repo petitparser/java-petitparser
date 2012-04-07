@@ -91,9 +91,9 @@ public class Chars {
   /**
    * Returns a parser that parses a specific character pattern.
    *
-   * Characters match themselves. A dash @code{-} between two
+   * Characters match themselves. A dash {@code -} between two
    * characters matches the range of those characters. A caret
-   * @code{^} at the beginning negates the pattern.
+   * {@code ^} at the beginning negates the pattern.
    */
   public static Parser pattern(String pattern) {
     return pattern(pattern, pattern + " expected");
