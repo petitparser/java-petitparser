@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.junit.Test;
+import org.petitparser.parser.CharParser;
 import org.petitparser.parser.DelegateParser;
 import org.petitparser.parser.Parser;
 import org.petitparser.utils.Queries;
@@ -24,7 +25,7 @@ import com.google.common.collect.Iterables;
 public class UtilsTest {
 
   @Test
-  public void testQuerySimple() {
+  public void testSimpleQuery() {
     Parser parser1 = Chars.lowerCase();
     Parser[] parsers = Iterables.toArray(Queries.iterable(parser1),
         Parser.class);
@@ -32,7 +33,7 @@ public class UtilsTest {
   }
 
   @Test
-  public void testQueryNested() {
+  public void testNestedQuery() {
     Parser parser3 = Chars.lowerCase();
     Parser parser2 = parser3.star();
     Parser parser1 = parser2.flatten();
@@ -42,7 +43,7 @@ public class UtilsTest {
   }
 
   @Test
-  public void testQueryBranched() {
+  public void testBranchedQuery() {
     Parser parser3 = Chars.lowerCase();
     Parser parser2 = Chars.upperCase();
     Parser parser1 = parser2.seq(parser3);
@@ -52,7 +53,7 @@ public class UtilsTest {
   }
 
   @Test
-  public void testQueryLooping() {
+  public void testLoopingQuery() {
     DelegateParser parser3 = new DelegateParser();
     DelegateParser parser2 = new DelegateParser();
     DelegateParser parser1 = new DelegateParser();
@@ -65,7 +66,7 @@ public class UtilsTest {
   }
 
   @Test
-  public void testQueryNextAtEndShouldThrowAnException() {
+  public void testNextAtEndShouldThrowAnException() {
     Parser parser = Chars.lowerCase();
     Iterator<Parser> iterator = Queries.iterator(parser);
     assertEquals(parser, iterator.next());
@@ -79,7 +80,7 @@ public class UtilsTest {
   }
 
   @Test
-  public void testQueryRemoveShouldNotBeSupported() {
+  public void testRemoveShouldNotBeSupported() {
     Parser parser = Chars.lowerCase();
     Iterator<Parser> iterator = Queries.iterator(parser);
     try {
@@ -88,6 +89,14 @@ public class UtilsTest {
       return;
     }
     fail();
+  }
+
+  @Test
+  public void testRemoveDelegate() {
+    Parser parser2 = Chars.lowerCase();
+    Parser parser1 = new DelegateParser(parser2);
+    Parser transformed = Transformations.removeDelegates(parser1);
+    assertEquals(CharParser.class, transformed.getClass());
   }
 
 }
