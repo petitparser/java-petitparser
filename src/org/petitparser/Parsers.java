@@ -30,25 +30,33 @@ public class Parsers {
   /**
    * Returns a parser that parsers a specific string.
    */
-  public static Parser string(final String string) {
+  public static Parser string(String string) {
+    return string(string, string + " expected");
+  }
+
+  public static Parser string(final String string, String message) {
     return new StringPredicateParser(string.length(), new StringPredicate() {
       @Override
       public boolean apply(String argument) {
         return string.equals(argument);
       }
-    }, string + " expected");
+    }, message);
   }
 
   /**
    * Returns a parser that parsers a specific string case-insensitive.
    */
-  public static Parser stringIgnoreCase(final String string) {
+  public static Parser stringIgnoreCase(String string) {
+    return stringIgnoreCase(string, string + " expected");
+  }
+
+  public static Parser stringIgnoreCase(final String string, String message) {
     return new StringPredicateParser(string.length(), new StringPredicate() {
       @Override
       public boolean apply(String argument) {
         return string.equalsIgnoreCase(argument);
       }
-    }, string + " expected");
+    }, message);
   }
 
 }

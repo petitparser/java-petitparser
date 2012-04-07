@@ -35,6 +35,7 @@ public class DelegateParser extends Parser {
 
   @Override
   public void replace(Parser source, Parser target) {
+    super.replace(source, target);
     if (delegate == source) {
       delegate = target;
     }
