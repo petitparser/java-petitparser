@@ -24,7 +24,7 @@ public class Chars {
   }
 
   public static Parser any(String message) {
-    return new CharParser(CharMatcher.ANY, message);
+    return matcher(CharMatcher.ANY, message);
   }
 
   /**
@@ -35,7 +35,7 @@ public class Chars {
   }
 
   public static Parser anyOf(String chars, String message) {
-    return new CharParser(CharMatcher.anyOf(chars), message);
+    return matcher(CharMatcher.anyOf(chars), message);
   }
 
   /**
@@ -46,7 +46,7 @@ public class Chars {
   }
 
   public static Parser character(char character, String message) {
-    return new CharParser(CharMatcher.is(character), message);
+    return matcher(CharMatcher.is(character), message);
   }
 
   /**
@@ -59,7 +59,7 @@ public class Chars {
   }
 
   public static Parser digit(String message) {
-    return new CharParser(CharMatcher.JAVA_DIGIT, message);
+    return matcher(CharMatcher.JAVA_DIGIT, message);
   }
 
   /**
@@ -72,7 +72,7 @@ public class Chars {
   }
 
   public static Parser letter(String message) {
-    return new CharParser(CharMatcher.JAVA_LETTER, message);
+    return matcher(CharMatcher.JAVA_LETTER, message);
   }
 
   /**
@@ -85,7 +85,20 @@ public class Chars {
   }
 
   public static Parser lowerCase(String message) {
-    return new CharParser(CharMatcher.JAVA_LOWER_CASE, message);
+    return matcher(CharMatcher.JAVA_LOWER_CASE, message);
+  }
+
+  /**
+   * Returns a parser that accepts the a specified matcher.
+   *
+   * @see CharMatcher
+   */
+  public static Parser matcher(CharMatcher matcher) {
+    return matcher(matcher, matcher.toString());
+  }
+
+  public static Parser matcher(CharMatcher matcher, String message) {
+    return new CharParser(matcher, message);
   }
 
   /**
@@ -100,7 +113,7 @@ public class Chars {
   }
 
   public static Parser pattern(String pattern, String message) {
-    return new CharParser(patternPredicate(pattern), message);
+    return matcher(patternPredicate(pattern), message);
   }
 
   private static CharMatcher patternPredicate(String pattern) {
@@ -151,7 +164,7 @@ public class Chars {
   }
 
   public static Parser range(char start, char stop, String message) {
-    return new CharParser(CharMatcher.inRange(start, stop), message);
+    return matcher(CharMatcher.inRange(start, stop), message);
   }
 
   /**
@@ -164,7 +177,7 @@ public class Chars {
   }
 
   public static Parser upperCase(String message) {
-    return new CharParser(CharMatcher.JAVA_UPPER_CASE, message);
+    return matcher(CharMatcher.JAVA_UPPER_CASE, message);
   }
 
   /**
@@ -177,7 +190,7 @@ public class Chars {
   }
 
   public static Parser whitespace(String message) {
-    return new CharParser(CharMatcher.WHITESPACE, message);
+    return matcher(CharMatcher.WHITESPACE, message);
   }
 
   /**
@@ -190,7 +203,7 @@ public class Chars {
   }
 
   public static Parser word(String message) {
-    return new CharParser(CharMatcher.JAVA_LETTER_OR_DIGIT, message);
+    return matcher(CharMatcher.JAVA_LETTER_OR_DIGIT, message);
   }
 
 }
