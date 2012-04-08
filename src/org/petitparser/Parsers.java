@@ -15,6 +15,8 @@ public class Parsers {
 
   /**
    * Returns a parser that always succeeds and never consumes anything.
+   *
+   * @see EpsilonParser
    */
   public static Parser epsilon() {
     return new EpsilonParser();
@@ -22,6 +24,8 @@ public class Parsers {
 
   /**
    * Returns a parser that always fails and never consumes anything.
+   *
+   * @see FailureParser
    */
   public static Parser failure(String message) {
     return new FailureParser(message);
@@ -29,6 +33,8 @@ public class Parsers {
 
   /**
    * Returns a parser that parsers a specific string.
+   *
+   * @see StringPredicateParser
    */
   public static Parser string(String string) {
     return string(string, string + " expected");
@@ -45,6 +51,8 @@ public class Parsers {
 
   /**
    * Returns a parser that parsers a specific string case-insensitive.
+   *
+   * @see StringPredicateParser
    */
   public static Parser stringIgnoreCase(String string) {
     return stringIgnoreCase(string, string + " expected");

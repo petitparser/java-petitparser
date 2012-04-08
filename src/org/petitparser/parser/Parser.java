@@ -24,6 +24,8 @@ public abstract class Parser implements Cloneable {
 
   /**
    * Returns a new parser that is simply wrapped.
+   *
+   * @see DelegateParser
    */
   public Parser wrapped() {
     return new DelegateParser(this);
@@ -31,6 +33,8 @@ public abstract class Parser implements Cloneable {
 
   /**
    * Returns a new parser that flattens to a {@link String}.
+   *
+   * @see FlattenParser
    */
   public Parser flatten() {
     return new FlattenParser(this);
@@ -39,6 +43,8 @@ public abstract class Parser implements Cloneable {
   /**
    * Returns a new parser that consumes whitespace before and after the
    * receiving parser.
+   *
+   * @see TrimmingParser
    */
   public Parser trim() {
     return trim(Chars.whitespace());
@@ -47,6 +53,8 @@ public abstract class Parser implements Cloneable {
   /**
    * Returns a new parser that consumes and ignores the {@code trimmer}
    * repeatedly before and after the receiving parser.
+   *
+   * @see TrimmingParser
    */
   public Parser trim(Parser trimmer) {
     return new TrimmingParser(this, trimmer);
@@ -55,6 +63,8 @@ public abstract class Parser implements Cloneable {
   /**
    * Returns a new parser (logical and-predicate) that succeeds whenever the
    * receiver does, but never consumes input.
+   *
+   * @see AndParser
    */
   public Parser and() {
     return new AndParser(this);
@@ -63,6 +73,8 @@ public abstract class Parser implements Cloneable {
   /**
    * Returns a new parser (logical not-predicate) that succeeds whenever the
    * receiver fails, but never consumes input.
+   *
+   * @see NotParser
    */
   public Parser not(String message) {
     return new NotParser(this, message);
@@ -85,6 +97,8 @@ public abstract class Parser implements Cloneable {
 
   /**
    * Returns a new parser that parses the receiver, if possible.
+   *
+   * @see OptionalParser
    */
   public Parser optional() {
     return new OptionalParser(this);
@@ -92,6 +106,8 @@ public abstract class Parser implements Cloneable {
 
   /**
    * Returns a new parser that parses the receiver zero or more times.
+   *
+   * @see RepeatingParser
    */
   public Parser star() {
     return repeat(0, Integer.MAX_VALUE);
@@ -99,6 +115,8 @@ public abstract class Parser implements Cloneable {
 
   /**
    * Returns a new parser that parses the receiver one or more times.
+   *
+   * @see RepeatingParser
    */
   public Parser plus() {
     return repeat(1, Integer.MAX_VALUE);
@@ -106,6 +124,8 @@ public abstract class Parser implements Cloneable {
 
   /**
    * Returns a new parser that parses the receiver exactly {@code count} times.
+   *
+   * @see RepeatingParser
    */
   public Parser times(int count) {
     return repeat(count, count);
@@ -114,6 +134,8 @@ public abstract class Parser implements Cloneable {
   /**
    * Returns a new parser that parses the receiver between {@code min} and
    * {@code max} times.
+   *
+   * @see RepeatingParser
    */
   public Parser repeat(int min, int max) {
     return new RepeatingParser(this, min, max);
@@ -140,6 +162,8 @@ public abstract class Parser implements Cloneable {
   /**
    * Returns a new parser that parses the receiver, if that fails try with the
    * following parsers.
+   *
+   * @see ChoiceParser
    */
   public Parser or(Parser... parsers) {
     Parser[] array = new Parser[1 + parsers.length];
@@ -150,6 +174,8 @@ public abstract class Parser implements Cloneable {
 
   /**
    * Returns a new parser that first parses the receiver and then the argument.
+   *
+   * @see SequenceParser
    */
   public Parser seq(Parser... parsers) {
     Parser[] array = new Parser[1 + parsers.length];
@@ -160,6 +186,8 @@ public abstract class Parser implements Cloneable {
 
   /**
    * Returns a new parser that performs the given function on success.
+   *
+   * @see ActionParser
    */
   public <T, R> Parser map(Function<T, R> function) {
     return new ActionParser<T, R>(this, function);
@@ -168,6 +196,8 @@ public abstract class Parser implements Cloneable {
   /**
    * Returns a new parser that succeeds at the end of the input and return the
    * result of the receiver.
+   *
+   * @see EndOfInputParser
    */
   public Parser end() {
     return end("end of input expected");
@@ -176,6 +206,8 @@ public abstract class Parser implements Cloneable {
   /**
    * Returns a new parser that succeeds at the end of the input and return the
    * result of the receiver.
+   *
+   * @see EndOfInputParser
    */
   public Parser end(String message) {
     return new EndOfInputParser(this, message);
