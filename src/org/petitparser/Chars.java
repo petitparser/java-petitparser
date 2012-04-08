@@ -17,7 +17,9 @@ import com.google.common.base.Function;
 public class Chars {
 
   /**
-   * Returns a parser that parses any character.
+   * Returns a parser that accepts any character.
+   *
+   * @see CharMatcher#ANY
    */
   public static Parser any() {
     return any("character expected");
@@ -28,18 +30,22 @@ public class Chars {
   }
 
   /**
-   * Returns a parser that parses any of the provided characters.
+   * Returns a parser that accepts any of the provided characters.
+   *
+   * @see CharMatcher#anyOf(CharSequence)
    */
-  public static Parser anyOf(String chars) {
+  public static Parser anyOf(CharSequence chars) {
     return anyOf(chars, "any of " + chars + " expected");
   }
 
-  public static Parser anyOf(String chars, String message) {
+  public static Parser anyOf(CharSequence chars, String message) {
     return matcher(CharMatcher.anyOf(chars), message);
   }
 
   /**
-   * Returns a parser that parses a specific {@code character}.
+   * Returns a parser that accepts a specific {@code character}.
+   *
+   * @see CharMatcher#is(char)
    */
   public static Parser character(char character) {
     return character(character, character + " expected");
@@ -50,7 +56,7 @@ public class Chars {
   }
 
   /**
-   * Returns a parser that parses a single digit.
+   * Returns a parser that accepts a single digit.
    *
    * @see Character#isDigit(char)
    */
@@ -63,7 +69,7 @@ public class Chars {
   }
 
   /**
-   * Returns a parser that parses a single letter.
+   * Returns a parser that accepts a single letter.
    *
    * @see Character#isLetter(char)
    */
@@ -76,7 +82,7 @@ public class Chars {
   }
 
   /**
-   * Returns a parser that parses an lower-case letter.
+   * Returns a parser that accepts an lower-case letter.
    *
    * @see Character#isLowerCase(char)
    */
@@ -102,7 +108,7 @@ public class Chars {
   }
 
   /**
-   * Returns a parser that parses a specific character pattern.
+   * Returns a parser that accepts a specific character pattern.
    *
    * Characters match themselves. A dash {@code -} between two
    * characters matches the range of those characters. A caret
@@ -157,7 +163,9 @@ public class Chars {
       }).end();
 
   /**
-   * Returns a parser that parses a specific character range.
+   * Returns a parser that accepts a specific character range.
+   *
+   * @see CharMatcher#inRange(char, char)
    */
   public static Parser range(char start, char stop) {
     return range(start, stop, start + ".." + stop + " expected");
@@ -168,7 +176,7 @@ public class Chars {
   }
 
   /**
-   * Returns a parser that parses an upper-case letter.
+   * Returns a parser that accepts an upper-case letter.
    *
    * @see Character#isUpperCase(char)
    */
@@ -181,7 +189,7 @@ public class Chars {
   }
 
   /**
-   * Returns a parser that parses a single whitespace.
+   * Returns a parser that accepts a single whitespace.
    *
    * @see Character#isWhitespace(char)
    */
@@ -194,7 +202,7 @@ public class Chars {
   }
 
   /**
-   * Returns a parser that parses a single letter or digit.
+   * Returns a parser that accepts a single letter or digit.
    *
    * @see Character#isLetterOrDigit(char)
    */
