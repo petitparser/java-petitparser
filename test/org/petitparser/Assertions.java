@@ -5,8 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.petitparser.Parsing.parse;
 
-import org.petitparser.context.Context;
 import org.petitparser.context.ParseError;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
@@ -19,8 +19,7 @@ public class Assertions {
 
   public static <T> void assertSuccess(Parser parser, String input,
       T expected, int position) {
-    Context context = new Context(input);
-    Result result = parser.parse(context);
+    Result result = parse(parser, input);
     assertNotNull(result.toString());
     assertTrue("Expected parse success", result.isSuccess());
     assertEquals("Position", position, result.getPosition());
@@ -44,8 +43,7 @@ public class Assertions {
 
   public static <T> void assertFailure(Parser parser, String input,
       int position, String message) {
-    Context context = new Context(input);
-    Result result = parser.parse(context);
+    Result result = parse(parser, input);
     assertNotNull(result.toString());
     assertTrue("Expected parse failure", result.isFailure());
     assertEquals("Position", position, result.getPosition());

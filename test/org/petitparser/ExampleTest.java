@@ -32,6 +32,11 @@ public class ExampleTest {
       .seq(whitespace().plus().flatten()).seq(IDENTIFIER.or(NUMBER).or(STRING))
       .map(Functions.lastOfList());
 
+  private static Parser JAVADOC = string("/**")
+      .seq(string("*/").negate().star())
+      .seq(string("*/"))
+      .flatten();
+
   @Test
   public void testIdentitiferSuccess() {
     assertSuccess(IDENTIFIER, "a", "a");
@@ -133,6 +138,12 @@ public class ExampleTest {
     assertFailure(RETURN, "retur f", 0, "return expected");
     assertFailure(RETURN, "return1", 6, "whitespace expected");
     assertFailure(RETURN, "return  $", 8, "\" expected");
+  }
+
+  @Test
+  public void testJavaDoc() {
+    assertSuccess(JAVADOC, "/** foo */", "/** foo */");
+    assertSuccess(JAVADOC, "/** * * */", "/** * * */");
   }
 
 }
