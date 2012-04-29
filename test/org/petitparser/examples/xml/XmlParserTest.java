@@ -11,11 +11,12 @@ import java.util.List;
 
 import org.junit.Test;
 import org.petitparser.context.Context;
-import org.petitparser.examples.xml.ast.XmlAttribute;
-import org.petitparser.examples.xml.ast.XmlDocument;
-import org.petitparser.examples.xml.ast.XmlElement;
-import org.petitparser.examples.xml.ast.XmlName;
-import org.petitparser.examples.xml.ast.XmlNode;
+import org.petitparser.grammars.xml.XmlParser;
+import org.petitparser.grammars.xml.ast.XmlAttribute;
+import org.petitparser.grammars.xml.ast.XmlDocument;
+import org.petitparser.grammars.xml.ast.XmlElement;
+import org.petitparser.grammars.xml.ast.XmlName;
+import org.petitparser.grammars.xml.ast.XmlNode;
 import org.petitparser.parser.Parser;
 
 import com.google.common.collect.Lists;

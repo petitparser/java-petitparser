@@ -1,4 +1,4 @@
-package org.petitparser.examples.xml.ast;
+package org.petitparser.grammars.xml.ast;
 
 /**
  * XML doctype node.

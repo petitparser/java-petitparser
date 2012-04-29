@@ -1,4 +1,4 @@
-package org.petitparser.examples.json;
+package org.petitparser.grammars.json;
 
 import static org.petitparser.Chars.anyOf;
 import static org.petitparser.Chars.character;

@@ -1,4 +1,4 @@
-package org.petitparser.examples.xml;
+package org.petitparser.grammars.xml;
 
 import static org.petitparser.Chars.character;
 import static org.petitparser.Chars.pattern;

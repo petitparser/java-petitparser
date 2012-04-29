@@ -1,17 +1,17 @@
-package org.petitparser.examples.xml;
+package org.petitparser.grammars.xml;
 
 import java.util.Collection;
 import java.util.List;
 
-import org.petitparser.examples.xml.ast.XmlAttribute;
-import org.petitparser.examples.xml.ast.XmlComment;
-import org.petitparser.examples.xml.ast.XmlDoctype;
-import org.petitparser.examples.xml.ast.XmlDocument;
-import org.petitparser.examples.xml.ast.XmlElement;
-import org.petitparser.examples.xml.ast.XmlName;
-import org.petitparser.examples.xml.ast.XmlNode;
-import org.petitparser.examples.xml.ast.XmlProcessing;
-import org.petitparser.examples.xml.ast.XmlText;
+import org.petitparser.grammars.xml.ast.XmlAttribute;
+import org.petitparser.grammars.xml.ast.XmlComment;
+import org.petitparser.grammars.xml.ast.XmlDoctype;
+import org.petitparser.grammars.xml.ast.XmlDocument;
+import org.petitparser.grammars.xml.ast.XmlElement;
+import org.petitparser.grammars.xml.ast.XmlName;
+import org.petitparser.grammars.xml.ast.XmlNode;
+import org.petitparser.grammars.xml.ast.XmlProcessing;
+import org.petitparser.grammars.xml.ast.XmlText;
 import org.petitparser.parser.Parser;
 
 import com.google.common.base.Function;

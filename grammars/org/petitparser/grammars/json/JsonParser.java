@@ -1,4 +1,4 @@
-package org.petitparser.examples.json;
+package org.petitparser.grammars.json;
 
 import java.util.List;
 import java.util.Map;
