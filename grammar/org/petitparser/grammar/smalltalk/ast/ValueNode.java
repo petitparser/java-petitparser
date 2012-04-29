@@ -1,9 +1,10 @@
 package org.petitparser.grammar.smalltalk.ast;
 
 /**
+ * Abstract AST node for values.
+ *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class ValueNode extends ProgramNode {
-
+public abstract class ValueNode extends ProgramNode {
 
 }

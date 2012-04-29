@@ -3,7 +3,7 @@ package org.petitparser.grammar.smalltalk.ast;
 import java.util.List;
 
 /**
- * AST node that represents a message send.
+ * AST node for message sends.
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */

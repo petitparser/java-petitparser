@@ -6,7 +6,7 @@ package org.petitparser.grammar.smalltalk.ast;
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
-public class ProgramNode {
+public abstract class ProgramNode {
 
   private ProgramNode parent;
 

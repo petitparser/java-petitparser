@@ -11,12 +11,15 @@ public class CascadeNode extends ValueNode {
 
   private List<MessageNode> messages;
 
-  public CascadeNode(List<MessageNode> messages) {
-    this.messages = messages;
-  }
-
   public List<MessageNode> getMessages() {
     return messages;
+  }
+
+  public void setMessages(List<MessageNode> messages) {
+    for (MessageNode message : messages) {
+      message.setParent(this);
+    }
+    this.messages = messages;
   }
 
 }
