@@ -11,7 +11,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
-import org.petitparser.grammars.json.JsonParser;
+import org.petitparser.grammar.json.JsonParser;
 import org.petitparser.parser.Parser;
 
 /**
