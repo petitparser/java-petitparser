@@ -5,7 +5,6 @@ package org.petitparser.grammar.smalltalk;
 
 import org.petitparser.parser.Parser;
 import org.petitparser.tools.CompositeParser;
-import org.petitparser.tools.Production;
 
 /**
  * Smalltalk grammar definition.
@@ -29,16 +28,6 @@ public class SmalltalkGrammar extends CompositeParser {
 
   @Override
   protected Parser start() {
-
-  }
-
-  @Production
-  Parser startMethod() {
-    return null;
-  }
-
-  @Production
-  Parser startExpression() {
     return null;
   }
 

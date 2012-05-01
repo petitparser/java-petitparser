@@ -3,7 +3,6 @@
  */
 package org.petitparser.grammar.smalltalk;
 
-import org.petitparser.parser.Parser;
 
 /**
  * Smalltalk parser definition.
@@ -12,11 +11,11 @@ import org.petitparser.parser.Parser;
  */
 public class SmalltalkParser extends SmalltalkGrammar {
 
-  @Override
-  protected Parser start() {
-    // TODO Auto-generated method stub
-    return null;
+  public SmalltalkParser(Kind kind) {
+    super(kind);
+    // TODO Auto-generated constructor stub
   }
+
 
 // 'From Pharo1.3 of 16 June 2011 [Latest update: #13327] on 30 April 2012 at 9:45:04 am'!
 // PPSmalltalkGrammar subclass: #PPSmalltalkParser
