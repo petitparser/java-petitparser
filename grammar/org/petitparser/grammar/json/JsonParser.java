@@ -31,12 +31,12 @@ public class JsonParser extends JsonGrammar {
 
   @Override
   Parser elements() {
-    return super.elements().map(Functions.withoutSpeparators());
+    return super.elements().map(Functions.withoutSeparators());
   }
 
   @Override
   Parser members() {
-    return super.members().map(Functions.withoutSpeparators());
+    return super.members().map(Functions.withoutSeparators());
   }
 
   @Override
@@ -88,9 +88,9 @@ public class JsonParser extends JsonGrammar {
         double floating = Double.parseDouble(input);
         long integral = (long) floating;
         if (floating == integral && input.indexOf('.') == -1) {
-          return Long.valueOf(integral);
+          return integral;
         } else {
-          return Double.valueOf(floating);
+          return floating;
         }
       }
     });

@@ -38,7 +38,7 @@ public class ExampleTest {
       .flatten();
 
   @Test
-  public void testIdentitiferSuccess() {
+  public void testIdentifierSuccess() {
     assertSuccess(IDENTIFIER, "a", "a");
     assertSuccess(IDENTIFIER, "a1", "a1");
     assertSuccess(IDENTIFIER, "a12", "a12");
@@ -47,7 +47,7 @@ public class ExampleTest {
   }
 
   @Test
-  public void testIdentitiferIncomplete() {
+  public void testIdentifierIncomplete() {
     assertSuccess(IDENTIFIER, "a_", "a", 1);
     assertSuccess(IDENTIFIER, "a1-", "a1", 2);
     assertSuccess(IDENTIFIER, "a12+", "a12", 3);
@@ -55,7 +55,7 @@ public class ExampleTest {
   }
 
   @Test
-  public void testIdentitiferFailure() {
+  public void testIdentifierFailure() {
     assertFailure(IDENTIFIER, "", "letter expected");
     assertFailure(IDENTIFIER, "1", "letter expected");
     assertFailure(IDENTIFIER, "1a", "letter expected");

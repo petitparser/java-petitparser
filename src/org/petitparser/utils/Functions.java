@@ -63,7 +63,7 @@ public class Functions {
    * Returns a function that gets rid of the separators as created by
    * {@link Parser#separatedBy(Parser)}.
    */
-  public static <T> Function<List<T>, List<T>> withoutSpeparators() {
+  public static <T> Function<List<T>, List<T>> withoutSeparators() {
     return new Function<List<T>, List<T>>() {
       @Override
       public List<T> apply(List<T> input) {

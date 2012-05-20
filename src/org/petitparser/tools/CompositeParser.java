@@ -66,9 +66,9 @@ public abstract class CompositeParser extends DelegateParser {
         if (annotation != null) {
           String name = annotation.value().isEmpty() ? field.getName()
               : annotation.value();
-          Method method = null;
+          Method method;
           try {
-            method = current.getDeclaredMethod(name, new Class<?>[0]);
+            method = current.getDeclaredMethod(name);
           } catch (NoSuchMethodException e) {
             throw new IllegalStateException("Missing initializer for "
                 + field.toString() + ".");
