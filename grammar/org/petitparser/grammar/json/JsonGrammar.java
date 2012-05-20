@@ -28,39 +28,45 @@ public class JsonGrammar extends CompositeParser {
   }
 
   // grammar
-  @Production Parser array;
-  @Production Parser elements;
-  @Production Parser members;
-  @Production Parser object;
-  @Production Parser pair;
-  @Production Parser value;
+  Parser array;
+  Parser elements;
+  Parser members;
+  Parser object;
+  Parser pair;
+  Parser value;
 
+  @Production
   Parser array() {
     return character('[').trim()
         .seq(elements.optional())
         .seq(character(']').trim());
   }
 
+  @Production
   Parser elements() {
     return value.separatedBy(character(',').trim());
   }
 
+  @Production
   Parser members() {
     return pair.separatedBy(character(',').trim());
   }
 
+  @Production
   Parser object() {
     return character('{').trim()
         .seq(members.optional())
         .seq(character('}').trim());
   }
 
+  @Production
   Parser pair() {
     return stringToken
         .seq(character(':').trim())
         .seq(value);
   }
 
+  @Production
   Parser value() {
     return stringToken
         .or(numberToken)
@@ -72,39 +78,44 @@ public class JsonGrammar extends CompositeParser {
   }
 
   // tokens
-  @Production Parser trueToken;
-  @Production Parser falseToken;
-  @Production Parser nullToken;
-  @Production Parser stringToken;
-  @Production Parser numberToken;
+  Parser trueToken;
+  Parser falseToken;
+  Parser nullToken;
+  Parser stringToken;
+  Parser numberToken;
 
+  @Production
   Parser trueToken() {
-    return string("true").flatten().trim();
+      return string("true").flatten().trim();
   }
 
+  @Production
   Parser falseToken() {
     return string("false").flatten().trim();
   }
 
+  @Production
   Parser nullToken() {
     return string("null").flatten().trim();
   }
 
+  @Production
   Parser stringToken() {
     return stringPrimitive.flatten().trim();
   }
 
+  @Production
   Parser numberToken() {
     return numberPrimitive.flatten().trim();
   }
 
   // primitives
-  @Production Parser characterPrimitive;
-  @Production Parser characterEscape;
-  @Production Parser characterNormal;
-  @Production Parser characterOctal;
-  @Production Parser numberPrimitive;
-  @Production Parser stringPrimitive;
+  Parser characterPrimitive;
+  Parser characterEscape;
+  Parser characterNormal;
+  Parser characterOctal;
+  Parser numberPrimitive;
+  Parser stringPrimitive;
 
   static final ImmutableMap<Character, Character> ESCAPE_TABLE
       = ImmutableMap.<Character, Character>builder()
@@ -120,24 +131,29 @@ public class JsonGrammar extends CompositeParser {
   static final Function<Character, Character> ESCAPE_TABLE_FUNCTION =
       Functions.forMap(ESCAPE_TABLE);
 
+  @Production
   Parser characterPrimitive() {
     return (characterEscape)
         .or(characterOctal)
         .or(characterNormal);
   }
 
+  @Production
   Parser characterEscape() {
     return character('\\').seq(anyOf(new String(Chars.toArray(ESCAPE_TABLE.keySet()))));
   }
 
+  @Production
   Parser characterNormal() {
     return anyOf("\"\\").negate();
   }
 
+  @Production
   Parser characterOctal() {
     return (string("\\u")).seq(pattern("0-9A-Fa-f").times(4).flatten());
   }
 
+  @Production
   Parser numberPrimitive() {
     return character('-').optional()
         .seq(character('0').or(digit().plus()))
@@ -145,6 +161,7 @@ public class JsonGrammar extends CompositeParser {
         .seq(anyOf("eE").seq(anyOf("-+").optional()).seq(digit().plus()).optional());
   }
 
+  @Production
   Parser stringPrimitive() {
     return character('"').seq(characterPrimitive.star()).seq(character('"'));
   }

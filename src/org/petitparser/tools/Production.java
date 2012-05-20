@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * @author Lukas Renggli (renggli@gmail.com)
  */
 @Documented
-@Target(ElementType.FIELD)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Production {
   String value() default "";

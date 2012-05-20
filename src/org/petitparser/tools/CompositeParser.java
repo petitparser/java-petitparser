@@ -48,7 +48,7 @@ public abstract class CompositeParser extends DelegateParser {
    */
   public CompositeParser() {
     super(new FailureParser("No parser defined"));
-    initializeFields(getFieldsAndInitializers());
+    initializeFields(getProductions());
     replace(getDelegate(), Transformations.removeDelegates(start()));
   }
 
@@ -57,32 +57,42 @@ public abstract class CompositeParser extends DelegateParser {
    */
   protected abstract Parser start();
 
-  private Map<Field, Method> getFieldsAndInitializers() {
+  private Map<Field, Method> getProductions() {
     Class<?> current = getClass();
-    Map<Field, Method> fields = Maps.newHashMap();
-    while (!current.equals(CompositeParser.class)) {
-      for (Field field : current.getDeclaredFields()) {
-        Production annotation = field.getAnnotation(Production.class);
-        if (annotation != null) {
-          String name = annotation.value().isEmpty() ? field.getName()
-              : annotation.value();
-          Method method;
-          try {
-            method = current.getDeclaredMethod(name);
-          } catch (NoSuchMethodException e) {
-            throw new IllegalStateException("Missing initializer for "
-                + field.toString() + ".");
-          }
-          if (!method.getReturnType().equals(field.getType())) {
+    Map<Field, Method> productions = Maps.newHashMap();
+    while (!CompositeParser.class.equals(current)) {
+      for (Method method : current.getDeclaredMethods()) {
+        Production production = method.getAnnotation(Production.class);
+        if (production != null) {
+          if (method.getParameterTypes().length > 0) {
             throw new IllegalStateException(method.toString()
-                + " expected to return " + field.getType().getName());
+                + " should not expect arguments");
           }
-          fields.put(field, method);
+          String name = production.value().isEmpty()
+              ? method.getName() : production.value();
+          Field field = lookupField(current, name);
+          if (!field.getType().isAssignableFrom(method.getReturnType())) {
+            throw new IllegalStateException(method.toString()
+                + " is not assignable to " + field.getName());
+          }
+          productions.put(field, method);
         }
       }
       current = current.getSuperclass();
     }
-    return fields;
+    return productions;
+  }
+
+  private Field lookupField(Class<?> start, String name) {
+    try {
+      Field field = start.getDeclaredField(name);
+      field.setAccessible(true);
+      return field;
+    } catch (SecurityException exception) {
+      throw new IllegalStateException(name + " cannot be accessed in " + start.getName());
+    } catch (NoSuchFieldException exception) {
+      throw new IllegalStateException(name + " is not a valid field in " + start.getName());
+    }
   }
 
   private void initializeFields(Map<Field, Method> fields) {
@@ -103,8 +113,7 @@ public abstract class CompositeParser extends DelegateParser {
       try {
         entry.getValue().setAccessible(true);
         Parser parser = (Parser) entry.getValue().invoke(this);
-        parsers.get(entry.getKey()).replace(
-            parsers.get(entry.getKey()).getDelegate(), parser);
+        parsers.get(entry.getKey()).replace(parsers.get(entry.getKey()).getDelegate(), parser);
         entry.getKey().set(this, parser);
       } catch (IllegalArgumentException exception) {
         exception.printStackTrace();

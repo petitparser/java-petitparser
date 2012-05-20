@@ -1,4 +1,4 @@
-package org.petitparser.examples.json;
+package org.petitparser.grammar.json;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

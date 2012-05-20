@@ -27,19 +27,20 @@ public class XmlGrammar extends CompositeParser {
     return document.end();
   }
 
-  @Production Parser attribute;
-  @Production Parser attributeValue;
-  @Production Parser attributeValueDouble;
-  @Production Parser attributeValueSingle;
-  @Production Parser attributes;
-  @Production Parser comment;
-  @Production Parser content;
-  @Production Parser doctype;
-  @Production Parser document;
-  @Production Parser element;
-  @Production Parser processing;
-  @Production Parser qualified;
+  Parser attribute;
+  Parser attributeValue;
+  Parser attributeValueDouble;
+  Parser attributeValueSingle;
+  Parser attributes;
+  Parser comment;
+  Parser content;
+  Parser doctype;
+  Parser document;
+  Parser element;
+  Parser processing;
+  Parser qualified;
 
+  @Production
   Parser attribute() {
     return qualified
         .seq(whitespace.optional())
@@ -49,24 +50,28 @@ public class XmlGrammar extends CompositeParser {
         .map(Functions.permutationOfList(0, 4));
   }
 
+  @Production
   Parser attributeValue() {
     return attributeValueDouble
         .or(attributeValueSingle)
         .map(Functions.nthOfList(1));
   }
 
+  @Production
   Parser attributeValueDouble() {
     return character('"')
         .seq(character('"').negate().star().flatten())
         .seq(character('"'));
   }
 
+  @Production
   Parser attributeValueSingle() {
     return character('\'')
         .seq(character('\'').negate().star().flatten())
         .seq(character('\''));
   }
 
+  @Production
   Parser attributes() {
     return whitespace
         .seq(attribute)
@@ -74,6 +79,7 @@ public class XmlGrammar extends CompositeParser {
         .star();
   }
 
+  @Production
   Parser comment() {
     return string("<!--")
         .seq(string("-->").negate().star().flatten())
@@ -81,6 +87,7 @@ public class XmlGrammar extends CompositeParser {
         .map(Functions.nthOfList(1));
   }
 
+  @Production
   Parser content() {
     return characterData
         .or(element)
@@ -89,6 +96,7 @@ public class XmlGrammar extends CompositeParser {
         .star();
   }
 
+  @Production
   Parser doctype() {
     return string("<!DOCTYPE")
         .seq(whitespace.optional())
@@ -102,6 +110,7 @@ public class XmlGrammar extends CompositeParser {
         .map(Functions.nthOfList(2));
   }
 
+  @Production
   Parser document() {
     return processing.optional()
         .seq(misc)
@@ -112,6 +121,7 @@ public class XmlGrammar extends CompositeParser {
         .map(Functions.permutationOfList(0, 2, 4));
   }
 
+  @Production
   Parser element() {
     return character('<')
         .seq(qualified)
@@ -141,6 +151,7 @@ public class XmlGrammar extends CompositeParser {
         });
   }
 
+  @Production
   Parser processing() {
     return string("<?")
         .seq(nameToken)
@@ -152,22 +163,26 @@ public class XmlGrammar extends CompositeParser {
         .map(Functions.permutationOfList(1, 2));
   }
 
+  @Production
   Parser qualified() {
     return nameToken;
   }
 
-  @Production Parser characterData;
-  @Production Parser misc;
-  @Production Parser whitespace;
+  Parser characterData;
+  Parser misc;
+  Parser whitespace;
 
+  @Production
   Parser characterData() {
     return character('<').negate().plus().flatten();
   }
 
+  @Production
   Parser misc() {
     return whitespace.or(comment).or(processing).star();
   }
 
+  @Production
   Parser whitespace() {
     return Chars.whitespace().plus();
   }
@@ -178,18 +193,21 @@ public class XmlGrammar extends CompositeParser {
   private static final String NAME_CHARS = "-.0-9\u00B7\u0300-\u036F\u203F-\u2040"
       + NAME_START_CHARS;
 
-  @Production Parser nameToken;
-  @Production Parser nameStartChar;
-  @Production Parser nameChar;
+  Parser nameToken;
+  Parser nameStartChar;
+  Parser nameChar;
 
+  @Production
   Parser nameToken() {
     return nameStartChar.seq(nameChar.star()).flatten();
   }
 
+  @Production
   Parser nameStartChar() {
     return pattern(NAME_START_CHARS);
   }
 
+  @Production
   Parser nameChar() {
     return pattern(NAME_CHARS);
   }
