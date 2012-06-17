@@ -13,7 +13,7 @@
   <property name="src" location="src" />
   <property name="lib" location="lib" />
   <property name="test" location="test" />
-  <property name="examples" location="examples" />
+  <property name="grammar" location="grammar" />
 
   <!-- output directories -->
   <property name="build" location="build" />
@@ -51,7 +51,7 @@
   <target name="compile" description="Compile source files." depends="ivy">
     <mkdir dir="${build.bin}" />
     <javac srcdir="${src}" destdir="${build.bin}" includeantruntime="false" classpathref="classpath" />
-    <javac srcdir="${examples}" destdir="${build.bin}" includeantruntime="false" classpathref="classpath" />
+    <javac srcdir="${grammar}" destdir="${build.bin}" includeantruntime="false" classpathref="classpath" />
   </target>
 
   <target name="test" description="Run all JUnit tests." depends="compile">
