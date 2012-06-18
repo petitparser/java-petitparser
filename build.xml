@@ -69,6 +69,10 @@
     </junit>
   </target>
 
+  <target name="bench" description="Run a simple XML benchmark." depends="test">
+    <java classname="org.petitparser.grammar.xml.XmlBenchmark" classpathref="classpath" />
+  </target>
+
   <target name="javadoc" description="Generate the JavaDoc files.">
     <mkdir dir="${build.doc}" />
     <javadoc sourcepath="${src}" destdir="${build.doc}">
