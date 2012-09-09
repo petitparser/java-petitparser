@@ -230,4 +230,16 @@ public class ParserTest {
     assertSuccess(parser, "ababab", Arrays.asList('a', 'b', 'a', 'b', 'a'), 5);
   }
 
+  @Test
+  public void testDelimitedBy() {
+    Parser parser = character('a').delimitedBy(character('b'));
+    assertFailure(parser, "", "a expected");
+    assertSuccess(parser, "a", Arrays.asList('a'));
+    assertSuccess(parser, "ab", Arrays.asList('a', 'b'));
+    assertSuccess(parser, "aba", Arrays.asList('a', 'b', 'a'));
+    assertSuccess(parser, "abab", Arrays.asList('a', 'b', 'a', 'b'));
+    assertSuccess(parser, "ababa", Arrays.asList('a', 'b', 'a', 'b', 'a'));
+    assertSuccess(parser, "ababab", Arrays.asList('a', 'b', 'a', 'b', 'a', 'b'));
+  }
+
 }

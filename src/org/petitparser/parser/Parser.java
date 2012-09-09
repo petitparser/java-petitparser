@@ -146,17 +146,37 @@ public abstract class Parser implements Cloneable {
    * by a {@code separator}.
    */
   public Parser separatedBy(Parser separator) {
-    return new SequenceParser(this, new SequenceParser(separator, this).star()).map(new Function<List<List<List<Object>>>, List<Object>>() {
-      @Override
-      public List<Object> apply(List<List<List<Object>>> input) {
-        List<Object> result = Lists.newArrayList();
-        result.add(input.get(0));
-        for (List<Object> list : input.get(1)) {
-          result.addAll(list);
-        }
-        return result;
-      }
-    });
+    return new SequenceParser(this, new SequenceParser(separator, this).star())
+        .map(new Function<List<List<List<Object>>>, List<Object>>() {
+          @Override
+          public List<Object> apply(List<List<List<Object>>> input) {
+            List<Object> result = Lists.newArrayList();
+            result.add(input.get(0));
+            for (List<Object> list : input.get(1)) {
+              result.addAll(list);
+            }
+            return result;
+          }
+        });
+  }
+
+  /**
+   * Returns a new parser that parses the receiver one or more times, separated
+   * and possibly ended by a {@code separator}."
+   */
+  public Parser delimitedBy(Parser separator) {
+    return separatedBy(separator)
+        .seq(separator.optional())
+        .map(new Function<List<List<Object>>, List<Object>>() {
+          @Override
+          public List<Object> apply(List<List<Object>> input) {
+            List<Object> result = Lists.newArrayList(input.get(0));
+            if (input.get(1) != null) {
+              result.add(input.get(1));
+            }
+            return result;
+          }
+        });
   }
 
   /**
