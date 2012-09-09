@@ -45,7 +45,7 @@ public class JsonParser extends JsonGrammar {
     action("trueToken", Functions.constant(true));
     action("falseToken", Functions.constant(false));
     action("nullToken", Functions.constant(null));
-    redefine("stringToken", reference("stringPrimitive").trim());
+    redef("stringToken", ref("stringPrimitive").trim());
     action("numberToken", new Function<String, Number>() {
       @Override
       public Number apply(String input) {

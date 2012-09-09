@@ -28,63 +28,63 @@ public class XmlGrammar extends CompositeParser {
 
   @Override
   protected void initialize() {
-    define("start", reference("document").end());
+    def("start", ref("document").end());
 
-    define("attribute", reference("qualified")
-      .seq(reference("whitespace").optional())
+    def("attribute", ref("qualified")
+      .seq(ref("whitespace").optional())
       .seq(character('='))
-      .seq(reference("whitespace").optional())
-      .seq(reference("attributeValue"))
+      .seq(ref("whitespace").optional())
+      .seq(ref("attributeValue"))
       .map(Functions.permutationOfList(0, 4)));
-    define("attributeValue", reference("attributeValueDouble")
-      .or(reference("attributeValueSingle"))
+    def("attributeValue", ref("attributeValueDouble")
+      .or(ref("attributeValueSingle"))
       .map(Functions.nthOfList(1)));
-    define("attributeValueDouble", character('"')
+    def("attributeValueDouble", character('"')
       .seq(character('"').negate().star().flatten())
       .seq(character('"')));
-    define("attributeValueSingle", character('\'')
+    def("attributeValueSingle", character('\'')
       .seq(character('\'').negate().star().flatten())
       .seq(character('\'')));
-    define("attributes", reference("whitespace")
-      .seq(reference("attribute"))
+    def("attributes", ref("whitespace")
+      .seq(ref("attribute"))
       .map(Functions.nthOfList(1))
       .star());
-    define("comment", string("<!--")
+    def("comment", string("<!--")
       .seq(string("-->").negate().star().flatten())
       .seq(string("-->"))
       .map(Functions.nthOfList(1)));
-    define("content", reference("characterData")
-      .or(reference("element"))
-      .or(reference("processing"))
-      .or(reference("comment"))
+    def("content", ref("characterData")
+      .or(ref("element"))
+      .or(ref("processing"))
+      .or(ref("comment"))
       .star());
-    define("doctype", string("<!DOCTYPE")
-      .seq(reference("whitespace").optional())
+    def("doctype", string("<!DOCTYPE")
+      .seq(ref("whitespace").optional())
       .seq(character('[').negate().star()
         .seq(character('['))
         .seq(character(']').negate().star())
         .seq(character(']'))
         .flatten())
-      .seq(reference("whitespace").optional())
+      .seq(ref("whitespace").optional())
       .seq(character('>'))
       .map(Functions.nthOfList(2)));
-    define("document", reference("processing").optional()
-      .seq(reference("misc"))
-      .seq(reference("doctype").optional())
-      .seq(reference("misc"))
-      .seq(reference("element"))
-      .seq(reference("misc"))
+    def("document", ref("processing").optional()
+      .seq(ref("misc"))
+      .seq(ref("doctype").optional())
+      .seq(ref("misc"))
+      .seq(ref("element"))
+      .seq(ref("misc"))
       .map(Functions.permutationOfList(0, 2, 4)));
-    define("element", character('<')
-      .seq(reference("qualified"))
-      .seq(reference("attributes"))
-      .seq(reference("whitespace").optional())
+    def("element", character('<')
+      .seq(ref("qualified"))
+      .seq(ref("attributes"))
+      .seq(ref("whitespace").optional())
       .seq(string("/>")
         .or(character('>')
-          .seq(reference("content"))
+          .seq(ref("content"))
           .seq(string("</"))
-          .seq(reference("qualified"))
-          .seq(reference("whitespace").optional())
+          .seq(ref("qualified"))
+          .seq(ref("whitespace").optional())
           .seq(character('>'))))
       .map(new Function<List<?>, List<?>>() {
           @Override
@@ -101,28 +101,28 @@ public class XmlGrammar extends CompositeParser {
             }
           }
         }));
-    define("processing", string("<?")
-      .seq(reference("nameToken"))
-      .seq(reference("whitespace")
+    def("processing", string("<?")
+      .seq(ref("nameToken"))
+      .seq(ref("whitespace")
         .seq(string("?>").negate().star())
         .optional()
         .flatten())
       .seq(string("?>"))
       .map(Functions.permutationOfList(1, 2)));
-    define("qualified", reference("nameToken"));
+    def("qualified", ref("nameToken"));
 
-    define("characterData", character('<').negate().plus().flatten());
-    define("misc", reference("whitespace")
-      .or(reference("comment"))
-      .or(reference("processing"))
+    def("characterData", character('<').negate().plus().flatten());
+    def("misc", ref("whitespace")
+      .or(ref("comment"))
+      .or(ref("processing"))
       .star());
-    define("whitespace", whitespace().plus());
+    def("whitespace", whitespace().plus());
 
-    define("nameToken", reference("nameStartChar")
-      .seq(reference("nameStartChar").star())
+    def("nameToken", ref("nameStartChar")
+      .seq(ref("nameStartChar").star())
       .flatten());
-    define("nameStartChar", pattern(NAME_START_CHARS));
-    define("nameChar", pattern(NAME_CHARS));
+    def("nameStartChar", pattern(NAME_START_CHARS));
+    def("nameChar", pattern(NAME_CHARS));
   }
 
 }

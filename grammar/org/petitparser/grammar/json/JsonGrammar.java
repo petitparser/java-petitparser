@@ -36,57 +36,57 @@ public class JsonGrammar extends CompositeParser {
 
   @Override
   protected void initialize() {
-    define("start", reference("value").end());
+    def("start", ref("value").end());
 
-    define("array",
+    def("array",
       character('[').trim()
-        .seq(reference("elements").optional())
+        .seq(ref("elements").optional())
         .seq(character(']').trim()));
-    define("elements",
-      reference("value").separatedBy(character(',').trim()));
-    define("members",
-      reference("pair").separatedBy(character(',').trim()));
-    define("object",
+    def("elements",
+      ref("value").separatedBy(character(',').trim()));
+    def("members",
+      ref("pair").separatedBy(character(',').trim()));
+    def("object",
       character('{').trim()
-        .seq(reference("members").optional())
+        .seq(ref("members").optional())
         .seq(character('}').trim()));
-    define("pair",
-      reference("stringToken")
+    def("pair",
+      ref("stringToken")
         .seq(character(':').trim())
-        .seq(reference("value")));
-    define("value",
-      reference("stringToken")
-        .or(reference("numberToken"))
-        .or(reference("trueToken"))
-        .or(reference("falseToken"))
-        .or(reference("nullToken"))
-        .or(reference("object"))
-        .or(reference("array")));
+        .seq(ref("value")));
+    def("value",
+      ref("stringToken")
+        .or(ref("numberToken"))
+        .or(ref("trueToken"))
+        .or(ref("falseToken"))
+        .or(ref("nullToken"))
+        .or(ref("object"))
+        .or(ref("array")));
 
-    define("trueToken", string("true").flatten().trim());
-    define("falseToken", string("false").flatten().trim());
-    define("nullToken", string("null").flatten().trim());
-    define("stringToken", reference("stringPrimitive").flatten().trim());
-    define("numberToken", reference("numberPrimitive").flatten().trim());
+    def("trueToken", string("true").flatten().trim());
+    def("falseToken", string("false").flatten().trim());
+    def("nullToken", string("null").flatten().trim());
+    def("stringToken", ref("stringPrimitive").flatten().trim());
+    def("numberToken", ref("numberPrimitive").flatten().trim());
 
-    define("characterPrimitive",
-      reference("characterEscape")
-        .or(reference("characterOctal"))
-        .or(reference("characterNormal")));
-    define("characterEscape",
+    def("characterPrimitive",
+      ref("characterEscape")
+        .or(ref("characterOctal"))
+        .or(ref("characterNormal")));
+    def("characterEscape",
       character('\\').seq(anyOf(new String(Chars.toArray(ESCAPE_TABLE.keySet())))));
-    define("characterOctal",
+    def("characterOctal",
       string("\\u").seq(pattern("0-9A-Fa-f").times(4).flatten()));
-    define("characterNormal",
+    def("characterNormal",
         anyOf("\"\\").negate());
-    define("numberPrimitive",
+    def("numberPrimitive",
       character('-').optional()
         .seq(character('0').or(digit().plus()))
         .seq(character('.').seq(digit().plus()).optional())
         .seq(anyOf("eE").seq(anyOf("-+").optional()).seq(digit().plus()).optional()));
-    define("stringPrimitive",
+    def("stringPrimitive",
       character('"')
-        .seq(reference("characterPrimitive").star())
+        .seq(ref("characterPrimitive").star())
         .seq(character('"')));
   }
 

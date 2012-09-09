@@ -32,12 +32,12 @@ public abstract class CompositeParser extends DelegateParser {
   public Parser getDelegate() {
     if (delegate == DEFAULT_DELEGATE) {
       initialize();
-      replace(delegate, reference("start"));
+      replace(delegate, ref("start"));
       for (Map.Entry<String, DelegateParser> entry : undefined.entrySet()) {
         checkState(defined.containsKey(entry.getKey()), "Undefined production: ", entry.getKey());
         entry.getValue().replace(entry.getValue().getDelegate(), defined.get(entry.getKey()));
       }
-      replace(delegate, Transformations.removeDelegates(reference("start")));
+      replace(delegate, Transformations.removeDelegates(ref("start")));
     }
     return delegate;
   }
@@ -50,7 +50,7 @@ public abstract class CompositeParser extends DelegateParser {
   /**
    * Returns a reference to the production with the given {@code name}.
    */
-  protected final Parser reference(String name) {
+  protected final Parser ref(String name) {
     if (undefined.containsKey(name)) {
       return undefined.get(name);
     } else {
@@ -64,7 +64,7 @@ public abstract class CompositeParser extends DelegateParser {
   /**
    * Defines a production with a {@code name} and a {@code parser}.
    */
-  protected final void define(String name, Parser parser) {
+  protected final void def(String name, Parser parser) {
     checkState(!defined.containsKey(name), "Duplicate production: ", name);
     defined.put(name, parser);
   }
@@ -73,7 +73,7 @@ public abstract class CompositeParser extends DelegateParser {
    * Redefines an existing production with a {@code name} and a new
    * {@code parser}.
    */
-  protected final void redefine(String name, Parser parser) {
+  protected final void redef(String name, Parser parser) {
     checkState(defined.containsKey(name), "Undefined production: ", name);
     defined.put(name, parser);
   }
@@ -82,15 +82,15 @@ public abstract class CompositeParser extends DelegateParser {
    * Redefines an existing production with a {@code name} and a {@code function}
    * producing a new parser.
    */
-  protected final void redefine(String name, Function<Parser, Parser> function) {
-    redefine(name, function.apply(defined.get(name)));
+  protected final void redef(String name, Function<Parser, Parser> function) {
+    redef(name, function.apply(defined.get(name)));
   }
 
   /**
    * Attaches an action {@code function} to an existing production {@code name}.
    */
   protected final <S, T> void action(String name, final Function<S, T> function) {
-    redefine(name, new Function<Parser, Parser>() {
+    redef(name, new Function<Parser, Parser>() {
       @Override
       public Parser apply(Parser parser) {
         return parser.map(function);
