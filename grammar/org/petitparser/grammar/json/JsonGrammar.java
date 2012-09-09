@@ -6,9 +6,7 @@ import static org.petitparser.Chars.digit;
 import static org.petitparser.Chars.pattern;
 import static org.petitparser.Parsers.string;
 
-import org.petitparser.parser.Parser;
-import org.petitparser.tools.CompositeParser;
-import org.petitparser.tools.Production;
+import org.petitparser.parser.CompositeParser;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
@@ -22,103 +20,8 @@ import com.google.common.primitives.Chars;
  */
 public class JsonGrammar extends CompositeParser {
 
-  @Override
-  protected Parser start() {
-    return value.end();
-  }
-
-  // grammar
-  Parser array;
-  Parser elements;
-  Parser members;
-  Parser object;
-  Parser pair;
-  Parser value;
-
-  @Production
-  Parser array() {
-    return character('[').trim()
-        .seq(elements.optional())
-        .seq(character(']').trim());
-  }
-
-  @Production
-  Parser elements() {
-    return value.separatedBy(character(',').trim());
-  }
-
-  @Production
-  Parser members() {
-    return pair.separatedBy(character(',').trim());
-  }
-
-  @Production
-  Parser object() {
-    return character('{').trim()
-        .seq(members.optional())
-        .seq(character('}').trim());
-  }
-
-  @Production
-  Parser pair() {
-    return stringToken
-        .seq(character(':').trim())
-        .seq(value);
-  }
-
-  @Production
-  Parser value() {
-    return stringToken
-        .or(numberToken)
-        .or(object)
-        .or(array)
-        .or(trueToken)
-        .or(falseToken)
-        .or(nullToken);
-  }
-
-  // tokens
-  Parser trueToken;
-  Parser falseToken;
-  Parser nullToken;
-  Parser stringToken;
-  Parser numberToken;
-
-  @Production
-  Parser trueToken() {
-      return string("true").flatten().trim();
-  }
-
-  @Production
-  Parser falseToken() {
-    return string("false").flatten().trim();
-  }
-
-  @Production
-  Parser nullToken() {
-    return string("null").flatten().trim();
-  }
-
-  @Production
-  Parser stringToken() {
-    return stringPrimitive.flatten().trim();
-  }
-
-  @Production
-  Parser numberToken() {
-    return numberPrimitive.flatten().trim();
-  }
-
-  // primitives
-  Parser characterPrimitive;
-  Parser characterEscape;
-  Parser characterNormal;
-  Parser characterOctal;
-  Parser numberPrimitive;
-  Parser stringPrimitive;
-
-  static final ImmutableMap<Character, Character> ESCAPE_TABLE
-      = ImmutableMap.<Character, Character>builder()
+  protected static final ImmutableMap<Character, Character> ESCAPE_TABLE =
+      ImmutableMap.<Character, Character>builder()
           .put('\\', '\\')
           .put('/', '/')
           .put('"', '"')
@@ -128,42 +31,63 @@ public class JsonGrammar extends CompositeParser {
           .put('r', '\r')
           .put('t', '\t')
           .build();
-  static final Function<Character, Character> ESCAPE_TABLE_FUNCTION =
+  protected static final Function<Character, Character> ESCAPE_TABLE_FUNCTION =
       Functions.forMap(ESCAPE_TABLE);
 
-  @Production
-  Parser characterPrimitive() {
-    return (characterEscape)
-        .or(characterOctal)
-        .or(characterNormal);
-  }
+  @Override
+  protected void initialize() {
+    define("start", reference("value").end());
 
-  @Production
-  Parser characterEscape() {
-    return character('\\').seq(anyOf(new String(Chars.toArray(ESCAPE_TABLE.keySet()))));
-  }
+    define("array",
+      character('[').trim()
+        .seq(reference("elements").optional())
+        .seq(character(']').trim()));
+    define("elements",
+      reference("value").separatedBy(character(',').trim()));
+    define("members",
+      reference("pair").separatedBy(character(',').trim()));
+    define("object",
+      character('{').trim()
+        .seq(reference("members").optional())
+        .seq(character('}').trim()));
+    define("pair",
+      reference("stringToken")
+        .seq(character(':').trim())
+        .seq(reference("value")));
+    define("value",
+      reference("stringToken")
+        .or(reference("numberToken"))
+        .or(reference("trueToken"))
+        .or(reference("falseToken"))
+        .or(reference("nullToken"))
+        .or(reference("object"))
+        .or(reference("array")));
 
-  @Production
-  Parser characterNormal() {
-    return anyOf("\"\\").negate();
-  }
+    define("trueToken", string("true").flatten().trim());
+    define("falseToken", string("false").flatten().trim());
+    define("nullToken", string("null").flatten().trim());
+    define("stringToken", reference("stringPrimitive").flatten().trim());
+    define("numberToken", reference("numberPrimitive").flatten().trim());
 
-  @Production
-  Parser characterOctal() {
-    return (string("\\u")).seq(pattern("0-9A-Fa-f").times(4).flatten());
-  }
-
-  @Production
-  Parser numberPrimitive() {
-    return character('-').optional()
+    define("characterPrimitive",
+      reference("characterEscape")
+        .or(reference("characterOctal"))
+        .or(reference("characterNormal")));
+    define("characterEscape",
+      character('\\').seq(anyOf(new String(Chars.toArray(ESCAPE_TABLE.keySet())))));
+    define("characterOctal",
+      string("\\u").seq(pattern("0-9A-Fa-f").times(4).flatten()));
+    define("characterNormal",
+        anyOf("\"\\").negate());
+    define("numberPrimitive",
+      character('-').optional()
         .seq(character('0').or(digit().plus()))
         .seq(character('.').seq(digit().plus()).optional())
-        .seq(anyOf("eE").seq(anyOf("-+").optional()).seq(digit().plus()).optional());
-  }
-
-  @Production
-  Parser stringPrimitive() {
-    return character('"').seq(characterPrimitive.star()).seq(character('"'));
+        .seq(anyOf("eE").seq(anyOf("-+").optional()).seq(digit().plus()).optional()));
+    define("stringPrimitive",
+      character('"')
+        .seq(reference("characterPrimitive").star())
+        .seq(character('"')));
   }
 
 }

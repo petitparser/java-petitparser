@@ -39,8 +39,10 @@ import com.google.common.collect.Maps;
  * }
  * </pre>
  *
+ * @deprecated Consider switching to {@link org.petitparser.parser.CompositeParser}.
  * @author Lukas Renggli (renggli@gmail.com)
  */
+@Deprecated
 public abstract class CompositeParser extends DelegateParser {
 
   /**
