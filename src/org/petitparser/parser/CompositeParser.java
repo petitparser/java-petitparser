@@ -1,5 +1,6 @@
 package org.petitparser.parser;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Map;
@@ -66,7 +67,9 @@ public abstract class CompositeParser extends DelegateParser {
    */
   protected final void def(String name, Parser parser) {
     checkState(!defined.containsKey(name), "Duplicate production: ", name);
-    defined.put(name, parser);
+    defined.put(
+        checkNotNull(name, "Invalid name: ", name),
+        checkNotNull(parser, "Invalid parser: ", parser));
   }
 
   /**
@@ -75,7 +78,9 @@ public abstract class CompositeParser extends DelegateParser {
    */
   protected final void redef(String name, Parser parser) {
     checkState(defined.containsKey(name), "Undefined production: ", name);
-    defined.put(name, parser);
+    defined.put(
+        checkNotNull(name, "Invalid name: ", name),
+        checkNotNull(parser, "Invalid parser: ", parser));
   }
 
   /**
