@@ -26,21 +26,24 @@ public abstract class CompositeParser extends DelegateParser {
   private final Map<String, DelegateParser> undefined = Maps.newHashMap();
 
   /**
-   * Default constructor that triggers the code building the composite grammar.
+   * Lazily initializes the delegate by calling {@link CompositeParser#initialize()}.
    */
-  public CompositeParser() {
-    super(Parsers.epsilon());
-    initialize();
-    replace(getDelegate(), reference("start"));
-    for (Map.Entry<String, DelegateParser> entry : undefined.entrySet()) {
-      checkState(defined.containsKey(entry.getKey()), "Undefined production: ", entry.getKey());
-      entry.getValue().replace(entry.getValue().getDelegate(), defined.get(entry.getKey()));
+  @Override
+  public Parser getDelegate() {
+    if (delegate == DEFAULT_DELEGATE) {
+      initialize();
+      replace(delegate, reference("start"));
+      for (Map.Entry<String, DelegateParser> entry : undefined.entrySet()) {
+        checkState(defined.containsKey(entry.getKey()), "Undefined production: ", entry.getKey());
+        entry.getValue().replace(entry.getValue().getDelegate(), defined.get(entry.getKey()));
+      }
+      replace(delegate, Transformations.removeDelegates(reference("start")));
     }
-    replace(getDelegate(), Transformations.removeDelegates(reference("start")));
+    return delegate;
   }
 
   /**
-   * Initializes the composite grammar.
+   * Automatically called by the framework to initialize the grammar.
    */
   protected abstract void initialize();
 

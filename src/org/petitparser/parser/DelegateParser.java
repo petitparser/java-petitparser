@@ -12,10 +12,13 @@ import org.petitparser.context.Result;
  */
 public class DelegateParser extends Parser {
 
-  private Parser delegate;
+  protected static final Parser DEFAULT_DELEGATE =
+      new FailureParser("No delegate parser specified");
+
+  protected Parser delegate;
 
   public DelegateParser() {
-    this(new FailureParser("No delegate parser specified"));
+    this(DEFAULT_DELEGATE);
   }
 
   public DelegateParser(Parser delegate) {
@@ -24,7 +27,7 @@ public class DelegateParser extends Parser {
 
   @Override
   public Result parse(Context context) {
-    return delegate.parse(context);
+    return getDelegate().parse(context);
   }
 
   public Parser getDelegate() {
@@ -42,7 +45,7 @@ public class DelegateParser extends Parser {
   @Override
   public List<Parser> getChildren() {
     List<Parser> children = super.getChildren();
-    children.add(delegate);
+    children.add(getDelegate());
     return children;
   }
 
