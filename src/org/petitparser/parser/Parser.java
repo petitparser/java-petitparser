@@ -41,6 +41,15 @@ public abstract class Parser implements Cloneable {
   }
 
   /**
+   * Returns a new parser that creates a {@link Token}.
+   *
+   * @see TokenParser
+   */
+  public Parser token() {
+    return new TokenParser(this);
+  }
+
+  /**
    * Returns a new parser that consumes whitespace before and after the
    * receiving parser.
    *

@@ -2,7 +2,7 @@ package org.petitparser.buffer;
 
 /**
  * Generic buffer interface to abstract the data source from the parsers.
- * 
+ *
  * @author Lukas Renggli (renggli@gmail.com)
  */
 public interface Buffer {
@@ -28,5 +28,10 @@ public interface Buffer {
    * error if this is not a character buffer.
    */
   String subSequence(int start, int stop);
+
+  /**
+   * Creates a token on a range of the buffer.
+   */
+  Token newToken(int start, int stop, Object value);
 
 }

@@ -1,14 +1,17 @@
 package org.petitparser;
 
+import static org.junit.Assert.assertEquals;
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
 import static org.petitparser.Chars.character;
 import static org.petitparser.Chars.digit;
 import static org.petitparser.Chars.upperCase;
+import static org.petitparser.Parsing.parse;
 
 import java.util.Arrays;
 
 import org.junit.Test;
+import org.petitparser.buffer.Token;
 import org.petitparser.parser.Parser;
 
 import com.google.common.base.Function;
@@ -176,6 +179,15 @@ public class ParserTest {
     assertSuccess(parser, "a", Arrays.asList('a'));
     assertSuccess(parser, "aa", Arrays.asList('a', 'a'));
     assertSuccess(parser, "aaa", Arrays.asList('a', 'a', 'a'));
+  }
+
+  @Test
+  public void testToken() {
+    Parser parser = character('a').star().token().trim();
+    Token token = parse(parser, " aa ").get();
+    assertEquals(1, token.getStart());
+    assertEquals(3, token.getStop());
+    assertEquals(Arrays.asList('a', 'a'), token.getValue());
   }
 
   @Test
