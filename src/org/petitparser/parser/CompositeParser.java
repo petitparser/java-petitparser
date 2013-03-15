@@ -14,10 +14,13 @@ import com.google.common.collect.Maps;
 /**
  * Helper to compose complex grammars from various primitive parsers. To create
  * a new composite grammar subclass {@link CompositeParser}. Override the method
- * {@link #initialize} and for every production call {@link #def} giving the
- * parsers a name. The start production must be named 'start'. To refer to other
- * productions use {@link #ref}. To redefine or attach actions to productions
- * use {@link #redef} and {@link #action}.
+ * {@link #initialize} and for every production call
+ * {@link CompositeParser#def(String, Parser)} giving the parsers a name. The
+ * start production must be named 'start'. To refer to other productions use
+ * {@link CompositeParser#ref(String)}. To redefine or attach actions to
+ * productions use {@link CompositeParser#redef(String, Function)},
+ * {@link CompositeParser#redef(String, Parser) and
+ * {@link CompositeParser#action(String, Function)}.
  *
  * @author Lukas Renggli (renggli@gmail.com)
  */
@@ -54,9 +57,10 @@ public abstract class CompositeParser extends DelegateParser {
   /**
    * Returns a reference to the production with the given {@code name}.
    *
-   * This method works during initialization, where it returns delegate parsers
-   * that will eventually be replaced by real parsers. It also works after initialization,
-   * where it returns the defined parser (mostly useful for testing).
+   * This method works during initialization, where it returns delegate
+   * parsers that is eventually replaced the real parsers. This method
+   * also works after initialization, where it returns the defined parser
+   * (mostly useful for testing).
    */
   public final Parser ref(String name) {
     if (initialized) {
@@ -72,7 +76,8 @@ public abstract class CompositeParser extends DelegateParser {
   }
 
   /**
-   * Defines a production with a {@code name} and a {@code parser}.
+   * Defines a production with a {@code name} and a {@code parser}. Only call
+   * this method during initialization.
    */
   protected final void def(String name, Parser parser) {
     checkState(!initialized, "Parser is already initialized");
@@ -84,7 +89,7 @@ public abstract class CompositeParser extends DelegateParser {
 
   /**
    * Redefines an existing production with a {@code name} and a new
-   * {@code parser}.
+   * {@code parser}. Only call this method during initialization.
    */
   protected final void redef(String name, Parser parser) {
     checkState(!initialized, "Parser is already initialized");
@@ -96,7 +101,7 @@ public abstract class CompositeParser extends DelegateParser {
 
   /**
    * Redefines an existing production with a {@code name} and a {@code function}
-   * producing a new parser.
+   * producing a new parser. Only call this method during initialization.
    */
   protected final void redef(String name, Function<Parser, Parser> function) {
     redef(name, function.apply(defined.get(name)));
@@ -104,6 +109,7 @@ public abstract class CompositeParser extends DelegateParser {
 
   /**
    * Attaches an action {@code function} to an existing production {@code name}.
+   * Only call this method during initialization.
    */
   protected final <S, T> void action(String name, final Function<S, T> function) {
     redef(name, new Function<Parser, Parser>() {
