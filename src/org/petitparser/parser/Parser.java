@@ -3,6 +3,7 @@ package org.petitparser.parser;
 import java.util.List;
 
 import org.petitparser.Chars;
+import org.petitparser.buffer.Token;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.utils.Functions;

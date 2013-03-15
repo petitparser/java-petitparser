@@ -19,7 +19,7 @@ import com.google.common.collect.Maps;
  * start production must be named 'start'. To refer to other productions use
  * {@link CompositeParser#ref(String)}. To redefine or attach actions to
  * productions use {@link CompositeParser#redef(String, Function)},
- * {@link CompositeParser#redef(String, Parser) and
+ * {@link CompositeParser#redef(String, Parser)} and
  * {@link CompositeParser#action(String, Function)}.
  *
  * @author Lukas Renggli (renggli@gmail.com)
