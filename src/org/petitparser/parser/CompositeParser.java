@@ -9,6 +9,7 @@ import org.petitparser.Parsers;
 import org.petitparser.utils.Transformations;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 /**
@@ -26,27 +27,13 @@ import com.google.common.collect.Maps;
  */
 public abstract class CompositeParser extends DelegateParser {
 
-  private boolean initialized = false;
+  private boolean completed = false;
+  private Map<String, Parser> defined = Maps.newHashMap();
+  private Map<String, DelegateParser> undefined = Maps.newHashMap();
 
-  private final Map<String, Parser> defined = Maps.newHashMap();
-  private final Map<String, DelegateParser> undefined = Maps.newHashMap();
-
-  /**
-   * Lazily initializes the delegate by calling {@link CompositeParser#initialize()}.
-   */
-  @Override
-  public Parser getDelegate() {
-    if (!initialized) {
-      initialize();
-      replace(delegate, ref("start"));
-      for (Map.Entry<String, DelegateParser> entry : undefined.entrySet()) {
-        checkState(defined.containsKey(entry.getKey()), "Undefined production: ", entry.getKey());
-        entry.getValue().replace(entry.getValue().getDelegate(), defined.get(entry.getKey()));
-      }
-      replace(delegate, Transformations.removeDelegates(ref("start")));
-      initialized = true;
-    }
-    return delegate;
+  public CompositeParser() {
+    initialize();
+    complete();
   }
 
   /**
@@ -55,15 +42,31 @@ public abstract class CompositeParser extends DelegateParser {
   protected abstract void initialize();
 
   /**
+   * Internal method that completes the initialization.
+   */
+  private final void complete() {
+    replace(delegate, ref("start"));
+    for (Map.Entry<String, DelegateParser> entry : undefined.entrySet()) {
+      checkState(defined.containsKey(entry.getKey()), "Undefined production: ", entry.getKey());
+      entry.getValue().replace(entry.getValue().getDelegate(), defined.get(entry.getKey()));
+    }
+    replace(delegate, Transformations.removeDelegates(ref("start")));
+    defined = ImmutableMap.copyOf(defined);
+    undefined = ImmutableMap.of();
+    completed = true;
+  }
+
+  /**
    * Returns a reference to the production with the given {@code name}.
    *
-   * This method works during initialization, where it returns delegate
-   * parsers that is eventually replaced the real parsers. This method
-   * also works after initialization, where it returns the defined parser
-   * (mostly useful for testing).
+   * This method works during initialization and after completion of the
+   * initialization. During the initialization it returns delegate parsers
+   * that are eventually replaced by the real parsers. Afterwards it
+   * returns the defined parser (mostly useful for testing).
    */
   public final Parser ref(String name) {
-    if (initialized) {
+    if (completed) {
+      checkState(defined.containsKey(name), "Undefined production: ", name);
       return defined.get(name);
     } else if (undefined.containsKey(name)) {
       return undefined.get(name);
@@ -80,7 +83,7 @@ public abstract class CompositeParser extends DelegateParser {
    * this method during initialization.
    */
   protected final void def(String name, Parser parser) {
-    checkState(!initialized, "Parser is already initialized");
+    checkState(!completed, "Completed parsers cannot be redefined");
     checkState(!defined.containsKey(name), "Duplicate production: ", name);
     defined.put(
         checkNotNull(name, "Invalid name: ", name),
@@ -92,7 +95,7 @@ public abstract class CompositeParser extends DelegateParser {
    * {@code parser}. Only call this method during initialization.
    */
   protected final void redef(String name, Parser parser) {
-    checkState(!initialized, "Parser is already initialized");
+    checkState(!completed, "Completed parsers cannot be redefined");
     checkState(defined.containsKey(name), "Undefined production: ", name);
     defined.put(
         checkNotNull(name, "Invalid name: ", name),
