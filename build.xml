@@ -17,6 +17,7 @@
 
   <!-- output directories -->
   <property name="build" location="build" />
+  <property name="build.jar" location="${build}/jar" />
   <property name="build.bin" location="${build}/bin" />
   <property name="build.doc" location="${build}/doc" />
   <property name="build.test" location="${build}/test" />
@@ -52,6 +53,18 @@
     <mkdir dir="${build.bin}" />
     <javac srcdir="${src}" destdir="${build.bin}" includeantruntime="false" classpathref="classpath" />
     <javac srcdir="${grammar}" destdir="${build.bin}" includeantruntime="false" classpathref="classpath" />
+  </target>
+
+  <target name="jar" description="Package into JAR." depends="compile">
+    <jar destfile="${build.jar}/petitparser.jar" compress="true" >
+      <fileset dir="${build.bin}" includes="**/*.class" />
+      <fileset dir="${lib}" includes="**/*.jar" />
+    </jar>
+    <jar destfile="${build.jar}/petitparser-src.jar" compress="true" >
+      <fileset dir="${src}" includes="**/*.java" />
+      <fileset dir="${grammar}" includes="**/*.java" />
+      <fileset dir="${test}" includes="**/*.java" />
+    </jar>
   </target>
 
   <target name="test" description="Run all JUnit tests." depends="compile">
