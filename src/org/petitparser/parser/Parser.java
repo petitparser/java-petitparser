@@ -224,6 +224,28 @@ public abstract class Parser implements Cloneable {
   }
 
   /**
+   * Returns a parser that transform a successful parse result by returning
+   * the element at {@code index} of a list. A negative index can be used to
+   * access the elements from the back of the list.
+   *
+   * @see Functions#nthOfList(int)
+   */
+  public Parser pick(int index) {
+    return this.map(Functions.nthOfList(index));
+  }
+
+  /**
+   * Returns a parser that transforms a successful parse result by returning
+   * the permuted elements at {@code indexes} of a list. Negative indexes can
+   * be used to access the elements from the back of the list.
+   *
+   * @see Functions#permutationOfList(int...)
+   */
+  public Parser permute(int... indexes) {
+    return this.map(Functions.permutationOfList(indexes));
+  }
+
+  /**
    * Returns a new parser that succeeds at the end of the input and return the
    * result of the receiver.
    *
