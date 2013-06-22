@@ -1,5 +1,7 @@
 package org.petitparser;
 
+import static org.petitparser.Chars.character;
+
 import org.petitparser.parser.EpsilonParser;
 import org.petitparser.parser.FailureParser;
 import org.petitparser.parser.Parser;
@@ -41,12 +43,16 @@ public class Parsers {
   }
 
   public static Parser string(final String string, String message) {
-    return new StringPredicateParser(string.length(), new StringPredicate() {
-      @Override
-      public boolean apply(String argument) {
-        return string.equals(argument);
-      }
-    }, message);
+    if (string.length() == 1) {
+      return character(string.charAt(0), message);
+    } else {
+      return new StringPredicateParser(string.length(), new StringPredicate() {
+        @Override
+        public boolean apply(String argument) {
+          return string.equals(argument);
+        }
+      }, message);
+    }
   }
 
   /**
