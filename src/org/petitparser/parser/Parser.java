@@ -86,9 +86,19 @@ public abstract class Parser implements Cloneable {
    *
    * @see NotParser
    */
-  public Parser not(String message) {
-    return new NotParser(this, message);
+  public Parser not() {
+    return not(null);
   }
+
+  /**
+  * Returns a new parser (logical not-predicate) that succeeds whenever the
+  * receiver fails, but never consumes input.
+  *
+  * @see NotParser
+  */
+ public Parser not(String message) {
+   return new NotParser(this, message);
+ }
 
   /**
    * Returns a new parser that consumes any input character but the receiver.
