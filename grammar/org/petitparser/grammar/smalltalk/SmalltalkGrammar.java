@@ -147,7 +147,7 @@ class SmalltalkGrammar extends CompositeParser {
     def("falseToken", token("false")
         .seq(word().not()));
     def("identifier", pattern("a-zA-Z_")
-        .seq(word().star()));
+        .seq(pattern("a-zA-Z0-9_").star()));
     def("identifierToken", token(ref("identifier")));
     def("keyword", ref("identifier")
         .seq(character(':')));
@@ -220,9 +220,9 @@ class SmalltalkGrammar extends CompositeParser {
             .or(ref("periodToken").star()))
             .or(ref("return").seq(ref("periodToken").star()))
             .or(ref("periodToken").star()));
-    def("string", character('\'')
-        .seq(character('\'').or(pattern("^'")).star())
-        .seq(character('\'')));
+    def("string", string("'")
+        .seq(string("''").or(pattern("^'")).star())
+        .seq(string("'")));
     def("stringLiteral", ref("stringToken"));
     def("stringToken", token(ref("string")));
     def("symbol", ref("unary")
