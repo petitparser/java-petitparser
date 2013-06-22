@@ -89,8 +89,8 @@ public class ParserTest {
   @Test
   public void testPick1() {
     Parser parser = digit().seq(letter()).pick(1);
-    assertSuccess(parser, "1a", "a");
-    assertSuccess(parser, "2b", "b");
+    assertSuccess(parser, "1a", 'a');
+    assertSuccess(parser, "2b", 'b');
     assertFailure(parser, "");
     assertFailure(parser, "1", 1, "letter expected");
     assertFailure(parser, "12", 1, "letter expected");
@@ -99,8 +99,8 @@ public class ParserTest {
   @Test
   public void testPick2() {
     Parser parser = digit().seq(letter()).pick(-1);
-    assertSuccess(parser, "1a", "a");
-    assertSuccess(parser, "2b", "b");
+    assertSuccess(parser, "1a", 'a');
+    assertSuccess(parser, "2b", 'b');
     assertFailure(parser, "");
     assertFailure(parser, "1", 1, "letter expected");
     assertFailure(parser, "12", 1, "letter expected");
@@ -109,8 +109,8 @@ public class ParserTest {
   @Test
   public void testPermutate1() {
     Parser parser = digit().seq(letter()).permute(1, 0);
-    assertSuccess(parser, "1a", Lists.newArrayList("a", "1"));
-    assertSuccess(parser, "2b", Lists.newArrayList("b", "2"));
+    assertSuccess(parser, "1a", Lists.newArrayList('a', '1'));
+    assertSuccess(parser, "2b", Lists.newArrayList('b', '2'));
     assertFailure(parser, "");
     assertFailure(parser, "1", 1, "letter expected");
     assertFailure(parser, "12", 1, "letter expected");
@@ -119,8 +119,8 @@ public class ParserTest {
   @Test
   public void testPermutate2() {
     Parser parser = digit().seq(letter()).permute(-1, 0);
-    assertSuccess(parser, "1a", Lists.newArrayList("a", "1"));
-    assertSuccess(parser, "2b", Lists.newArrayList("b", "2"));
+    assertSuccess(parser, "1a", Lists.newArrayList('a', '1'));
+    assertSuccess(parser, "2b", Lists.newArrayList('b', '2'));
     assertFailure(parser, "");
     assertFailure(parser, "1", 1, "letter expected");
     assertFailure(parser, "12", 1, "letter expected");
