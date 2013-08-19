@@ -86,9 +86,19 @@ public abstract class Parser implements Cloneable {
    *
    * @see NotParser
    */
-  public Parser not(String message) {
-    return new NotParser(this, message);
+  public Parser not() {
+    return not(null);
   }
+
+  /**
+  * Returns a new parser (logical not-predicate) that succeeds whenever the
+  * receiver fails, but never consumes input.
+  *
+  * @see NotParser
+  */
+ public Parser not(String message) {
+   return new NotParser(this, message);
+ }
 
   /**
    * Returns a new parser that consumes any input character but the receiver.
@@ -221,6 +231,28 @@ public abstract class Parser implements Cloneable {
    */
   public <T, R> Parser map(Function<T, R> function) {
     return new ActionParser<T, R>(this, function);
+  }
+
+  /**
+   * Returns a parser that transform a successful parse result by returning
+   * the element at {@code index} of a list. A negative index can be used to
+   * access the elements from the back of the list.
+   *
+   * @see Functions#nthOfList(int)
+   */
+  public Parser pick(int index) {
+    return this.map(Functions.nthOfList(index));
+  }
+
+  /**
+   * Returns a parser that transforms a successful parse result by returning
+   * the permuted elements at {@code indexes} of a list. Negative indexes can
+   * be used to access the elements from the back of the list.
+   *
+   * @see Functions#permutationOfList(int...)
+   */
+  public Parser permute(int... indexes) {
+    return this.map(Functions.permutationOfList(indexes));
   }
 
   /**

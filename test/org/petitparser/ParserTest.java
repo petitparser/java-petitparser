@@ -5,6 +5,7 @@ import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
 import static org.petitparser.Chars.character;
 import static org.petitparser.Chars.digit;
+import static org.petitparser.Chars.letter;
 import static org.petitparser.Chars.upperCase;
 import static org.petitparser.Parsing.parse;
 
@@ -15,6 +16,7 @@ import org.petitparser.buffer.Token;
 import org.petitparser.parser.Parser;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 
 /**
  * Tests {@link Parsers} factory.
@@ -82,6 +84,46 @@ public class ParserTest {
     assertSuccess(parser, "9", 9);
     assertFailure(parser, "");
     assertFailure(parser, "a");
+  }
+
+  @Test
+  public void testPick1() {
+    Parser parser = digit().seq(letter()).pick(1);
+    assertSuccess(parser, "1a", 'a');
+    assertSuccess(parser, "2b", 'b');
+    assertFailure(parser, "");
+    assertFailure(parser, "1", 1, "letter expected");
+    assertFailure(parser, "12", 1, "letter expected");
+  }
+
+  @Test
+  public void testPick2() {
+    Parser parser = digit().seq(letter()).pick(-1);
+    assertSuccess(parser, "1a", 'a');
+    assertSuccess(parser, "2b", 'b');
+    assertFailure(parser, "");
+    assertFailure(parser, "1", 1, "letter expected");
+    assertFailure(parser, "12", 1, "letter expected");
+  }
+
+  @Test
+  public void testPermutate1() {
+    Parser parser = digit().seq(letter()).permute(1, 0);
+    assertSuccess(parser, "1a", Lists.newArrayList('a', '1'));
+    assertSuccess(parser, "2b", Lists.newArrayList('b', '2'));
+    assertFailure(parser, "");
+    assertFailure(parser, "1", 1, "letter expected");
+    assertFailure(parser, "12", 1, "letter expected");
+  }
+
+  @Test
+  public void testPermutate2() {
+    Parser parser = digit().seq(letter()).permute(-1, 0);
+    assertSuccess(parser, "1a", Lists.newArrayList('a', '1'));
+    assertSuccess(parser, "2b", Lists.newArrayList('b', '2'));
+    assertFailure(parser, "");
+    assertFailure(parser, "1", 1, "letter expected");
+    assertFailure(parser, "12", 1, "letter expected");
   }
 
   @Test
