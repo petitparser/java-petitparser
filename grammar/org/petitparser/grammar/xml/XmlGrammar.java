@@ -119,7 +119,7 @@ public class XmlGrammar extends CompositeParser {
     def("whitespace", whitespace().plus());
 
     def("nameToken", ref("nameStartChar")
-      .seq(ref("nameStartChar").star())
+      .seq(ref("nameChar").star())
       .flatten());
     def("nameStartChar", pattern(NAME_START_CHARS));
     def("nameChar", pattern(NAME_CHARS));

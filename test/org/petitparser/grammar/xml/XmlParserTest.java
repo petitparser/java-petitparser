@@ -11,7 +11,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.petitparser.context.Context;
-import org.petitparser.grammar.xml.XmlParser;
 import org.petitparser.grammar.xml.ast.XmlAttribute;
 import org.petitparser.grammar.xml.ast.XmlDocument;
 import org.petitparser.grammar.xml.ast.XmlElement;
@@ -20,7 +19,6 @@ import org.petitparser.grammar.xml.ast.XmlNode;
 import org.petitparser.parser.Parser;
 
 import com.google.common.collect.Lists;
-
 
 /**
  * Tests {@link XmlParser}.
@@ -167,6 +165,17 @@ public class XmlParserTest {
         + "      <xsd:pattern value=\"\\d{3}-[A-Z]{2}\"/>\n"
         + "    </xsd:restriction>\n" + "  </xsd:simpleType>\n" + "\n"
         + "</xsd:schema>");
+  }
+
+  @Test
+  public void testAtom() {
+    assertParseInvariant("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+        + "<app:service>"
+        + "<app:workspace>"
+        + "<cmisra:repositoryInfo xmlns:ns3=\"http://docs.oasis-open.org/ns/cmis/messaging/200908/\">"
+        + "</cmisra:repositoryInfo>"
+        + "</app:workspace>"
+        + "</app:service>");
   }
 
   private void assertParseInvariant(String aString) {
