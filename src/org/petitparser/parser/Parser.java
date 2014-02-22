@@ -33,6 +33,16 @@ public abstract class Parser implements Cloneable {
   }
 
   /**
+   * Returns a parser that points to the receiver, but can be changed to point
+   * to something else at a later point in time.
+   *
+   * @see SetableParser
+   */
+  public SetableParser setable() {
+    return new SetableParser(this);
+  }
+
+  /**
    * Returns a new parser that flattens to a {@link String}.
    *
    * @see FlattenParser

@@ -14,6 +14,7 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.petitparser.buffer.Token;
 import org.petitparser.parser.Parser;
+import org.petitparser.parser.SetableParser;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -58,6 +59,16 @@ public class ParserTest {
     assertFailure(parser, "", "a expected");
     assertSuccess(parser, "a", 'a');
     assertFailure(parser, "aa", 1, "end of input expected");
+  }
+
+  @Test
+  public void testSetable() {
+    SetableParser parser = character('a').setable();
+    assertSuccess(parser, "a", 'a');
+    assertFailure(parser, "b", 0, "a expected");
+    parser.set(character('b'));
+    assertSuccess(parser, "b", 'b');
+    assertFailure(parser, "a", 0, "b expected");
   }
 
   @Test
