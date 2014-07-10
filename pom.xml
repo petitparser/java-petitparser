@@ -4,7 +4,7 @@
 	<artifactId>petitparser</artifactId>
 	<name>petitparser</name>
 	<packaging>jar</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<description>petitparser</description>
 	<url>https://github.com/eitch/PetitParserJava</url>
 	<properties>
