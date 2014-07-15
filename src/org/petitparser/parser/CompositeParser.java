@@ -107,6 +107,7 @@ public abstract class CompositeParser extends DelegateParser {
    * producing a new parser. Only call this method during initialization.
    */
   protected final void redef(String name, Function<Parser, Parser> function) {
+    checkState(defined.containsKey(name), "Undefined production: ", name);
     redef(name, function.apply(defined.get(name)));
   }
 
