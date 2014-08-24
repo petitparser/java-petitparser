@@ -18,7 +18,7 @@ public abstract class ListParser extends Parser {
   }
 
   @Override
-  public Object clone() throws CloneNotSupportedException {
+  public Parser clone() throws CloneNotSupportedException {
     ListParser clone = (ListParser) super.clone();
     clone.parsers = parsers.clone();
     return clone;
@@ -36,9 +36,7 @@ public abstract class ListParser extends Parser {
 
   @Override
   public List<Parser> getChildren() {
-    List<Parser> children = super.getChildren();
-    children.addAll(Arrays.asList(parsers));
-    return children;
+    return Arrays.asList(parsers);
   }
 
 }

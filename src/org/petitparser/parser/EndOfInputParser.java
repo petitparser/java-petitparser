@@ -26,4 +26,10 @@ public class EndOfInputParser extends DelegateParser {
     return result.failure(message, result.getPosition());
   }
 
+  @Override
+  protected boolean matchesProperties(Parser other) {
+    EndOfInputParser otherEndOfInputParser = (EndOfInputParser) other;
+    return super.matchesProperties(other) && message.equals(otherEndOfInputParser.message);
+  }
+
 }

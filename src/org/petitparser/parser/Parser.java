@@ -1,7 +1,9 @@
 package org.petitparser.parser;
 
 import java.util.List;
+import java.util.Set;
 
+import com.google.common.collect.Sets;
 import org.petitparser.Chars;
 import org.petitparser.buffer.Token;
 import org.petitparser.context.Context;
@@ -101,14 +103,14 @@ public abstract class Parser implements Cloneable {
   }
 
   /**
-  * Returns a new parser (logical not-predicate) that succeeds whenever the
-  * receiver fails, but never consumes input.
-  *
-  * @see NotParser
-  */
- public Parser not(String message) {
-   return new NotParser(this, message);
- }
+   * Returns a new parser (logical not-predicate) that succeeds whenever the
+   * receiver fails, but never consumes input.
+   *
+   * @see NotParser
+   */
+  public Parser not(String message) {
+    return new NotParser(this, message);
+  }
 
   /**
    * Returns a new parser that consumes any input character but the receiver.
@@ -240,7 +242,7 @@ public abstract class Parser implements Cloneable {
    * @see ActionParser
    */
   public <T, R> Parser map(Function<T, R> function) {
-    return new ActionParser<T, R>(this, function);
+    return new ActionParser<>(this, function);
   }
 
   /**
@@ -289,8 +291,8 @@ public abstract class Parser implements Cloneable {
    * Clones this parser.
    */
   @Override
-  public Object clone() throws CloneNotSupportedException {
-    return super.clone();
+  public Parser clone() throws CloneNotSupportedException {
+    return (Parser) super.clone();
   }
 
   /**
@@ -306,6 +308,60 @@ public abstract class Parser implements Cloneable {
    */
   public List<Parser> getChildren() {
     return Lists.newArrayList();
+  }
+
+  /**
+   * Recursively tests for structural similarity of two parsers.
+   * <p/>
+   * The code can automatically deals with recursive parsers and parsers that
+   * refer to other parsers. This code is supposed to be overridden by parsers
+   * that add other state.
+   */
+  public boolean matches(Parser other) {
+    return matches(other, Sets.<Parser>newIdentityHashSet());
+  }
+
+  /**
+   * Recursively tests for structural similarity of two parsers.
+   *
+   * @see #matches(Parser)
+   */
+  protected boolean matches(Parser other, Set<Parser> seen) {
+    if (this == other || seen.contains(this)) {
+      return true;
+    }
+    seen.add(this);
+    return getClass() == other.getClass()
+        && matchesProperties(other)
+        && matchesChildren(other, seen);
+  }
+
+  /**
+   * Compares the properties of two parsers.
+   * <p/>
+   * Override this method in all subclasses that add new state.
+   */
+  protected boolean matchesProperties(Parser other) {
+    return true;
+  }
+
+  /**
+   * Compares the children of two parsers.
+   * <p/>
+   * Normally subclasses should not override this method, but instead {@link #getChildren()}.
+   */
+  protected boolean matchesChildren(Parser other, Set<Parser> seen) {
+    List<Parser> thisChildren = this.getChildren();
+    List<Parser> otherChildren = other.getChildren();
+    if (thisChildren.size() != otherChildren.size()) {
+      return false;
+    }
+    for (int i = 0; i < thisChildren.size(); i++) {
+      if (!thisChildren.get(i).matches(otherChildren.get(i), seen)) {
+        return false;
+      }
+    }
+    return true;
   }
 
 }

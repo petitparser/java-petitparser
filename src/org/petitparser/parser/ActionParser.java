@@ -32,4 +32,8 @@ public class ActionParser<T, R> extends DelegateParser {
     }
   }
 
+  protected boolean matchesProperties(Parser other) {
+    return super.matchesProperties(other) && function.equals(((ActionParser) other).function);
+  }
+
 }

@@ -40,4 +40,13 @@ public class StringPredicateParser extends Parser {
     return context.failure(message);
   }
 
+  @Override
+  protected boolean matchesProperties(Parser other) {
+    StringPredicateParser otherPredicateParser = (StringPredicateParser) other;
+    return super.matchesProperties(other)
+        && size == otherPredicateParser.size
+        && predicate.equals(otherPredicateParser.predicate)
+        && message.equals(otherPredicateParser.message);
+  }
+
 }

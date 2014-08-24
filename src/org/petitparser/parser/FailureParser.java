@@ -21,4 +21,10 @@ public class FailureParser extends Parser {
     return context.failure(message);
   }
 
+  @Override
+  protected boolean matchesProperties(Parser other) {
+    FailureParser otherFailureParser = (FailureParser) other;
+    return super.matchesProperties(other) && message.equals(otherFailureParser.message);
+  }
+
 }

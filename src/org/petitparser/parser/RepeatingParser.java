@@ -44,4 +44,12 @@ public class RepeatingParser extends DelegateParser {
     return current.success(elements);
   }
 
+  @Override
+  protected boolean matchesProperties(Parser other) {
+    RepeatingParser otherRepeatingParser = (RepeatingParser) other;
+    return super.matchesProperties(other)
+        && min == otherRepeatingParser.min
+        && max == otherRepeatingParser.max;
+  }
+
 }

@@ -38,4 +38,12 @@ public class CharParser extends Parser {
     return new CharParser(matcher.negate(), message);
   }
 
+  @Override
+  protected boolean matchesProperties(Parser other) {
+    CharParser otherCharMatcher = (CharParser) other;
+    return super.matchesProperties(other)
+        && matcher.equals(otherCharMatcher.matcher)
+        && message.equals(otherCharMatcher.message);
+  }
+
 }
