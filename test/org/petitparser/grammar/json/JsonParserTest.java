@@ -57,20 +57,20 @@ public class JsonParserTest {
 
   @Test
   public void testEmptyObject() {
-    Map<String, Double> result = assertValid("{}").get();
+    Map<String, Long> result = assertValid("{}").get();
     assertTrue(result.isEmpty());
   }
 
   @Test
   public void testSmallObject() {
-    Map<String, Double> result = assertValid("{\"a\":1}").get();
+    Map<String, Long> result = assertValid("{\"a\":1}").get();
     assertEquals(1, result.size());
     assertEquals(Long.valueOf(1), result.get("a"));
   }
 
   @Test
   public void testBigObject() {
-    Map<String, Double> result = assertValid(" { \"a\" : 1 , \"b\" : 2 } ").get();
+    Map<String, Long> result = assertValid(" { \"a\" : 1 , \"b\" : 2 } ").get();
     assertEquals(2, result.size());
     assertEquals(Long.valueOf(1), result.get("a"));
     assertEquals(Long.valueOf(2), result.get("b"));
@@ -78,7 +78,7 @@ public class JsonParserTest {
 
   @Test
   public void testNestedObject() {
-    Map<String, Map<String, Double>> result = assertValid("{\"object\":{\"1\": 2}}").get();
+    Map<String, Map<String, Long>> result = assertValid("{\"object\":{\"1\": 2}}").get();
     assertEquals(1, result.size());
     assertEquals(1, result.get("object").size());
     assertEquals(Long.valueOf(2), result.get("object").get("1"));

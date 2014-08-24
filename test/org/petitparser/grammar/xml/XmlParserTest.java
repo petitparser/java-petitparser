@@ -198,7 +198,6 @@ public class XmlParserTest {
     for (XmlNode node : anXmlNode) {
       assertEquals(node, node);
       assertEquals(node.hashCode(), node.hashCode());
-      assertFalse(node.equals(null));
       assertFalse(node.equals(node.getParent()));
       for (XmlNode child : node.getChildren()) {
         assertFalse(node.equals(child));

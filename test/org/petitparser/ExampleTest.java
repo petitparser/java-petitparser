@@ -20,19 +20,19 @@ import org.petitparser.utils.Functions;
  */
 public class ExampleTest {
 
-  private static Parser IDENTIFIER = letter().seq(word().star()).flatten();
+  private static final Parser IDENTIFIER = letter().seq(word().star()).flatten();
 
-  private static Parser NUMBER = character('-').optional().seq(digit().plus())
+  private static final Parser NUMBER = character('-').optional().seq(digit().plus())
       .seq(character('.').seq(digit().plus()).optional()).flatten();
 
-  private static Parser STRING = character('"')
+  private static final Parser STRING = character('"')
       .seq(character('"').negate().star()).seq(character('"')).flatten();
 
-  private static Parser RETURN = string("return")
+  private static final Parser RETURN = string("return")
       .seq(whitespace().plus().flatten()).seq(IDENTIFIER.or(NUMBER).or(STRING))
       .map(Functions.lastOfList());
 
-  private static Parser JAVADOC = string("/**")
+  private static final Parser JAVADOC = string("/**")
       .seq(string("*/").negate().star())
       .seq(string("*/"))
       .flatten();

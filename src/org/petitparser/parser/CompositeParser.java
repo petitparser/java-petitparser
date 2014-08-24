@@ -44,7 +44,7 @@ public abstract class CompositeParser extends DelegateParser {
   /**
    * Internal method that completes the initialization.
    */
-  private final void complete() {
+  private void complete() {
     replace(delegate, ref("start"));
     for (Map.Entry<String, DelegateParser> entry : undefined.entrySet()) {
       checkState(defined.containsKey(entry.getKey()), "Undefined production: ", entry.getKey());

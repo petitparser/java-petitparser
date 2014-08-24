@@ -24,7 +24,7 @@ public class RepeatingParser extends DelegateParser {
   @Override
   public Result parse(Context context) {
     Context current = context;
-    List<Object> elements = new ArrayList<Object>();
+    List<Object> elements = new ArrayList<>();
     while (elements.size() < min) {
       Result result = super.parse(current);
       if (result.isFailure()) {

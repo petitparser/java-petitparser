@@ -50,7 +50,7 @@ public class Functions {
     return new Function<List<T>, List<T>>() {
       @Override
       public List<T> apply(List<T> argument) {
-        List<T> result = new ArrayList<T>(indexes.length);
+        List<T> result = new ArrayList<>(indexes.length);
         for (int index : indexes) {
           result.add(argument.get(index < 0 ? argument.size() + index : index));
         }
@@ -67,7 +67,7 @@ public class Functions {
     return new Function<List<T>, List<T>>() {
       @Override
       public List<T> apply(List<T> input) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         for (int i = 0; i < input.size(); i += 2) {
           result.add(input.get(i));
         }

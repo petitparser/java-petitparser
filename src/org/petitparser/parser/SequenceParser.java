@@ -21,7 +21,7 @@ public class SequenceParser extends ListParser {
   @Override
   public Result parse(Context context) {
     Context current = context;
-    List<Object> elements = new ArrayList<Object>(parsers.length);
+    List<Object> elements = new ArrayList<>(parsers.length);
     for (Parser parser : parsers) {
       Result result = parser.parse(current);
       if (result.isFailure()) {

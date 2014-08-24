@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
  */
 public class ExpressionBuilder {
 
-  private final List<ExpressionGroup> groups = new ArrayList<ExpressionGroup>();
+  private final List<ExpressionGroup> groups = new ArrayList<>();
 
   /**
    * Creates a new group of operators that share the same priority.
@@ -60,7 +60,7 @@ public class ExpressionBuilder {
       return buildChoice(primitives, inner);
     }
 
-    private final List<Parser> primitives = new ArrayList<Parser>();
+    private final List<Parser> primitives = new ArrayList<>();
 
     /**
      * Adds a prefix operator {@code parser}.
@@ -83,7 +83,7 @@ public class ExpressionBuilder {
       if (prefix.isEmpty()) {
         return inner;
       } else {
-        Parser sequence = new SequenceParser(new Parser[] { buildChoice(prefix).star(), inner });
+        Parser sequence = new SequenceParser(buildChoice(prefix).star(), inner);
         return sequence.map(new Function<List<Object>, Object>() {
           @Override
           @SuppressWarnings("unchecked")
@@ -98,7 +98,7 @@ public class ExpressionBuilder {
       }
     }
 
-    private final List<Parser> prefix = new ArrayList<Parser>();
+    private final List<Parser> prefix = new ArrayList<>();
 
     /**
      * Adds a postfix operator {@code parser}.
@@ -121,7 +121,7 @@ public class ExpressionBuilder {
       if (postfix.isEmpty()) {
         return inner;
       } else {
-        Parser sequence = new SequenceParser(new Parser[] { inner, buildChoice(postfix).star() });
+        Parser sequence = new SequenceParser(inner, buildChoice(postfix).star());
         return sequence.map(new Function<List<Object>, Object>() {
           @Override
           @SuppressWarnings("unchecked")
@@ -136,7 +136,7 @@ public class ExpressionBuilder {
       }
     }
 
-    private final List<Parser> postfix = new ArrayList<Parser>();
+    private final List<Parser> postfix = new ArrayList<>();
 
     /**
      * Adds a right-associative operator {@code parser}.
@@ -176,7 +176,7 @@ public class ExpressionBuilder {
       }
     }
 
-    private final List<Parser> right = new ArrayList<Parser>();
+    private final List<Parser> right = new ArrayList<>();
 
     /**
      * Adds a left-associative operator {@code parser}.
@@ -216,7 +216,7 @@ public class ExpressionBuilder {
       }
     }
 
-    private final List<Parser> left = new ArrayList<Parser>();
+    private final List<Parser> left = new ArrayList<>();
 
     // helper to connect operator parser and action, and add to list
     private <T, R> void addTo(List<Parser> list, Parser parser, final Function<T, R> action) {

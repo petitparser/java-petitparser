@@ -126,7 +126,7 @@ public class Chars {
     return PATTERN.parse(new Context(pattern)).get();
   }
 
-  private static Parser PATTERN_SIMPLE = any().map(
+  private static final Parser PATTERN_SIMPLE = any().map(
       new Function<Character, CharMatcher>() {
         @Override
         public CharMatcher apply(Character character) {
@@ -134,7 +134,7 @@ public class Chars {
         }
       });
 
-  private static Parser PATTERN_RANGE = any().seq(character('-')).seq(any())
+  private static final Parser PATTERN_RANGE = any().seq(character('-')).seq(any())
       .map(new Function<List<Character>, CharMatcher>() {
         @Override
         public CharMatcher apply(List<Character> characters) {
@@ -142,7 +142,7 @@ public class Chars {
         }
       });
 
-  private static Parser PATTERN_POSITIVE = PATTERN_RANGE.or(PATTERN_SIMPLE).plus()
+  private static final Parser PATTERN_POSITIVE = PATTERN_RANGE.or(PATTERN_SIMPLE).plus()
       .map(new Function<List<CharMatcher>, CharMatcher>() {
         @Override
         public CharMatcher apply(List<CharMatcher> matchers) {
@@ -154,7 +154,7 @@ public class Chars {
         }
       });
 
-  private static Parser PATTERN = character('^').optional().seq(PATTERN_POSITIVE)
+  private static final Parser PATTERN = character('^').optional().seq(PATTERN_POSITIVE)
       .map(new Function<List<CharMatcher>, CharMatcher>() {
         @Override
         public CharMatcher apply(List<CharMatcher> matchers) {
