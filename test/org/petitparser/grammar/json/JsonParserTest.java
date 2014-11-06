@@ -21,6 +21,7 @@ import org.petitparser.parser.Parser;
 public class JsonParserTest {
 
   private final Parser parser = new JsonParser();
+  private final double EPSILON = 1.0e-6;
 
   // arrays
 
@@ -106,25 +107,25 @@ public class JsonParserTest {
 
   @Test
   public void testFloat() {
-    assertEquals(0.0, assertValid("0.0").get());
-    assertEquals(0.12, assertValid("0.12").get());
-    assertEquals(-0.12, assertValid("-0.12").get());
-    assertEquals(12.34, assertValid("12.34").get());
-    assertEquals(-12.34, assertValid("-12.34").get());
-    assertEquals(1.2, assertValid("1.2e0").get());
-    assertEquals(1.2e-1, assertValid("1.2e-1").get());
-    assertEquals(1.2e-1, assertValid("1.2E-1").get());
+    assertEquals(0.0, (double) assertValid("0.0").get(), EPSILON);
+    assertEquals(0.12, (double) assertValid("0.12").get(), EPSILON);
+    assertEquals(-0.12, (double) assertValid("-0.12").get(), EPSILON);
+    assertEquals(12.34, (double) assertValid("12.34").get(), EPSILON);
+    assertEquals(-12.34, (double) assertValid("-12.34").get(), EPSILON);
+    assertEquals(1.2, (double) assertValid("1.2e0").get(), EPSILON);
+    assertEquals(1.2e-1, (double) assertValid("1.2e-1").get(), EPSILON);
+    assertEquals(1.2e-1, (double) assertValid("1.2E-1").get(), EPSILON);
   }
 
   @Test
   public void testInteger() {
-    assertEquals(0L, assertValid("0").get());
-    assertEquals(1L, assertValid("1").get());
-    assertEquals(-1L, assertValid("-1").get());
-    assertEquals(12L, assertValid("12").get());
-    assertEquals(-12L, assertValid("-12").get());
-    assertEquals(100L, assertValid("1e2").get());
-    assertEquals(100L, assertValid("1e+2").get());
+    assertEquals(0L, (long) assertValid("0").get());
+    assertEquals(1L, (long) assertValid("1").get());
+    assertEquals(-1L, (long) assertValid("-1").get());
+    assertEquals(12L, (long) assertValid("12").get());
+    assertEquals(-12L, (long) assertValid("-12").get());
+    assertEquals(100L, (long) assertValid("1e2").get());
+    assertEquals(100L, (long) assertValid("1e+2").get());
   }
 
   @Test
