@@ -1,9 +1,4 @@
-.DS_Store
-.classpath
-.project
-.settings/
 .idea/
-build/
-bin/
-lib/
 target/
+.DS_Store
+*.iml
