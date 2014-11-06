@@ -12,8 +12,6 @@ import com.google.common.primitives.Chars;
 
 /**
  * JSON parser definition.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class JsonParser extends JsonGrammar {
 

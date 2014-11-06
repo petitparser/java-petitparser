@@ -2,8 +2,6 @@ package org.petitparser.parser;
 
 /**
  * A parser that can be set to point to another parser.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class SetableParser extends DelegateParser {
 

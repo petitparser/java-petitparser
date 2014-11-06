@@ -4,8 +4,6 @@ import com.google.common.base.Objects;
 
 /**
  * XML processing instruction.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class XmlProcessing extends XmlData {
 

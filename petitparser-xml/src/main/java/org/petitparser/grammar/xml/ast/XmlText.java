@@ -2,8 +2,6 @@ package org.petitparser.grammar.xml.ast;
 
 /**
  * XML text node.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class XmlText extends XmlData {
 

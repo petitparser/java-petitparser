@@ -22,8 +22,6 @@ import com.google.common.collect.Lists;
 
 /**
  * Tests {@link XmlParser}.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class XmlParserTest {
 

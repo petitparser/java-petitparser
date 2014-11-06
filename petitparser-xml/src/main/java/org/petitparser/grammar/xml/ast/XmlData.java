@@ -3,8 +3,6 @@ package org.petitparser.grammar.xml.ast;
 
 /**
  * Abstract XML data node.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public abstract class XmlData extends XmlNode {
 

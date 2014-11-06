@@ -15,8 +15,6 @@ import com.google.common.collect.Lists;
 
 /**
  * XML grammar definition.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class XmlGrammar extends CompositeParser {
 

@@ -2,8 +2,6 @@ package org.petitparser.buffer;
 
 /**
  * Generic token interface.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public interface Token {
 

@@ -5,8 +5,6 @@ import org.petitparser.context.Result;
 
 /**
  * A parser that succeeds only at the end of the input stream.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class EndOfInputParser extends DelegateParser {
 

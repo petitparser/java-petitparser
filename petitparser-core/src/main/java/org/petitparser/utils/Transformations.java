@@ -16,8 +16,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Utility functions to transform parsers.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class Transformations {
 

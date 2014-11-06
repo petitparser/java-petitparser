@@ -4,8 +4,6 @@ import org.petitparser.buffer.Buffer;
 
 /**
  * An immutable and abstract parse result.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public abstract class Result extends Context {
 

@@ -4,8 +4,6 @@ import com.google.common.base.Objects;
 
 /**
  * XML attribute node.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class XmlAttribute extends XmlNode {
 

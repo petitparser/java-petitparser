@@ -18,8 +18,6 @@ import org.petitparser.parser.Parser;
 
 /**
  * Tests {@link Chars} factory.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class CharsTest {
 

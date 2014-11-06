@@ -5,8 +5,6 @@ import org.petitparser.parser.Parser;
 
 /**
  * Test the performance of {@link XmlParser}.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class XmlBenchmark {
 

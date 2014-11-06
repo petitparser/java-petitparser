@@ -19,8 +19,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Tests for {@link Queries} and {@link Transformations}.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class UtilsTest {
 

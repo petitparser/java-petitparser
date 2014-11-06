@@ -15,8 +15,6 @@ import org.petitparser.parser.Parser;
 
 /**
  * Tests {@link JsonParser}.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class JsonParserTest {
 

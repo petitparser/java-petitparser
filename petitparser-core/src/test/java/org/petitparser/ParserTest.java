@@ -21,8 +21,6 @@ import com.google.common.collect.Lists;
 
 /**
  * Tests {@link Parsers} factory.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class ParserTest {
 

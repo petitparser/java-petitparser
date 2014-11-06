@@ -2,8 +2,6 @@ package org.petitparser.buffer;
 
 /**
  * Generic buffer interface to abstract the data source from the parsers.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public interface Buffer {
 

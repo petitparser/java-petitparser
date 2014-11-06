@@ -10,8 +10,6 @@ import org.petitparser.parser.StringPredicateParser.StringPredicate;
 
 /**
  * Factory for parsers.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class Parsers {
 

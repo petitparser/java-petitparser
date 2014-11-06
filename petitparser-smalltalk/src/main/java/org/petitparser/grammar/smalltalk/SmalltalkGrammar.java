@@ -14,8 +14,6 @@ import org.petitparser.parser.Parser;
 
 /**
  * Smalltalk grammar definition.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 class SmalltalkGrammar extends CompositeParser {
 

@@ -17,8 +17,6 @@ import com.google.common.base.Function;
 
 /**
  * Tests {@link ExpressionBuilder}.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class ExpressionTest {
 

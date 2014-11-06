@@ -5,8 +5,6 @@ import org.petitparser.buffer.StringBuffer;
 
 /**
  * Abstract parse context.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class Context {
 

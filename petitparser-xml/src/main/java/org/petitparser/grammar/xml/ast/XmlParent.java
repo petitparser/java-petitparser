@@ -7,8 +7,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Abstract XML node with actual children.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public abstract class XmlParent extends XmlNode {
 

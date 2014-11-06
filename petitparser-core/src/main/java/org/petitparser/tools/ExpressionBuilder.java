@@ -16,8 +16,6 @@ import com.google.common.collect.Lists;
 /**
  * A builder that allows the simple definition of expression grammars with
  * prefix, postfix, and left- and right-associative infix operators.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class ExpressionBuilder {
 

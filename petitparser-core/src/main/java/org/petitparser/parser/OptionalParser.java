@@ -5,8 +5,6 @@ import org.petitparser.context.Result;
 
 /**
  * A parser that optionally parsers its delegate, or answers nil.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class OptionalParser extends DelegateParser {
 

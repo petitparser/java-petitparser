@@ -13,8 +13,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Utility functions to query parsers.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class Queries {
 

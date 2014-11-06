@@ -15,8 +15,6 @@ import org.petitparser.utils.Functions;
 
 /**
  * Tests some small but realistic parser examples.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class ExampleTest {
 

@@ -6,8 +6,6 @@ import java.util.List;
 /**
  * Abstract parser that parses a list of things in some way (to be specified by
  * the subclasses).
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public abstract class ListParser extends Parser {
 

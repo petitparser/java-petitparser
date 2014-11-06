@@ -4,8 +4,6 @@ import com.google.common.base.Objects;
 
 /**
  * XML entity name.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class XmlName implements Cloneable {
 

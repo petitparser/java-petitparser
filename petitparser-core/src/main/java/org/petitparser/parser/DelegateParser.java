@@ -7,8 +7,6 @@ import org.petitparser.context.Result;
 
 /**
  * A parser that delegates to another one.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class DelegateParser extends Parser {
 

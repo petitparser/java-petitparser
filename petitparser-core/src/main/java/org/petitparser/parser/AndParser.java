@@ -6,8 +6,6 @@ import org.petitparser.context.Result;
 /**
  * The and-predicate, a parser that succeeds whenever its delegate does, but
  * does not consume the input stream [Parr 1994, 1995].
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class AndParser extends DelegateParser {
 

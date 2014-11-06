@@ -5,8 +5,6 @@ import org.petitparser.context.Result;
 
 /**
  * A parser that answers a flat copy of the range my delegate parses.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class FlattenParser extends DelegateParser {
 

@@ -4,8 +4,6 @@ import org.petitparser.buffer.Buffer;
 
 /**
  * An immutable parse failure.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class Failure extends Result {
 

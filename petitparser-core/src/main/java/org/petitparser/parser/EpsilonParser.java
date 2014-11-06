@@ -5,8 +5,6 @@ import org.petitparser.context.Result;
 
 /**
  * A parser that consumes nothing and always succeeds.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class EpsilonParser extends Parser {
 

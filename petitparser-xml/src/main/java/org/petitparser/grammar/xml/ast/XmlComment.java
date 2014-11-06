@@ -2,8 +2,6 @@ package org.petitparser.grammar.xml.ast;
 
 /**
  * An XML comment node.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class XmlComment extends XmlData {
 

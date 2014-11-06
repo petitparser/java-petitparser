@@ -17,8 +17,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests {@link CompositeParser}.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class CompositeTest {
 

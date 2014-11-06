@@ -4,8 +4,6 @@ import org.petitparser.buffer.Buffer;
 
 /**
  * An immutable parse success.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class Success extends Result {
 

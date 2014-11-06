@@ -11,8 +11,6 @@ import com.google.common.base.Function;
 
 /**
  * Factory for character parsers.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class Chars {
 

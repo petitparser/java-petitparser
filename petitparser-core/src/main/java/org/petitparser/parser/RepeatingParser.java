@@ -8,8 +8,6 @@ import org.petitparser.context.Result;
 
 /**
  * A parser that parses a sequence of parsers.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class RepeatingParser extends DelegateParser {
 

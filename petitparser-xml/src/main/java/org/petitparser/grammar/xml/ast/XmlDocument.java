@@ -4,8 +4,6 @@ import java.util.Collection;
 
 /**
  * XML document node.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class XmlDocument extends XmlParent {
 

@@ -13,8 +13,6 @@ import com.google.common.collect.Lists;
 
 /**
  * Utility methods for parsing input.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class Parsing {
 

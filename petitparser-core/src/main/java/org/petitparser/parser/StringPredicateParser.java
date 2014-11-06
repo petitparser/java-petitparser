@@ -6,8 +6,6 @@ import org.petitparser.context.Result;
 
 /**
  * Parses a sequence of characters.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class StringPredicateParser extends Parser {
 

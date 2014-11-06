@@ -15,8 +15,6 @@ import com.google.common.collect.Lists;
 
 /**
  * An abstract parser that forms the root of all parsers in this package.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public abstract class Parser implements Cloneable {
 

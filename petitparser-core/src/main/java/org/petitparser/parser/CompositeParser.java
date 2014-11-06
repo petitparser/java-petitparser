@@ -22,8 +22,6 @@ import com.google.common.collect.Maps;
  * productions use {@link CompositeParser#redef(String, Function)},
  * {@link CompositeParser#redef(String, Parser)} and
  * {@link CompositeParser#action(String, Function)}.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public abstract class CompositeParser extends DelegateParser {
 

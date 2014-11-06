@@ -7,8 +7,6 @@ import org.petitparser.context.Result;
 
 /**
  * A parser that silently consumes spaces before and after the delegate parser.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class TrimmingParser extends DelegateParser {
 

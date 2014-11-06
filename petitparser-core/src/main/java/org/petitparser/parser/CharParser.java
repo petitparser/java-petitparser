@@ -8,8 +8,6 @@ import com.google.common.base.CharMatcher;
 
 /**
  * Parses a single character satisfying a character matcher.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class CharParser extends Parser {
 

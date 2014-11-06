@@ -8,8 +8,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * XML element node.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class XmlElement extends XmlParent {
 

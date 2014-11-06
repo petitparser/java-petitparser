@@ -2,8 +2,6 @@ package org.petitparser.buffer;
 
 /**
  * Token backed by a {@link StringBuffer}.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class StringToken implements Token {
 

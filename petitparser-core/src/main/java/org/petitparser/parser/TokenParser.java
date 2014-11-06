@@ -6,8 +6,6 @@ import org.petitparser.context.Result;
 
 /**
  * A parser that creates a token from the parsed input.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class TokenParser extends DelegateParser {
 

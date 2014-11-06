@@ -7,8 +7,6 @@ import org.petitparser.context.Result;
 
 /**
  * A parser that uses the first parser that succeeds.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class ChoiceParser extends ListParser {
 

@@ -8,8 +8,6 @@ import org.petitparser.parser.Parser;
 
 /**
  * Tests {@link SmalltalkGrammar}.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class SmalltalkGrammarTest {
 

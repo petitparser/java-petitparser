@@ -19,8 +19,6 @@ import com.google.common.collect.Collections2;
 
 /**
  * XML parser definition.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class XmlParser extends XmlGrammar {
 

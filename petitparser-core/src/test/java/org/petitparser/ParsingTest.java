@@ -19,8 +19,6 @@ import com.google.common.collect.Lists;
 
 /**
  * Tests {@link Parsing} utility.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class ParsingTest {
 

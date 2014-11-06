@@ -2,8 +2,6 @@ package org.petitparser.buffer;
 
 /**
  * Buffer backed by a {@link CharSequence}.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public class StringBuffer implements Buffer {
 

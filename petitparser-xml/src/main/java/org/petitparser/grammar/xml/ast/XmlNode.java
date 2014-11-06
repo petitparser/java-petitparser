@@ -8,8 +8,6 @@ import com.google.common.collect.Lists;
 
 /**
  * Abstract XML node.
- *
- * @author Lukas Renggli (renggli@gmail.com)
  */
 public abstract class XmlNode implements Iterable<XmlNode> {
 
