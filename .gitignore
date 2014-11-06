@@ -2,6 +2,7 @@
 .classpath
 .project
 .settings/
+.idea/
 build/
 bin/
 lib/
