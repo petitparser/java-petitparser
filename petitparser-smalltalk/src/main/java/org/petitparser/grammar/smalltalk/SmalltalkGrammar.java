@@ -1,16 +1,10 @@
 package org.petitparser.grammar.smalltalk;
 
-import static org.petitparser.parser.characters.CharacterParser.any;
-import static org.petitparser.parser.characters.CharacterParser.digit;
-import static org.petitparser.parser.characters.CharacterParser.pattern;
-import static org.petitparser.parser.characters.CharacterParser.whitespace;
-import static org.petitparser.parser.characters.CharacterParser.word;
-import static org.petitparser.Parsers.epsilon;
-import static org.petitparser.Parsers.string;
-
-import org.petitparser.tools.CompositeParser;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.characters.CharacterParser;
+import org.petitparser.parser.primitive.EpsilonParser;
+import org.petitparser.parser.primitive.StringParser;
+import org.petitparser.tools.CompositeParser;
 
 /**
  * Smalltalk grammar definition.
@@ -30,7 +24,7 @@ class SmalltalkGrammar extends CompositeParser {
     def("whitespace", CharacterParser.whitespace()
         .or(ref("comment")));
     def("comment", CharacterParser.is('"')
-        .seq(CharacterParser.is('"').negate().star())
+        .seq(CharacterParser.is('"').neg().star())
         .seq(CharacterParser.is('"')));
   }
 
@@ -79,7 +73,7 @@ class SmalltalkGrammar extends CompositeParser {
     } else if (input instanceof Character) {
       parser = CharacterParser.is((Character) input);
     } else if (input instanceof String) {
-      parser = string((String) input);
+      parser = StringParser.of((String) input);
     } else {
       throw new IllegalStateException("Object not parsable: " + input);
     }
@@ -123,7 +117,7 @@ class SmalltalkGrammar extends CompositeParser {
         .or(ref("blockArgumentsWithout")));
     def("blockArgumentsWith", ref("blockArgument").plus()
         .seq(token("|").or(token("]").and())));
-    def("blockArgumentsWithout", epsilon());
+    def("blockArgumentsWithout", EpsilonParser.DEFAULT);
     def("blockBody", ref("blockArguments")
         .seq(ref("sequence")));
     def("byteLiteral", token("#[")
@@ -218,9 +212,9 @@ class SmalltalkGrammar extends CompositeParser {
             .or(ref("periodToken").star()))
             .or(ref("return").seq(ref("periodToken").star()))
             .or(ref("periodToken").star()));
-    def("string", string("'")
-        .seq(string("''").or(CharacterParser.pattern("^'")).star())
-        .seq(string("'")));
+    def("string", CharacterParser.is('"')
+        .seq(StringParser.of("''").or(CharacterParser.pattern("^'")).star())
+        .seq(CharacterParser.is('"')));
     def("stringLiteral", ref("stringToken"));
     def("stringToken", token(ref("string")));
     def("symbol", ref("unary")

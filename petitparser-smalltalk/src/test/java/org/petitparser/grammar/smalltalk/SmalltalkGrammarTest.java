@@ -1,10 +1,9 @@
 package org.petitparser.grammar.smalltalk;
 
 import org.junit.Test;
-import org.petitparser.Parsing;
 import org.petitparser.context.Result;
-import org.petitparser.tools.CompositeParser;
 import org.petitparser.parser.Parser;
+import org.petitparser.tools.CompositeParser;
 
 /**
  * Tests {@link SmalltalkGrammar}.
@@ -15,7 +14,7 @@ public class SmalltalkGrammarTest {
 
   private <T> T validate(String source, String production) {
     Parser parser = smalltalk.ref(production).end();
-    Result result = Parsing.parse(parser, source);
+    Result result = parser.parse(source);
     return result.get();
   }
 
