@@ -38,7 +38,7 @@ public abstract class Parser {
   /**
    * Primitive method doing the actual parsing.
    */
-  protected abstract Result parseOn(Context context);
+  public abstract Result parseOn(Context context);
 
   /**
    * Returns the parse result of the {@code input}.
@@ -186,15 +186,15 @@ public abstract class Parser {
   }
 
   /**
-   * Returns a parser that accepts the receiver followed by {@code other}. The resulting parser
+   * Returns a parser that accepts the receiver followed by {@code others}. The resulting parser
    * returns a list of the parse result of the receiver followed by the parse result of {@code
-   * other}. Calling this method on an existing sequence code not nest this sequence into a new one,
-   * but instead augments the existing sequence with {@code other}.
+   * others}. Calling this method on an existing sequence code not nest this sequence into a new one,
+   * but instead augments the existing sequence with {@code others}.
    */
   public Parser seq(Parser... others) {
     Parser[] parsers = new Parser[1 + others.length];
     parsers[0] = this;
-    System.arraycopy(others, 0, parsers, 1, parsers.length);
+    System.arraycopy(others, 0, parsers, 1, others.length);
     return new SequenceParser(parsers);
   }
 
@@ -206,7 +206,7 @@ public abstract class Parser {
   public Parser or(Parser... others) {
     Parser[] parsers = new Parser[1 + others.length];
     parsers[0] = this;
-    System.arraycopy(others, 0, parsers, 1, parsers.length);
+    System.arraycopy(others, 0, parsers, 1, others.length);
     return new ChoiceParser(parsers);
   }
 

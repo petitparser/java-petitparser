@@ -24,7 +24,7 @@ public class EndOfInputParser extends DelegateParser {
     if (result.isFailure()) {
       return result;
     }
-    if (context.getPosition() == context.getBuffer().length()) {
+    if (result.getPosition() == result.getBuffer().length()) {
       return result;
     }
     return result.failure(message, result.getPosition());

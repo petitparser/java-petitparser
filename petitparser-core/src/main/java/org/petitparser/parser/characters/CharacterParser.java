@@ -16,7 +16,7 @@ public class CharacterParser extends Parser {
    * Returns a parser that accepts any character.
    */
   public static Parser any() {
-    return any("character expected");
+    return any("any character expected");
   }
 
   public static Parser any(String message) {
@@ -27,7 +27,7 @@ public class CharacterParser extends Parser {
    * Returns a parser that accepts any of the provided characters.
    */
   public static Parser anyOf(String chars) {
-    return anyOf(chars, "any of " + chars + " expected");
+    return anyOf(chars, "any of '" + chars + "' expected");
   }
 
   public static Parser anyOf(String chars, String message) {
@@ -49,7 +49,7 @@ public class CharacterParser extends Parser {
    * Returns a parser that accepts none of the provided characters.
    */
   public static Parser noneOf(String chars) {
-    return noneOf(chars, "none of " + chars + " expected");
+    return noneOf(chars, "none of '" + chars + "' expected");
   }
 
   public static Parser noneOf(String chars, String message) {
@@ -60,7 +60,7 @@ public class CharacterParser extends Parser {
    * Returns a parser that accepts a specific {@code character}.
    */
   public static Parser is(char character) {
-    return is(character, character + " expected");
+    return is(character, "'" + character + "' expected");
   }
 
   public static Parser is(char character, String message) {
@@ -107,7 +107,7 @@ public class CharacterParser extends Parser {
    * characters. A caret {@code ^} at the beginning negates the pattern.
    */
   public static Parser pattern(String pattern) {
-    return pattern(pattern, pattern + " expected");
+    return pattern(pattern, "[" + pattern + "] expected");
   }
 
   public static Parser pattern(String pattern, String message) {
@@ -115,20 +115,20 @@ public class CharacterParser extends Parser {
   }
 
   private static final Parser PATTERN_SIMPLE = any().map(CharacterPredicate::is);
-  private static final Parser PATTERN_RANGE =
-      any().seq(is('-')).seq(any()).map((List<Character> characters) -> {
+  private static final Parser PATTERN_RANGE = any().seq(is('-')).seq(any())
+      .map((List<Character> characters) -> {
         return CharacterPredicate.range(characters.get(0), characters.get(2));
       });
-  private static final Parser PATTERN_POSITIVE =
-      PATTERN_RANGE.or(PATTERN_SIMPLE).plus().map((List<CharacterPredicate> matchers) -> {
+  private static final Parser PATTERN_POSITIVE = PATTERN_RANGE.or(PATTERN_SIMPLE).plus()
+      .map((List<CharacterPredicate> matchers) -> {
         CharacterPredicate result = matchers.remove(0);
         for (CharacterPredicate matcher : matchers) {
           result = result.or(matcher);
         }
         return result;
       });
-  private static final Parser PATTERN =
-      is('^').optional().seq(PATTERN_POSITIVE).map((List<CharacterPredicate> matchers) -> {
+  private static final Parser PATTERN = is('^').optional().seq(PATTERN_POSITIVE)
+      .map((List<CharacterPredicate> matchers) -> {
         return matchers.get(0) == null ? matchers.get(1) : matchers.get(1).not();
       }).end();
 

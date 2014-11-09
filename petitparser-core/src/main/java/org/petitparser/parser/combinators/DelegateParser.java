@@ -17,7 +17,7 @@ public class DelegateParser extends Parser {
   protected Parser delegate;
 
   public DelegateParser() {
-    this(new FailureParser("Undefined delegate parser."));
+    this(FailureParser.withMessage("Undefined delegate parser."));
   }
 
   public DelegateParser(Parser delegate) {

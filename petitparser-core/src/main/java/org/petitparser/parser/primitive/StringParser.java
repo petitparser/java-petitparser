@@ -12,19 +12,19 @@ import java.util.function.Predicate;
  */
 public class StringParser extends Parser {
 
-  public static Parser string(String value) {
-    return string(value, value + " expected");
+  public static Parser of(String value) {
+    return of(value, value + " expected");
   }
 
-  public static Parser string(String value, String message) {
+  public static Parser of(String value, String message) {
     return new StringParser(value.length(), value::equals, message);
   }
 
-  public static Parser stringIgnoringCase(String value) {
-    return stringIgnoringCase(value, value + " expected");
+  public static Parser ofIgnoringCase(String value) {
+    return ofIgnoringCase(value, value + " expected");
   }
 
-  public static Parser stringIgnoringCase(String value, String message) {
+  public static Parser ofIgnoringCase(String value, String message) {
     return new StringParser(value.length(), value::equalsIgnoreCase, message);
   }
 
@@ -32,7 +32,7 @@ public class StringParser extends Parser {
   private final Predicate<String> predicate;
   private final String message;
 
-  public StringParser(int size, Predicate<String> predicate, String message) {
+  private StringParser(int size, Predicate<String> predicate, String message) {
     this.size = size;
     this.predicate = Objects.requireNonNull(predicate);
     this.message = Objects.requireNonNull(message);

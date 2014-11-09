@@ -32,7 +32,8 @@ public class ExpressionBuilder {
    * Builds the expression parser.
    */
   public Parser build() {
-    Parser parser = new FailureParser("Highest priority group should define a primitive parser.");
+    Parser parser =
+        FailureParser.withMessage("Highest priority group should define a primitive parser.");
     for (ExpressionGroup group : groups) {
       parser = group.build(parser);
     }

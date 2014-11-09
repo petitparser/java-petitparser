@@ -70,7 +70,7 @@ public abstract class CompositeParser extends DelegateParser {
       return undefined.get(name);
     } else {
       SetableParser parser =
-          new SetableParser(new FailureParser("Uninitalized production: " + name));
+          new SetableParser(FailureParser.withMessage("Uninitalized production: " + name));
       undefined.put(name, parser);
       return parser;
     }

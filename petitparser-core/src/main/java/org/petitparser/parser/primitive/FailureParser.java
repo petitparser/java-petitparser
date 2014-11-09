@@ -11,9 +11,13 @@ import java.util.Objects;
  */
 public class FailureParser extends Parser {
 
+  public static Parser withMessage(String message) {
+    return new FailureParser(message);
+  }
+
   private final String message;
 
-  public FailureParser(String message) {
+  private FailureParser(String message) {
     this.message = Objects.requireNonNull(message);
   }
 
