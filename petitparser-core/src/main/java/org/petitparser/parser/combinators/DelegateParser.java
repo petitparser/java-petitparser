@@ -1,35 +1,32 @@
-package org.petitparser.parser;
-
-import java.util.List;
+package org.petitparser.parser.combinators;
 
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
+import org.petitparser.parser.Parser;
+import org.petitparser.parser.primitive.FailureParser;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A parser that delegates to another one.
  */
 public class DelegateParser extends Parser {
 
-  protected static final Parser DEFAULT_DELEGATE =
-      new FailureParser("No delegate parser specified");
-
   protected Parser delegate;
 
   public DelegateParser() {
-    this(DEFAULT_DELEGATE);
+    this(new FailureParser("Undefined delegate parser."));
   }
 
   public DelegateParser(Parser delegate) {
-    this.delegate = delegate;
+    this.delegate = Objects.requireNonNull(delegate);
   }
 
   @Override
-  public Result parse(Context context) {
-    return getDelegate().parse(context);
-  }
-
-  public Parser getDelegate() {
-    return delegate;
+  public Result parseOn(Context context) {
+    return delegate.parseOn(context);
   }
 
   @Override
@@ -42,9 +39,11 @@ public class DelegateParser extends Parser {
 
   @Override
   public List<Parser> getChildren() {
-    List<Parser> children = super.getChildren();
-    children.add(getDelegate());
-    return children;
+    return Arrays.asList(delegate);
   }
 
+  @Override
+  public Parser copy() {
+    return new DelegateParser(delegate);
+  }
 }

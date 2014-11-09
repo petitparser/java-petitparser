@@ -1,23 +1,19 @@
 package org.petitparser;
 
-import static org.junit.Assert.assertEquals;
-import static org.petitparser.Assertions.assertFailure;
-import static org.petitparser.Assertions.assertSuccess;
-import static org.petitparser.Chars.character;
-import static org.petitparser.Chars.digit;
-import static org.petitparser.Chars.letter;
-import static org.petitparser.Chars.upperCase;
-import static org.petitparser.Parsing.parse;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import org.junit.Test;
+import org.petitparser.context.Token;
+import org.petitparser.parser.Parser;
+import org.petitparser.parser.combinators.SetableParser;
+import org.petitparser.parser.characters.CharacterParser;
 
 import java.util.Arrays;
 
-import org.junit.Test;
-import org.petitparser.buffer.Token;
-import org.petitparser.parser.Parser;
-import org.petitparser.parser.SetableParser;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import static org.junit.Assert.assertEquals;
+import static org.petitparser.Assertions.assertFailure;
+import static org.petitparser.Assertions.assertSuccess;
+import static org.petitparser.Parsing.parse;
 
 /**
  * Tests {@link Parsers} factory.
@@ -26,7 +22,7 @@ public class ParserTest {
 
   @Test
   public void testAnd() {
-    Parser parser = character('a').and();
+    Parser parser = CharacterParser.is('a').and();
     assertSuccess(parser, "a", 'a', 0);
     assertFailure(parser, "b", "a expected");
     assertFailure(parser, "");
@@ -34,7 +30,7 @@ public class ParserTest {
 
   @Test
   public void testChoice2() {
-    Parser parser = character('a').or(character('b'));
+    Parser parser = CharacterParser.is('a').or(CharacterParser.is('b'));
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, "b", 'b');
     assertFailure(parser, "c");
@@ -43,7 +39,8 @@ public class ParserTest {
 
   @Test
   public void testChoice3() {
-    Parser parser = character('a').or(character('b')).or(character('c'));
+    Parser parser = CharacterParser.is('a').or(CharacterParser.is('b'))
+        .or(CharacterParser.is('c'));
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, "b", 'b');
     assertSuccess(parser, "c", 'c');
@@ -53,7 +50,7 @@ public class ParserTest {
 
   @Test
   public void testEndOfInput() {
-    Parser parser = character('a').end();
+    Parser parser = CharacterParser.is('a').end();
     assertFailure(parser, "", "a expected");
     assertSuccess(parser, "a", 'a');
     assertFailure(parser, "aa", 1, "end of input expected");
@@ -61,17 +58,17 @@ public class ParserTest {
 
   @Test
   public void testSetable() {
-    SetableParser parser = character('a').setable();
+    SetableParser parser = CharacterParser.is('a').setable();
     assertSuccess(parser, "a", 'a');
     assertFailure(parser, "b", 0, "a expected");
-    parser.set(character('b'));
+    parser.set(CharacterParser.is('b'));
     assertSuccess(parser, "b", 'b');
     assertFailure(parser, "a", 0, "b expected");
   }
 
   @Test
   public void testFlatten() {
-    Parser parser = digit().plus().flatten();
+    Parser parser = CharacterParser.digit().plus().flatten();
     assertFailure(parser, "");
     assertFailure(parser, "a");
     assertSuccess(parser, "1", "1");
@@ -82,7 +79,7 @@ public class ParserTest {
 
   @Test
   public void testMap() {
-    Parser parser = digit().map(new Function<Character, Integer>() {
+    Parser parser = CharacterParser.digit().map(new Function<Character, Integer>() {
       @Override
       public Integer apply(Character argument) {
         return Character.getNumericValue(argument);
@@ -97,7 +94,7 @@ public class ParserTest {
 
   @Test
   public void testPick1() {
-    Parser parser = digit().seq(letter()).pick(1);
+    Parser parser = CharacterParser.digit().seq(CharacterParser.letter()).pick(1);
     assertSuccess(parser, "1a", 'a');
     assertSuccess(parser, "2b", 'b');
     assertFailure(parser, "");
@@ -107,7 +104,7 @@ public class ParserTest {
 
   @Test
   public void testPick2() {
-    Parser parser = digit().seq(letter()).pick(-1);
+    Parser parser = CharacterParser.digit().seq(CharacterParser.letter()).pick(-1);
     assertSuccess(parser, "1a", 'a');
     assertSuccess(parser, "2b", 'b');
     assertFailure(parser, "");
@@ -117,7 +114,7 @@ public class ParserTest {
 
   @Test
   public void testPermutate1() {
-    Parser parser = digit().seq(letter()).permute(1, 0);
+    Parser parser = CharacterParser.digit().seq(CharacterParser.letter()).permute(1, 0);
     assertSuccess(parser, "1a", Lists.newArrayList('a', '1'));
     assertSuccess(parser, "2b", Lists.newArrayList('b', '2'));
     assertFailure(parser, "");
@@ -127,7 +124,7 @@ public class ParserTest {
 
   @Test
   public void testPermutate2() {
-    Parser parser = digit().seq(letter()).permute(-1, 0);
+    Parser parser = CharacterParser.digit().seq(CharacterParser.letter()).permute(-1, 0);
     assertSuccess(parser, "1a", Lists.newArrayList('a', '1'));
     assertSuccess(parser, "2b", Lists.newArrayList('b', '2'));
     assertFailure(parser, "");
@@ -137,8 +134,8 @@ public class ParserTest {
 
   @Test
   public void testNegate() {
-    Parser parser = digit().or(upperCase()).negate(
-        "no diggit or uppercase expected");
+    Parser parser = CharacterParser.digit().or(CharacterParser.upperCase())
+        .negate("no diggit or uppercase expected");
     assertFailure(parser, "1");
     assertFailure(parser, "9");
     assertFailure(parser, "A");
@@ -150,7 +147,7 @@ public class ParserTest {
 
   @Test
   public void testNegateDigit() {
-    Parser parser = digit().negate("no digit expected");
+    Parser parser = CharacterParser.digit().negate("no digit expected");
     assertFailure(parser, "1", 0, "no digit expected");
     assertFailure(parser, "9", 0, "no digit expected");
     assertSuccess(parser, "a", 'a');
@@ -160,7 +157,7 @@ public class ParserTest {
 
   @Test
   public void testNot() {
-    Parser parser = character('a').not("not a expected");
+    Parser parser = CharacterParser.is('a').not("not a expected");
     assertFailure(parser, "a", "not a expected");
     assertSuccess(parser, "b", null, 0);
     assertSuccess(parser, "", null);
@@ -168,7 +165,7 @@ public class ParserTest {
 
   @Test
   public void testOptional() {
-    Parser parser = character('a').optional();
+    Parser parser = CharacterParser.is('a').optional();
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, "b", null, 0);
     assertSuccess(parser, "", null);
@@ -176,7 +173,7 @@ public class ParserTest {
 
   @Test
   public void testPlus() {
-    Parser parser = character('a').plus();
+    Parser parser = CharacterParser.is('a').plus();
     assertFailure(parser, "", "a expected");
     assertSuccess(parser, "a", Arrays.asList('a'));
     assertSuccess(parser, "aa", Arrays.asList('a', 'a'));
@@ -184,7 +181,7 @@ public class ParserTest {
   }
 
   public void testTimes() {
-    Parser parser = character('a').times(2);
+    Parser parser = CharacterParser.is('a').times(2);
     assertFailure(parser, "", "a expected");
     assertFailure(parser, "a", "a expected");
     assertSuccess(parser, "aa", Arrays.asList('a', 'a'));
@@ -193,7 +190,7 @@ public class ParserTest {
 
   @Test
   public void testRepeat() {
-    Parser parser = character('a').repeat(2, 3);
+    Parser parser = CharacterParser.is('a').repeat(2, 3);
     assertFailure(parser, "", "a expected");
     assertFailure(parser, "a", 1, "a expected");
     assertSuccess(parser, "aa", Arrays.asList('a', 'a'));
@@ -203,7 +200,7 @@ public class ParserTest {
 
   @Test
   public void testSequence2() {
-    Parser parser = character('a').seq(character('b'));
+    Parser parser = CharacterParser.is('a').seq(CharacterParser.is('b'));
     assertSuccess(parser, "ab", Arrays.asList('a', 'b'));
     assertFailure(parser, "");
     assertFailure(parser, "x");
@@ -213,7 +210,8 @@ public class ParserTest {
 
   @Test
   public void testSequence3() {
-    Parser parser = character('a').seq(character('b')).seq(character('c'));
+    Parser parser = CharacterParser.is('a').seq(CharacterParser.is('b'))
+        .seq(CharacterParser.is('c'));
     assertSuccess(parser, "abc", Arrays.asList('a', 'b', 'c'));
     assertFailure(parser, "");
     assertFailure(parser, "x");
@@ -225,7 +223,7 @@ public class ParserTest {
 
   @Test
   public void testStar() {
-    Parser parser = character('a').star();
+    Parser parser = CharacterParser.is('a').star();
     assertSuccess(parser, "", Arrays.asList());
     assertSuccess(parser, "a", Arrays.asList('a'));
     assertSuccess(parser, "aa", Arrays.asList('a', 'a'));
@@ -234,7 +232,7 @@ public class ParserTest {
 
   @Test
   public void testToken() {
-    Parser parser = character('a').star().token().trim();
+    Parser parser = CharacterParser.is('a').star().token().trim();
     Token token = parse(parser, " aa ").get();
     assertEquals(1, token.getStart());
     assertEquals(3, token.getStop());
@@ -243,7 +241,7 @@ public class ParserTest {
 
   @Test
   public void testTrim() {
-    Parser parser = character('a').trim();
+    Parser parser = CharacterParser.is('a').trim();
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, " a", 'a');
     assertSuccess(parser, "a ", 'a');
@@ -259,7 +257,7 @@ public class ParserTest {
 
   @Test
   public void testTrimCustom() {
-    Parser parser = character('a').trim(character('*'));
+    Parser parser = CharacterParser.is('a').trim(CharacterParser.is('*'));
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, "*a", 'a');
     assertSuccess(parser, "a*", 'a');
@@ -275,7 +273,7 @@ public class ParserTest {
 
   @Test
   public void testWrapped() {
-    Parser parser = character('a').wrapped();
+    Parser parser = CharacterParser.is('a').wrapped();
     assertSuccess(parser, "a", 'a');
     assertFailure(parser, "b", "a expected");
     assertFailure(parser, "");
@@ -283,7 +281,7 @@ public class ParserTest {
 
   @Test
   public void testSeparatedBy() {
-    Parser parser = character('a').separatedBy(character('b'));
+    Parser parser = CharacterParser.is('a').separatedBy(CharacterParser.is('b'));
     assertFailure(parser, "", "a expected");
     assertSuccess(parser, "a", Arrays.asList('a'));
     assertSuccess(parser, "ab", Arrays.asList('a'), 1);
@@ -295,7 +293,7 @@ public class ParserTest {
 
   @Test
   public void testDelimitedBy() {
-    Parser parser = character('a').delimitedBy(character('b'));
+    Parser parser = CharacterParser.is('a').delimitedBy(CharacterParser.is('b'));
     assertFailure(parser, "", "a expected");
     assertSuccess(parser, "a", Arrays.asList('a'));
     assertSuccess(parser, "ab", Arrays.asList('a', 'b'));

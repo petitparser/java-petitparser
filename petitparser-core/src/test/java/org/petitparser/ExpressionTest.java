@@ -1,95 +1,86 @@
 package org.petitparser;
 
-import static org.junit.Assert.assertEquals;
-import static org.petitparser.Chars.character;
-import static org.petitparser.Chars.digit;
-import static org.petitparser.Parsers.failure;
-import static org.petitparser.Parsers.string;
+import com.google.common.base.Function;
+import org.junit.Test;
+import org.petitparser.parser.Parser;
+import org.petitparser.parser.combinators.SetableParser;
+import org.petitparser.parser.characters.CharacterParser;
+import org.petitparser.tools.ExpressionBuilder;
 
 import java.util.List;
 
-import org.junit.Test;
-import org.petitparser.parser.Parser;
-import org.petitparser.parser.SetableParser;
-import org.petitparser.tools.ExpressionBuilder;
-
-import com.google.common.base.Function;
+import static org.junit.Assert.assertEquals;
+import static org.petitparser.Parsers.failure;
+import static org.petitparser.Parsers.string;
 
 /**
  * Tests {@link ExpressionBuilder}.
  */
 public class ExpressionTest {
 
+  private static final double EPSILON = 1e-5;
+  private static final Parser PARSER = createParser();
+
   private static Parser createParser() {
     SetableParser root = failure("Undefined").setable();
     ExpressionBuilder builder = new ExpressionBuilder();
+    builder.group().primitive(
+        CharacterParser.is('(').trim().seq(root).seq(CharacterParser.is(')').trim())
+            .pick(1)).primitive(CharacterParser.digit().plus()
+        .seq(CharacterParser.is('.').seq(CharacterParser.digit().plus()).optional())
+        .flatten().trim().map(Double::parseDouble));
     builder.group()
-      .primitive(character('(').trim()
-          .seq(root)
-          .seq(character(')').trim())
-          .pick(1))
-      .primitive(digit().plus()
-          .seq(character('.').seq(digit().plus()).optional())
-          .flatten().trim().map(Double::parseDouble));
+        .prefix(CharacterParser.is('-').trim(), new Function<List<Double>, Double>() {
+          @Override
+          public Double apply(List<Double> values) {
+            return -values.get(1);
+          }
+        });
+    builder.group().postfix(string("++").trim(), new Function<List<Double>, Double>() {
+      @Override
+      public Double apply(List<Double> values) {
+        return values.get(0) + 1;
+      }
+    }).postfix(string("--").trim(), new Function<List<Double>, Double>() {
+      @Override
+      public Double apply(List<Double> values) {
+        return values.get(0) - 1;
+      }
+    });
     builder.group()
-      .prefix(character('-').trim(), new Function<List<Double>, Double>() {
-        @Override
-        public Double apply(List<Double> values) {
-          return -values.get(1);
-        }
-      });
+        .right(CharacterParser.is('^').trim(), new Function<List<Double>, Double>() {
+          @Override
+          public Double apply(List<Double> values) {
+            return Math.pow(values.get(0), values.get(2));
+          }
+        });
     builder.group()
-      .postfix(string("++").trim(), new Function<List<Double>, Double>() {
-        @Override
-        public Double apply(List<Double> values) {
-          return values.get(0) + 1;
-        }
-      })
-      .postfix(string("--").trim(), new Function<List<Double>, Double>() {
-        @Override
-        public Double apply(List<Double> values) {
-          return values.get(0) - 1;
-        }
-      });
+        .left(CharacterParser.is('*').trim(), new Function<List<Double>, Double>() {
+          @Override
+          public Double apply(List<Double> values) {
+            return values.get(0) * values.get(2);
+          }
+        }).left(CharacterParser.is('/').trim(), new Function<List<Double>, Double>() {
+      @Override
+      public Double apply(List<Double> values) {
+        return values.get(0) / values.get(2);
+      }
+    });
     builder.group()
-      .right(character('^').trim(), new Function<List<Double>, Double>() {
-        @Override
-        public Double apply(List<Double> values) {
-          return Math.pow(values.get(0), values.get(2));
-        }
-      });
-    builder.group()
-      .left(character('*').trim(), new Function<List<Double>, Double>() {
-        @Override
-        public Double apply(List<Double> values) {
-          return values.get(0) * values.get(2);
-        }
-      })
-      .left(character('/').trim(), new Function<List<Double>, Double>() {
-        @Override
-        public Double apply(List<Double> values) {
-          return values.get(0) / values.get(2);
-        }
-      });
-    builder.group()
-      .left(character('+').trim(), new Function<List<Double>, Double>() {
-        @Override
-        public Double apply(List<Double> values) {
-          return values.get(0) + values.get(2);
-        }
-      })
-      .left(character('-').trim(), new Function<List<Double>, Double>() {
-        @Override
-        public Double apply(List<Double> values) {
-          return values.get(0) - values.get(2);
-        }
-      });
+        .left(CharacterParser.is('+').trim(), new Function<List<Double>, Double>() {
+          @Override
+          public Double apply(List<Double> values) {
+            return values.get(0) + values.get(2);
+          }
+        }).left(CharacterParser.is('-').trim(), new Function<List<Double>, Double>() {
+      @Override
+      public Double apply(List<Double> values) {
+        return values.get(0) - values.get(2);
+      }
+    });
     root.set(builder.build());
     return root.end();
   }
-
-  private static final double EPSILON = 1e-5;
-  private static final Parser PARSER = createParser();
 
   private static void assertExpression(String input, double expected) {
     double actual = Parsing.parse(PARSER, input).get();

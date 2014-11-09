@@ -1,14 +1,11 @@
 package org.petitparser;
 
-import static org.petitparser.Assertions.assertFailure;
-import static org.petitparser.Assertions.assertSuccess;
-import static org.petitparser.Parsers.epsilon;
-import static org.petitparser.Parsers.failure;
-import static org.petitparser.Parsers.string;
-import static org.petitparser.Parsers.stringIgnoreCase;
-
 import org.junit.Test;
 import org.petitparser.parser.Parser;
+
+import static org.petitparser.Assertions.assertFailure;
+import static org.petitparser.Assertions.assertSuccess;
+import static org.petitparser.Parsers.*;
 
 /**
  * Tests {@link Parsers} factory.

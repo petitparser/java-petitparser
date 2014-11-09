@@ -24,7 +24,6 @@
         <project.reporting.sourceEncoding>UTF-8</project.reporting.sourceEncoding>
         <java.version>1.8</java.version>
         <junit.version>4.11</junit.version>
-        <guava.version>18.0</guava.version>
     </properties>
 
     <scm>
@@ -52,11 +51,6 @@
     </organization>
 
     <dependencies>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

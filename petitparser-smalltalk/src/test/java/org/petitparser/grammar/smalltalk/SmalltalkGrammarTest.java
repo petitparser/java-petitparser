@@ -3,7 +3,7 @@ package org.petitparser.grammar.smalltalk;
 import org.junit.Test;
 import org.petitparser.Parsing;
 import org.petitparser.context.Result;
-import org.petitparser.parser.CompositeParser;
+import org.petitparser.tools.CompositeParser;
 import org.petitparser.parser.Parser;
 
 /**

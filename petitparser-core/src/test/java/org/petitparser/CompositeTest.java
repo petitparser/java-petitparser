@@ -1,19 +1,18 @@
 package org.petitparser;
 
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
+import org.junit.Test;
+import org.petitparser.tools.CompositeParser;
+import org.petitparser.parser.Parser;
+import org.petitparser.parser.characters.CharacterParser;
+
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
-import static org.petitparser.Chars.character;
-
-import java.util.Map;
-
-import org.junit.Test;
-import org.petitparser.parser.CompositeParser;
-import org.petitparser.parser.Parser;
-
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests {@link CompositeParser}.
@@ -25,7 +24,7 @@ public class CompositeTest {
     Parser parser = new CompositeParser() {
       @Override
       protected void initialize() {
-        def("start", character('a'));
+        def("start", CharacterParser.is('a'));
       }
     };
     assertSuccess(parser, "a", 'a', 1);
@@ -38,8 +37,8 @@ public class CompositeTest {
     Parser parser = new CompositeParser() {
       @Override
       protected void initialize() {
-        def("start", ref("loop").or(character('b')));
-        def("loop", character('a').seq(ref("start")));
+        def("start", ref("loop").or(CharacterParser.is('b')));
+        def("loop", CharacterParser.is('a').seq(ref("start")));
       }
     };
     assertTrue(Parsing.accepts(parser, "b"));
@@ -53,8 +52,8 @@ public class CompositeTest {
     Parser parser = new CompositeParser() {
       @Override
       protected void initialize() {
-        def("start", character('b'));
-        redef("start", character('a'));
+        def("start", CharacterParser.is('b'));
+        redef("start", CharacterParser.is('a'));
       }
     };
     assertSuccess(parser, "a", 'a', 1);
@@ -67,13 +66,13 @@ public class CompositeTest {
     Parser parser = new CompositeParser() {
       @Override
       protected void initialize() {
-        final Parser b = character('b');
+        final Parser b = CharacterParser.is('b');
         def("start", b);
         redef("start", new Function<Parser, Parser>() {
           @Override
           public Parser apply(Parser parser) {
             assertEquals(b, parser);
-            return character('a');
+            return CharacterParser.is('a');
           }
         });
       }
@@ -85,11 +84,10 @@ public class CompositeTest {
 
   @Test
   public void testRefCompleted() {
-    final Map<String, Parser> parsers = ImmutableMap.<String, Parser>builder()
-        .put("start", character('a'))
-        .put("something", character('b'))
-        .put("else", character('c'))
-        .build();
+    final Map<String, Parser> parsers =
+        ImmutableMap.<String, Parser> builder().put("start", CharacterParser.is('a'))
+            .put("something", CharacterParser.is('b'))
+            .put("else", CharacterParser.is('c')).build();
     final CompositeParser parser = new CompositeParser() {
       @Override
       protected void initialize() {
@@ -108,7 +106,7 @@ public class CompositeTest {
     CompositeParser parser = new CompositeParser() {
       @Override
       protected void initialize() {
-        def("start", character('a'));
+        def("start", CharacterParser.is('a'));
       }
     };
     parser.ref("star1");
@@ -119,8 +117,8 @@ public class CompositeTest {
     new CompositeParser() {
       @Override
       protected void initialize() {
-        def("start", character('a'));
-        def("start", character('b'));
+        def("start", CharacterParser.is('a'));
+        def("start", CharacterParser.is('b'));
       }
     };
   }
@@ -130,7 +128,7 @@ public class CompositeTest {
     new CompositeParser() {
       @Override
       protected void initialize() {
-        def("star1", character('a'));
+        def("star1", CharacterParser.is('a'));
       }
     };
   }
@@ -140,8 +138,8 @@ public class CompositeTest {
     new CompositeParser() {
       @Override
       protected void initialize() {
-        def("start", character('a'));
-        redef("star1", character('b'));
+        def("start", CharacterParser.is('a'));
+        redef("star1", CharacterParser.is('b'));
       }
     };
   }

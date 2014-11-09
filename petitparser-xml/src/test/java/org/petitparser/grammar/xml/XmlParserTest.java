@@ -139,7 +139,7 @@ public class XmlParserTest {
         + "\n"
         + "  <xsd:complexType name=\"Items\">\n"
         + "    <xsd:sequence>\n"
-        + "      <xsd:element name=\"item\" minOccurs=\"0\" maxOccurs=\"unbounded\">\n"
+        + "      <xsd:element name=\"item\" minOccurs=\"0\" maxOccurs=\"UNBOUNDED\">\n"
         + "        <xsd:complexType>\n"
         + "          <xsd:sequence>\n"
         + "            <xsd:element name=\"productName\" type=\"xsd:string\"/>\n"

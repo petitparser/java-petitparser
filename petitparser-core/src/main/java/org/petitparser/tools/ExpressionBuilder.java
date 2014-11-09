@@ -1,21 +1,19 @@
 package org.petitparser.tools;
 
+import org.petitparser.parser.Parser;
+import org.petitparser.parser.combinators.ChoiceParser;
+import org.petitparser.parser.combinators.SequenceParser;
+import org.petitparser.parser.primitive.FailureParser;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-
-import org.petitparser.Parsers;
-import org.petitparser.parser.ChoiceParser;
-import org.petitparser.parser.Parser;
-import org.petitparser.parser.SequenceParser;
-
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-import com.google.common.collect.Lists;
+import java.util.function.Function;
 
 /**
- * A builder that allows the simple definition of expression grammars with
- * prefix, postfix, and left- and right-associative infix operators.
+ * A builder that allows the simple definition of expression grammars with prefix, postfix, and
+ * left- and right-associative infix operators.
  */
 public class ExpressionBuilder {
 
@@ -34,7 +32,7 @@ public class ExpressionBuilder {
    * Builds the expression parser.
    */
   public Parser build() {
-    Parser parser = Parsers.failure("Highest priority group should define a primitive parser.");
+    Parser parser = new FailureParser("Highest priority group should define a primitive parser.");
     for (ExpressionGroup group : groups) {
       parser = group.build(parser);
     }
@@ -45,6 +43,12 @@ public class ExpressionBuilder {
    * Models a group of operators of the same precedence.
    */
   public static class ExpressionGroup {
+
+    private final List<Parser> primitives = new ArrayList<>();
+    private final List<Parser> prefix = new ArrayList<>();
+    private final List<Parser> postfix = new ArrayList<>();
+    private final List<Parser> right = new ArrayList<>();
+    private final List<Parser> left = new ArrayList<>();
 
     /**
      * Defines a new primitive or literal {@code parser}.
@@ -58,19 +62,17 @@ public class ExpressionBuilder {
       return buildChoice(primitives, inner);
     }
 
-    private final List<Parser> primitives = new ArrayList<>();
-
     /**
      * Adds a prefix operator {@code parser}.
      */
     public ExpressionGroup prefix(Parser parser) {
-      addTo(prefix, parser, Functions.identity());
+      addTo(prefix, parser, Function.identity());
       return this;
     }
 
     /**
-     * Adds a prefix operator {@code parser}. Evaluates the optional
-     * {@code action} with the parsed {@code operator} and {@code value}.
+     * Adds a prefix operator {@code parser}. Evaluates the optional {@code action} with the parsed
+     * {@code operator} and {@code value}.
      */
     public <T, R> ExpressionGroup prefix(Parser parser, Function<T, R> action) {
       addTo(prefix, parser, action);
@@ -87,7 +89,9 @@ public class ExpressionBuilder {
           @SuppressWarnings("unchecked")
           public Object apply(List<Object> tuple) {
             Object value = tuple.get(1);
-            for (ExpressionResult result : Lists.reverse((List<ExpressionResult>) tuple.get(0))) {
+            List<ExpressionResult> tuples = (List<ExpressionResult>) tuple.get(0);
+            Collections.reverse(tuples);
+            for (ExpressionResult result : tuples) {
               value = result.action.apply(Arrays.asList(result.operator, value));
             }
             return value;
@@ -96,19 +100,17 @@ public class ExpressionBuilder {
       }
     }
 
-    private final List<Parser> prefix = new ArrayList<>();
-
     /**
      * Adds a postfix operator {@code parser}.
      */
     public ExpressionGroup postfix(Parser parser) {
-      addTo(postfix, parser, Functions.identity());
+      addTo(postfix, parser, Function.identity());
       return this;
     }
 
     /**
-     * Adds a postfix operator {@code parser}. Evaluates the optional
-     * {@code action} with the parsed {@code value} and {@code operator}.
+     * Adds a postfix operator {@code parser}. Evaluates the optional {@code action} with the parsed
+     * {@code value} and {@code operator}.
      */
     public <T, R> ExpressionGroup postfix(Parser parser, Function<T, R> action) {
       addTo(postfix, parser, action);
@@ -134,20 +136,17 @@ public class ExpressionBuilder {
       }
     }
 
-    private final List<Parser> postfix = new ArrayList<>();
-
     /**
      * Adds a right-associative operator {@code parser}.
      */
     public ExpressionGroup right(Parser parser) {
-      addTo(right, parser, Functions.identity());
+      addTo(right, parser, Function.identity());
       return this;
     }
 
     /**
-     * Adds a right-associative operator {@code parser}. Evaluates the optional
-     * {@code action} with the parsed {@code left} term, {@code operator}, and
-     * {@code right} term.
+     * Adds a right-associative operator {@code parser}. Evaluates the optional {@code action} with
+     * the parsed {@code left} term, {@code operator}, and {@code right} term.
      */
     public <T, R> ExpressionGroup right(Parser parser, Function<T, R> action) {
       addTo(right, parser, action);
@@ -165,8 +164,8 @@ public class ExpressionBuilder {
             Object result = sequence.get(sequence.size() - 1);
             for (int i = sequence.size() - 2; i > 0; i -= 2) {
               ExpressionResult expressionResult = (ExpressionResult) sequence.get(i);
-              result = expressionResult.action.apply(Arrays.asList(sequence.get(i - 1),
-                  expressionResult.operator, result));
+              result = expressionResult.action
+                  .apply(Arrays.asList(sequence.get(i - 1), expressionResult.operator, result));
             }
             return result;
           }
@@ -174,20 +173,17 @@ public class ExpressionBuilder {
       }
     }
 
-    private final List<Parser> right = new ArrayList<>();
-
     /**
      * Adds a left-associative operator {@code parser}.
      */
     public ExpressionGroup left(Parser parser) {
-      addTo(left, parser, Functions.identity());
+      addTo(left, parser, Function.identity());
       return this;
     }
 
     /**
-     * Adds a left-associative operator {@code parser}. Evaluates the optional
-     * {@code action} with the parsed {@code left} term, {@code operator}, and
-     * {@code right} term.
+     * Adds a left-associative operator {@code parser}. Evaluates the optional {@code action} with
+     * the parsed {@code left} term, {@code operator}, and {@code right} term.
      */
     public <T, R> ExpressionGroup left(Parser parser, Function<T, R> action) {
       addTo(left, parser, action);
@@ -205,16 +201,14 @@ public class ExpressionBuilder {
             Object result = sequence.get(0);
             for (int i = 1; i < sequence.size(); i += 2) {
               ExpressionResult expressionResult = (ExpressionResult) sequence.get(i);
-              result = expressionResult.action.apply(Arrays.asList(result,
-                  expressionResult.operator, sequence.get(i + 1)));
+              result = expressionResult.action
+                  .apply(Arrays.asList(result, expressionResult.operator, sequence.get(i + 1)));
             }
             return result;
           }
         });
       }
     }
-
-    private final List<Parser> left = new ArrayList<>();
 
     // helper to connect operator parser and action, and add to list
     private <T, R> void addTo(List<Parser> list, Parser parser, final Function<T, R> action) {
@@ -246,7 +240,6 @@ public class ExpressionBuilder {
     private Parser build(Parser inner) {
       return buildLeft(buildRight(buildPostfix(buildPrefix(buildPrimitive(inner)))));
     }
-
   }
 
   // helper class to associate operators and actions
@@ -259,5 +252,4 @@ public class ExpressionBuilder {
       this.action = action;
     }
   }
-
 }

@@ -1,13 +1,13 @@
 package org.petitparser.grammar.xml;
 
-import static org.petitparser.Chars.character;
-import static org.petitparser.Chars.pattern;
-import static org.petitparser.Chars.whitespace;
+import static org.petitparser.parser.characters.CharacterParser.pattern;
+import static org.petitparser.parser.characters.CharacterParser.whitespace;
 import static org.petitparser.Parsers.string;
 
 import java.util.List;
 
-import org.petitparser.parser.CompositeParser;
+import org.petitparser.tools.CompositeParser;
+import org.petitparser.parser.characters.CharacterParser;
 import org.petitparser.utils.Functions;
 
 import com.google.common.base.Function;
@@ -30,19 +30,19 @@ public class XmlGrammar extends CompositeParser {
 
     def("attribute", ref("qualified")
       .seq(ref("whitespace").optional())
-      .seq(character('='))
+      .seq(CharacterParser.is('='))
       .seq(ref("whitespace").optional())
       .seq(ref("attributeValue"))
       .map(Functions.permutationOfList(0, 4)));
     def("attributeValue", ref("attributeValueDouble")
       .or(ref("attributeValueSingle"))
       .map(Functions.nthOfList(1)));
-    def("attributeValueDouble", character('"')
-      .seq(character('"').negate().star().flatten())
-      .seq(character('"')));
-    def("attributeValueSingle", character('\'')
-      .seq(character('\'').negate().star().flatten())
-      .seq(character('\'')));
+    def("attributeValueDouble", CharacterParser.is('"')
+      .seq(CharacterParser.is('"').negate().star().flatten())
+      .seq(CharacterParser.is('"')));
+    def("attributeValueSingle", CharacterParser.is('\'')
+      .seq(CharacterParser.is('\'').negate().star().flatten())
+      .seq(CharacterParser.is('\'')));
     def("attributes", ref("whitespace")
       .seq(ref("attribute"))
       .map(Functions.nthOfList(1))
@@ -58,13 +58,13 @@ public class XmlGrammar extends CompositeParser {
       .star());
     def("doctype", string("<!DOCTYPE")
       .seq(ref("whitespace").optional())
-      .seq(character('[').negate().star()
-        .seq(character('['))
-        .seq(character(']').negate().star())
-        .seq(character(']'))
+      .seq(CharacterParser.is('[').negate().star()
+        .seq(CharacterParser.is('['))
+        .seq(CharacterParser.is(']').negate().star())
+        .seq(CharacterParser.is(']'))
         .flatten())
       .seq(ref("whitespace").optional())
-      .seq(character('>'))
+      .seq(CharacterParser.is('>'))
       .map(Functions.nthOfList(2)));
     def("document", ref("processing").optional()
       .seq(ref("misc"))
@@ -73,17 +73,17 @@ public class XmlGrammar extends CompositeParser {
       .seq(ref("element"))
       .seq(ref("misc"))
       .map(Functions.permutationOfList(0, 2, 4)));
-    def("element", character('<')
+    def("element", CharacterParser.is('<')
       .seq(ref("qualified"))
       .seq(ref("attributes"))
       .seq(ref("whitespace").optional())
       .seq(string("/>")
-        .or(character('>')
+        .or(CharacterParser.is('>')
           .seq(ref("content"))
           .seq(string("</"))
           .seq(ref("qualified"))
           .seq(ref("whitespace").optional())
-          .seq(character('>'))))
+          .seq(CharacterParser.is('>'))))
       .map(new Function<List<?>, List<?>>() {
           @Override
           public List<?> apply(List<?> list) {
@@ -109,18 +109,18 @@ public class XmlGrammar extends CompositeParser {
       .map(Functions.permutationOfList(1, 2)));
     def("qualified", ref("nameToken"));
 
-    def("characterData", character('<').negate().plus().flatten());
+    def("characterData", CharacterParser.is('<').negate().plus().flatten());
     def("misc", ref("whitespace")
       .or(ref("comment"))
       .or(ref("processing"))
       .star());
-    def("whitespace", whitespace().plus());
+    def("whitespace", CharacterParser.whitespace().plus());
 
     def("nameToken", ref("nameStartChar")
       .seq(ref("nameChar").star())
       .flatten());
-    def("nameStartChar", pattern(NAME_START_CHARS));
-    def("nameChar", pattern(NAME_CHARS));
+    def("nameStartChar", CharacterParser.pattern(NAME_START_CHARS));
+    def("nameChar", CharacterParser.pattern(NAME_CHARS));
   }
 
 }

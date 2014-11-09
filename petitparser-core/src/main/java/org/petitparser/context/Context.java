@@ -1,33 +1,19 @@
 package org.petitparser.context;
 
-import org.petitparser.buffer.Buffer;
-import org.petitparser.buffer.StringBuffer;
-
 /**
- * Abstract parse context.
+ * An immutable parse context.
  */
 public class Context {
 
-  private final Buffer buffer;
-  private final int position;
+  /**
+   * The input buffer.
+   */
+  protected final String buffer;
 
   /**
-   * Constructs an immutable parse context with a string.
-   *
-   * @param string the string this context is using
+   * The current position.
    */
-  public Context(String string) {
-    this(new StringBuffer(string));
-  }
-
-  /**
-   * Constructs an immutable parse context at the default position.
-   *
-   * @param buffer the buffer this context is using
-   */
-  public Context(Buffer buffer) {
-    this(buffer, 0);
-  }
+  protected final int position;
 
   /**
    * Constructs an immutable parse context.
@@ -35,20 +21,15 @@ public class Context {
    * @param buffer the buffer this context is using
    * @param position the position this context is pointing at
    */
-  public Context(Buffer buffer, int position) {
+  public Context(String buffer, int position) {
     this.buffer = buffer;
     this.position = position;
-  }
-
-  @Override
-  public String toString() {
-    return "Context[" + getPosition() + "]";
   }
 
   /**
    * Returns the input buffer.
    */
-  public Buffer getBuffer() {
+  public String getBuffer() {
     return buffer;
   }
 
@@ -60,33 +41,12 @@ public class Context {
   }
 
   /**
-   * Tests if we point to the end of the input.
-   */
-  public boolean atEnd() {
-    return buffer.size() <= position;
-  }
-
-  /**
-   * Tests if the receiver is a successful parse.
-   */
-  public boolean isSuccess() {
-    return false;
-  }
-
-  /**
-   * Tests if the receiver is a failure.
-   */
-  public boolean isFailure() {
-    return false;
-  }
-
-  /**
    * Returns a successful parse result at the current position.
    *
    * @param value the value of the parse result
    */
   public Success success(Object value) {
-    return success(value, getPosition());
+    return success(value, position);
   }
 
   /**
@@ -118,4 +78,9 @@ public class Context {
     return new Failure(buffer, position, message);
   }
 
+  @Override
+  public String toString() {
+    int[] tuple = Token.lineAndColumnOf(buffer, position);
+    return getClass().getSimpleName() + "[" + tuple[0] + ":" + tuple[1] + "]";
+  }
 }

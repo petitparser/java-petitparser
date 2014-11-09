@@ -1,17 +1,17 @@
 package org.petitparser.grammar.json;
 
-import static org.petitparser.Chars.anyOf;
-import static org.petitparser.Chars.character;
-import static org.petitparser.Chars.digit;
-import static org.petitparser.Chars.pattern;
+import static org.petitparser.parser.characters.CharacterParser.anyOf;
+import static org.petitparser.parser.characters.CharacterParser.digit;
+import static org.petitparser.parser.characters.CharacterParser.pattern;
 import static org.petitparser.Parsers.string;
 
-import org.petitparser.parser.CompositeParser;
+import org.petitparser.tools.CompositeParser;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Chars;
+import org.petitparser.parser.characters.CharacterParser;
 
 /**
  * JSON grammar definition.
@@ -37,20 +37,20 @@ public class JsonGrammar extends CompositeParser {
     def("start", ref("value").end());
 
     def("array",
-      character('[').trim()
+      CharacterParser.is('[').trim()
         .seq(ref("elements").optional())
-        .seq(character(']').trim()));
+        .seq(CharacterParser.is(']').trim()));
     def("elements",
-      ref("value").separatedBy(character(',').trim()));
+      ref("value").separatedBy(CharacterParser.is(',').trim()));
     def("members",
-      ref("pair").separatedBy(character(',').trim()));
+      ref("pair").separatedBy(CharacterParser.is(',').trim()));
     def("object",
-      character('{').trim()
+      CharacterParser.is('{').trim()
         .seq(ref("members").optional())
-        .seq(character('}').trim()));
+        .seq(CharacterParser.is('}').trim()));
     def("pair",
       ref("stringToken")
-        .seq(character(':').trim())
+        .seq(CharacterParser.is(':').trim())
         .seq(ref("value")));
     def("value",
       ref("stringToken")
@@ -72,20 +72,22 @@ public class JsonGrammar extends CompositeParser {
         .or(ref("characterOctal"))
         .or(ref("characterNormal")));
     def("characterEscape",
-      character('\\').seq(anyOf(new String(Chars.toArray(ESCAPE_TABLE.keySet())))));
+      CharacterParser.is('\\').seq(
+          CharacterParser.anyOf(new String(Chars.toArray(ESCAPE_TABLE.keySet())))));
     def("characterOctal",
-      string("\\u").seq(pattern("0-9A-Fa-f").times(4).flatten()));
+      string("\\u").seq(CharacterParser.pattern("0-9A-Fa-f").times(4).flatten()));
     def("characterNormal",
-        anyOf("\"\\").negate());
+        CharacterParser.anyOf("\"\\").negate());
     def("numberPrimitive",
-      character('-').optional()
-        .seq(character('0').or(digit().plus()))
-        .seq(character('.').seq(digit().plus()).optional())
-        .seq(anyOf("eE").seq(anyOf("-+").optional()).seq(digit().plus()).optional()));
+      CharacterParser.is('-').optional()
+        .seq(CharacterParser.is('0').or(CharacterParser.digit().plus()))
+        .seq(CharacterParser.is('.').seq(CharacterParser.digit().plus()).optional())
+        .seq(CharacterParser
+            .anyOf("eE").seq(CharacterParser.anyOf("-+").optional()).seq(CharacterParser.digit().plus()).optional()));
     def("stringPrimitive",
-      character('"')
+      CharacterParser.is('"')
         .seq(ref("characterPrimitive").star())
-        .seq(character('"')));
+        .seq(CharacterParser.is('"')));
   }
 
 }

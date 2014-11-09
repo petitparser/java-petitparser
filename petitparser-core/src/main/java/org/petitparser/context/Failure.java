@@ -1,7 +1,5 @@
 package org.petitparser.context;
 
-import org.petitparser.buffer.Buffer;
-
 /**
  * An immutable parse failure.
  */
@@ -9,7 +7,7 @@ public class Failure extends Result {
 
   private final String message;
 
-  Failure(Buffer buffer, int position, String message) {
+  public Failure(String buffer, int position, String message) {
     super(buffer, position);
     this.message = message;
   }
@@ -31,7 +29,6 @@ public class Failure extends Result {
 
   @Override
   public String toString() {
-    return "Failure[" + getPosition() + "]: " + getMessage();
+    return super.toString() + ": " + getMessage();
   }
-
 }

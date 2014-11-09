@@ -1,7 +1,5 @@
 package org.petitparser.context;
 
-import org.petitparser.buffer.Buffer;
-
 /**
  * An immutable parse success.
  */
@@ -9,7 +7,7 @@ public class Success extends Result {
 
   private final Object result;
 
-  Success(Buffer buffer, int position, Object result) {
+  public Success(String buffer, int position, Object result) {
     super(buffer, position);
     this.result = result;
   }
@@ -27,8 +25,6 @@ public class Success extends Result {
 
   @Override
   public String toString() {
-    String message = get() == null ? "null" : get().toString();
-    return "Success[" + getPosition() + "]: " + message;
+    return super.toString() + ": " + result;
   }
-
 }

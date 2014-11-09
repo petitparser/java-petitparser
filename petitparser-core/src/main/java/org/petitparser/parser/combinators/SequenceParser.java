@@ -1,11 +1,12 @@
-package org.petitparser.parser;
+package org.petitparser.parser.combinators;
+
+import org.petitparser.context.Context;
+import org.petitparser.context.Result;
+import org.petitparser.parser.Parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.petitparser.context.Context;
-import org.petitparser.context.Result;
 
 /**
  * A parser that parses a sequence of parsers.
@@ -17,11 +18,11 @@ public class SequenceParser extends ListParser {
   }
 
   @Override
-  public Result parse(Context context) {
+  public Result parseOn(Context context) {
     Context current = context;
     List<Object> elements = new ArrayList<>(parsers.length);
     for (Parser parser : parsers) {
-      Result result = parser.parse(current);
+      Result result = parser.parseOn(current);
       if (result.isFailure()) {
         return result;
       }
@@ -32,10 +33,14 @@ public class SequenceParser extends ListParser {
   }
 
   @Override
-  public Parser seq(Parser... more) {
-    Parser[] array = Arrays.copyOf(parsers, parsers.length + more.length);
-    System.arraycopy(more, 0, array, parsers.length, more.length);
+  public Parser seq(Parser... others) {
+    Parser[] array = Arrays.copyOf(parsers, parsers.length + others.length);
+    System.arraycopy(others, 0, array, parsers.length, others.length);
     return new SequenceParser(array);
   }
 
+  @Override
+  public Parser copy() {
+    return new SequenceParser(Arrays.copyOf(parsers, parsers.length));
+  }
 }

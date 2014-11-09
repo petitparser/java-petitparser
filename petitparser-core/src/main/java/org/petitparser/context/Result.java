@@ -1,14 +1,26 @@
 package org.petitparser.context;
 
-import org.petitparser.buffer.Buffer;
-
 /**
- * An immutable and abstract parse result.
+ * An immutable abstract parse result.
  */
 public abstract class Result extends Context {
 
-  Result(Buffer buffer, int position) {
+  public Result(String buffer, int position) {
     super(buffer, position);
+  }
+
+  /**
+   * Returns {@code true} if this result indicates a parse success.
+   */
+  public boolean isSuccess() {
+    return false;
+  }
+
+  /**
+   * Returns {@code true} if this result indicates a parse failure.
+   */
+  public boolean isFailure() {
+    return false;
   }
 
   /**
@@ -24,5 +36,4 @@ public abstract class Result extends Context {
   public String getMessage() {
     return null;
   }
-
 }
