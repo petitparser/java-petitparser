@@ -7,6 +7,10 @@ import org.petitparser.parser.Parser;
  */
 public class SettableParser extends DelegateParser {
 
+  public SettableParser() {
+    super();
+  }
+
   public SettableParser(Parser delegate) {
     super(delegate);
   }

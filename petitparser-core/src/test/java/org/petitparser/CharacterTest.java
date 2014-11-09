@@ -23,7 +23,7 @@ import static org.petitparser.parser.characters.CharacterParser.word;
 /**
  * Tests {@link CharacterParser}.
  */
-public class CharacterParsersTest {
+public class CharacterTest {
 
   @Test
   public void testAny() {

@@ -133,7 +133,7 @@ public class ExamplesTest {
   public void testReturnFailure() {
     assertFailure(RETURN, "retur f", 0, "return expected");
     assertFailure(RETURN, "return1", 6, "whitespace expected");
-    assertFailure(RETURN, "return  $", 8, "'\" expected");
+    assertFailure(RETURN, "return  $", 8, "'\"' expected");
   }
 
   @Test

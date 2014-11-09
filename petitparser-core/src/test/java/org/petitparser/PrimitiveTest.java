@@ -12,7 +12,7 @@ import static org.petitparser.Assertions.assertSuccess;
 /**
  * Tests {@link EpsilonParser}, {@link FailureParser} and {@link StringParser}.
  */
-public class PrimitiveParsersTest {
+public class PrimitiveTest {
 
   @Test
   public void testEpsilon() {
