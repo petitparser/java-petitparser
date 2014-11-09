@@ -5,9 +5,9 @@ import org.petitparser.parser.Parser;
 /**
  * A parser that can be set to behave like another parser.
  */
-public class SetableParser extends DelegateParser {
+public class SettableParser extends DelegateParser {
 
-  public SetableParser(Parser delegate) {
+  public SettableParser(Parser delegate) {
     super(delegate);
   }
 
@@ -21,6 +21,6 @@ public class SetableParser extends DelegateParser {
 
   @Override
   public Parser copy() {
-    return new SetableParser(delegate);
+    return new SettableParser(delegate);
   }
 }

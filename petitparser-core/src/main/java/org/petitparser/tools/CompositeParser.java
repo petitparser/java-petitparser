@@ -2,7 +2,7 @@ package org.petitparser.tools;
 
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.DelegateParser;
-import org.petitparser.parser.combinators.SetableParser;
+import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.parser.primitive.FailureParser;
 
 import java.util.Collections;
@@ -24,7 +24,7 @@ public abstract class CompositeParser extends DelegateParser {
 
   private boolean completed = false;
   private Map<String, Parser> defined = new HashMap<>();
-  private Map<String, SetableParser> undefined = new HashMap<>();
+  private Map<String, SettableParser> undefined = new HashMap<>();
 
   public CompositeParser() {
     initialize();
@@ -41,7 +41,7 @@ public abstract class CompositeParser extends DelegateParser {
    */
   private void complete() {
     replace(delegate, ref("start"));
-    for (Map.Entry<String, SetableParser> entry : undefined.entrySet()) {
+    for (Map.Entry<String, SettableParser> entry : undefined.entrySet()) {
       if (!defined.containsKey(entry.getKey())) {
         throw new IllegalStateException("Undefined production: " + entry.getKey());
       }
@@ -69,8 +69,8 @@ public abstract class CompositeParser extends DelegateParser {
     } else if (undefined.containsKey(name)) {
       return undefined.get(name);
     } else {
-      SetableParser parser =
-          new SetableParser(FailureParser.withMessage("Uninitalized production: " + name));
+      SettableParser parser =
+          new SettableParser(FailureParser.withMessage("Uninitalized production: " + name));
       undefined.put(name, parser);
       return parser;
     }

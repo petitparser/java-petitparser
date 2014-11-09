@@ -14,7 +14,7 @@ import org.petitparser.parser.combinators.EndOfInputParser;
 import org.petitparser.parser.combinators.NotParser;
 import org.petitparser.parser.combinators.OptionalParser;
 import org.petitparser.parser.combinators.SequenceParser;
-import org.petitparser.parser.combinators.SetableParser;
+import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.parser.repeating.GreedyRepeatingParser;
 import org.petitparser.parser.repeating.LazyRepeatingParser;
 import org.petitparser.parser.repeating.PossessiveRepeatingParser;
@@ -284,7 +284,7 @@ public abstract class Parser {
    * Returns a parser that succeeds only if the receiver consumes the complete input.
    */
   public Parser end() {
-    return end("End of input expected");
+    return end("end of input expected");
   }
 
   /**
@@ -299,8 +299,8 @@ public abstract class Parser {
    * Returns a parser that points to the receiver, but can be changed to point to something else at
    * a later point in time.
    */
-  public SetableParser settable() {
-    return new SetableParser(this);
+  public SettableParser settable() {
+    return new SettableParser(this);
   }
 
   /**
