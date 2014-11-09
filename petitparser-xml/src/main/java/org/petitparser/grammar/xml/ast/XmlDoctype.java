@@ -13,5 +13,4 @@ public class XmlDoctype extends XmlData {
   public void writeTo(StringBuffer buffer) {
     buffer.append("<!DOCTYPE").append(getData()).append(">");
   }
-
 }

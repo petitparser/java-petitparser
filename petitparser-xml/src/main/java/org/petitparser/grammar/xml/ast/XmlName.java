@@ -1,6 +1,6 @@
 package org.petitparser.grammar.xml.ast;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 
 /**
  * XML entity name.
@@ -53,17 +53,18 @@ public class XmlName implements Cloneable {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null || getClass() != obj.getClass())
+    }
+    if (obj == null || getClass() != obj.getClass()) {
       return false;
+    }
     XmlName other = (XmlName) obj;
-    return Objects.equal(prefix, other.prefix) && local.equals(other.local);
+    return Objects.equals(prefix, other.prefix) && local.equals(other.local);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(prefix, local);
+    return Objects.hash(prefix, local);
   }
-
 }

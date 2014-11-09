@@ -1,10 +1,9 @@
 package org.petitparser.grammar.xml.ast;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * Abstract XML node.
@@ -46,7 +45,7 @@ public abstract class XmlNode implements Iterable<XmlNode> {
    */
   @Override
   public Iterator<XmlNode> iterator() {
-    List<XmlNode> nodes = Lists.newArrayList();
+    List<XmlNode> nodes = new ArrayList<>();
     allAllNodesTo(nodes);
     return nodes.iterator();
   }
@@ -60,16 +59,16 @@ public abstract class XmlNode implements Iterable<XmlNode> {
   }
 
   /**
-   * Answer the root of the subtree in which this node is found, whether that's
-   * a document or another element.
+   * Answer the root of the subtree in which this node is found, whether that's a document or
+   * another element.
    */
   public XmlNode getRoot() {
     return parent == null ? this : parent.getRoot();
   }
 
   /**
-   * Answer the document that contains this node, or {@code null} if the node is
-   * not part of a document.
+   * Answer the document that contains this node, or {@code null} if the node is not part of a
+   * document.
    */
   public XmlDocument getDocument() {
     return parent == null ? null : parent.getDocument();
@@ -146,5 +145,4 @@ public abstract class XmlNode implements Iterable<XmlNode> {
    * Writes the XML string of the receiver to a {@code buffer}.
    */
   public abstract void writeTo(StringBuffer buffer);
-
 }

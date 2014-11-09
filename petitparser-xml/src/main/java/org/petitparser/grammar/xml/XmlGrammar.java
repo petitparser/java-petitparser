@@ -1,17 +1,13 @@
 package org.petitparser.grammar.xml;
 
-import static org.petitparser.parser.characters.CharacterParser.pattern;
-import static org.petitparser.parser.characters.CharacterParser.whitespace;
-import static org.petitparser.Parsers.string;
-
-import java.util.List;
-
-import org.petitparser.tools.CompositeParser;
 import org.petitparser.parser.characters.CharacterParser;
+import org.petitparser.parser.primitive.StringParser;
+import org.petitparser.tools.CompositeParser;
 import org.petitparser.utils.Functions;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * XML grammar definition.
@@ -38,29 +34,29 @@ public class XmlGrammar extends CompositeParser {
       .or(ref("attributeValueSingle"))
       .map(Functions.nthOfList(1)));
     def("attributeValueDouble", CharacterParser.is('"')
-      .seq(CharacterParser.is('"').negate().star().flatten())
+      .seq(CharacterParser.is('"').neg().star().flatten())
       .seq(CharacterParser.is('"')));
     def("attributeValueSingle", CharacterParser.is('\'')
-      .seq(CharacterParser.is('\'').negate().star().flatten())
+      .seq(CharacterParser.is('\'').neg().star().flatten())
       .seq(CharacterParser.is('\'')));
     def("attributes", ref("whitespace")
       .seq(ref("attribute"))
       .map(Functions.nthOfList(1))
       .star());
-    def("comment", string("<!--")
-      .seq(string("-->").negate().star().flatten())
-      .seq(string("-->"))
+    def("comment", StringParser.of("<!--")
+      .seq(StringParser.of("-->").neg().star().flatten())
+      .seq(StringParser.of("-->"))
       .map(Functions.nthOfList(1)));
     def("content", ref("characterData")
       .or(ref("element"))
       .or(ref("processing"))
       .or(ref("comment"))
       .star());
-    def("doctype", string("<!DOCTYPE")
+    def("doctype", StringParser.of("<!DOCTYPE")
       .seq(ref("whitespace").optional())
-      .seq(CharacterParser.is('[').negate().star()
+      .seq(CharacterParser.is('[').neg().star()
         .seq(CharacterParser.is('['))
-        .seq(CharacterParser.is(']').negate().star())
+        .seq(CharacterParser.is(']').neg().star())
         .seq(CharacterParser.is(']'))
         .flatten())
       .seq(ref("whitespace").optional())
@@ -77,10 +73,10 @@ public class XmlGrammar extends CompositeParser {
       .seq(ref("qualified"))
       .seq(ref("attributes"))
       .seq(ref("whitespace").optional())
-      .seq(string("/>")
+      .seq(StringParser.of("/>")
         .or(CharacterParser.is('>')
           .seq(ref("content"))
-          .seq(string("</"))
+          .seq(StringParser.of("</"))
           .seq(ref("qualified"))
           .seq(ref("whitespace").optional())
           .seq(CharacterParser.is('>'))))
@@ -88,28 +84,28 @@ public class XmlGrammar extends CompositeParser {
           @Override
           public List<?> apply(List<?> list) {
             if (list.get(4).equals("/>")) {
-              return Lists.newArrayList(list.get(1), list.get(2), Lists.newArrayList());
+              return Arrays.asList(list.get(1), list.get(2), Arrays.asList());
             } else {
               List<?> end = (List<?>) list.get(4);
               if (list.get(1).equals(end.get(3))) {
-                return Lists.newArrayList(list.get(1), list.get(2), end.get(1));
+                return Arrays.asList(list.get(1), list.get(2), end.get(1));
               } else {
                 throw new IllegalStateException("Expected </" + list.get(1) + ">");
               }
             }
           }
         }));
-    def("processing", string("<?")
+    def("processing", StringParser.of("<?")
       .seq(ref("nameToken"))
       .seq(ref("whitespace")
-        .seq(string("?>").negate().star())
+        .seq(StringParser.of("?>").neg().star())
         .optional()
         .flatten())
-      .seq(string("?>"))
+      .seq(StringParser.of("?>"))
       .map(Functions.permutationOfList(1, 2)));
     def("qualified", ref("nameToken"));
 
-    def("characterData", CharacterParser.is('<').negate().plus().flatten());
+    def("characterData", CharacterParser.is('<').neg().plus().flatten());
     def("misc", ref("whitespace")
       .or(ref("comment"))
       .or(ref("processing"))

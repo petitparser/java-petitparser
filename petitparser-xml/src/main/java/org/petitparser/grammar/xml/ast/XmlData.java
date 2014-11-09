@@ -1,6 +1,5 @@
 package org.petitparser.grammar.xml.ast;
 
-
 /**
  * Abstract XML data node.
  */
@@ -18,10 +17,12 @@ public abstract class XmlData extends XmlNode {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null || getClass() != obj.getClass())
+    }
+    if (obj == null || getClass() != obj.getClass()) {
       return false;
+    }
     XmlData other = (XmlData) obj;
     return data.equals(other.data);
   }
@@ -30,5 +31,4 @@ public abstract class XmlData extends XmlNode {
   public int hashCode() {
     return data.hashCode();
   }
-
 }

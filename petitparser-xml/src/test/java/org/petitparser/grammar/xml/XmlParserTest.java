@@ -1,16 +1,6 @@
 package org.petitparser.grammar.xml;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
 import org.junit.Test;
-import org.petitparser.context.Context;
 import org.petitparser.grammar.xml.ast.XmlAttribute;
 import org.petitparser.grammar.xml.ast.XmlDocument;
 import org.petitparser.grammar.xml.ast.XmlElement;
@@ -18,7 +8,15 @@ import org.petitparser.grammar.xml.ast.XmlName;
 import org.petitparser.grammar.xml.ast.XmlNode;
 import org.petitparser.parser.Parser;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests {@link XmlParser}.
@@ -177,8 +175,8 @@ public class XmlParserTest {
   }
 
   private void assertParseInvariant(String aString) {
-    XmlNode tree = parser.parse(new Context(aString)).get();
-    assertEquals(tree, parser.parse(new Context(tree.toXmlString())).get());
+    XmlNode tree = parser.parse(aString).get();
+    assertEquals(tree, parser.parse(tree.toXmlString()).get());
     assertInvariants(tree);
   }
 
@@ -233,7 +231,7 @@ public class XmlParserTest {
   private void assertForwardInvariant(XmlNode anXmlNode) {
     for (XmlNode node : anXmlNode) {
       XmlNode current = node.getFirstChild();
-      List<XmlNode> children = Lists.newArrayList(node.getChildren());
+      List<XmlNode> children = new ArrayList<>(node.getChildren());
       while (current != null) {
         assertSame(current, children.remove(0));
         current = current.getNextSibling();
@@ -245,7 +243,7 @@ public class XmlParserTest {
   private void assertBackwardInvariant(XmlNode anXmlNode) {
     for (XmlNode node : anXmlNode) {
       XmlNode current = node.getLastChild();
-      List<XmlNode> children = Lists.newArrayList(node.getChildren());
+      List<XmlNode> children = new ArrayList<>(node.getChildren());
       while (current != null) {
         assertSame(current, children.remove(children.size() - 1));
         current = current.getPreviousSibling();

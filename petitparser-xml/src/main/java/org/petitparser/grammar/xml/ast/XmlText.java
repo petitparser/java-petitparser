@@ -13,5 +13,4 @@ public class XmlText extends XmlData {
   public void writeTo(StringBuffer buffer) {
     buffer.append(getData());
   }
-
 }

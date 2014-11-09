@@ -1,6 +1,6 @@
 package org.petitparser.grammar.xml.ast;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 
 /**
  * XML processing instruction.
@@ -25,17 +25,18 @@ public class XmlProcessing extends XmlData {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (!super.equals(obj) || getClass() != obj.getClass())
+    }
+    if (!super.equals(obj) || getClass() != obj.getClass()) {
       return false;
+    }
     XmlProcessing other = (XmlProcessing) obj;
     return target.equals(other.target);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(super.hashCode(), getTarget());
+    return Objects.hash(super.hashCode(), getTarget());
   }
-
 }

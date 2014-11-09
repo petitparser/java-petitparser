@@ -13,5 +13,4 @@ public class XmlComment extends XmlData {
   public void writeTo(StringBuffer buffer) {
     buffer.append("<!--").append(getData()).append("-->");
   }
-
 }

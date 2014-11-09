@@ -24,5 +24,4 @@ public class XmlDocument extends XmlParent {
     }
     return null;
   }
-
 }

@@ -1,10 +1,9 @@
 package org.petitparser.grammar.xml.ast;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
+import java.util.Objects;
 
 /**
  * XML element node.
@@ -18,7 +17,7 @@ public class XmlElement extends XmlParent {
       Collection<XmlNode> children) {
     super(children);
     this.name = name;
-    this.attributes = ImmutableList.copyOf(attributes);
+    this.attributes = new ArrayList<>(attributes);
     for (XmlAttribute attribute : attributes) {
       attribute.setParent(this);
     }
@@ -68,17 +67,18 @@ public class XmlElement extends XmlParent {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (!super.equals(obj) || getClass() != obj.getClass())
+    }
+    if (!super.equals(obj) || getClass() != obj.getClass()) {
       return false;
+    }
     XmlElement other = (XmlElement) obj;
     return name.equals(other.name) && attributes.equals(other.attributes);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(super.hashCode(), name, attributes.size());
+    return Objects.hash(super.hashCode(), name, attributes.size());
   }
-
 }

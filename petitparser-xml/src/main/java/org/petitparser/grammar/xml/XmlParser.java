@@ -1,8 +1,5 @@
 package org.petitparser.grammar.xml;
 
-import java.util.Collection;
-import java.util.List;
-
 import org.petitparser.grammar.xml.ast.XmlAttribute;
 import org.petitparser.grammar.xml.ast.XmlComment;
 import org.petitparser.grammar.xml.ast.XmlDoctype;
@@ -13,9 +10,11 @@ import org.petitparser.grammar.xml.ast.XmlNode;
 import org.petitparser.grammar.xml.ast.XmlProcessing;
 import org.petitparser.grammar.xml.ast.XmlText;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Collections2;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * XML parser definition.
@@ -37,7 +36,7 @@ public class XmlParser extends XmlGrammar {
     action("document", new Function<List<XmlNode>, XmlDocument>() {
       @Override
       public XmlDocument apply(List<XmlNode> nodes) {
-        return new XmlDocument(Collections2.filter(nodes, Predicates.notNull()));
+        return new XmlDocument(nodes.stream().filter(Objects::nonNull).collect(Collectors.toList()));
       }
     });
     action("element", new Function<List<?>, XmlElement>() {

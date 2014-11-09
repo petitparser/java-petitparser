@@ -1,6 +1,5 @@
 package org.petitparser.grammar.xml;
 
-import org.petitparser.context.Context;
 import org.petitparser.parser.Parser;
 
 /**
@@ -9,7 +8,7 @@ import org.petitparser.parser.Parser;
 public class XmlBenchmark {
 
   private static final Parser PARSER = new XmlParser();
-  private static final String INPUT = 
+  private static final String INPUT =
         "<?xml version=\"1.0\"?>"
       + "<catalog>"
       + "   <book id=\"bk101\">"
@@ -134,7 +133,7 @@ public class XmlBenchmark {
   public static void main(String[] args) {
     long start = System.currentTimeMillis();
     for (int i = 0; i < 2000; i++) {
-      PARSER.parse(new Context(INPUT)).get();
+      PARSER.parse(INPUT).get();
     }
     long stop = System.currentTimeMillis();
     System.out.println(Double.toString((stop - start) / 1000.0) + "s");

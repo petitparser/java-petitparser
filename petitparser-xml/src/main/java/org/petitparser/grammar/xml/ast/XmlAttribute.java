@@ -1,6 +1,6 @@
 package org.petitparser.grammar.xml.ast;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 
 /**
  * XML attribute node.
@@ -31,18 +31,18 @@ public class XmlAttribute extends XmlNode {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null || getClass() != obj.getClass())
+    }
+    if (obj == null || getClass() != obj.getClass()) {
       return false;
+    }
     XmlAttribute other = (XmlAttribute) obj;
-    return name.equals(other.name)
-        && value.equals(other.value);
+    return name.equals(other.name) && value.equals(other.value);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(name, value);
+    return Objects.hash(name, value);
   }
-
 }
