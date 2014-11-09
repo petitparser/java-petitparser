@@ -48,7 +48,7 @@ public class GreedyRepeatingParser extends LimitedRepeatingParser {
         return stop;
       }
       contexts.remove(contexts.size() - 1);
-      elements.remove(contexts.size() - 1);
+      elements.remove(elements.size() - 1);
       if (contexts.isEmpty()) {
         return stop;
       }

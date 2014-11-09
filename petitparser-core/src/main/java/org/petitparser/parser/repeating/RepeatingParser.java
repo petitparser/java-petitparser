@@ -10,7 +10,7 @@ import java.util.Objects;
  */
 public abstract class RepeatingParser extends DelegateParser {
 
-  public static final int UNBOUNDED = Integer.MAX_VALUE;
+  public static final int UNBOUNDED = -1;
 
   protected final int min;
   protected final int max;
@@ -19,16 +19,13 @@ public abstract class RepeatingParser extends DelegateParser {
     super(delegate);
     this.min = min;
     this.max = max;
-    if (min < 0 || max < min) {
-      throw new IllegalStateException("Invalid repetition count: " + min + ".." + max);
-    }
+    assert 0 <= min;
+    assert max == UNBOUNDED || min <= max;
   }
 
   @Override
   public String toString() {
-    String lower = Integer.toString(min);
-    String upper = max == UNBOUNDED ? "*" : Integer.toString(max);
-    return super.toString() + "[" + lower + ".." + upper + "]";
+    return super.toString() + "[" + min + ".." + (max == UNBOUNDED ? "*" : max) + "]";
   }
 
   @Override

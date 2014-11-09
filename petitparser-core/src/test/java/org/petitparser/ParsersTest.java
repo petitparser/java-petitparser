@@ -5,8 +5,11 @@ import org.petitparser.context.Token;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.characters.CharacterParser;
 import org.petitparser.parser.combinators.SettableParser;
+import org.petitparser.parser.repeating.RepeatingParser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
@@ -86,7 +89,7 @@ public class ParsersTest {
   }
 
   @Test
-  public void testPick1() {
+  public void testPick() {
     Parser parser = CharacterParser.digit().seq(CharacterParser.letter()).pick(1);
     assertSuccess(parser, "1a", 'a');
     assertSuccess(parser, "2b", 'b');
@@ -96,7 +99,7 @@ public class ParsersTest {
   }
 
   @Test
-  public void testPick2() {
+  public void testPickLast() {
     Parser parser = CharacterParser.digit().seq(CharacterParser.letter()).pick(-1);
     assertSuccess(parser, "1a", 'a');
     assertSuccess(parser, "2b", 'b');
@@ -106,7 +109,7 @@ public class ParsersTest {
   }
 
   @Test
-  public void testPermute1() {
+  public void testPermute() {
     Parser parser = CharacterParser.digit().seq(CharacterParser.letter()).permute(1, 0);
     assertSuccess(parser, "1a", Arrays.asList('a', '1'));
     assertSuccess(parser, "2b", Arrays.asList('b', '2'));
@@ -116,7 +119,7 @@ public class ParsersTest {
   }
 
   @Test
-  public void testPermute2() {
+  public void testPermuteLast() {
     Parser parser = CharacterParser.digit().seq(CharacterParser.letter()).permute(-1, 0);
     assertSuccess(parser, "1a", Arrays.asList('a', '1'));
     assertSuccess(parser, "2b", Arrays.asList('b', '2'));
@@ -127,19 +130,6 @@ public class ParsersTest {
 
   @Test
   public void testNegate() {
-    Parser parser = CharacterParser.digit().or(CharacterParser.upperCase())
-        .neg("no digit or uppercase expected");
-    assertFailure(parser, "1");
-    assertFailure(parser, "9");
-    assertFailure(parser, "A");
-    assertFailure(parser, "Z");
-    assertSuccess(parser, "a", 'a');
-    assertSuccess(parser, " ", ' ');
-    assertFailure(parser, "");
-  }
-
-  @Test
-  public void testNegateDigit() {
     Parser parser = CharacterParser.digit().neg("no digit expected");
     assertFailure(parser, "1", 0, "no digit expected");
     assertFailure(parser, "9", 0, "no digit expected");
@@ -174,6 +164,46 @@ public class ParsersTest {
   }
 
   @Test
+  public void testPlusGreedy() {
+    Parser parser = CharacterParser.word().plusGreedy(CharacterParser.digit());
+    assertFailure(parser, "", 0, "letter or digit expected");
+    assertFailure(parser, "a", 1, "digit expected");
+    assertFailure(parser, "ab", 1, "digit expected");
+    assertFailure(parser, "1", 1, "digit expected");
+    assertSuccess(parser, "a1", Arrays.asList('a'), 1);
+    assertSuccess(parser, "ab1", Arrays.asList('a', 'b'), 2);
+    assertSuccess(parser, "abc1", Arrays.asList('a', 'b', 'c'), 3);
+    assertSuccess(parser, "12", Arrays.asList('1'), 1);
+    assertSuccess(parser, "a12", Arrays.asList('a', '1'), 2);
+    assertSuccess(parser, "ab12", Arrays.asList('a', 'b', '1'), 3);
+    assertSuccess(parser, "abc12", Arrays.asList('a', 'b', 'c', '1'), 4);
+    assertSuccess(parser, "123", Arrays.asList('1', '2'), 2);
+    assertSuccess(parser, "a123", Arrays.asList('a', '1', '2'), 3);
+    assertSuccess(parser, "ab123", Arrays.asList('a', 'b', '1', '2'), 4);
+    assertSuccess(parser, "abc123", Arrays.asList('a', 'b', 'c', '1', '2'), 5);
+  }
+
+  @Test
+  public void testPlusLazy() {
+    Parser parser = CharacterParser.word().plusLazy(CharacterParser.digit());
+    assertFailure(parser, "");
+    assertFailure(parser, "a", 1, "digit expected");
+    assertFailure(parser, "ab", 2, "digit expected");
+    assertFailure(parser, "1", 1, "digit expected");
+    assertSuccess(parser, "a1", Arrays.asList('a'), 1);
+    assertSuccess(parser, "ab1", Arrays.asList('a', 'b'), 2);
+    assertSuccess(parser, "abc1", Arrays.asList('a', 'b', 'c'), 3);
+    assertSuccess(parser, "12", Arrays.asList('1'), 1);
+    assertSuccess(parser, "a12", Arrays.asList('a'), 1);
+    assertSuccess(parser, "ab12", Arrays.asList('a', 'b'), 2);
+    assertSuccess(parser, "abc12", Arrays.asList('a', 'b', 'c'), 3);
+    assertSuccess(parser, "123", Arrays.asList('1'), 1);
+    assertSuccess(parser, "a123", Arrays.asList('a'), 1);
+    assertSuccess(parser, "ab123", Arrays.asList('a', 'b'), 2);
+    assertSuccess(parser, "abc123", Arrays.asList('a', 'b', 'c'), 3);
+  }
+
+  @Test
   public void testTimes() {
     Parser parser = CharacterParser.is('a').times(2);
     assertFailure(parser, "", 0, "'a' expected");
@@ -190,6 +220,108 @@ public class ParsersTest {
     assertSuccess(parser, "aa", Arrays.asList('a', 'a'));
     assertSuccess(parser, "aaa", Arrays.asList('a', 'a', 'a'));
     assertSuccess(parser, "aaaa", Arrays.asList('a', 'a', 'a'), 3);
+  }
+
+  @Test
+  public void testRepeatUnbounded() {
+    StringBuilder builder = new StringBuilder();
+    List<Character> list = new ArrayList<>();
+    for (int i = 0; i < 100000; i++) {
+      builder.append('a');
+      list.add('a');
+    }
+    Parser parser = CharacterParser.is('a').repeat(2, RepeatingParser.UNBOUNDED);
+    assertSuccess(parser, builder.toString(), list);
+  }
+
+  @Test
+  public void testRepeatGreedy() {
+    Parser parser = CharacterParser.word().repeatGreedy(CharacterParser.digit(), 2, 4);
+    assertFailure(parser, "", 0, "letter or digit expected");
+    assertFailure(parser, "a", 1, "letter or digit expected");
+    assertFailure(parser, "ab", 2, "digit expected");
+    assertFailure(parser, "abc", 2, "digit expected");
+    assertFailure(parser, "abcd", 2, "digit expected");
+    assertFailure(parser, "abcde", 2, "digit expected");
+    assertFailure(parser, "1", 1, "letter or digit expected");
+    assertFailure(parser, "a1", 2, "digit expected");
+    assertSuccess(parser, "ab1", Arrays.asList('a', 'b'), 2);
+    assertSuccess(parser, "abc1", Arrays.asList('a', 'b', 'c'), 3);
+    assertSuccess(parser, "abcd1", Arrays.asList('a', 'b', 'c', 'd'), 4);
+    assertFailure(parser, "abcde1", 2, "digit expected");
+    assertFailure(parser, "12", 2, "digit expected");
+    assertSuccess(parser, "a12", Arrays.asList('a', '1'), 2);
+    assertSuccess(parser, "ab12", Arrays.asList('a', 'b', '1'), 3);
+    assertSuccess(parser, "abc12", Arrays.asList('a', 'b', 'c', '1'), 4);
+    assertSuccess(parser, "abcd12", Arrays.asList('a', 'b', 'c', 'd'), 4);
+    assertFailure(parser, "abcde12", 2, "digit expected");
+    assertSuccess(parser, "123", Arrays.asList('1', '2'), 2);
+    assertSuccess(parser, "a123", Arrays.asList('a', '1', '2'), 3);
+    assertSuccess(parser, "ab123", Arrays.asList('a', 'b', '1', '2'), 4);
+    assertSuccess(parser, "abc123", Arrays.asList('a', 'b', 'c', '1'), 4);
+    assertSuccess(parser, "abcd123", Arrays.asList('a', 'b', 'c', 'd'), 4);
+    assertFailure(parser, "abcde123", 2, "digit expected");
+  }
+
+  @Test
+  public void testRepeatGreedyUnbounded() {
+    StringBuilder builderLetter = new StringBuilder(), builderDigit = new StringBuilder();
+    List<Character> listLetter = new ArrayList<>(), listDigit = new ArrayList<>();
+    for (int i = 0; i < 100000; i++) {
+      builderLetter.append('a');
+      listLetter.add('a');
+      builderDigit.append('1');
+      listDigit.add('1');
+    }
+    builderLetter.append('1');
+    builderDigit.append('1');
+    Parser parser =
+        CharacterParser.word().repeatGreedy(CharacterParser.digit(), 2, RepeatingParser.UNBOUNDED);
+    assertSuccess(parser, builderLetter.toString(), listLetter, listLetter.size());
+    assertSuccess(parser, builderDigit.toString(), listDigit, listDigit.size());
+  }
+
+  @Test
+  public void testRepeatLazy() {
+    Parser parser = CharacterParser.word().repeatLazy(CharacterParser.digit(), 2, 4);
+    assertFailure(parser, "", 0, "letter or digit expected");
+    assertFailure(parser, "a", 1, "letter or digit expected");
+    assertFailure(parser, "ab", 2, "digit expected");
+    assertFailure(parser, "abc", 3, "digit expected");
+    assertFailure(parser, "abcd", 4, "digit expected");
+    assertFailure(parser, "abcde", 4, "digit expected");
+    assertFailure(parser, "1", 1, "letter or digit expected");
+    assertFailure(parser, "a1", 2, "digit expected");
+    assertSuccess(parser, "ab1", Arrays.asList('a', 'b'), 2);
+    assertSuccess(parser, "abc1", Arrays.asList('a', 'b', 'c'), 3);
+    assertSuccess(parser, "abcd1", Arrays.asList('a', 'b', 'c', 'd'), 4);
+    assertFailure(parser, "abcde1", 4, "digit expected");
+    assertFailure(parser, "12", 2, "digit expected");
+    assertSuccess(parser, "a12", Arrays.asList('a', '1'), 2);
+    assertSuccess(parser, "ab12", Arrays.asList('a', 'b'), 2);
+    assertSuccess(parser, "abc12", Arrays.asList('a', 'b', 'c'), 3);
+    assertSuccess(parser, "abcd12", Arrays.asList('a', 'b', 'c', 'd'), 4);
+    assertFailure(parser, "abcde12", 4, "digit expected");
+    assertSuccess(parser, "123", Arrays.asList('1', '2'), 2);
+    assertSuccess(parser, "a123", Arrays.asList('a', '1'), 2);
+    assertSuccess(parser, "ab123", Arrays.asList('a', 'b'), 2);
+    assertSuccess(parser, "abc123", Arrays.asList('a', 'b', 'c'), 3);
+    assertSuccess(parser, "abcd123", Arrays.asList('a', 'b', 'c', 'd'), 4);
+    assertFailure(parser, "abcde123", 4, "digit expected");
+  }
+
+  @Test
+  public void testRepeatLazyUnbounded() {
+    StringBuilder builder = new StringBuilder();
+    List<Character> list = new ArrayList<>();
+    for (int i = 0; i < 100000; i++) {
+      builder.append('a');
+      list.add('a');
+    }
+    builder.append("1111");
+    Parser parser =
+        CharacterParser.word().repeatLazy(CharacterParser.digit(), 2, RepeatingParser.UNBOUNDED);
+    assertSuccess(parser, builder.toString(), list, list.size());
   }
 
   @Test
@@ -222,6 +354,46 @@ public class ParsersTest {
     assertSuccess(parser, "a", Arrays.asList('a'));
     assertSuccess(parser, "aa", Arrays.asList('a', 'a'));
     assertSuccess(parser, "aaa", Arrays.asList('a', 'a', 'a'));
+  }
+
+  @Test
+  public void testStarGreedy() {
+    Parser parser = CharacterParser.word().starGreedy(CharacterParser.digit());
+    assertFailure(parser, "", 0, "digit expected");
+    assertFailure(parser, "a", 0, "digit expected");
+    assertFailure(parser, "ab", 0, "digit expected");
+    assertSuccess(parser, "1", Arrays.asList(), 0);
+    assertSuccess(parser, "a1", Arrays.asList('a'), 1);
+    assertSuccess(parser, "ab1", Arrays.asList('a', 'b'), 2);
+    assertSuccess(parser, "abc1", Arrays.asList('a', 'b', 'c'), 3);
+    assertSuccess(parser, "12", Arrays.asList('1'), 1);
+    assertSuccess(parser, "a12", Arrays.asList('a', '1'), 2);
+    assertSuccess(parser, "ab12", Arrays.asList('a', 'b', '1'), 3);
+    assertSuccess(parser, "abc12", Arrays.asList('a', 'b', 'c', '1'), 4);
+    assertSuccess(parser, "123", Arrays.asList('1', '2'), 2);
+    assertSuccess(parser, "a123", Arrays.asList('a', '1', '2'), 3);
+    assertSuccess(parser, "ab123", Arrays.asList('a', 'b', '1', '2'), 4);
+    assertSuccess(parser, "abc123", Arrays.asList('a', 'b', 'c', '1', '2'), 5);
+  }
+
+  @Test
+  public void testStarLazy() {
+    Parser parser = CharacterParser.word().starLazy(CharacterParser.digit());
+    assertFailure(parser, "");
+    assertFailure(parser, "a", 1, "digit expected");
+    assertFailure(parser, "ab", 2, "digit expected");
+    assertSuccess(parser, "1", Arrays.asList(), 0);
+    assertSuccess(parser, "a1", Arrays.asList('a'), 1);
+    assertSuccess(parser, "ab1", Arrays.asList('a', 'b'), 2);
+    assertSuccess(parser, "abc1", Arrays.asList('a', 'b', 'c'), 3);
+    assertSuccess(parser, "12", Arrays.asList(), 0);
+    assertSuccess(parser, "a12", Arrays.asList('a'), 1);
+    assertSuccess(parser, "ab12", Arrays.asList('a', 'b'), 2);
+    assertSuccess(parser, "abc12", Arrays.asList('a', 'b', 'c'), 3);
+    assertSuccess(parser, "123", Arrays.asList(), 0);
+    assertSuccess(parser, "a123", Arrays.asList('a'), 1);
+    assertSuccess(parser, "ab123", Arrays.asList('a', 'b'), 2);
+    assertSuccess(parser, "abc123", Arrays.asList('a', 'b', 'c'), 3);
   }
 
   @Test
