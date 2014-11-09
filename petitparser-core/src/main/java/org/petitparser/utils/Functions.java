@@ -46,6 +46,19 @@ public class Functions {
   }
 
   /**
+   * Returns a function that skips the separators of a given list.
+   */
+  public static <T> Function<List<T>, List<T>> withoutSeparators() {
+    return (list) -> {
+      List<T> result = new ArrayList<>();
+      for (int i = 0; i < result.size(); i += 2) {
+        result.add(list.get(i));
+      }
+      return result;
+    };
+  }
+
+  /**
    * Returns a function that returns a constant value.
    */
   public static <T> Function<Object, T> constant(T output) {

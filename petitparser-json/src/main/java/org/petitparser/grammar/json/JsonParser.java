@@ -1,14 +1,12 @@
 package org.petitparser.grammar.json;
 
-import java.util.List;
-import java.util.Map;
-
 import org.petitparser.utils.Functions;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.primitives.Chars;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * JSON parser definition.
@@ -24,13 +22,13 @@ public class JsonParser extends JsonGrammar {
     action("array", new Function<List<List<?>>, List<?>>() {
       @Override
       public List<?> apply(List<List<?>> input) {
-        return input.get(1) != null ? input.get(1) : Lists.newArrayList();
+        return input.get(1) != null ? input.get(1) : new ArrayList<>();
       }
     });
     action("object", new Function<List<List<List<Object>>>, Map<Object, Object>>() {
       @Override
       public Map<Object, Object> apply(List<List<List<Object>>> input) {
-        Map<Object, Object> result = Maps.newLinkedHashMap();
+        Map<Object, Object> result = new LinkedHashMap<>();
         if (input.get(1) != null) {
           for (List<Object> list : input.get(1)) {
             result.put(list.get(0), list.get(2));
@@ -60,7 +58,7 @@ public class JsonParser extends JsonGrammar {
     action("stringPrimitive", new Function<List<List<Character>>, String>() {
       @Override
       public String apply(List<List<Character>> input) {
-        return new String(Chars.toArray(input.get(1)));
+        return listToString(input.get(1));
       }
     });
     action("characterEscape", Functions.lastOfList());
