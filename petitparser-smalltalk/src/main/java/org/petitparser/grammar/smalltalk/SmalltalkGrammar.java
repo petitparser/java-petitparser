@@ -212,9 +212,9 @@ class SmalltalkGrammar extends CompositeParser {
             .or(ref("periodToken").star()))
             .or(ref("return").seq(ref("periodToken").star()))
             .or(ref("periodToken").star()));
-    def("string", CharacterParser.is('"')
+    def("string", CharacterParser.is('\'')
         .seq(StringParser.of("''").or(CharacterParser.pattern("^'")).star())
-        .seq(CharacterParser.is('"')));
+        .seq(CharacterParser.is('\'')));
     def("stringLiteral", ref("stringToken"));
     def("stringToken", token(ref("string")));
     def("symbol", ref("unary")
