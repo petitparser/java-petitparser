@@ -51,7 +51,7 @@ public class Functions {
   public static <T> Function<List<T>, List<T>> withoutSeparators() {
     return (list) -> {
       List<T> result = new ArrayList<>();
-      for (int i = 0; i < result.size(); i += 2) {
+      for (int i = 0; i < list.size(); i += 2) {
         result.add(list.get(i));
       }
       return result;

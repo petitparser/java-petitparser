@@ -330,41 +330,39 @@ public abstract class Parser {
   }
 
   /**
-   * Returns a parser that consumes the receiver one or more times separated by the {@code
-   * separator} parser. The resulting parser returns a flat list of the parse results of the
-   * receiver interleaved with the parse result of the separator parser.
+   * Returns a new parser that parses the receiver one or more times, separated
+   * by a {@code separator}.
    */
   public Parser separatedBy(Parser separator) {
-    return separatedBy(separator, true, false);
+    return new SequenceParser(this, new SequenceParser(separator, this).star())
+        .map(new Function<List<List<List<Object>>>, List<Object>>() {
+          @Override
+          public List<Object> apply(List<List<List<Object>>> input) {
+            List<Object> result = new ArrayList<>();
+            result.add(input.get(0));
+            input.get(1).forEach(result::addAll);
+            return result;
+          }
+        });
   }
 
   /**
-   * Returns a parser that consumes the receiver one or more times separated by the {@code
-   * separator} parser. The resulting parser returns a flat list of the parse results of the
-   * receiver interleaved with the parse result of the separator parser.
+   * Returns a new parser that parses the receiver one or more times, separated
+   * and possibly ended by a {@code separator}."
    */
-  @SuppressWarnings("unchecked")
-  public Parser separatedBy(Parser separator, boolean includeSeparators,
-      boolean optionalSeparatorAtEnd) {
-    Parser repeater = new SequenceParser(separator, this).star();
-    Parser parser = optionalSeparatorAtEnd
-        ? new SequenceParser(this, repeater, separator.optional(separator))
-        : new SequenceParser(this, repeater);
-    return parser.map((List<Object> list) -> {
-      List<Object> result = new ArrayList<>();
-      result.add(list.get(0));
-      List<List<Object>> tuples = (List<List<Object>>) list.get(1);
-      for (List<Object> tuple : tuples) {
-        if (includeSeparators) {
-          result.add(tuple.get(0));
-        }
-        result.add(tuple.get(1));
-      }
-      if (includeSeparators && optionalSeparatorAtEnd && list.get(2) != separator) {
-        result.add(list.get(2));
-      }
-      return result;
-    });
+  public Parser delimitedBy(Parser separator) {
+    return separatedBy(separator)
+        .seq(separator.optional())
+        .map(new Function<List<List<Object>>, List<Object>>() {
+          @Override
+          public List<Object> apply(List<List<Object>> input) {
+            List<Object> result = new ArrayList<>(input.get(0));
+            if (input.get(1) != null) {
+              result.add(input.get(1));
+            }
+            return result;
+          }
+        });
   }
 
   /**
