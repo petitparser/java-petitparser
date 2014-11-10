@@ -18,7 +18,7 @@
 
   <name>PetitParser</name>
   <description>Dynamic Grammars in Java</description>
-  <url>http://github.com/renggli/java-petitparser</url>
+  <url>http://github.com/petitparser/java-petitparser</url>
 
   <licenses>
     <license>
@@ -36,10 +36,21 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:renggli/java-petitparser.git</connection>
-    <developerConnection>scm:git:git@github.com:renggli/java-petitparser.git</developerConnection>
-    <url>git@github.com:renggli/java-petitparser</url>
+    <connection>scm:git:git@github.com:petitparser/java-petitparser.git</connection>
+    <developerConnection>scm:git:git@github.com:petitparser/java-petitparser.git</developerConnection>
+    <url>git@github.com:petitparser/java-petitparser</url>
+    <tag>HEAD</tag>
   </scm>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/petitparser/java-petitparser/issues</url>
+  </issueManagement>
+
+  <ciManagement>
+    <system>Jenkins</system>
+    <url>http://jenkins.lukas-renggli.ch/job/java-petitparser/</url>
+  </ciManagement>
 
   <modules>
     <module>petitparser-core</module>
