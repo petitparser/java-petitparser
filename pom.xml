@@ -11,7 +11,7 @@
     <junit.version>4.11</junit.version>
   </properties>
 
-  <groupId>org.petitparser</groupId>
+  <groupId>com.github.petitparser</groupId>
   <artifactId>petitparser</artifactId>
   <version>2.0.0-alpha</version>
   <packaging>pom</packaging>

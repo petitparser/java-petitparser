@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.petitparser</groupId>
+    <groupId>com.github.petitparser</groupId>
     <artifactId>petitparser</artifactId>
     <version>2.0.0-alpha</version>
     <relativePath>../pom.xml</relativePath>
