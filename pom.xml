@@ -1,87 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.petitparser</groupId>
-    <artifactId>petitparser</artifactId>
-    <version>2.0.0</version>
-    <packaging>pom</packaging>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.sourceEncoding>UTF-8</project.reporting.sourceEncoding>
+    <java.version>1.8</java.version>
+    <junit.version>4.11</junit.version>
+  </properties>
 
-    <name>PetitParser</name>
-    <description>Dynamic Grammars in Java</description>
-    <url>http://github.com/renggli/java-petitparser</url>
+  <groupId>org.petitparser</groupId>
+  <artifactId>petitparser</artifactId>
+  <version>2.0.0-alpha</version>
+  <packaging>pom</packaging>
 
-    <modules>
-        <module>petitparser-core</module>
-        <module>petitparser-json</module>
-        <module>petitparser-smalltalk</module>
-        <module>petitparser-xml</module>
-    </modules>
+  <name>PetitParser</name>
+  <description>Dynamic Grammars in Java</description>
+  <url>http://github.com/renggli/java-petitparser</url>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.sourceEncoding>UTF-8</project.reporting.sourceEncoding>
-        <java.version>1.8</java.version>
-        <junit.version>4.11</junit.version>
-    </properties>
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
+    </license>
+  </licenses>
 
-    <scm>
-        <url>http://github.com/renggli/java-petitparser</url>
-        <connection>scm:git:git://github.com/renggli/java-petitparser.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/renggli/java-petitparser.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
+  <developers>
+    <developer>
+      <name>Lukas Renggli</name>
+      <email>renggli@gmail.com</email>
+      <url>http://lukas-renggli.ch/</url>
+    </developer>
+  </developers>
 
-    <issueManagement>
-        <system>GitHub Issues</system>
-        <url>http://github.com/renggli/java-petitparser/issues</url>
-    </issueManagement>
+  <scm>
+    <connection>scm:git:git@github.com:renggli/java-petitparser.git</connection>
+    <developerConnection>scm:git:git@github.com:renggli/java-petitparser.git</developerConnection>
+    <url>git@github.com:renggli/java-petitparser</url>
+  </scm>
 
-    <licenses>
-        <license>
-            <name>MIT</name>
-            <url>http://opensource.org/licenses/MIT</url>
-        </license>
-    </licenses>
+  <modules>
+    <module>petitparser-core</module>
+    <module>petitparser-json</module>
+    <module>petitparser-smalltalk</module>
+    <module>petitparser-xml</module>
+  </modules>
 
-    <organization>
-        <name>Lukas Renggli</name>
-        <url>http://lukas-renggli.ch/</url>
-    </organization>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.0</version>
-                    <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5</version>
-                <configuration>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.0</version>
+          <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
