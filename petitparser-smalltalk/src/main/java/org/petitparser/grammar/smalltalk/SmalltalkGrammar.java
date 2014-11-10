@@ -117,7 +117,7 @@ class SmalltalkGrammar extends CompositeParser {
         .or(ref("blockArgumentsWithout")));
     def("blockArgumentsWith", ref("blockArgument").plus()
         .seq(token("|").or(token("]").and())));
-    def("blockArgumentsWithout", EpsilonParser.DEFAULT);
+    def("blockArgumentsWithout", new EpsilonParser());
     def("blockBody", ref("blockArguments")
         .seq(ref("sequence")));
     def("byteLiteral", token("#[")
