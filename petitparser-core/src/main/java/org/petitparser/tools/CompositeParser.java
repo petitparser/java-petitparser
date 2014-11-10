@@ -27,6 +27,7 @@ public abstract class CompositeParser extends DelegateParser {
   private Map<String, SettableParser> undefined = new HashMap<>();
 
   public CompositeParser() {
+    super(FailureParser.withMessage("Undefined start production"));
     initialize();
     complete();
   }
@@ -69,8 +70,7 @@ public abstract class CompositeParser extends DelegateParser {
     } else if (undefined.containsKey(name)) {
       return undefined.get(name);
     } else {
-      SettableParser parser =
-          new SettableParser(FailureParser.withMessage("Uninitalized production: " + name));
+      SettableParser parser = SettableParser.undefined("Uninitialized production: " + name);
       undefined.put(name, parser);
       return parser;
     }

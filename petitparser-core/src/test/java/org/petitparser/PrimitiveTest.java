@@ -16,7 +16,7 @@ public class PrimitiveTest {
 
   @Test
   public void testEpsilon() {
-    Parser parser = EpsilonParser.DEFAULT;
+    Parser parser = new EpsilonParser();
     assertSuccess(parser, "", null);
     assertSuccess(parser, "a", null, 0);
   }

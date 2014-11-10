@@ -223,7 +223,7 @@ public abstract class Parser {
    * consumes input.
    */
   public Parser not() {
-    return not(this + " unexpected");
+    return not("unexpected");
   }
 
   /**
@@ -273,11 +273,17 @@ public abstract class Parser {
   }
 
   /**
-   * Returns a parser that consumes input before and after the receiver. The argument {@code
-   * trimmer} is a parser that consumes the excess input.
+   * Returns a parser that consumes input on {@code both} sides of the receiver.
    */
-  public Parser trim(Parser trimmer) {
-    return new TrimmingParser(this, trimmer);
+  public Parser trim(Parser both) {
+    return trim(both, both);
+  }
+
+  /**
+   * Returns a parser that consumes input {@code before} and {@code after} the receiver.
+   */
+  public Parser trim(Parser before, Parser after) {
+    return new TrimmingParser(this, before, after);
   }
 
   /**
@@ -300,7 +306,7 @@ public abstract class Parser {
    * a later point in time.
    */
   public SettableParser settable() {
-    return new SettableParser(this);
+    return SettableParser.with(this);
   }
 
   /**

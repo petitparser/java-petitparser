@@ -9,11 +9,6 @@ import org.petitparser.parser.Parser;
  */
 public class EpsilonParser extends Parser {
 
-  public static final Parser DEFAULT = new EpsilonParser();
-
-  private EpsilonParser() {
-  }
-
   @Override
   public Result parseOn(Context context) {
     return context.success(null);

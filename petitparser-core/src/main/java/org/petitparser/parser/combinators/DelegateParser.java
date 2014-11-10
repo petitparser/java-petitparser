@@ -3,7 +3,6 @@ package org.petitparser.parser.combinators;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.primitive.FailureParser;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,10 +14,6 @@ import java.util.Objects;
 public class DelegateParser extends Parser {
 
   protected Parser delegate;
-
-  public DelegateParser() {
-    this(FailureParser.withMessage("Undefined delegate parser."));
-  }
 
   public DelegateParser(Parser delegate) {
     this.delegate = Objects.requireNonNull(delegate);

@@ -16,7 +16,7 @@ public class Parsers {
 
   @Deprecated
   public static Parser epsilon() {
-    return EpsilonParser.DEFAULT;
+    return new EpsilonParser();
   }
 
   @Deprecated

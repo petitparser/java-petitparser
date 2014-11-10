@@ -21,7 +21,7 @@ public class ExpressionTest {
   private static final Parser PARSER = createParser();
 
   private static Parser createParser() {
-    SettableParser root = new SettableParser();
+    SettableParser root = SettableParser.undefined();
     ExpressionBuilder builder = new ExpressionBuilder();
     builder.group().primitive(
         CharacterParser.is('(').trim().seq(root).seq(CharacterParser.is(')').trim())

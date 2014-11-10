@@ -17,10 +17,6 @@ public class TrimmingParser extends DelegateParser {
   private Parser left;
   private Parser right;
 
-  public TrimmingParser(Parser delegate, Parser trimmer) {
-    this(delegate, trimmer, trimmer);
-  }
-
   public TrimmingParser(Parser delegate, Parser left, Parser right) {
     super(delegate);
     this.left = Objects.requireNonNull(left);
@@ -53,7 +49,7 @@ public class TrimmingParser extends DelegateParser {
       left = target;
     }
     if (right == source) {
-      left = target;
+      right = target;
     }
   }
 
