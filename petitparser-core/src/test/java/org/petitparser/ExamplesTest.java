@@ -14,23 +14,23 @@ import static org.petitparser.Assertions.assertSuccess;
  */
 public class ExamplesTest {
 
-  private static final Parser IDENTIFIER =
+  static final Parser IDENTIFIER =
       CharacterParser.letter().seq(CharacterParser.word().star()).flatten();
 
-  private static final Parser NUMBER =
+  static final Parser NUMBER =
       CharacterParser.is('-').optional().seq(CharacterParser.digit().plus())
           .seq(CharacterParser.is('.').seq(CharacterParser.digit().plus()).optional())
           .flatten();
 
-  private static final Parser STRING =
+  static final Parser STRING =
       CharacterParser.is('"').seq(CharacterParser.is('"').neg().star())
           .seq(CharacterParser.is('"')).flatten();
 
-  private static final Parser RETURN =
+  static final Parser RETURN =
       StringParser.of("return").seq(CharacterParser.whitespace().plus().flatten())
           .seq(IDENTIFIER.or(NUMBER).or(STRING)).map(Functions.lastOfList());
 
-  private static final Parser JAVADOC =
+  static final Parser JAVADOC =
       StringParser.of("/**").seq(StringParser.of("*/").neg().star()).seq(StringParser.of("*/")).flatten();
 
   @Test

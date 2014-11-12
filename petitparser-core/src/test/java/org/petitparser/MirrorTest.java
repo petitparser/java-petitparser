@@ -1,11 +1,13 @@
 package org.petitparser;
 
 import org.junit.Test;
+import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.characters.CharacterParser;
 import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.utils.Mirror;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -198,5 +200,141 @@ public class MirrorTest {
     assertTrue(input.isEqualTo(output));
     assertNotEquals(input.getChildren().get(0), input.getChildren().get(1));
     assertEquals(output.getChildren().get(0), output.getChildren().get(1));
+  }
+
+  @Test
+  public void testSuccessfulTrace() {
+    List<String> expected = Arrays.asList(
+        "FlattenParser",
+        "  SequenceParser",
+        "    CharacterParser[letter expected]",
+        "    Success[1:2]: a",
+        "    PossessiveRepeatingParser[0..*]",
+        "      CharacterParser[letter or digit expected]",
+        "      Failure[1:2]: letter or digit expected",
+        "    Success[1:2]: []",
+        "  Success[1:2]: [a, []]",
+        "Success[1:2]: a"
+    );
+    List<String> actual = new ArrayList<>();
+    Result result = Mirror.of(ExamplesTest.IDENTIFIER)
+        .trace(actual::add)
+        .parse("a");
+    assertTrue(result.isSuccess());
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testFailingTrace() {
+    List<String> expected = Arrays.asList(
+        "FlattenParser",
+        "  SequenceParser",
+        "    CharacterParser[letter expected]",
+        "    Failure[1:1]: letter expected",
+        "  Failure[1:1]: letter expected",
+        "Failure[1:1]: letter expected"
+    );
+    List<String> actual = new ArrayList<>();
+    Result result = Mirror.of(ExamplesTest.IDENTIFIER)
+        .trace(actual::add)
+        .parse("1");
+    assertFalse(result.isSuccess());
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testSuccessfulProgress() {
+    List<String> expected = Arrays.asList(
+        "* FlattenParser",
+        "* SequenceParser",
+        "* CharacterParser[letter expected]",
+        "** PossessiveRepeatingParser[0..*]",
+        "** CharacterParser[letter or digit expected]",
+        "*** CharacterParser[letter or digit expected]",
+        "**** CharacterParser[letter or digit expected]",
+        "***** CharacterParser[letter or digit expected]",
+        "****** CharacterParser[letter or digit expected]"
+    );
+    List<String> actual = new ArrayList<>();
+    Result result = Mirror.of(ExamplesTest.IDENTIFIER)
+        .progress(actual::add)
+        .parse("ab123");
+    assertTrue(result.isSuccess());
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testFailingProgress() {
+    List<String> expected = Arrays.asList(
+        "* FlattenParser",
+        "* SequenceParser",
+        "* CharacterParser[letter expected]"
+    );
+    List<String> actual = new ArrayList<>();
+    Result result = Mirror.of(ExamplesTest.IDENTIFIER)
+        .progress(actual::add)
+        .parse("1");
+    assertFalse(result.isSuccess());
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testSuccessfulProfile() {
+    List<Mirror.Profile> actual = new ArrayList<>();
+    Result result = Mirror.of(ExamplesTest.IDENTIFIER)
+        .profile(actual::add)
+        .parse("ab123");
+    assertTrue(result.isSuccess());
+    assertEquals(5, actual.size());
+
+    assertEquals("FlattenParser", actual.get(0).parser.toString());
+    assertEquals(1, actual.get(0).activations);
+    assertTrue(actual.get(0).elapsedNanoseconds > 0);
+
+    assertEquals("SequenceParser", actual.get(1).parser.toString());
+    assertEquals(1, actual.get(1).activations);
+    assertTrue(actual.get(1).elapsedNanoseconds > 0);
+
+    assertEquals("PossessiveRepeatingParser[0..*]", actual.get(2).parser.toString());
+    assertEquals(1, actual.get(2).activations);
+    assertTrue(actual.get(2).elapsedNanoseconds > 0);
+
+    assertEquals("CharacterParser[letter or digit expected]", actual.get(3).parser.toString());
+    assertEquals(5, actual.get(3).activations);
+    assertTrue(actual.get(3).elapsedNanoseconds > 0);
+
+    assertEquals("CharacterParser[letter expected]", actual.get(4).parser.toString());
+    assertEquals(1, actual.get(4).activations);
+    assertTrue(actual.get(4).elapsedNanoseconds > 0);
+  }
+
+  @Test
+  public void testFailingProfile() {
+    List<Mirror.Profile> actual = new ArrayList<>();
+    Result result = Mirror.of(ExamplesTest.IDENTIFIER)
+        .profile(actual::add)
+        .parse("1");
+    assertFalse(result.isSuccess());
+    assertEquals(5, actual.size());
+
+    assertEquals("FlattenParser", actual.get(0).parser.toString());
+    assertEquals(1, actual.get(0).activations);
+    assertTrue(actual.get(0).elapsedNanoseconds > 0);
+
+    assertEquals("SequenceParser", actual.get(1).parser.toString());
+    assertEquals(1, actual.get(1).activations);
+    assertTrue(actual.get(1).elapsedNanoseconds > 0);
+
+    assertEquals("PossessiveRepeatingParser[0..*]", actual.get(2).parser.toString());
+    assertEquals(0, actual.get(2).activations);
+    assertEquals(0, actual.get(2).elapsedNanoseconds);
+
+    assertEquals("CharacterParser[letter or digit expected]", actual.get(3).parser.toString());
+    assertEquals(0, actual.get(3).activations);
+    assertEquals(0, actual.get(3).elapsedNanoseconds);
+
+    assertEquals("CharacterParser[letter expected]", actual.get(4).parser.toString());
+    assertEquals(1, actual.get(4).activations);
+    assertTrue(actual.get(4).elapsedNanoseconds > 0);
   }
 }

@@ -1,5 +1,6 @@
 package org.petitparser.utils;
 
+import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.DelegateParser;
 import org.petitparser.parser.combinators.SettableParser;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -16,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -53,10 +56,10 @@ public class Mirror implements Iterable<Parser> {
 
   private static class ParserIterator implements Iterator<Parser> {
 
-    private final List<Parser> todo = new ArrayList<>();
-    private final Set<Parser> seen = new HashSet<>();
+    final List<Parser> todo = new ArrayList<>();
+    final Set<Parser> seen = new HashSet<>();
 
-    private ParserIterator(Parser root) {
+    ParserIterator(Parser root) {
       todo.add(root);
       seen.add(root);
     }
@@ -146,5 +149,127 @@ public class Mirror implements Iterable<Parser> {
     });
   }
 
+  /**
+   * Returns a transformed parser that when being used to read input prints a trace of all activated
+   * parsers and their respective parse results.
+   */
+  public Parser trace(Consumer<String> consumer) {
+    int closure[] = {0};
+    return map(parser -> parser.callCC((continuation, context) -> {
+      consumer.accept(repeat("  ", closure[0]) + parser);
+      closure[0]++;
+      Result result = continuation.apply(context);
+      closure[0]--;
+      consumer.accept(repeat("  ", closure[0]) + result);
+      return result;
+    }));
+  }
 
+  /**
+   * Returns a transformed parser that when being used to read input visually prints its progress
+   * while progressing.
+   */
+  public Parser progress(Consumer<String> consumer) {
+    return map(parser -> parser.callCC((continuation, context) -> {
+      consumer.accept(repeat("*", 1 + context.getPosition()) + " " + parser);
+      return continuation.apply(context);
+    }));
+  }
+
+  private String repeat(String string, int count) {
+    StringBuilder buffer = new StringBuilder(string.length() * count);
+    for (int i = 0; i < count; i++) {
+      buffer.append(string);
+    }
+    return buffer.toString();
+  }
+
+  /**
+   * Returns a transformed parser that when being used measures the activation count and total time
+   * of each parser.
+   */
+  public Parser profile(Consumer<Profile> consumer) {
+    Map<Parser, ProfileBuilder> builders = new LinkedHashMap<>();
+    return map(parser -> {
+      ProfileBuilder builder = new ProfileBuilder(parser);
+      builders.put(parser, builder);
+      return parser.callCC((continuation, context) -> {
+        builder.start();
+        Result result = continuation.apply(context);
+        builder.stop();
+        return result;
+      });
+    }).callCC((continuation, context) -> {
+      builders.values().stream().forEach(ProfileBuilder::reset);
+      Result result = continuation.apply(context);
+      builders.values().stream().map(ProfileBuilder::build).forEach(consumer);
+      return result;
+    });
+  }
+
+  /**
+   * Simple data holder for the profile information about a parser.
+   */
+  public static class Profile {
+
+    public final Parser parser;
+
+    public final long activations;
+
+    public final long elapsedNanoseconds;
+
+    private Profile(Parser parser, long activations, long elapsedNanoseconds) {
+      this.parser = parser;
+      this.activations = activations;
+      this.elapsedNanoseconds = elapsedNanoseconds;
+    }
+
+    @Override
+    public String toString() {
+      return activations + "\t" + elapsedNanoseconds + "\t" + parser;
+    }
+  }
+
+  private static class ProfileBuilder {
+
+    private Parser parser;
+
+    private long activations;
+
+    private long elapsedNanoseconds;
+
+    private int nestCount;
+
+    private long startTime;
+
+    private ProfileBuilder(Parser parser) {
+      this.parser = parser;
+    }
+
+    private void reset() {
+      activations = 0;
+      elapsedNanoseconds = 0;
+      nestCount = 0;
+      startTime = 0;
+    }
+
+    private void start() {
+      nestCount++;
+      if (nestCount == 1) {
+        startTime = System.nanoTime();
+      }
+    }
+
+    private void stop() {
+      if (nestCount == 1) {
+        elapsedNanoseconds += System.nanoTime() - startTime;
+        activations++;
+      }
+      nestCount--;
+    }
+
+    private Profile build() {
+      return new Profile(parser, activations, elapsedNanoseconds);
+    }
+  }
 }
