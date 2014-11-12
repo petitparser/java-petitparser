@@ -202,8 +202,8 @@ public class CharacterParser extends Parser {
   }
 
   @Override
-  protected boolean equalsProperties(Parser other) {
-    return super.equalsProperties(other) &&
+  protected boolean hasEqualProperties(Parser other) {
+    return super.hasEqualProperties(other) &&
         Objects.equals(matcher, ((CharacterParser) other).matcher) &&
         Objects.equals(message, ((CharacterParser) other).message);
   }

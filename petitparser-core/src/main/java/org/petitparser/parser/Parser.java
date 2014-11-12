@@ -23,7 +23,7 @@ import org.petitparser.utils.Functions;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.IdentityHashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -382,28 +382,21 @@ public abstract class Parser {
    * The code can automatically deals with recursive parsers and parsers that refer to other
    * parsers. This code is supposed to be overridden by parsers that add other state.
    */
-  @Override
-  public boolean equals(Object other) {
-    if (this == other) {
-      return true;
-    }
-    if (other instanceof Parser) {
-      Set<Parser> seen = Collections.<Parser>newSetFromMap(new IdentityHashMap<>());
-      return equals((Parser) other, seen);
-    }
-    return false;
+  public boolean isEqualTo(Parser other) {
+    return isEqualTo(other, new HashSet<>());
   }
 
   /**
    * Recursively tests for structural similarity of two parsers.
    */
-  protected boolean equals(Parser other, Set<Parser> seen) {
-    if (this == other || seen.contains(this)) {
+  protected boolean isEqualTo(Parser other, Set<Parser> seen) {
+    if (this.equals(other) || seen.contains(this)) {
       return true;
     }
     seen.add(this);
-    return getClass().equals(other.getClass()) && equalsProperties(other) &&
-        equalsChildren(other, seen);
+    return getClass().equals(other.getClass())
+        && hasEqualProperties(other)
+        && hasEqualChildren(other, seen);
   }
 
   /**
@@ -411,7 +404,7 @@ public abstract class Parser {
    * <p>
    * Override this method in all subclasses that add new state.
    */
-  protected boolean equalsProperties(Parser other) {
+  protected boolean hasEqualProperties(Parser other) {
     return true;
   }
 
@@ -420,14 +413,14 @@ public abstract class Parser {
    * <p>
    * Normally subclasses should not override this method, but instead {@link #getChildren()}.
    */
-  protected boolean equalsChildren(Parser other, Set<Parser> seen) {
+  protected boolean hasEqualChildren(Parser other, Set<Parser> seen) {
     List<Parser> thisChildren = this.getChildren();
     List<Parser> otherChildren = other.getChildren();
     if (thisChildren.size() != otherChildren.size()) {
       return false;
     }
     for (int i = 0; i < thisChildren.size(); i++) {
-      if (!thisChildren.get(i).equals(otherChildren.get(i), seen)) {
+      if (!thisChildren.get(i).isEqualTo(otherChildren.get(i), seen)) {
         return false;
       }
     }

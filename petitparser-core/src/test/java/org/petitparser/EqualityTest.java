@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests {@link Parser#copy}, {@link Parser#equals(Object)}, and {@link Parser#replace(Parser,
@@ -36,10 +37,10 @@ public class EqualityTest {
         pattern.matcher(parser.toString()).replaceAll(""),
         pattern.matcher(copy.toString()).replaceAll(""));
     // check equality
-    assertEquals(copy, copy);
-    assertEquals(parser, copy);
-    assertEquals(copy, parser);
-    assertEquals(parser, parser);
+    assertTrue(copy.isEqualTo(copy));
+    assertTrue(parser.isEqualTo(copy));
+    assertTrue(copy.isEqualTo(parser));
+    assertTrue(parser.isEqualTo(parser));
     // check replacing
     List<Parser> replaced = new ArrayList<>();
     for (int i = 0; i < copy.getChildren().size(); i++) {

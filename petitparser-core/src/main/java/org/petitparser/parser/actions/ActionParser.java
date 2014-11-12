@@ -35,8 +35,8 @@ public class ActionParser<T, R> extends DelegateParser {
   }
 
   @Override
-  protected boolean equalsProperties(Parser other) {
-    return super.equalsProperties(other) &&
+  protected boolean hasEqualProperties(Parser other) {
+    return super.hasEqualProperties(other) &&
         Objects.equals(function, ((ActionParser) other).function);
   }
 

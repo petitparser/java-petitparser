@@ -30,8 +30,8 @@ public class NotParser extends DelegateParser {
   }
 
   @Override
-  protected boolean equalsProperties(Parser other) {
-    return super.equalsProperties(other) && Objects.equals(message, ((NotParser) other).message);
+  protected boolean hasEqualProperties(Parser other) {
+    return super.hasEqualProperties(other) && Objects.equals(message, ((NotParser) other).message);
   }
 
   @Override

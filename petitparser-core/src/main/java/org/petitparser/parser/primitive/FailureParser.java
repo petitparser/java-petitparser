@@ -27,8 +27,8 @@ public class FailureParser extends Parser {
   }
 
   @Override
-  protected boolean equalsProperties(Parser other) {
-    return super.equalsProperties(other) &&
+  protected boolean hasEqualProperties(Parser other) {
+    return super.hasEqualProperties(other) &&
         Objects.equals(message, ((FailureParser) other).message);
   }
 

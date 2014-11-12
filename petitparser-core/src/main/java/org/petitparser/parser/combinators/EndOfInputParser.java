@@ -31,8 +31,8 @@ public class EndOfInputParser extends DelegateParser {
   }
 
   @Override
-  protected boolean equalsProperties(Parser other) {
-    return super.equalsProperties(other) &&
+  protected boolean hasEqualProperties(Parser other) {
+    return super.hasEqualProperties(other) &&
         Objects.equals(message, ((EndOfInputParser) other).message);
   }
 

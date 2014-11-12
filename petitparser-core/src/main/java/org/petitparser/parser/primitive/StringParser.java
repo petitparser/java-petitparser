@@ -53,8 +53,8 @@ public class StringParser extends Parser {
   }
 
   @Override
-  protected boolean equalsProperties(Parser other) {
-    return super.equalsProperties(other) &&
+  protected boolean hasEqualProperties(Parser other) {
+    return super.hasEqualProperties(other) &&
         Objects.equals(size, ((StringParser) other).size) &&
         Objects.equals(predicate, ((StringParser) other).predicate) &&
         Objects.equals(message, ((StringParser) other).message);
