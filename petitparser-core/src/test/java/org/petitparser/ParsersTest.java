@@ -1,6 +1,8 @@
 package org.petitparser;
 
 import org.junit.Test;
+import org.petitparser.context.Context;
+import org.petitparser.context.Result;
 import org.petitparser.context.Token;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.characters.CharacterParser;
@@ -13,6 +15,8 @@ import java.util.List;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
 
@@ -459,5 +463,58 @@ public class ParsersTest {
     assertSuccess(parser, "abab", Arrays.asList('a', 'b', 'a', 'b'));
     assertSuccess(parser, "ababa", Arrays.asList('a', 'b', 'a', 'b', 'a'));
     assertSuccess(parser, "ababab", Arrays.asList('a', 'b', 'a', 'b', 'a', 'b'));
+  }
+
+  @Test
+  public void testContinuationDelegating() {
+    Parser parser = CharacterParser.digit()
+        .callCC(Function::apply);
+    assertTrue(parser.parse("1").isSuccess());
+    assertFalse(parser.parse("a").isSuccess());
+  }
+
+  @Test
+  public void testContinuationRedirecting() {
+    Parser parser = CharacterParser.digit()
+        .callCC((continuation, context) -> CharacterParser.letter().parseOn(context));
+    assertFalse(parser.parse("1").isSuccess());
+    assertTrue(parser.parse("a").isSuccess());
+  }
+
+  @Test
+  public void testContinuationResuming() {
+    List<Function<Context, Result>> continuations = new ArrayList<>();
+    List<Context> contexts = new ArrayList<>();
+    Parser parser = CharacterParser.digit().callCC((continuation, context) -> {
+      continuations.add(continuation);
+      contexts.add(context);
+      // we have to return something for now
+      return context.failure("Abort");
+    });
+    // execute the parser twice to collect the continuations
+    assertFalse(parser.parse("1").isSuccess());
+    assertFalse(parser.parse("a").isSuccess());
+    // later we can execute the captured continuations
+    assertTrue(continuations.get(0).apply(contexts.get(0)).isSuccess());
+    assertFalse(continuations.get(1).apply(contexts.get(1)).isSuccess());
+    // of course the continuations can be resumed multiple times
+    assertTrue(continuations.get(0).apply(contexts.get(0)).isSuccess());
+    assertFalse(continuations.get(1).apply(contexts.get(1)).isSuccess());
+  }
+
+  @Test
+  public void testContinuationSuccessful() {
+    Parser parser = CharacterParser.digit()
+        .callCC((continuation, context) -> context.success("Always succeed"));
+    assertTrue(parser.parse("1").isSuccess());
+    assertTrue(parser.parse("a").isSuccess());
+  }
+
+  @Test
+  public void testContinuationFailing() {
+    Parser parser = CharacterParser.digit()
+        .callCC((continuation, context) -> context.failure("Always fail"));
+    assertFalse(parser.parse("1").isSuccess());
+    assertFalse(parser.parse("a").isSuccess());
   }
 }

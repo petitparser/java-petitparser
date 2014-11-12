@@ -4,6 +4,7 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.context.Token;
 import org.petitparser.parser.actions.ActionParser;
+import org.petitparser.parser.actions.ContinuationParser;
 import org.petitparser.parser.actions.FlattenParser;
 import org.petitparser.parser.actions.TokenParser;
 import org.petitparser.parser.actions.TrimmingParser;
@@ -216,6 +217,13 @@ public abstract class Parser {
    */
   public Parser and() {
     return new AndParser(this);
+  }
+
+  /**
+   * Returns a parser that is called with its current continuation.
+   */
+  public Parser callCC(ContinuationParser.ContinuationHandler handler) {
+    return new ContinuationParser(this, handler);
   }
 
   /**
