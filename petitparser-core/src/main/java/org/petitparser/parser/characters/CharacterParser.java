@@ -102,7 +102,7 @@ public class CharacterParser extends Parser {
 
   /**
    * Returns a parser that accepts a specific character pattern.
-   * <p>
+   * <p/>
    * Characters match themselves. A dash {@code -} between two characters matches the range of those
    * characters. A caret {@code ^} at the beginning negates the pattern.
    */
@@ -211,5 +211,10 @@ public class CharacterParser extends Parser {
   @Override
   public Parser copy() {
     return new CharacterParser(matcher, message);
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + "[" + message + "]";
   }
 }

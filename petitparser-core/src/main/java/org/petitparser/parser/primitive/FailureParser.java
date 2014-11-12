@@ -36,4 +36,9 @@ public class FailureParser extends Parser {
   public Parser copy() {
     return new FailureParser(message);
   }
+
+  @Override
+  public String toString() {
+    return super.toString() + "[" + message + "]";
+  }
 }

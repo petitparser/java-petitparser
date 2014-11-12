@@ -40,4 +40,9 @@ public class EndOfInputParser extends DelegateParser {
   public Parser copy() {
     return new EndOfInputParser(delegate, message);
   }
+
+  @Override
+  public String toString() {
+    return super.toString() + "[" + message + "]";
+  }
 }

@@ -11,7 +11,6 @@ import org.petitparser.parser.primitive.StringParser;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
@@ -24,8 +23,6 @@ import static org.junit.Assert.assertTrue;
  */
 public class EqualityTest {
 
-  private static final Pattern pattern = Pattern.compile("@[0-9a-fA-F]+");
-
   private void verify(Parser parser) {
     Parser copy = parser.copy();
     // check copying
@@ -33,9 +30,7 @@ public class EqualityTest {
     assertEquals(parser.getClass(), copy.getClass());
     assertEquals(parser.getChildren().size(), copy.getChildren().size());
     assertPairwiseSame(parser.getChildren(), copy.getChildren());
-    assertEquals(
-        pattern.matcher(parser.toString()).replaceAll(""),
-        pattern.matcher(copy.toString()).replaceAll(""));
+    assertEquals(parser.toString(), copy.toString());
     // check equality
     assertTrue(copy.isEqualTo(copy));
     assertTrue(parser.isEqualTo(copy));
@@ -83,6 +78,11 @@ public class EqualityTest {
   @Test
   public void delegate() {
     verify(new DelegateParser(CharacterParser.any()));
+  }
+
+  @Test
+  public void continuation() {
+    verify(CharacterParser.digit().callCC((continuation, context) -> null));
   }
 
   @Test

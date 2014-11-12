@@ -449,4 +449,11 @@ public abstract class Parser {
   public void replace(Parser source, Parser target) {
     // no referring parsers
   }
+
+  /**
+   * Returns a human readable string identifying this parser.
+   */
+  public String toString() {
+    return getClass().getSimpleName();
+  }
 }

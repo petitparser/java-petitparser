@@ -64,4 +64,9 @@ public class StringParser extends Parser {
   public Parser copy() {
     return new StringParser(size, predicate, message);
   }
+
+  @Override
+  public String toString() {
+    return super.toString() + "[" + message + "]";
+  }
 }

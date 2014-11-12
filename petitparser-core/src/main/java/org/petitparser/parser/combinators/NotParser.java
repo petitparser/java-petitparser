@@ -38,4 +38,9 @@ public class NotParser extends DelegateParser {
   public Parser copy() {
     return new NotParser(delegate, message);
   }
+
+  @Override
+  public String toString() {
+    return super.toString() + "[" + message + "]";
+  }
 }

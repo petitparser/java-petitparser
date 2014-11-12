@@ -24,14 +24,14 @@ public abstract class RepeatingParser extends DelegateParser {
   }
 
   @Override
-  public String toString() {
-    return super.toString() + "[" + min + ".." + (max == UNBOUNDED ? "*" : max) + "]";
-  }
-
-  @Override
   public boolean hasEqualProperties(Parser other) {
     return super.hasEqualProperties(other) &&
         Objects.equals(min, ((RepeatingParser) other).min) &&
         Objects.equals(max, ((RepeatingParser) other).max);
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + "[" + min + ".." + (max == UNBOUNDED ? "*" : max) + "]";
   }
 }
