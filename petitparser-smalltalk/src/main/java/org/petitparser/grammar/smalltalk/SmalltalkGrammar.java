@@ -9,7 +9,7 @@ import org.petitparser.tools.CompositeParser;
 /**
  * Smalltalk grammar definition.
  */
-class SmalltalkGrammar extends CompositeParser {
+public class SmalltalkGrammar extends CompositeParser {
 
   @Override
   protected void initialize() {
