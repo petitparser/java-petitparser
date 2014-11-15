@@ -107,7 +107,7 @@ public class Token {
   @Override
   public String toString() {
     int[] tuple = lineAndColumnOf(buffer, start);
-    return "Token[" + tuple[0] + ":" + tuple[1] + "]:" + value;
+    return "Token[" + tuple[0] + ":" + tuple[1] + "]: " + value;
   }
 
   @Override

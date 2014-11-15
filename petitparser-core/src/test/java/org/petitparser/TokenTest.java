@@ -5,12 +5,13 @@ import org.petitparser.context.Token;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.characters.CharacterParser;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Tests {@link Token}.
@@ -80,9 +81,46 @@ public class TokenTest {
   }
 
   @Test
-  public void testUnique() {
-    Set<Token> uniques = new HashSet<>(result);
+  public void testString() {
+    Object[] expected = {"Token[1:1]: 49", "Token[1:2]: 13", "Token[2:1]: 49", "Token[2:2]: 50",
+        "Token[2:3]: 13", "Token[2:4]: 10", "Token[3:1]: 49", "Token[3:2]: 50", "Token[3:3]: 51",
+        "Token[3:4]: 10", "Token[4:1]: 49", "Token[4:2]: 50", "Token[4:3]: 51", "Token[4:4]: 52"};
+    Object[] actual = result.stream().map(Token::toString).toArray();
+    assertArrayEquals(expected, actual);
+  }
+
+  @Test
+  public void testHashCode() {
+    Set<Integer> uniques = result.stream().map(Token::hashCode).collect(Collectors.toSet());
     assertEquals(result.size(), uniques.size());
+  }
+
+  @Test
+  public void testEquals() {
+    for (int i = 0; i < result.size(); i++) {
+      Token first = result.get(i);
+      for (int j = 0; j < result.size(); j++) {
+        Token second = result.get(j);
+        if (i == j) {
+          assertEquals(first, second);
+        } else {
+          assertNotEquals(first, second);
+        }
+      }
+      assertEquals(first, new Token(first.getBuffer(), first.getStart(), first.getStop(), first
+          .getValue()));
+      assertNotEquals(first, null);
+      assertNotEquals(first, "Some random string");
+      assertNotEquals(first, new Token("", first.getStart(), first.getStop(), first
+          .getValue()));
+      assertNotEquals(first,
+          new Token(first.getBuffer(), first.getStart() + 1, first.getStop(), first
+              .getValue()));
+      assertNotEquals(first,
+          new Token(first.getBuffer(), first.getStart(), first.getStop() + 1, first
+              .getValue()));
+      assertNotEquals(first, new Token(first.getBuffer(), first.getStart(), first.getStop(), null));
+    }
   }
 
 }
