@@ -7,7 +7,7 @@
   <parent>
     <groupId>com.github.petitparser</groupId>
     <artifactId>petitparser</artifactId>
-    <version>2.0.0</version>
+    <version>${petitparser.version}</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
