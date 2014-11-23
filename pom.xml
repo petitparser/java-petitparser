@@ -58,6 +58,13 @@
     <url>http://jenkins.lukas-renggli.ch/job/java-petitparser/</url>
   </ciManagement>
 
+  <distributionManagement>
+    <repository>
+      <id>bintray</id>
+      <url>https://api.bintray.com/maven/renggli/petitparser/petitparser</url>
+    </repository>
+  </distributionManagement>
+
   <modules>
     <module>petitparser-core</module>
     <module>petitparser-json</module>
@@ -136,6 +143,15 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.4.1</version>
+        <configuration>
+          <useReleaseProfile>false</useReleaseProfile>
+          <releaseProfiles>release</releaseProfiles>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+        </configuration>
       </plugin>
     </plugins>
   </build>
