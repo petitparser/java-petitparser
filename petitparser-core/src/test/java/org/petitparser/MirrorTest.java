@@ -104,7 +104,7 @@ public class MirrorTest {
   @Test
   public void testIdentityTransformation() {
     Parser input = CharacterParser.lowerCase().settable();
-    Parser output = Mirror.of(input).map(Function.identity());
+    Parser output = Mirror.of(input).transform(Function.identity());
     assertNotEquals(input, output);
     assertTrue(input.isEqualTo(output));
     assertNotEquals(input.getChildren().get(0), output.getChildren().get(0));
@@ -114,7 +114,8 @@ public class MirrorTest {
   public void testReplaceRootTransformation() {
     Parser source = CharacterParser.lowerCase();
     Parser target = CharacterParser.upperCase();
-    Parser output = Mirror.of(source).map(parser -> source.isEqualTo(parser) ? target : parser);
+    Parser output = Mirror.of(source).transform(
+        parser -> source.isEqualTo(parser) ? target : parser);
     assertNotEquals(source, output);
     assertFalse(source.isEqualTo(output));
     assertEquals(output, target);
@@ -125,7 +126,7 @@ public class MirrorTest {
     Parser source = CharacterParser.lowerCase();
     Parser input = source.settable();
     Parser target = CharacterParser.upperCase();
-    Parser output = Mirror.of(input).map(parser -> source.isEqualTo(parser) ? target : parser);
+    Parser output = Mirror.of(input).transform(parser -> source.isEqualTo(parser) ? target : parser);
     assertNotEquals(input, output);
     assertFalse(input.isEqualTo(output));
     assertEquals(input.getChildren().get(0), source);
@@ -137,7 +138,7 @@ public class MirrorTest {
     Parser source = CharacterParser.lowerCase();
     Parser input = source.seq(source);
     Parser target = CharacterParser.upperCase();
-    Parser output = Mirror.of(input).map(parser -> source.isEqualTo(parser) ? target : parser);
+    Parser output = Mirror.of(input).transform(parser -> source.isEqualTo(parser) ? target : parser);
     assertNotEquals(input, output);
     assertFalse(input.isEqualTo(output));
     assertTrue(input.isEqualTo(source.seq(source)));
@@ -151,7 +152,7 @@ public class MirrorTest {
     Parser input = SettableParser.undefined().settable().settable().settable();
     SettableParser settable = (SettableParser) input.getChildren().get(0).getChildren().get(0);
     settable.setDelegate(input);
-    Parser output = Mirror.of(input).map(Function.identity());
+    Parser output = Mirror.of(input).transform(Function.identity());
     assertNotEquals(input, output);
     assertTrue(input.isEqualTo(output));
     Set<Parser> inputs = Mirror.of(input).stream().collect(Collectors.toSet());
@@ -166,7 +167,8 @@ public class MirrorTest {
     Parser target = SettableParser.undefined().settable().settable().settable();
     SettableParser settable = (SettableParser) target.getChildren().get(0).getChildren().get(0);
     settable.setDelegate(source);
-    Parser output = Mirror.of(source).map(parser -> source.isEqualTo(parser) ? target : parser);
+    Parser output = Mirror.of(source).transform(
+        parser -> source.isEqualTo(parser) ? target : parser);
     assertNotEquals(source, output);
     assertFalse(source.isEqualTo(output));
     assertTrue(output.isEqualTo(target));
