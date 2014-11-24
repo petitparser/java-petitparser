@@ -1,41 +1,22 @@
 package org.petitparser.utils;
 
-import org.petitparser.context.Context;
-import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.DelegateParser;
 import org.petitparser.parser.combinators.SettableParser;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
  * Tools to optimize a parser graph.
  */
-public class Optimizer implements Function<Parser, Parser> {
+public class Optimizer {
 
-  /**
-   * Constructs an optimizer of the provided {@code parser}.
-   */
-  public static Optimizer of(Parser parser) {
-    return new Optimizer(parser);
-  }
-
-  private final Parser parser;
   private final List<Function<Parser, Parser>> transformers = new ArrayList<>();
-
-  public Optimizer(Parser parser) {
-    this.parser = Objects.requireNonNull(parser);
-  }
 
   /**
    * Adds a generic parser transformer.
@@ -76,8 +57,13 @@ public class Optimizer implements Function<Parser, Parser> {
     });
   }
 
-
-
-
-
+  /**
+   * Transforms the provided parsers using the selected optimizations.
+   */
+  public Parser transform(Parser parser) {
+    Function<Parser, Parser> transformer = transformers.stream()
+        .reduce(Function::andThen)
+        .orElse(Function.identity());
+    return Mirror.of(parser).transform(transformer);
+  }
 }
