@@ -15,10 +15,18 @@ import static org.junit.Assert.assertTrue;
 public class OptimizerTest {
 
   @Test
+  public void testNoOptimization() {
+    Parser input = CharacterParser.lowerCase().settable().star();
+    Parser output = new Optimizer()
+        .transform(input);
+    assertTrue(output.isEqualTo(input));
+  }
+
+  @Test
   public void testRemoveBasicDelegates() {
     Parser input = CharacterParser.lowerCase().settable();
     Parser output = new Optimizer()
-        .addDelegateRemoval()
+        .removeDelegates()
         .transform(input);
     assertTrue(output.isEqualTo(CharacterParser.lowerCase()));
   }
@@ -27,7 +35,7 @@ public class OptimizerTest {
   public void testRemoveNestedDelegates() {
     Parser input = CharacterParser.lowerCase().settable().star();
     Parser output = new Optimizer()
-        .addDelegateRemoval()
+        .removeDelegates()
         .transform(input);
     assertTrue(output.isEqualTo(CharacterParser.lowerCase().star()));
   }
@@ -36,7 +44,7 @@ public class OptimizerTest {
   public void testRemoveDoubleDelegates() {
     Parser input = CharacterParser.lowerCase().settable().settable();
     Parser output = new Optimizer()
-        .addDelegateRemoval()
+        .removeDelegates()
         .transform(input);
     assertTrue(output.isEqualTo(CharacterParser.lowerCase()));
   }
@@ -45,7 +53,7 @@ public class OptimizerTest {
   public void testRemoveDuplicates() {
     Parser input = CharacterParser.lowerCase().seq(CharacterParser.lowerCase());
     Parser output = new Optimizer()
-        .addDuplicateRemoval()
+        .removeDuplicates()
         .transform(input);
     assertTrue(input.isEqualTo(output));
     assertNotEquals(input.getChildren().get(0), input.getChildren().get(1));

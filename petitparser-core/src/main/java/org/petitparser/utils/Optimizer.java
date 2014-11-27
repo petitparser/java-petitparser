@@ -29,7 +29,7 @@ public class Optimizer {
   /**
    * Adds a parser transformer that removes unnecessary delegates.
    */
-  public Optimizer addDelegateRemoval() {
+  public Optimizer removeDelegates() {
     return add(parser -> {
       while (DelegateParser.class.equals(parser.getClass()) ||
           SettableParser.class.equals(parser.getClass())) {
@@ -42,7 +42,7 @@ public class Optimizer {
   /**
    * Adds a parser transformer that collapses unnecessary copies of parsers.
    */
-  public Optimizer addDuplicateRemoval() {
+  public Optimizer removeDuplicates() {
     Set<Parser> uniques = new HashSet<>();
     return add(parser -> {
       Optional<Parser> target = uniques.stream()
