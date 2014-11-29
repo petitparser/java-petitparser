@@ -31,7 +31,7 @@ public class Mirror implements Iterable<Parser> {
 
   private final Parser parser;
 
-  public Mirror(Parser parser) {
+  private Mirror(Parser parser) {
     this.parser = Objects.requireNonNull(parser);
   }
 
@@ -50,10 +50,10 @@ public class Mirror implements Iterable<Parser> {
 
   private static class ParserIterator implements Iterator<Parser> {
 
-    final List<Parser> todo = new ArrayList<>();
-    final Set<Parser> seen = new HashSet<>();
+    private final List<Parser> todo = new ArrayList<>();
+    private final Set<Parser> seen = new HashSet<>();
 
-    ParserIterator(Parser root) {
+    private ParserIterator(Parser root) {
       todo.add(root);
       seen.add(root);
     }
