@@ -29,6 +29,6 @@ public class Failure extends Result {
 
   @Override
   public String toString() {
-    return super.toString() + ": " + getMessage();
+    return super.toString() + ": " + message;
   }
 }
