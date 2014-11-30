@@ -16,7 +16,7 @@ public class DelegateParser extends Parser {
   protected Parser delegate;
 
   public DelegateParser(Parser delegate) {
-    this.delegate = Objects.requireNonNull(delegate);
+    this.delegate = Objects.requireNonNull(delegate, "Undefined delegate parser");
   }
 
   @Override

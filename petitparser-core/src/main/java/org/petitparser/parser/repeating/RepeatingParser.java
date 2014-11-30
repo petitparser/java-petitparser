@@ -19,8 +19,12 @@ public abstract class RepeatingParser extends DelegateParser {
     super(delegate);
     this.min = min;
     this.max = max;
-    assert 0 <= min;
-    assert max == UNBOUNDED || min <= max;
+    if (min < 0) {
+      throw new IllegalArgumentException("Negative min repetitions");
+    }
+    if (max != UNBOUNDED && min > max) {
+      throw new IllegalArgumentException("Invalid max repetitions");
+    }
   }
 
   @Override

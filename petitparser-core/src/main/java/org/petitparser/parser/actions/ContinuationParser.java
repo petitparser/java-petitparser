@@ -23,7 +23,7 @@ public class ContinuationParser extends DelegateParser {
 
   public ContinuationParser(Parser delegate, ContinuationHandler handler) {
     super(delegate);
-    this.handler = Objects.requireNonNull(handler);
+    this.handler = Objects.requireNonNull(handler, "Undefined handler");
   }
 
   @Override

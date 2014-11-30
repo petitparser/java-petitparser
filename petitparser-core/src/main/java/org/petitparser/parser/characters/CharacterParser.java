@@ -188,8 +188,8 @@ public class CharacterParser extends Parser {
   private final String message;
 
   private CharacterParser(CharacterPredicate matcher, String message) {
-    this.matcher = matcher;
-    this.message = message;
+    this.matcher = Objects.requireNonNull(matcher, "Undefined matcher");
+    this.message = Objects.requireNonNull(message, "Undefined message");
   }
 
   @Override

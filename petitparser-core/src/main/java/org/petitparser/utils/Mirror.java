@@ -32,7 +32,7 @@ public class Mirror implements Iterable<Parser> {
   private final Parser parser;
 
   private Mirror(Parser parser) {
-    this.parser = Objects.requireNonNull(parser);
+    this.parser = Objects.requireNonNull(parser, "Undefined parser");
   }
 
   @Override

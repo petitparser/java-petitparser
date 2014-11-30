@@ -17,7 +17,7 @@ public abstract class LimitedRepeatingParser extends RepeatingParser {
 
   public LimitedRepeatingParser(Parser delegate, Parser limit, int min, int max) {
     super(delegate, min, max);
-    this.limit = Objects.requireNonNull(limit);
+    this.limit = Objects.requireNonNull(limit, "Undefined limit parser");
   }
 
   @Override

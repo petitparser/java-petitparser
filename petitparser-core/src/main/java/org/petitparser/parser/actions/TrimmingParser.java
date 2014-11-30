@@ -19,8 +19,8 @@ public class TrimmingParser extends DelegateParser {
 
   public TrimmingParser(Parser delegate, Parser left, Parser right) {
     super(delegate);
-    this.left = Objects.requireNonNull(left);
-    this.right = Objects.requireNonNull(right);
+    this.left = Objects.requireNonNull(left, "Undefined left trimming parser");
+    this.right = Objects.requireNonNull(right, "Undefined right trimming parser");
   }
 
   @Override

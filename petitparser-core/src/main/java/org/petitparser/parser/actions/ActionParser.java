@@ -21,7 +21,7 @@ public class ActionParser<T, R> extends DelegateParser {
 
   public ActionParser(Parser delegate, Function<T, R> function) {
     super(delegate);
-    this.function = Objects.requireNonNull(function);
+    this.function = Objects.requireNonNull(function, "Undefined function");
   }
 
   @Override

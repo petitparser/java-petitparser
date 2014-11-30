@@ -34,8 +34,8 @@ public class StringParser extends Parser {
 
   private StringParser(int size, Predicate<String> predicate, String message) {
     this.size = size;
-    this.predicate = Objects.requireNonNull(predicate);
-    this.message = Objects.requireNonNull(message);
+    this.predicate = Objects.requireNonNull(predicate, "Undefined predicate");
+    this.message = Objects.requireNonNull(message, "Undefined message");
   }
 
   @Override

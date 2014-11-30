@@ -18,7 +18,7 @@ public class FailureParser extends Parser {
   private final String message;
 
   private FailureParser(String message) {
-    this.message = Objects.requireNonNull(message);
+    this.message = Objects.requireNonNull(message, "Undefined message");
   }
 
   @Override

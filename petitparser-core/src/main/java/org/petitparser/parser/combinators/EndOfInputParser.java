@@ -15,7 +15,7 @@ public class EndOfInputParser extends DelegateParser {
 
   public EndOfInputParser(Parser delegate, String message) {
     super(delegate);
-    this.message = Objects.requireNonNull(message);
+    this.message = Objects.requireNonNull(message, "Undefined message");
   }
 
   @Override

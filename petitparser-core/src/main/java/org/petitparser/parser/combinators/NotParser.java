@@ -16,7 +16,7 @@ public class NotParser extends DelegateParser {
 
   public NotParser(Parser delegate, String message) {
     super(delegate);
-    this.message = Objects.requireNonNull(message);
+    this.message = Objects.requireNonNull(message, "Undefined message");
   }
 
   @Override

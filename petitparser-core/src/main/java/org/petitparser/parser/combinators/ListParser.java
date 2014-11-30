@@ -14,7 +14,7 @@ public abstract class ListParser extends Parser {
   protected final Parser[] parsers;
 
   public ListParser(Parser... parsers) {
-    this.parsers = Objects.requireNonNull(parsers);
+    this.parsers = Objects.requireNonNull(parsers, "Undefined parser list");
   }
 
   @Override

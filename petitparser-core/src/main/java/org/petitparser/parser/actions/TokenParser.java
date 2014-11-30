@@ -19,9 +19,9 @@ public class TokenParser extends DelegateParser {
   public Result parseOn(Context context) {
     Result result = delegate.parseOn(context);
     if (result.isSuccess()) {
-      return result.success(
-          new Token(context.getBuffer(), context.getPosition(), result.getPosition(),
-              result.get()));
+      Token token = new Token(context.getBuffer(), context.getPosition(), result.getPosition(),
+          result.get());
+      return result.success(token);
     } else {
       return result;
     }
