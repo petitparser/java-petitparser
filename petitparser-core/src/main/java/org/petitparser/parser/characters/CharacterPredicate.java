@@ -63,7 +63,17 @@ public interface CharacterPredicate {
    * Negates this character predicate.
    */
   default CharacterPredicate not() {
-    return value -> !test(value);
+    return new CharacterPredicate() {
+      @Override
+      public boolean test(char value) {
+        return !CharacterPredicate.this.test(value);
+      }
+
+      @Override
+      public CharacterPredicate not() {
+        return CharacterPredicate.this;
+      }
+    };
   }
 
   /**
