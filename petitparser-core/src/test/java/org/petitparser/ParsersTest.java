@@ -7,6 +7,7 @@ import org.petitparser.context.Token;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.characters.CharacterParser;
 import org.petitparser.parser.combinators.SettableParser;
+import org.petitparser.parser.primitive.StringParser;
 import org.petitparser.parser.repeating.RepeatingParser;
 
 import java.util.ArrayList;
@@ -134,13 +135,32 @@ public class ParsersTest {
   }
 
   @Test
-  public void testNegate() {
+  public void testNeg1() {
+    Parser parser = CharacterParser.digit().neg();
+    assertFailure(parser, "1", 0);
+    assertFailure(parser, "9", 0);
+    assertSuccess(parser, "a", 'a');
+    assertSuccess(parser, " ", ' ');
+    assertFailure(parser, "", 0);
+  }
+
+  @Test
+  public void testNeg2() {
     Parser parser = CharacterParser.digit().neg("no digit expected");
     assertFailure(parser, "1", 0, "no digit expected");
     assertFailure(parser, "9", 0, "no digit expected");
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, " ", ' ');
     assertFailure(parser, "", 0, "no digit expected");
+  }
+
+  @Test
+  public void testNeg3() {
+    Parser parser = StringParser.of("foo").neg("no foo expected");
+    assertFailure(parser, "foo", 0, "no foo expected");
+    assertFailure(parser, "foobar", 0, "no foo expected");
+    assertSuccess(parser, "f", 'f');
+    assertSuccess(parser, " ", ' ');
   }
 
   @Test
@@ -225,6 +245,16 @@ public class ParsersTest {
     assertSuccess(parser, "aa", Arrays.asList('a', 'a'));
     assertSuccess(parser, "aaa", Arrays.asList('a', 'a', 'a'));
     assertSuccess(parser, "aaaa", Arrays.asList('a', 'a', 'a'), 3);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testRepeatMinError1() {
+    of('a').repeat(-2, 5);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testRepeatMinError2() {
+    of('a').repeat(3, 2);
   }
 
   @Test

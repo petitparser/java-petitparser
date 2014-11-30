@@ -28,6 +28,14 @@ import static org.petitparser.parser.combinators.SettableParser.undefined;
 public class MirrorTest {
 
   @Test
+  public void testToString() {
+    Parser parser = lowerCase();
+    Mirror mirror = Mirror.of(parser);
+    assertEquals("CharacterParser[lowercase letter expected]", parser.toString());
+    assertEquals("Mirror of CharacterParser[lowercase letter expected]", mirror.toString());
+  }
+
+  @Test
   public void testSingleElementIteration() {
     Parser parser = lowerCase();
     Mirror mirror = Mirror.of(parser);

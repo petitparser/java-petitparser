@@ -13,10 +13,6 @@ import java.util.function.Consumer;
  */
 public class Profiler {
 
-  private Profiler() {
-    // utility class
-  }
-
   /**
    * Returns a parser that calls the provided consumer with a {@link Profile} of every parser.
    */

@@ -20,7 +20,7 @@ public abstract class RepeatingParser extends DelegateParser {
     this.min = min;
     this.max = max;
     if (min < 0) {
-      throw new IllegalArgumentException("Negative min repetitions");
+      throw new IllegalArgumentException("Invalid min repetitions");
     }
     if (max != UNBOUNDED && min > max) {
       throw new IllegalArgumentException("Invalid max repetitions");

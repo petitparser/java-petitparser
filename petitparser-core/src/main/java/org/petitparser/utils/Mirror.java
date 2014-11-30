@@ -37,7 +37,7 @@ public class Mirror implements Iterable<Parser> {
 
   @Override
   public String toString() {
-    return super.toString() + " of " + parser.toString();
+    return getClass().getSimpleName() + " of " + parser.toString();
   }
 
   /**

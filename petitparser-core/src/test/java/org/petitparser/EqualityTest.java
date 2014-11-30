@@ -12,10 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.petitparser.parser.characters.CharacterParser.of;
 
 /**
  * Tests {@link Parser#copy}, {@link Parser#equals(Object)}, and {@link Parser#replace(Parser,
@@ -53,6 +55,22 @@ public class EqualityTest {
     for (int i = 0; i < expected.size(); i++) {
       assertSame(expected.get(i), actual.get(i));
     }
+  }
+
+  @Test
+  public void differentChildren() {
+    Parser first = of('a').or(of('b')).or(of('c'));
+    Parser second = of('a').or(of('b')).or(of('d'));
+    assertFalse(first.isEqualTo(second));
+    assertFalse(second.isEqualTo(first));
+  }
+
+  @Test
+  public void differentSize() {
+    Parser first = of('a').or(of('b')).or(of('c'));
+    Parser second = of('a').or(of('b'));
+    assertFalse(first.isEqualTo(second));
+    assertFalse(second.isEqualTo(first));
   }
 
   @Test
