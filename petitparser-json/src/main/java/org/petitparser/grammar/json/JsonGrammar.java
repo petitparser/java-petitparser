@@ -1,7 +1,6 @@
 package org.petitparser.grammar.json;
 
 import org.petitparser.parser.characters.CharacterParser;
-import org.petitparser.parser.primitive.StringParser;
 import org.petitparser.tools.CompositeParser;
 
 import java.util.Collection;
@@ -9,6 +8,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
+import static org.petitparser.parser.characters.CharacterParser.anyOf;
+import static org.petitparser.parser.characters.CharacterParser.digit;
+import static org.petitparser.parser.characters.CharacterParser.of;
+import static org.petitparser.parser.primitive.StringParser.of;
 
 /**
  * JSON grammar definition.
@@ -43,24 +47,18 @@ public class JsonGrammar extends CompositeParser {
   protected void initialize() {
     def("start", ref("value").end());
 
-    def("array",
-      CharacterParser.is('[').trim()
+    def("array", of('[').trim()
         .seq(ref("elements").optional())
-        .seq(CharacterParser.is(']').trim()));
-    def("elements",
-      ref("value").separatedBy(CharacterParser.is(',').trim()));
-    def("members",
-      ref("pair").separatedBy(CharacterParser.is(',').trim()));
-    def("object",
-      CharacterParser.is('{').trim()
+        .seq(of(']').trim()));
+    def("elements", ref("value").separatedBy(of(',').trim()));
+    def("members", ref("pair").separatedBy(of(',').trim()));
+    def("object", of('{').trim()
         .seq(ref("members").optional())
-        .seq(CharacterParser.is('}').trim()));
-    def("pair",
-      ref("stringToken")
-        .seq(CharacterParser.is(':').trim())
+        .seq(of('}').trim()));
+    def("pair", ref("stringToken")
+        .seq(of(':').trim())
         .seq(ref("value")));
-    def("value",
-      ref("stringToken")
+    def("value", ref("stringToken")
         .or(ref("numberToken"))
         .or(ref("trueToken"))
         .or(ref("falseToken"))
@@ -68,33 +66,28 @@ public class JsonGrammar extends CompositeParser {
         .or(ref("object"))
         .or(ref("array")));
 
-    def("trueToken", StringParser.of("true").flatten().trim());
-    def("falseToken", StringParser.of("false").flatten().trim());
-    def("nullToken", StringParser.of("null").flatten().trim());
+    def("trueToken", of("true").flatten().trim());
+    def("falseToken", of("false").flatten().trim());
+    def("nullToken", of("null").flatten().trim());
     def("stringToken", ref("stringPrimitive").flatten().trim());
     def("numberToken", ref("numberPrimitive").flatten().trim());
 
-    def("characterPrimitive",
-      ref("characterEscape")
+    def("characterPrimitive", ref("characterEscape")
         .or(ref("characterOctal"))
         .or(ref("characterNormal")));
-    def("characterEscape",
-      CharacterParser.is('\\').seq(
-          CharacterParser.anyOf(listToString(ESCAPE_TABLE.keySet()))));
-    def("characterOctal",
-        StringParser.of("\\u").seq(CharacterParser.pattern("0-9A-Fa-f").times(4).flatten()));
-    def("characterNormal",
-        CharacterParser.anyOf("\"\\").neg());
-    def("numberPrimitive",
-      CharacterParser.is('-').optional()
-        .seq(CharacterParser.is('0').or(CharacterParser.digit().plus()))
-        .seq(CharacterParser.is('.').seq(CharacterParser.digit().plus()).optional())
-        .seq(CharacterParser.anyOf("eE").seq(CharacterParser.anyOf("-+").optional())
-            .seq(CharacterParser.digit().plus()).optional()));
-    def("stringPrimitive",
-      CharacterParser.is('"')
+    def("characterEscape", of('\\')
+        .seq(anyOf(listToString(ESCAPE_TABLE.keySet()))));
+    def("characterOctal", of("\\u")
+        .seq(CharacterParser.pattern("0-9A-Fa-f").times(4).flatten()));
+    def("characterNormal", anyOf("\"\\").neg());
+    def("numberPrimitive", of('-').optional()
+        .seq(of('0').or(digit().plus()))
+        .seq(of('.').seq(digit().plus()).optional())
+        .seq(anyOf("eE").seq(anyOf("-+").optional())
+            .seq(digit().plus()).optional()));
+    def("stringPrimitive", of('"')
         .seq(ref("characterPrimitive").star())
-        .seq(CharacterParser.is('"')));
+        .seq(of('"')));
   }
 
 }

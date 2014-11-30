@@ -67,7 +67,7 @@ public class EqualityTest {
 
   @Test
   public void is() {
-    verify(CharacterParser.is('a'));
+    verify(CharacterParser.of('a'));
   }
 
   @Test
@@ -202,6 +202,6 @@ public class EqualityTest {
 
   @Test
   public void trim() {
-    verify(CharacterParser.digit().trim(CharacterParser.is('a'), CharacterParser.is('b')));
+    verify(CharacterParser.digit().trim(CharacterParser.of('a'), CharacterParser.of('b')));
   }
 }

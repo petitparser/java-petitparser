@@ -12,6 +12,25 @@ import java.util.Objects;
  */
 public class CharacterParser extends Parser {
 
+
+  /**
+   * Returns a parser that accepts a specific {@link CharacterPredicate}.
+   */
+  public static Parser of(CharacterPredicate predicate, String message) {
+    return new CharacterParser(predicate, message);
+  }
+
+  /**
+   * Returns a parser that accepts a specific {@code character}.
+   */
+  public static Parser of(char character) {
+    return of(character, "'" + character + "' expected");
+  }
+
+  public static Parser of(char character, String message) {
+    return of(CharacterPredicate.of(character), message);
+  }
+
   /**
    * Returns a parser that accepts any character.
    */
@@ -20,7 +39,7 @@ public class CharacterParser extends Parser {
   }
 
   public static Parser any(String message) {
-    return new CharacterParser(CharacterPredicate.any(), message);
+    return of(CharacterPredicate.any(), message);
   }
 
   /**
@@ -31,7 +50,7 @@ public class CharacterParser extends Parser {
   }
 
   public static Parser anyOf(String chars, String message) {
-    return new CharacterParser(CharacterPredicate.anyOf(chars), message);
+    return of(CharacterPredicate.anyOf(chars), message);
   }
 
   /**
@@ -42,7 +61,7 @@ public class CharacterParser extends Parser {
   }
 
   public static Parser none(String message) {
-    return new CharacterParser(CharacterPredicate.none(), message);
+    return of(CharacterPredicate.none(), message);
   }
 
   /**
@@ -53,18 +72,7 @@ public class CharacterParser extends Parser {
   }
 
   public static Parser noneOf(String chars, String message) {
-    return new CharacterParser(CharacterPredicate.noneOf(chars), message);
-  }
-
-  /**
-   * Returns a parser that accepts a specific {@code character}.
-   */
-  public static Parser is(char character) {
-    return is(character, "'" + character + "' expected");
-  }
-
-  public static Parser is(char character, String message) {
-    return new CharacterParser(CharacterPredicate.is(character), message);
+    return of(CharacterPredicate.noneOf(chars), message);
   }
 
   /**
@@ -86,7 +94,7 @@ public class CharacterParser extends Parser {
   }
 
   public static Parser letter(String message) {
-    return new CharacterParser(Character::isLetter, message);
+    return of(Character::isLetter, message);
   }
 
   /**
@@ -97,7 +105,7 @@ public class CharacterParser extends Parser {
   }
 
   public static Parser lowerCase(String message) {
-    return new CharacterParser(Character::isLowerCase, message);
+    return of(Character::isLowerCase, message);
   }
 
   /**
@@ -111,11 +119,11 @@ public class CharacterParser extends Parser {
   }
 
   public static Parser pattern(String pattern, String message) {
-    return new CharacterParser(PATTERN.parse(pattern).get(), message);
+    return of((CharacterPredicate) PATTERN.parse(pattern).get(), message);
   }
 
-  private static final Parser PATTERN_SIMPLE = any().map(CharacterPredicate::is);
-  private static final Parser PATTERN_RANGE = any().seq(is('-')).seq(any())
+  private static final Parser PATTERN_SIMPLE = any().map(CharacterPredicate::of);
+  private static final Parser PATTERN_RANGE = any().seq(of('-')).seq(any())
       .map((List<Character> characters) -> {
         return CharacterPredicate.range(characters.get(0), characters.get(2));
       });
@@ -127,7 +135,7 @@ public class CharacterParser extends Parser {
         }
         return result;
       });
-  private static final Parser PATTERN = is('^').optional().seq(PATTERN_POSITIVE)
+  private static final Parser PATTERN = of('^').optional().seq(PATTERN_POSITIVE)
       .map((List<CharacterPredicate> matchers) -> {
         return matchers.get(0) == null ? matchers.get(1) : matchers.get(1).not();
       }).end();
@@ -140,7 +148,7 @@ public class CharacterParser extends Parser {
   }
 
   public static Parser range(char start, char stop, String message) {
-    return new CharacterParser(CharacterPredicate.range(start, stop), message);
+    return of(CharacterPredicate.range(start, stop), message);
   }
 
   /**
@@ -151,7 +159,7 @@ public class CharacterParser extends Parser {
   }
 
   public static Parser upperCase(String message) {
-    return new CharacterParser(Character::isUpperCase, message);
+    return of(Character::isUpperCase, message);
   }
 
   /**
@@ -162,7 +170,7 @@ public class CharacterParser extends Parser {
   }
 
   public static Parser whitespace(String message) {
-    return new CharacterParser(Character::isWhitespace, message);
+    return of(Character::isWhitespace, message);
   }
 
   /**
@@ -173,13 +181,13 @@ public class CharacterParser extends Parser {
   }
 
   public static Parser word(String message) {
-    return new CharacterParser(Character::isLetterOrDigit, message);
+    return of(Character::isLetterOrDigit, message);
   }
 
   private final CharacterPredicate matcher;
   private final String message;
 
-  public CharacterParser(CharacterPredicate matcher, String message) {
+  private CharacterParser(CharacterPredicate matcher, String message) {
     this.matcher = matcher;
     this.message = message;
   }
@@ -187,10 +195,11 @@ public class CharacterParser extends Parser {
   @Override
   public Result parseOn(Context context) {
     String buffer = context.getBuffer();
-    if (context.getPosition() < buffer.length()) {
-      char result = buffer.charAt(context.getPosition());
+    int position = context.getPosition();
+    if (position < buffer.length()) {
+      char result = buffer.charAt(position);
       if (matcher.test(result)) {
-        return context.success(result, context.getPosition() + 1);
+        return context.success(result, position + 1);
       }
     }
     return context.failure(message);
@@ -198,7 +207,7 @@ public class CharacterParser extends Parser {
 
   @Override
   public Parser neg(String message) {
-    return new CharacterParser(matcher.not(), message);
+    return of(matcher.not(), message);
   }
 
   @Override
@@ -210,7 +219,7 @@ public class CharacterParser extends Parser {
 
   @Override
   public Parser copy() {
-    return new CharacterParser(matcher, message);
+    return of(matcher, message);
   }
 
   @Override

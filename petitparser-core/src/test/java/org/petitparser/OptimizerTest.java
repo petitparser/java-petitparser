@@ -2,12 +2,12 @@ package org.petitparser;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.characters.CharacterParser;
 import org.petitparser.utils.Optimizer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+import static org.petitparser.parser.characters.CharacterParser.lowerCase;
 
 /**
  * Tests {@link Optimizer}.
@@ -16,7 +16,7 @@ public class OptimizerTest {
 
   @Test
   public void testNoOptimization() {
-    Parser input = CharacterParser.lowerCase().settable().star();
+    Parser input = lowerCase().settable().star();
     Parser output = new Optimizer()
         .transform(input);
     assertTrue(output.isEqualTo(input));
@@ -24,34 +24,34 @@ public class OptimizerTest {
 
   @Test
   public void testRemoveBasicDelegates() {
-    Parser input = CharacterParser.lowerCase().settable();
+    Parser input = lowerCase().settable();
     Parser output = new Optimizer()
         .removeDelegates()
         .transform(input);
-    assertTrue(output.isEqualTo(CharacterParser.lowerCase()));
+    assertTrue(output.isEqualTo(lowerCase()));
   }
 
   @Test
   public void testRemoveNestedDelegates() {
-    Parser input = CharacterParser.lowerCase().settable().star();
+    Parser input = lowerCase().settable().star();
     Parser output = new Optimizer()
         .removeDelegates()
         .transform(input);
-    assertTrue(output.isEqualTo(CharacterParser.lowerCase().star()));
+    assertTrue(output.isEqualTo(lowerCase().star()));
   }
 
   @Test
   public void testRemoveDoubleDelegates() {
-    Parser input = CharacterParser.lowerCase().settable().settable();
+    Parser input = lowerCase().settable().settable();
     Parser output = new Optimizer()
         .removeDelegates()
         .transform(input);
-    assertTrue(output.isEqualTo(CharacterParser.lowerCase()));
+    assertTrue(output.isEqualTo(lowerCase()));
   }
 
   @Test
   public void testRemoveDuplicates() {
-    Parser input = CharacterParser.lowerCase().seq(CharacterParser.lowerCase());
+    Parser input = lowerCase().seq(lowerCase());
     Parser output = new Optimizer()
         .removeDuplicates()
         .transform(input);

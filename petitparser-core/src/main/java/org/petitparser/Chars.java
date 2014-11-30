@@ -34,12 +34,12 @@ public class Chars {
 
   @Deprecated
   public static Parser character(char character) {
-    return CharacterParser.is(character);
+    return CharacterParser.of(character);
   }
 
   @Deprecated
   public static Parser character(char character, String message) {
-    return CharacterParser.is(character, message);
+    return CharacterParser.of(character, message);
   }
 
   @Deprecated

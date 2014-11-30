@@ -3,7 +3,6 @@ package org.petitparser;
 import org.junit.Test;
 import org.petitparser.context.Token;
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.characters.CharacterParser;
 
 import java.util.List;
 import java.util.Set;
@@ -12,14 +11,14 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.petitparser.parser.characters.CharacterParser.any;
 
 /**
  * Tests {@link Token}.
  */
 public class TokenTest {
 
-  private final Parser parser = CharacterParser.any()
-      .map(Object::hashCode).token().star();
+  private final Parser parser = any().map(Object::hashCode).token().star();
   private final String buffer = "1\r12\r\n123\n1234";
   private final List<Token> result = parser.parse(buffer).get();
 

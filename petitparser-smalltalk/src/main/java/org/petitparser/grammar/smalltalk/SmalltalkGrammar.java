@@ -1,10 +1,16 @@
 package org.petitparser.grammar.smalltalk;
 
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.characters.CharacterParser;
 import org.petitparser.parser.primitive.EpsilonParser;
-import org.petitparser.parser.primitive.StringParser;
 import org.petitparser.tools.CompositeParser;
+
+import static org.petitparser.parser.characters.CharacterParser.any;
+import static org.petitparser.parser.characters.CharacterParser.digit;
+import static org.petitparser.parser.characters.CharacterParser.of;
+import static org.petitparser.parser.characters.CharacterParser.pattern;
+import static org.petitparser.parser.characters.CharacterParser.whitespace;
+import static org.petitparser.parser.characters.CharacterParser.word;
+import static org.petitparser.parser.primitive.StringParser.of;
 
 /**
  * Smalltalk grammar definition.
@@ -21,17 +27,17 @@ public class SmalltalkGrammar extends CompositeParser {
   private void other() {
     // the original implementation uses a handwritten parser to
     // efficiently consume whitespace and comments
-    def("whitespace", CharacterParser.whitespace()
+    def("whitespace", whitespace()
         .or(ref("comment")));
-    def("comment", CharacterParser.is('"')
-        .seq(CharacterParser.is('"').neg().star())
-        .seq(CharacterParser.is('"')));
+    def("comment", of('"')
+        .seq(any().starLazy(of('"')))
+        .seq(of('"')));
   }
 
   private void number() {
     // the original implementation uses the hand written number
     // parser of the system, this is the spec of the ANSI standard
-    def("number", CharacterParser.is('-').optional()
+    def("number", of('-').optional()
         .seq(ref("positiveNumber")));
     def("positiveNumber", ref("scaledDecimal")
         .or(ref("float"))
@@ -40,26 +46,26 @@ public class SmalltalkGrammar extends CompositeParser {
     def("integer", ref("radixInteger")
         .or(ref("decimalInteger")));
     def("decimalInteger", ref("digits"));
-    def("digits", CharacterParser.digit().plus());
+    def("digits", digit().plus());
     def("radixInteger", ref("radixSpecifier")
-        .seq(CharacterParser.is('r'))
+        .seq(of('r'))
         .seq(ref("radixDigits")));
     def("radixSpecifier", ref("digits"));
-    def("radixDigits", CharacterParser.pattern("0-9A-Z").plus());
+    def("radixDigits", pattern("0-9A-Z").plus());
 
     def("float", ref("mantissa")
         .seq(ref("exponentLetter")
             .seq(ref("exponent"))
             .optional()));
     def("mantissa", ref("digits")
-        .seq(CharacterParser.is('.'))
+        .seq(of('.'))
         .seq(ref("digits")));
-    def("exponent", CharacterParser.is('-')
+    def("exponent", of('-')
         .seq(ref("decimalInteger")));
-    def("exponentLetter", CharacterParser.pattern("edq"));
+    def("exponentLetter", pattern("edq"));
 
     def("scaledDecimal", ref("scaledMantissa")
-        .seq(CharacterParser.is('s'))
+        .seq(of('s'))
         .seq(ref("fractionalDigits").optional()));
     def("scaledMantissa", ref("decimalInteger")
         .or(ref("mantissa")));
@@ -71,9 +77,9 @@ public class SmalltalkGrammar extends CompositeParser {
     if (input instanceof Parser) {
       parser = (Parser) input;
     } else if (input instanceof Character) {
-      parser = CharacterParser.is((Character) input);
+      parser = of((Character) input);
     } else if (input instanceof String) {
-      parser = StringParser.of((String) input);
+      parser = of((String) input);
     } else {
       throw new IllegalStateException("Object not parsable: " + input);
     }
@@ -98,7 +104,7 @@ public class SmalltalkGrammar extends CompositeParser {
     def("assignment", ref("variable")
         .seq(ref("assignmentToken")));
     def("assignmentToken", token(":="));
-    def("binary", CharacterParser.pattern("!%&*+,-/<=>?@\\|~").plus());
+    def("binary", pattern("!%&*+,-/<=>?@\\|~").plus());
     def("binaryExpression", ref("unaryExpression")
         .seq(ref("binaryMessage").star()));
     def("binaryMessage", ref("binaryToken")
@@ -130,19 +136,19 @@ public class SmalltalkGrammar extends CompositeParser {
         .seq(ref("cascadeMessage").star()));
     def("cascadeMessage", token(";")
         .seq(ref("message")));
-    def("char", CharacterParser.is('$').seq(CharacterParser.any()));
+    def("char", of('$').seq(any()));
     def("charLiteral", ref("charToken"));
     def("charToken", token(ref("char")));
     def("expression", ref("assignment").star()
         .seq(ref("cascadeExpression")));
     def("falseLiteral", ref("falseToken"));
     def("falseToken", token("false")
-        .seq(CharacterParser.word().not()));
-    def("identifier", CharacterParser.pattern("a-zA-Z_")
-        .seq(CharacterParser.pattern("a-zA-Z0-9_").star()));
+        .seq(word().not()));
+    def("identifier", pattern("a-zA-Z_")
+        .seq(pattern("a-zA-Z0-9_").star()));
     def("identifierToken", token(ref("identifier")));
     def("keyword", ref("identifier")
-        .seq(CharacterParser.is(':')));
+        .seq(of(':')));
     def("keywordExpression", ref("binaryExpression")
         .seq(ref("keywordMessage").optional()));
     def("keywordMessage", ref("keywordToken")
@@ -180,13 +186,13 @@ public class SmalltalkGrammar extends CompositeParser {
     def("multiword", ref("keyword").plus());
     def("nilLiteral", ref("nilToken"));
     def("nilToken", token("nil")
-        .seq(CharacterParser.word().not()));
+        .seq(word().not()));
     def("numberLiteral", ref("numberToken"));
     def("numberToken", token(ref("number")));
     def("parens", token("(")
         .seq(ref("expression"))
         .seq(token(")")));
-    def("period", CharacterParser.is('.'));
+    def("period", of('.'));
     def("periodToken", token(ref("period")));
     def("pragma", token("<")
         .seq(ref("pragmaMessage"))
@@ -212,9 +218,9 @@ public class SmalltalkGrammar extends CompositeParser {
             .or(ref("periodToken").star()))
             .or(ref("return").seq(ref("periodToken").star()))
             .or(ref("periodToken").star()));
-    def("string", CharacterParser.is('\'')
-        .seq(StringParser.of("''").or(CharacterParser.pattern("^'")).star())
-        .seq(CharacterParser.is('\'')));
+    def("string", of('\'')
+        .seq(of("''").or(pattern("^'")).star())
+        .seq(of('\'')));
     def("stringLiteral", ref("stringToken"));
     def("stringToken", token(ref("string")));
     def("symbol", ref("unary")
@@ -230,9 +236,9 @@ public class SmalltalkGrammar extends CompositeParser {
         .optional());
     def("trueLiteral", ref("trueToken"));
     def("trueToken", token("true")
-        .seq(CharacterParser.word().not()));
+        .seq(word().not()));
     def("unary", ref("identifier")
-        .seq(CharacterParser.is(':').not()));
+        .seq(of(':').not()));
     def("unaryExpression", ref("primary")
         .seq(ref("unaryMessage").star()));
     def("unaryMessage", ref("unaryToken"));

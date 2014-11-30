@@ -9,7 +9,7 @@ import static org.petitparser.Assertions.assertSuccess;
 import static org.petitparser.parser.characters.CharacterParser.any;
 import static org.petitparser.parser.characters.CharacterParser.anyOf;
 import static org.petitparser.parser.characters.CharacterParser.digit;
-import static org.petitparser.parser.characters.CharacterParser.is;
+import static org.petitparser.parser.characters.CharacterParser.of;
 import static org.petitparser.parser.characters.CharacterParser.letter;
 import static org.petitparser.parser.characters.CharacterParser.lowerCase;
 import static org.petitparser.parser.characters.CharacterParser.none;
@@ -119,7 +119,7 @@ public class CharacterTest {
 
   @Test
   public void testIs() {
-    Parser parser = is('a');
+    Parser parser = of('a');
     assertSuccess(parser, "a", 'a');
     assertFailure(parser, "b", "'a' expected");
     assertFailure(parser, "", "'a' expected");
@@ -127,7 +127,7 @@ public class CharacterTest {
 
   @Test
   public void testIsWithMessage() {
-    Parser parser = is('a', "wrong");
+    Parser parser = of('a', "wrong");
     assertSuccess(parser, "a", 'a');
     assertFailure(parser, "b", "wrong");
     assertFailure(parser, "", "wrong");

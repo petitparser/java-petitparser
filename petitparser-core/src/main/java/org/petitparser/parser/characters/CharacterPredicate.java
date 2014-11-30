@@ -43,7 +43,7 @@ public interface CharacterPredicate {
   /**
    * Returns a character matcher that matches the given {@code character}.
    */
-  static CharacterPredicate is(char character) {
+  static CharacterPredicate of(char character) {
     return value -> value == character;
   }
 

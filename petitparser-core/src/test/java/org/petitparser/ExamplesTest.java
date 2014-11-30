@@ -2,36 +2,43 @@ package org.petitparser;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.characters.CharacterParser;
-import org.petitparser.parser.primitive.StringParser;
-import org.petitparser.utils.Functions;
 
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
+import static org.petitparser.parser.characters.CharacterParser.any;
+import static org.petitparser.parser.characters.CharacterParser.digit;
+import static org.petitparser.parser.characters.CharacterParser.letter;
+import static org.petitparser.parser.characters.CharacterParser.of;
+import static org.petitparser.parser.characters.CharacterParser.whitespace;
+import static org.petitparser.parser.characters.CharacterParser.word;
+import static org.petitparser.parser.primitive.StringParser.of;
 
 /**
  * Tests some small but realistic parser examples.
  */
 public class ExamplesTest {
 
-  static final Parser IDENTIFIER =
-      CharacterParser.letter().seq(CharacterParser.word().star()).flatten();
+  static final Parser IDENTIFIER = letter().seq(word().star()).flatten();
 
-  static final Parser NUMBER =
-      CharacterParser.is('-').optional().seq(CharacterParser.digit().plus())
-          .seq(CharacterParser.is('.').seq(CharacterParser.digit().plus()).optional())
-          .flatten();
+  static final Parser NUMBER = of('-').optional()
+      .seq(digit().plus())
+      .seq(of('.').seq(digit().plus()).optional())
+      .flatten();
 
-  static final Parser STRING =
-      CharacterParser.is('"').seq(CharacterParser.is('"').neg().star())
-          .seq(CharacterParser.is('"')).flatten();
+  static final Parser STRING = of('"')
+      .seq(any().starLazy(of('"')))
+      .seq(of('"'))
+      .flatten();
 
-  static final Parser RETURN =
-      StringParser.of("return").seq(CharacterParser.whitespace().plus().flatten())
-          .seq(IDENTIFIER.or(NUMBER).or(STRING)).map(Functions.lastOfList());
+  static final Parser RETURN = of("return")
+      .seq(whitespace().plus().flatten())
+      .seq(IDENTIFIER.or(NUMBER).or(STRING))
+      .pick(-1);
 
-  static final Parser JAVADOC =
-      StringParser.of("/**").seq(StringParser.of("*/").neg().star()).seq(StringParser.of("*/")).flatten();
+  static final Parser JAVADOC = of("/**")
+      .seq(any().starLazy(of("*/")))
+      .seq(of("*/"))
+      .flatten();
 
   @Test
   public void testIdentifierSuccess() {
