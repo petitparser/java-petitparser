@@ -3,15 +3,14 @@ package org.petitparser;
 import org.junit.Test;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.SettableParser;
-import org.petitparser.parser.primitive.StringParser;
 import org.petitparser.tools.ExpressionBuilder;
 
 import java.util.List;
-import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 import static org.petitparser.parser.characters.CharacterParser.digit;
 import static org.petitparser.parser.characters.CharacterParser.of;
+import static org.petitparser.parser.combinators.SettableParser.undefined;
 import static org.petitparser.parser.primitive.StringParser.of;
 
 /**
@@ -23,56 +22,31 @@ public class ExpressionTest {
   private static final Parser PARSER = createParser();
 
   private static Parser createParser() {
-    SettableParser root = SettableParser.undefined();
+    SettableParser root = undefined();
     ExpressionBuilder builder = new ExpressionBuilder();
-    builder.group().primitive(of('(').trim().seq(root).seq(of(')').trim()).pick(1)).primitive(
-        digit().plus().seq(of('.').seq(digit().plus()).optional()).flatten().trim()
+    builder.group()
+        .primitive(of('(').trim()
+            .seq(root)
+            .seq(of(')').trim())
+            .pick(1))
+        .primitive(digit().plus().seq(of('.')
+            .seq(digit().plus()).optional())
+            .flatten()
+            .trim()
             .map(Double::parseDouble));
-    builder.group().prefix(of('-').trim(), new Function<List<Double>, Double>() {
-      @Override
-      public Double apply(List<Double> values) {
-        return -values.get(1);
-      }
-    });
-    builder.group().postfix(of("++").trim(), new Function<List<Double>, Double>() {
-      @Override
-      public Double apply(List<Double> values) {
-        return values.get(0) + 1;
-      }
-    }).postfix(StringParser.of("--").trim(), new Function<List<Double>, Double>() {
-      @Override
-      public Double apply(List<Double> values) {
-        return values.get(0) - 1;
-      }
-    });
-    builder.group().right(of('^').trim(), new Function<List<Double>, Double>() {
-      @Override
-      public Double apply(List<Double> values) {
-        return Math.pow(values.get(0), values.get(2));
-      }
-    });
-    builder.group().left(of('*').trim(), new Function<List<Double>, Double>() {
-      @Override
-      public Double apply(List<Double> values) {
-        return values.get(0) * values.get(2);
-      }
-    }).left(of('/').trim(), new Function<List<Double>, Double>() {
-      @Override
-      public Double apply(List<Double> values) {
-        return values.get(0) / values.get(2);
-      }
-    });
-    builder.group().left(of('+').trim(), new Function<List<Double>, Double>() {
-      @Override
-      public Double apply(List<Double> values) {
-        return values.get(0) + values.get(2);
-      }
-    }).left(of('-').trim(), new Function<List<Double>, Double>() {
-      @Override
-      public Double apply(List<Double> values) {
-        return values.get(0) - values.get(2);
-      }
-    });
+    builder.group()
+        .prefix(of('-').trim(), (List<Double> values) -> -values.get(1));
+    builder.group()
+        .postfix(of("++").trim(), (List<Double> values) -> values.get(0) + 1)
+        .postfix(of("--").trim(), (List<Double> values) -> values.get(0) - 1);
+    builder.group()
+        .right(of('^').trim(), (List<Double> values) -> Math.pow(values.get(0), values.get(2)));
+    builder.group()
+        .left(of('*').trim(), (List<Double> values) -> values.get(0) * values.get(2))
+        .left(of('/').trim(), (List<Double> values) -> values.get(0) / values.get(2));
+    builder.group()
+        .left(of('+').trim(), (List<Double> values) -> values.get(0) + values.get(2))
+        .left(of('-').trim(), (List<Double> values) -> values.get(0) - values.get(2));
     root.setDelegate(builder.build());
     return root.end();
   }
