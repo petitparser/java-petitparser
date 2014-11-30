@@ -1,6 +1,7 @@
 package org.petitparser.grammar.xml;
 
 import org.petitparser.grammar.xml.ast.XmlAttribute;
+import org.petitparser.grammar.xml.ast.XmlCdata;
 import org.petitparser.grammar.xml.ast.XmlComment;
 import org.petitparser.grammar.xml.ast.XmlDoctype;
 import org.petitparser.grammar.xml.ast.XmlDocument;
@@ -32,6 +33,7 @@ public class XmlParser extends XmlGrammar {
       }
     });
     action("comment", XmlComment::new);
+    action("cdata", XmlCdata::new);
     action("doctype", XmlDoctype::new);
     action("document", new Function<List<XmlNode>, XmlDocument>() {
       @Override

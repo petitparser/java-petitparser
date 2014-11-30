@@ -1,13 +1,17 @@
 package org.petitparser.grammar.xml;
 
-import org.petitparser.parser.characters.CharacterParser;
-import org.petitparser.parser.primitive.StringParser;
 import org.petitparser.tools.CompositeParser;
-import org.petitparser.utils.Functions;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+
+import static org.petitparser.parser.characters.CharacterParser.any;
+import static org.petitparser.parser.characters.CharacterParser.of;
+import static org.petitparser.parser.characters.CharacterParser.pattern;
+import static org.petitparser.parser.characters.CharacterParser.whitespace;
+import static org.petitparser.parser.primitive.StringParser.of;
+
 
 /**
  * XML grammar definition.
@@ -25,62 +29,70 @@ public class XmlGrammar extends CompositeParser {
     def("start", ref("document").end());
 
     def("attribute", ref("qualified")
-      .seq(ref("whitespace").optional())
-      .seq(CharacterParser.is('='))
-      .seq(ref("whitespace").optional())
-      .seq(ref("attributeValue"))
-      .map(Functions.permutationOfList(0, 4)));
+        .seq(ref("space").optional())
+        .seq(of('='))
+        .seq(ref("space").optional())
+        .seq(ref("attributeValue"))
+        .permute(0, 4));
     def("attributeValue", ref("attributeValueDouble")
-      .or(ref("attributeValueSingle"))
-      .map(Functions.nthOfList(1)));
-    def("attributeValueDouble", CharacterParser.is('"')
-      .seq(CharacterParser.is('"').neg().star().flatten())
-      .seq(CharacterParser.is('"')));
-    def("attributeValueSingle", CharacterParser.is('\'')
-      .seq(CharacterParser.is('\'').neg().star().flatten())
-      .seq(CharacterParser.is('\'')));
-    def("attributes", ref("whitespace")
-      .seq(ref("attribute"))
-      .map(Functions.nthOfList(1))
-      .star());
-    def("comment", StringParser.of("<!--")
-      .seq(StringParser.of("-->").neg().star().flatten())
-      .seq(StringParser.of("-->"))
-      .map(Functions.nthOfList(1)));
+        .or(ref("attributeValueSingle"))
+        .pick(1));
+    def("attributeValueDouble", of('"')
+        .seq(any().starLazy(of('"')).flatten())
+        .seq(of('"')));
+    def("attributeValueSingle", of('\'')
+        .seq(any().starLazy(of('\'')).flatten())
+        .seq(of('\'')));
+    def("attributes", ref("space")
+        .seq(ref("attribute"))
+        .pick(1)
+        .star());
+    def("comment", of("<!--")
+        .seq(any().starLazy(of("-->")).flatten())
+        .seq(of("-->"))
+        .pick(1));
+    def("cdata", of("<![CDATA[")
+        .seq(any().starLazy(of("]]>")).flatten())
+        .seq(of("]]>"))
+        .pick(1));
     def("content", ref("characterData")
-      .or(ref("element"))
-      .or(ref("processing"))
-      .or(ref("comment"))
-      .star());
-    def("doctype", StringParser.of("<!DOCTYPE")
-      .seq(ref("whitespace").optional())
-      .seq(CharacterParser.is('[').neg().star()
-        .seq(CharacterParser.is('['))
-        .seq(CharacterParser.is(']').neg().star())
-        .seq(CharacterParser.is(']'))
-        .flatten())
-      .seq(ref("whitespace").optional())
-      .seq(CharacterParser.is('>'))
-      .map(Functions.nthOfList(2)));
+        .or(ref("element"))
+        .or(ref("processing"))
+        .or(ref("comment"))
+        .or(ref("cdata"))
+        .star());
+    def("doctype", of("<!DOCTYPE")
+        .seq(ref("space"))
+        .seq(ref("nameToken")
+            .or(ref("attributeValue"))
+            .or(any().starLazy(of('['))
+                .seq(of('['))
+                .seq(any().starLazy(of(']')))
+                .seq(of(']')))
+            .separatedBy(ref("space"))
+            .flatten())
+        .seq(ref("space").optional())
+        .seq(of('>'))
+        .pick(2));
     def("document", ref("processing").optional()
-      .seq(ref("misc"))
-      .seq(ref("doctype").optional())
-      .seq(ref("misc"))
-      .seq(ref("element"))
-      .seq(ref("misc"))
-      .map(Functions.permutationOfList(0, 2, 4)));
-    def("element", CharacterParser.is('<')
-      .seq(ref("qualified"))
-      .seq(ref("attributes"))
-      .seq(ref("whitespace").optional())
-      .seq(StringParser.of("/>")
-        .or(CharacterParser.is('>')
-          .seq(ref("content"))
-          .seq(StringParser.of("</"))
-          .seq(ref("qualified"))
-          .seq(ref("whitespace").optional())
-          .seq(CharacterParser.is('>'))))
-      .map(new Function<List<?>, List<?>>() {
+        .seq(ref("misc"))
+        .seq(ref("doctype").optional())
+        .seq(ref("misc"))
+        .seq(ref("element"))
+        .seq(ref("misc"))
+        .permute(0, 2, 4));
+    def("element", of('<')
+        .seq(ref("qualified"))
+        .seq(ref("attributes"))
+        .seq(ref("space").optional())
+        .seq(of("/>")
+            .or(of('>')
+                .seq(ref("content"))
+                .seq(of("</"))
+                .seq(ref("qualified"))
+                .seq(ref("space").optional())
+                .seq(of('>'))))
+        .map(new Function<List<?>, List<?>>() {
           @Override
           public List<?> apply(List<?> list) {
             if (list.get(4).equals("/>")) {
@@ -95,28 +107,27 @@ public class XmlGrammar extends CompositeParser {
             }
           }
         }));
-    def("processing", StringParser.of("<?")
-      .seq(ref("nameToken"))
-      .seq(ref("whitespace")
-        .seq(StringParser.of("?>").neg().star())
-        .optional()
-        .flatten())
-      .seq(StringParser.of("?>"))
-      .map(Functions.permutationOfList(1, 2)));
+    def("processing", of("<?")
+        .seq(ref("nameToken"))
+        .seq(ref("space")
+            .seq(any().starLazy(of("?>")).flatten())
+            .pick(1).optional(""))
+        .seq(of("?>"))
+        .permute(1, 2));
     def("qualified", ref("nameToken"));
 
-    def("characterData", CharacterParser.is('<').neg().plus().flatten());
-    def("misc", ref("whitespace")
-      .or(ref("comment"))
-      .or(ref("processing"))
-      .star());
-    def("whitespace", CharacterParser.whitespace().plus());
+    def("characterData", pattern("^<").plus().flatten());
+    def("misc", ref("space")
+        .or(ref("comment"))
+        .or(ref("processing"))
+        .star());
+    def("space", whitespace().plus());
 
     def("nameToken", ref("nameStartChar")
-      .seq(ref("nameChar").star())
-      .flatten());
-    def("nameStartChar", CharacterParser.pattern(NAME_START_CHARS));
-    def("nameChar", CharacterParser.pattern(NAME_CHARS));
+        .seq(ref("nameChar").star())
+        .flatten());
+    def("nameStartChar", pattern(NAME_START_CHARS, "Expected name"));
+    def("nameChar", pattern(NAME_CHARS));
   }
 
 }

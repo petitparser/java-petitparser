@@ -20,7 +20,13 @@ public class XmlProcessing extends XmlData {
 
   @Override
   public void writeTo(StringBuffer buffer) {
-    buffer.append("<?").append(getTarget()).append(getData()).append("?>");
+    buffer.append("<?");
+    buffer.append(getTarget());
+    if (!getData().isEmpty()) {
+      buffer.append(" ");
+      buffer.append(getData());
+    }
+    buffer.append("?>");
   }
 
   @Override

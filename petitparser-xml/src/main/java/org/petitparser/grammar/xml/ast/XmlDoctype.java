@@ -11,6 +11,9 @@ public class XmlDoctype extends XmlData {
 
   @Override
   public void writeTo(StringBuffer buffer) {
-    buffer.append("<!DOCTYPE").append(getData()).append(">");
+    buffer.append("<!DOCTYPE");
+    buffer.append(" ");
+    buffer.append(getData());
+    buffer.append(">");
   }
 }

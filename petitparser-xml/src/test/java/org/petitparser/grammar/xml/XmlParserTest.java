@@ -37,18 +37,34 @@ public class XmlParserTest {
 
   @Test
   public void testComplicated() {
-    assertParseInvariant("<?xml foo?>\n" + "<foo>\n"
+    assertParseInvariant("<?xml foo?>\n"
+        + "<foo>\n"
         + "  <bar a=\"fasdfasdf\">\n"
-        + "    <zork/>\n" + "    <zonk/>\n"
+        + "    <zork/>\n"
+        + "    <zonk/>\n"
         + "  </bar>\n"
-        + "  <!-- with comment -->\n" + "</foo>");
+        + "  <!-- with comment -->\n"
+        + "</foo>");
   }
 
   @Test
   public void testDoctype() {
-    assertParseInvariant("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-        + "  <!DOCTYPE freaking <schema> [ <!-- schema --> ]  >\n"
-        + "  <schema></schema>");
+    assertParseInvariant("<!DOCTYPE root-name SYSTEM 'uri-reference'>" +
+        "<root />");
+    assertParseInvariant("<!DOCTYPE root-name PUBLIC 'public-identifier' 'uri-reference'>" +
+        "<root />");
+    assertParseInvariant("<!DOCTYPE root [" +
+        "  <!ELEMENT root (child)>" +
+        "  <!ATTLIST root attribute #IMPLIED>" +
+        "  <!ENTITY copy '©'>" +
+        "]>" +
+        "<root />");
+    assertParseInvariant("<!DOCTYPE root SYSTEM 'uri-reference' [" +
+        "  <!ELEMENT root (child)>" +
+        "  <!ATTLIST root attribute #IMPLIED>" +
+        "  <!ENTITY copy '©'>" +
+        "]>" +
+        "<root />");
   }
 
   @Test
@@ -175,8 +191,8 @@ public class XmlParserTest {
         + "</app:service>");
   }
 
-  private void assertParseInvariant(String aString) {
-    XmlNode tree = parser.parse(aString).get();
+  private void assertParseInvariant(String input) {
+    XmlNode tree = parser.parse(input).get();
     assertEquals(tree, parser.parse(tree.toXmlString()).get());
     assertInvariants(tree);
   }
