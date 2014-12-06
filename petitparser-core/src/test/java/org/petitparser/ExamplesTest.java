@@ -18,24 +18,24 @@ import static org.petitparser.parser.primitive.StringParser.of;
  */
 public class ExamplesTest {
 
-  static final Parser IDENTIFIER = letter().seq(word().star()).flatten();
+  public static final Parser IDENTIFIER = letter().seq(word().star()).flatten();
 
-  static final Parser NUMBER = of('-').optional()
+  public static final Parser NUMBER = of('-').optional()
       .seq(digit().plus())
       .seq(of('.').seq(digit().plus()).optional())
       .flatten();
 
-  static final Parser STRING = of('"')
+  public static final Parser STRING = of('"')
       .seq(any().starLazy(of('"')))
       .seq(of('"'))
       .flatten();
 
-  static final Parser RETURN = of("return")
+  public static final Parser RETURN = of("return")
       .seq(whitespace().plus().flatten())
       .seq(IDENTIFIER.or(NUMBER).or(STRING))
       .pick(-1);
 
-  static final Parser JAVADOC = of("/**")
+  public static final Parser JAVADOC = of("/**")
       .seq(any().starLazy(of("*/")))
       .seq(of("*/"))
       .flatten();

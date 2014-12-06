@@ -1,4 +1,4 @@
-package org.petitparser;
+package org.petitparser.tools;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
@@ -16,7 +16,7 @@ import static org.petitparser.parser.primitive.StringParser.of;
 /**
  * Tests {@link ExpressionBuilder}.
  */
-public class ExpressionTest {
+public class ExpressionBuilderTest {
 
   private static final double EPSILON = 1e-5;
   private static final Parser PARSER = createParser();

@@ -1,8 +1,7 @@
-package org.petitparser;
+package org.petitparser.utils;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
-import org.petitparser.utils.Optimizer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;

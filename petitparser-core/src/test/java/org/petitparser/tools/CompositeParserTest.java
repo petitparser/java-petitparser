@@ -1,4 +1,4 @@
-package org.petitparser;
+package org.petitparser.tools;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
@@ -16,7 +16,7 @@ import static org.petitparser.parser.characters.CharacterParser.of;
 /**
  * Tests {@link CompositeParser}.
  */
-public class CompositeTest {
+public class CompositeParserTest {
 
   @Test
   public void testStart() {

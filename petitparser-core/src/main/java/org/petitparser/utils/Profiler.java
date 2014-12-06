@@ -1,4 +1,4 @@
-package org.petitparser.utils.debugger;
+package org.petitparser.utils;
 
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;

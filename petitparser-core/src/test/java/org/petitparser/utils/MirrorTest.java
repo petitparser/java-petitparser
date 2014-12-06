@@ -1,4 +1,4 @@
-package org.petitparser;
+package org.petitparser.utils;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
