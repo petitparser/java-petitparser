@@ -94,7 +94,7 @@ public abstract class Parser {
   /**
    * Returns a parser that accepts the receiver zero or more times. The resulting parser returns a
    * list of the parse results of the receiver.
-   * <p>
+   *
    * This is a greedy and blind implementation that tries to consume as much input as possible and
    * that does not consider what comes afterwards.
    */
@@ -123,7 +123,7 @@ public abstract class Parser {
   /**
    * Returns a parser that accepts the receiver one or more times. The resulting parser returns a
    * list of the parse results of the receiver.
-   * <p>
+   *
    * This is a greedy and blind implementation that tries to consume as much input as possible and
    * that does not consider what comes afterwards.
    */
@@ -152,7 +152,7 @@ public abstract class Parser {
   /**
    * Returns a parser that accepts the receiver between {@code min} and {@code max} times. The
    * resulting parser returns a list of the parse results of the receiver.
-   * <p>
+   *
    * This is a greedy and blind implementation that tries to consume as much input as possible and
    * that does not consider what comes afterwards.
    */
@@ -386,7 +386,7 @@ public abstract class Parser {
 
   /**
    * Recursively tests for structural similarity of two parsers.
-   * <p>
+   *
    * The code can automatically deals with recursive parsers and parsers that refer to other
    * parsers. This code is supposed to be overridden by parsers that add other state.
    */
@@ -409,7 +409,7 @@ public abstract class Parser {
 
   /**
    * Compares the properties of two parsers.
-   * <p>
+   *
    * Override this method in all subclasses that add new state.
    */
   protected boolean hasEqualProperties(Parser other) {
@@ -418,7 +418,7 @@ public abstract class Parser {
 
   /**
    * Compares the children of two parsers.
-   * <p>
+   *
    * Normally subclasses should not override this method, but instead {@link #getChildren()}.
    */
   protected boolean hasEqualChildren(Parser other, Set<Parser> seen) {
