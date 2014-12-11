@@ -8,7 +8,7 @@ import org.petitparser.parser.actions.ContinuationParser;
 import org.petitparser.parser.actions.FlattenParser;
 import org.petitparser.parser.actions.TokenParser;
 import org.petitparser.parser.actions.TrimmingParser;
-import org.petitparser.parser.characters.CharacterParser;
+import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.parser.combinators.AndParser;
 import org.petitparser.parser.combinators.ChoiceParser;
 import org.petitparser.parser.combinators.EndOfInputParser;
@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-import static org.petitparser.parser.characters.CharacterParser.any;
+import static org.petitparser.parser.primitive.CharacterParser.any;
 
 /**
  * An abstract parser that forms the root of all parsers in this package.

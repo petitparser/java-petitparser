@@ -2,7 +2,7 @@ package org.petitparser;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.characters.CharacterParser;
+import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.parser.combinators.DelegateParser;
 import org.petitparser.parser.primitive.EpsilonParser;
 import org.petitparser.parser.primitive.FailureParser;
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.petitparser.parser.characters.CharacterParser.of;
+import static org.petitparser.parser.primitive.CharacterParser.of;
 
 /**
  * Tests {@link Parser#copy}, {@link Parser#equals(Object)}, and {@link Parser#replace(Parser,

@@ -2,23 +2,23 @@ package org.petitparser;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.characters.CharacterParser;
+import org.petitparser.parser.primitive.CharacterParser;
 
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
-import static org.petitparser.parser.characters.CharacterParser.any;
-import static org.petitparser.parser.characters.CharacterParser.anyOf;
-import static org.petitparser.parser.characters.CharacterParser.digit;
-import static org.petitparser.parser.characters.CharacterParser.letter;
-import static org.petitparser.parser.characters.CharacterParser.lowerCase;
-import static org.petitparser.parser.characters.CharacterParser.none;
-import static org.petitparser.parser.characters.CharacterParser.noneOf;
-import static org.petitparser.parser.characters.CharacterParser.of;
-import static org.petitparser.parser.characters.CharacterParser.pattern;
-import static org.petitparser.parser.characters.CharacterParser.range;
-import static org.petitparser.parser.characters.CharacterParser.upperCase;
-import static org.petitparser.parser.characters.CharacterParser.whitespace;
-import static org.petitparser.parser.characters.CharacterParser.word;
+import static org.petitparser.parser.primitive.CharacterParser.any;
+import static org.petitparser.parser.primitive.CharacterParser.anyOf;
+import static org.petitparser.parser.primitive.CharacterParser.digit;
+import static org.petitparser.parser.primitive.CharacterParser.letter;
+import static org.petitparser.parser.primitive.CharacterParser.lowerCase;
+import static org.petitparser.parser.primitive.CharacterParser.none;
+import static org.petitparser.parser.primitive.CharacterParser.noneOf;
+import static org.petitparser.parser.primitive.CharacterParser.of;
+import static org.petitparser.parser.primitive.CharacterParser.pattern;
+import static org.petitparser.parser.primitive.CharacterParser.range;
+import static org.petitparser.parser.primitive.CharacterParser.upperCase;
+import static org.petitparser.parser.primitive.CharacterParser.whitespace;
+import static org.petitparser.parser.primitive.CharacterParser.word;
 
 /**
  * Tests {@link CharacterParser}.

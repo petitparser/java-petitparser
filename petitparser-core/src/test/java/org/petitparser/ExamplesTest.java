@@ -8,12 +8,12 @@ import java.util.List;
 
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
-import static org.petitparser.parser.characters.CharacterParser.any;
-import static org.petitparser.parser.characters.CharacterParser.digit;
-import static org.petitparser.parser.characters.CharacterParser.letter;
-import static org.petitparser.parser.characters.CharacterParser.of;
-import static org.petitparser.parser.characters.CharacterParser.whitespace;
-import static org.petitparser.parser.characters.CharacterParser.word;
+import static org.petitparser.parser.primitive.CharacterParser.any;
+import static org.petitparser.parser.primitive.CharacterParser.digit;
+import static org.petitparser.parser.primitive.CharacterParser.letter;
+import static org.petitparser.parser.primitive.CharacterParser.of;
+import static org.petitparser.parser.primitive.CharacterParser.whitespace;
+import static org.petitparser.parser.primitive.CharacterParser.word;
 import static org.petitparser.parser.primitive.StringParser.of;
 
 /**

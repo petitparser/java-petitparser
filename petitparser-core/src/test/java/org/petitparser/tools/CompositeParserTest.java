@@ -2,7 +2,6 @@ package org.petitparser.tools;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
-import org.petitparser.tools.CompositeParser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
-import static org.petitparser.parser.characters.CharacterParser.of;
+import static org.petitparser.parser.primitive.CharacterParser.of;
 
 /**
  * Tests {@link CompositeParser}.

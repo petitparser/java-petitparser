@@ -4,12 +4,12 @@ import org.petitparser.parser.Parser;
 import org.petitparser.parser.primitive.EpsilonParser;
 import org.petitparser.tools.CompositeParser;
 
-import static org.petitparser.parser.characters.CharacterParser.any;
-import static org.petitparser.parser.characters.CharacterParser.digit;
-import static org.petitparser.parser.characters.CharacterParser.of;
-import static org.petitparser.parser.characters.CharacterParser.pattern;
-import static org.petitparser.parser.characters.CharacterParser.whitespace;
-import static org.petitparser.parser.characters.CharacterParser.word;
+import static org.petitparser.parser.primitive.CharacterParser.any;
+import static org.petitparser.parser.primitive.CharacterParser.digit;
+import static org.petitparser.parser.primitive.CharacterParser.of;
+import static org.petitparser.parser.primitive.CharacterParser.pattern;
+import static org.petitparser.parser.primitive.CharacterParser.whitespace;
+import static org.petitparser.parser.primitive.CharacterParser.word;
 import static org.petitparser.parser.primitive.StringParser.of;
 
 /**

@@ -9,7 +9,7 @@
  * a letter followed by zero or more letter or digits is defined as follows:
  *
  * <pre>
- *   import static org.petitparser.parser.characters.CharacterParser.*;
+ *   import static org.petitparser.parser.primitive.CharacterParser.*;
  *
  *   class Example {
  *     public static void main(String[] arguments) {
@@ -25,11 +25,11 @@
  *
  * <ul>
  *   <li> {@link org.petitparser.parser.combinators.SequenceParser}: This parser accepts a sequence of parsers.
- *   <li> &nbsp;&nbsp; {@link org.petitparser.parser.characters.CharacterParser}: This parser accepts a single letter.
+ *   <li> &nbsp;&nbsp; {@link org.petitparser.parser.primitive.CharacterParser}: This parser accepts a single letter.
  *   <li> &nbsp;&nbsp; {@link org.petitparser.parser.repeating.PossessiveRepeatingParser}: This parser accepts zero or more times another parser.
  *   <li> &nbsp;&nbsp;&nbsp;&nbsp; {@link org.petitparser.parser.combinators.ChoiceParser}: This parser accepts a single word character.
- *   <li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {@link org.petitparser.parser.characters.CharacterParser}: This parser accepts a single letter.
- *   <li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {@link org.petitparser.parser.characters.CharacterParser}: This parser accepts a single digit.
+ *   <li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {@link org.petitparser.parser.primitive.CharacterParser}: This parser accepts a single letter.
+ *   <li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {@link org.petitparser.parser.primitive.CharacterParser}: This parser accepts a single digit.
  * </ul>
  *
  * <h3>Parsing Some Input</h3>
@@ -96,7 +96,7 @@
  *   <li> {@code CharacterParser.word()} parses any letter or digit.
  * </ul>
  *
- * Many other parsers are available in {@link org.petitparser.parser.characters.CharacterParser}
+ * Many other parsers are available in {@link org.petitparser.parser.primitive.CharacterParser}
  * and {@link org.petitparser.parser.primitive.StringParser}.
  *
  * So instead of using the letter and digit predicate, we could have written

@@ -1,4 +1,4 @@
-package org.petitparser.parser.characters;
+package org.petitparser.parser.primitive;
 
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;

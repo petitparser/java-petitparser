@@ -1,6 +1,6 @@
 package org.petitparser.grammar.json;
 
-import org.petitparser.parser.characters.CharacterParser;
+import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.tools.CompositeParser;
 
 import java.util.Collection;
@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import static org.petitparser.parser.characters.CharacterParser.anyOf;
-import static org.petitparser.parser.characters.CharacterParser.digit;
-import static org.petitparser.parser.characters.CharacterParser.of;
+import static org.petitparser.parser.primitive.CharacterParser.anyOf;
+import static org.petitparser.parser.primitive.CharacterParser.digit;
+import static org.petitparser.parser.primitive.CharacterParser.of;
 import static org.petitparser.parser.primitive.StringParser.of;
 
 /**

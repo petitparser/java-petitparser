@@ -6,7 +6,7 @@ import org.petitparser.parser.Parser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-import static org.petitparser.parser.characters.CharacterParser.lowerCase;
+import static org.petitparser.parser.primitive.CharacterParser.lowerCase;
 
 /**
  * Tests {@link Optimizer}.

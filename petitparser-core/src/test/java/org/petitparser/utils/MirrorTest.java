@@ -3,7 +3,6 @@ package org.petitparser.utils;
 import org.junit.Test;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.SettableParser;
-import org.petitparser.utils.Mirror;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -18,8 +17,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.petitparser.parser.characters.CharacterParser.lowerCase;
-import static org.petitparser.parser.characters.CharacterParser.upperCase;
+import static org.petitparser.parser.primitive.CharacterParser.lowerCase;
+import static org.petitparser.parser.primitive.CharacterParser.upperCase;
 import static org.petitparser.parser.combinators.SettableParser.undefined;
 
 /**

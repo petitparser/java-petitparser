@@ -5,7 +5,7 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.context.Token;
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.characters.CharacterParser;
+import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.parser.primitive.StringParser;
 import org.petitparser.parser.repeating.RepeatingParser;
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
-import static org.petitparser.parser.characters.CharacterParser.of;
+import static org.petitparser.parser.primitive.CharacterParser.of;
 
 /**
  * Tests {@link Parser} factory methods.

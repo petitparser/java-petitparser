@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.petitparser.parser.characters.CharacterParser.any;
+import static org.petitparser.parser.primitive.CharacterParser.any;
 
 /**
  * Tests {@link Token}.

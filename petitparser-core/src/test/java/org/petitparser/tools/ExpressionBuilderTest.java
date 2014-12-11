@@ -3,13 +3,12 @@ package org.petitparser.tools;
 import org.junit.Test;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.SettableParser;
-import org.petitparser.tools.ExpressionBuilder;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.petitparser.parser.characters.CharacterParser.digit;
-import static org.petitparser.parser.characters.CharacterParser.of;
+import static org.petitparser.parser.primitive.CharacterParser.digit;
+import static org.petitparser.parser.primitive.CharacterParser.of;
 import static org.petitparser.parser.combinators.SettableParser.undefined;
 import static org.petitparser.parser.primitive.StringParser.of;
 

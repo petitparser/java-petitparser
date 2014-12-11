@@ -1,7 +1,7 @@
 package org.petitparser;
 
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.characters.CharacterParser;
+import org.petitparser.parser.primitive.CharacterParser;
 
 /**
  * Deprecated factory for character parsers.
