@@ -149,4 +149,28 @@ public class ExamplesTest {
     assertSuccess(JAVADOC, "/** * * */", "/** * * */");
   }
 
+  @Test
+  public void testExpression() {
+    Parser number = digit().plus().flatten().trim().map((String value) -> Integer.parseInt(value));
+
+    SettableParser term = SettableParser.undefined();
+    SettableParser prod = SettableParser.undefined();
+    SettableParser prim = SettableParser.undefined();
+
+    term.set(prod.seq(of('+').trim()).seq(term).map((List<Integer> values) -> {
+      return values.get(0) + values.get(2);
+    }).or(prod));
+    prod.set(prim.seq(of('*').trim()).seq(prod).map((List<Integer> values) -> {
+      return values.get(0) * values.get(2);
+    }).or(prim));
+    prim.set((of('(').trim().seq(term).seq(of(')').trim())).map((List<Integer> values) -> {
+      return values.get(1);
+    }).or(number));
+
+    Parser start = term.end();
+
+    assertSuccess(start, "1 + 2 * 3", 7);
+    assertSuccess(start, "(1 + 2) * 3", 9);
+  }
+
 }
