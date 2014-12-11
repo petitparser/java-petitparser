@@ -9,7 +9,7 @@
  * a letter followed by zero or more letter or digits is defined as follows:
  *
  * <pre>
- *   import static import org.petitparser.parser.characters.CharacterParser.*;
+ *   import static org.petitparser.parser.characters.CharacterParser.*;
  *
  *   class Example {
  *     public static void main(String[] arguments) {
@@ -23,57 +23,62 @@
  * If you look at the object {@code id} in the debugger, you'll notice that the
  * code above builds a tree of parser objects:
  *
- * <pre>
- *   Sequence: This parser accepts a sequence of parsers.
- *     Predicate: This parser accepts a single letter.
- *     Repeater: This parser accepts zero or more times another parser.
- *       Choice: This parser accepts a single word character.
- *         Predicate: This parser accepts a single letter.
- *         Predicate: This parser accepts a single digit.
- * </pre>
+ * <ul>
+ *   <li> {@link org.petitparser.parser.combinators.SequenceParser}: This parser accepts a sequence of parsers.
+ *   <li> &nbsp;&nbsp; {@link org.petitparser.parser.characters.CharacterParser}: This parser accepts a single letter.
+ *   <li> &nbsp;&nbsp; {@link org.petitparser.parser.repeating.PossessiveRepeatingParser}: This parser accepts zero or more times another parser.
+ *   <li> &nbsp;&nbsp;&nbsp;&nbsp; {@link org.petitparser.parser.combinators.ChoiceParser}: This parser accepts a single word character.
+ *   <li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {@link org.petitparser.parser.characters.CharacterParser}: This parser accepts a single letter.
+ *   <li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {@link org.petitparser.parser.characters.CharacterParser}: This parser accepts a single digit.
+ * </ul>
  *
  * <h3>Parsing Some Input</h3>
  *
- * To actually parse a {@link String} we can use the method {@link Parser#parse}:
+ * To actually parse a {@link java.lang.String} we can use the method
+ * {@link org.petitparser.parser.Parser#parse(String)}:
  *
  * <pre>
  *     Result id1 = id.parse("yeah");
  *     Result id2 = id.parse("f12");
  * </pre>
  *
- * The method {@link Parser#parse} returns a parse {@link Result}, which is either an
- * instance of {@link Success} or {@link Failure}. In both examples above we are
- * successful and can retrieve the parse result using {@link Success#get}:
+ * The method {@link org.petitparser.parser.Parser#parse(java.lang.String)} returns
+ * a parse {@link org.petitparser.context.Result}, which is either an instance of {@link
+ * org.petitparser.context.Success} or {@link org.petitparser.context.Failure}. In
+ * both examples above we are successful and can retrieve the parse result using
+ * {@link org.petitparser.context.Success#get()}:
  *
  * <pre>
- *     System.out.println(id1.value);      // ['y', ['e', 'a', 'h']]
- *     System.out.println(id2.value);      // ['f', ['1', '2']]
+ *   System.out.println(id1.value);  // ['y', ['e', 'a', 'h']]
+ *   System.out.println(id2.value);  // ['f', ['1', '2']]
  * </pre>
  *
  * While it seems odd to get these nested arrays with characters as a return
  * value, this is the default decomposition of the input into a parse tree.
  * We'll see in a while how that can be customized.
  *
- * If we try to parse something invalid we get an instance of {@link Failure} as
- * an answer and we can retrieve a descriptive error message using
- * {@link Failure#getMessage}:
+ * If we try to parse something invalid we get an instance of {@link
+ * org.petitparser.context.Failure} as an answer and we can retrieve a descriptive
+ * error message using {@link org.petitparser.context.Failure#getMessage}:
  *
  * <pre>
- *     Result id3 = id.parse('123');
- *     print(id3.getMessage());            // "letter expected"
- *     print(id3.getPosition());           // 0
+ *   Result id3 = id.parse('123');
+ *   System.out.println(id3.getMessage());  // "letter expected"
+ *   System.out.println(id3.getPosition());  // 0
  * </pre>
  *
- * Trying to retrieve the parse result by calling {@link Failure#get} would throw
- * the exception {@link ParserError}. {@link Context#isSuccess} and {@link Context#isFailure}
- * can be used to decide if the parse was successful.
+ * Trying to retrieve the parse result by calling {@link
+ * org.petitparser.context.Failure#get()} would throw the exception {@link
+ * org.petitparser.context.ParseError}. {@link org.petitparser.context.Result#isSuccess()}
+ * and {@link org.petitparser.context.Result#isFailure()} can be used to decide if
+ * the parse was successful.
  *
  * If you are only interested if a given string matches or not you can use the
- * helper method {@link Parser#accept}:
+ * helper method {@link org.petitparser.parser.Parser#accept(java.lang.String)}:
  *
  * <pre>
- *     print(id.accept("foo"));            // true
- *     print(id.accept("123"));            // false
+ *   System.out.println(id.accept("foo"));  // true
+ *   System.out.println(id.accept("123"));  // false
  * </pre>
  *
  * <h3>Different Kinds of Parsers</h3>
@@ -84,18 +89,21 @@
  *
  * <ul>
  *   <li> {@code CharacterParser.of('a')} parses the character {@code a}.
- *   <li> {@code string('abc')} parses the string {@code abc}.
- *   <li> {@code any()} parses any character.
- *   <li> {@code digit()} parses any digit from {@code 0} to {@code 9}.
- *   <li> {@code letter()} parses any letter from {@code a} to {@code z} and {@code A} to {@code Z}.
- *   <li> {@code word()} parses any letter or digit.
+ *   <li> {@code StringParser.of("abc")} parses the string {@code abc}.
+ *   <li> {@code CharacterParser.any()} parses any character.
+ *   <li> {@code CharacterParser.digit()} parses any digit from {@code 0} to {@code 9}.
+ *   <li> {@code CharacterParser.letter()} parses any letter from {@code a} to {@code z} and {@code A} to {@code Z}.
+ *   <li> {@code CharacterParser.word()} parses any letter or digit.
  * </ul>
+ *
+ * Many other parsers are available in {@link org.petitparser.parser.characters.CharacterParser}
+ * and {@link org.petitparser.parser.primitive.StringParser}.
  *
  * So instead of using the letter and digit predicate, we could have written
  * our identifier parser like this:
  *
  * <pre>
- *     Parser id = letter().seq(word().star());
+ *   Parser id = letter().seq(word().star());
  * </pre>
  *
  * The next set of parsers are used to combine other parsers together:
@@ -126,20 +134,20 @@
  * this:
  *
  * <pre>
- *     Parser id = letter().seq(word().star()).flatten();
+ *   Parser id = letter().seq(word().star()).flatten();
  * </pre>
  *
  * To conveniently find all matches in a given input string you can use
- * {@link Parser#matchesSkipping}:
+ * {@link org.petitparser.parser.Parser#matchesSkipping(java.lang.String)}:
  *
  * <pre>
- *     List<Object> matches = id.matchesSkipping("foo 123 bar4");
- *     System.out.println(matches);        // [foo", "bar4"]
+ *   List&lt;Object> matches = id.matchesSkipping("foo 123 bar4");
+ *   System.out.println(matches);  // ["foo", "bar4"]
  * </pre>
  *
  * These are the basic elements to build parsers. There are a few more well
- * documented and tested factory methods in the {@link Parser} class. If you want
- * browse their documentation and tests.
+ * documented and tested factory methods in the {@link org.petitparser.parser.Parser}
+ * class. If you want, browse their documentation and tests.
  *
  * <h3>Writing a More Complicated Grammar</h3>
  *
@@ -148,7 +156,7 @@
  * number (actually an integer):
  *
  * <pre>
- *     Parser number = digit().plus().flatten().trim().map(Integer::fromString);
+ *   Parser number = digit().plus().flatten().trim().map((String value) -> Integer.parseInt(value));
  * </pre>
  *
  * Then we define the productions for addition and multiplication in order of
@@ -157,33 +165,33 @@
  * resolve this recursion by setting their reference:
  *
  * <pre>
- *     Settable term = SettableParser.undefined();
- *     Settable prod = SettableParser.undefined();
- *     Settable prim = SettableParser.undefined();
+ *   SettableParser term = SettableParser.undefined();
+ *   SettableParser prod = SettableParser.undefined();
+ *   SettableParser prim = SettableParser.undefined();
  *
- *     term.set(prod.seq(char('+').trim()).seq(term).map((values) {
- *       return values[0] + values[2];
- *     }).or(prod));
- *     prod.set(prim.seq(char('*').trim()).seq(prod).map((values) {
- *       return values[0] * values[2];
- *     }).or(prim));
- *     prim.set(char('(').trim().seq(term).seq(char(')'.trim())).map((values) {
- *       return values[1];
- *     }).or(number));
+ *   term.set(prod.seq(of('+').trim()).seq(term).map((List<Integer> values) -> {
+ *     return values.get(0) + values.get(2);
+ *   }).or(prod));
+ *   prod.set(prim.seq(of('*').trim()).seq(prod).map((List<Integer> values) -> {
+ *     return values.get(0) * values.get(2);
+ *   }).or(prim));
+ *   prim.set((of('(').trim().seq(term).seq(of(')').trim())).map((List<Integer> values) -> {
+ *     return values.get(1);
+ *   }).or(number));
  * </pre>
  *
  * To make sure that our parser consumes all input we wrap it with the `end()`
  * parser into the start production:
  *
  * <pre>
- *     Parser start = term.end();
+ *   Parser start = term.end();
  * </pre>
  *
  * That's it, now we can test our parser and evaluator:
  *
  * <pre>
- *     System.out.println(start.parse("1 + 2 * 3").value);        // 7
- *     System.out.println(start.parse("(1 + 2) * 3").value);      // 9
+ *   System.out.println(start.parse("1 + 2 * 3").get());  // 7
+ *   System.out.println(start.parse("(1 + 2) * 3").get());  // 9
  * </pre>
  *
  * As an exercise we could extend the parser to also accept negative numbers
@@ -192,4 +200,3 @@
  * can be added with a few lines of PetitParser code.
  */
 package org.petitparser;
-
