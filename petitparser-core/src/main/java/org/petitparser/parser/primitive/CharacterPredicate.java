@@ -9,14 +9,14 @@ import java.util.Arrays;
 public interface CharacterPredicate {
 
   /**
-   * Returns a character matcher that matches any character.
+   * Returns a character predicate that matches any character.
    */
   static CharacterPredicate any() {
     return value -> true;
   }
 
   /**
-   * Returns a character matcher that matches any of the characters in {@code string}.
+   * Returns a character predicate that matches any of the characters in {@code string}.
    */
   static CharacterPredicate anyOf(String string) {
     char[] characters = string.toCharArray();
@@ -25,14 +25,14 @@ public interface CharacterPredicate {
   }
 
   /**
-   * Returns a character matcher that matches no character.
+   * Returns a character predicate that matches no character.
    */
   static CharacterPredicate none() {
     return value -> false;
   }
 
   /**
-   * Returns a character matcher that matches none of the characters in {@code string}.
+   * Returns a character predicate that matches none of the characters in {@code string}.
    */
   static CharacterPredicate noneOf(String string) {
     char[] characters = string.toCharArray();
@@ -41,14 +41,14 @@ public interface CharacterPredicate {
   }
 
   /**
-   * Returns a character matcher that matches the given {@code character}.
+   * Returns a character predicate that matches the given {@code character}.
    */
   static CharacterPredicate of(char character) {
     return value -> value == character;
   }
 
   /**
-   * Returns a character matcher that matches any character between {@code start} and {@code stop}.
+   * Returns a character predicate that matches any character between {@code start} and {@code stop}.
    */
   static CharacterPredicate range(char start, char stop) {
     return value -> start <= value && value <= stop;
@@ -63,23 +63,68 @@ public interface CharacterPredicate {
    * Negates this character predicate.
    */
   default CharacterPredicate not() {
-    return new CharacterPredicate() {
-      @Override
-      public boolean test(char value) {
-        return !CharacterPredicate.this.test(value);
-      }
-
-      @Override
-      public CharacterPredicate not() {
-        return CharacterPredicate.this;
-      }
-    };
+    return new NotCharacterPredicate(this);
   }
 
   /**
-   * Matches either this character predicate or {@code other}.
+   * The negated character predicate.
    */
-  default CharacterPredicate or(CharacterPredicate other) {
-    return value -> test(value) || other.test(value);
+  class NotCharacterPredicate implements CharacterPredicate {
+
+    private final CharacterPredicate predicate;
+
+    public NotCharacterPredicate(CharacterPredicate predicate) {
+      this.predicate = predicate;
+    }
+
+    @Override
+    public boolean test(char value) {
+      return !predicate.test(value);
+    }
+
+    @Override
+    public CharacterPredicate not() {
+      return predicate;
+    }
   }
+
+  /**
+   * Matches either this character predicate or any of the other {@code predicates}.
+   */
+  default CharacterPredicate or(CharacterPredicate... others) {
+    CharacterPredicate[] predicates = new CharacterPredicate[1 + others.length];
+    predicates[0] = this;
+    System.arraycopy(others, 0, predicates, 1, others.length);
+    return new AltCharacterPredicate(predicates);
+  }
+
+  /**
+   * The alternative character predicate.
+   */
+  class AltCharacterPredicate implements CharacterPredicate {
+
+    private final CharacterPredicate[] predicates;
+
+    public AltCharacterPredicate(CharacterPredicate... predicates) {
+      this.predicates = predicates;
+    }
+
+    @Override
+    public boolean test(char value) {
+      for (CharacterPredicate predicate : predicates) {
+        if (predicate.test(value)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    @Override
+    public CharacterPredicate or(CharacterPredicate... others) {
+      CharacterPredicate[] array = Arrays.copyOf(predicates, predicates.length + others.length);
+      System.arraycopy(others, 0, array, predicates.length, others.length);
+      return new AltCharacterPredicate(array);
+    }
+  }
+
 }
