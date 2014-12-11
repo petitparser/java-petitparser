@@ -2,6 +2,9 @@ package org.petitparser;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
+import org.petitparser.parser.combinators.SettableParser;
+
+import java.util.List;
 
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;

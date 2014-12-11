@@ -24,11 +24,11 @@ public class SettableParser extends DelegateParser {
     super(delegate);
   }
 
-  public Parser getDelegate() {
+  public Parser get() {
     return delegate;
   }
 
-  public void setDelegate(Parser delegate) {
+  public void set(Parser delegate) {
     this.delegate = delegate;
   }
 

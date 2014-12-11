@@ -75,7 +75,7 @@ public class MirrorTest {
   @Test
   public void testKnotParserIteration() {
     SettableParser parser1 = undefined();
-    parser1.setDelegate(parser1);
+    parser1.set(parser1);
     Mirror mirror = Mirror.of(parser1);
     List<Parser> parsers = mirror.stream().collect(Collectors.toList());
     assertEquals(Arrays.<Parser>asList(parser1), parsers);
@@ -86,9 +86,9 @@ public class MirrorTest {
     SettableParser parser1 = undefined();
     SettableParser parser2 = undefined();
     SettableParser parser3 = undefined();
-    parser1.setDelegate(parser2);
-    parser2.setDelegate(parser3);
-    parser3.setDelegate(parser1);
+    parser1.set(parser2);
+    parser2.set(parser3);
+    parser3.set(parser1);
     Mirror mirror = Mirror.of(parser1);
     List<Parser> parsers = mirror.stream().collect(Collectors.toList());
     assertEquals(Arrays.<Parser>asList(parser1, parser2, parser3), parsers);
@@ -159,7 +159,7 @@ public class MirrorTest {
   public void testExistingLoopTransformation() {
     Parser input = undefined().settable().settable().settable();
     SettableParser settable = (SettableParser) input.getChildren().get(0).getChildren().get(0);
-    settable.setDelegate(input);
+    settable.set(input);
     Parser output = Mirror.of(input).transform(Function.identity());
     assertNotEquals(input, output);
     assertTrue(input.isEqualTo(output));
@@ -174,7 +174,7 @@ public class MirrorTest {
     Parser source = lowerCase();
     Parser target = undefined().settable().settable().settable();
     SettableParser settable = (SettableParser) target.getChildren().get(0).getChildren().get(0);
-    settable.setDelegate(source);
+    settable.set(source);
     Parser output = Mirror.of(source).transform(
         parser -> source.isEqualTo(parser) ? target : parser);
     assertNotEquals(source, output);

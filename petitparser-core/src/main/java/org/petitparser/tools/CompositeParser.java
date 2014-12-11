@@ -46,7 +46,7 @@ public abstract class CompositeParser extends DelegateParser {
       if (!defined.containsKey(entry.getKey())) {
         throw new IllegalStateException("Undefined production: " + entry.getKey());
       }
-      entry.getValue().replace(entry.getValue().getDelegate(), defined.get(entry.getKey()));
+      entry.getValue().replace(entry.getValue().get(), defined.get(entry.getKey()));
     }
     replace(delegate, ref("start"));
     defined = Collections.unmodifiableMap(defined);

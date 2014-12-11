@@ -47,7 +47,7 @@ public class ExpressionBuilderTest {
     builder.group()
         .left(of('+').trim(), (List<Double> values) -> values.get(0) + values.get(2))
         .left(of('-').trim(), (List<Double> values) -> values.get(0) - values.get(2));
-    root.setDelegate(builder.build());
+    root.set(builder.build());
     return root.end();
   }
 

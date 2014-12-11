@@ -67,7 +67,7 @@ public class ParsersTest {
     SettableParser parser = of('a').settable();
     assertSuccess(parser, "a", 'a');
     assertFailure(parser, "b", 0, "'a' expected");
-    parser.setDelegate(of('b'));
+    parser.set(of('b'));
     assertSuccess(parser, "b", 'b');
     assertFailure(parser, "a", 0, "'b' expected");
   }
