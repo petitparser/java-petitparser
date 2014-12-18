@@ -1,6 +1,11 @@
 package org.petitparser.parser.primitive;
 
+import org.petitparser.parser.Parser;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Character predicate.
@@ -19,9 +24,10 @@ public interface CharacterPredicate {
    * Returns a character predicate that matches any of the characters in {@code string}.
    */
   static CharacterPredicate anyOf(String string) {
-    char[] characters = string.toCharArray();
-    Arrays.sort(characters);
-    return value -> Arrays.binarySearch(characters, value) >= 0;
+    List<CharacterRange> ranges = string.chars()
+        .mapToObj((value) -> new CharacterRange((char) value))
+        .collect(Collectors.toList());
+    return CharacterRange.toCharacterPredicate(ranges);
   }
 
   /**
@@ -35,9 +41,10 @@ public interface CharacterPredicate {
    * Returns a character predicate that matches none of the characters in {@code string}.
    */
   static CharacterPredicate noneOf(String string) {
-    char[] characters = string.toCharArray();
-    Arrays.sort(characters);
-    return value -> Arrays.binarySearch(characters, value) < 0;
+    List<CharacterRange> ranges = string.chars()
+        .mapToObj((value) -> new CharacterRange((char) value))
+        .collect(Collectors.toList());
+    return CharacterRange.toCharacterPredicate(ranges).not();
   }
 
   /**
@@ -52,6 +59,29 @@ public interface CharacterPredicate {
    */
   static CharacterPredicate range(char start, char stop) {
     return value -> start <= value && value <= stop;
+  }
+
+  /**
+   * Returns a character predicate that matches the provided pattern.
+   */
+  static CharacterPredicate pattern(String pattern) {
+    return PatternParser.PATTERN.parse(pattern).get();
+  }
+
+  class PatternParser {
+    static final Parser PATTERN_SIMPLE = CharacterParser.any()
+        .map((Character value) -> new CharacterRange(value));
+    static final Parser PATTERN_RANGE = CharacterParser.any()
+        .seq(CharacterParser.of('-'))
+        .seq(CharacterParser.any())
+        .map((List<Character> values) -> new CharacterRange(values.get(0), values.get(2)));
+    static final Parser PATTERN_POSITIVE = PATTERN_RANGE.or(PATTERN_SIMPLE).star()
+        .map(CharacterRange::toCharacterPredicate);
+    static final Parser PATTERN = CharacterParser.of('^').optional()
+        .seq(PATTERN_POSITIVE)
+        .map((List<CharacterPredicate> predicate) -> {
+          return predicate.get(0) == null ? predicate.get(1) : predicate.get(1).not();
+        }).end();
   }
 
   /**

@@ -72,6 +72,14 @@ public class CharacterTest {
   }
 
   @Test
+  public void testAnyOfEmpty() {
+    Parser parser = anyOf("");
+    assertFailure(parser, "a", "any of '' expected");
+    assertFailure(parser, "b", "any of '' expected");
+    assertFailure(parser, "", "any of '' expected");
+  }
+
+  @Test
   public void testNone() {
     Parser parser = none();
     assertFailure(parser, "a", "no character expected");
@@ -111,10 +119,18 @@ public class CharacterTest {
     assertFailure(parser, "h", "wrong");
     assertFailure(parser, "i", "wrong");
     assertFailure(parser, "o", "wrong");
-    assertFailure(parser, "p", "wrong");
+   assertFailure(parser, "p", "wrong");
     assertFailure(parser, "r", "wrong");
     assertFailure(parser, "t", "wrong");
     assertFailure(parser, "y", "wrong");
+  }
+
+  @Test
+  public void testNoneOfEmpty() {
+    Parser parser = noneOf("");
+    assertSuccess(parser, "a", 'a');
+    assertSuccess(parser, "b", 'b');
+    assertFailure(parser, "", "none of '' expected");
   }
 
   @Test
@@ -217,13 +233,61 @@ public class CharacterTest {
 
   @Test
   public void testPatternWithOverlappingRange() {
-    Parser parser = pattern("a-cb-d");
+    Parser parser = pattern("b-da-c");
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, "b", 'b');
     assertSuccess(parser, "c", 'c');
     assertSuccess(parser, "d", 'd');
     assertFailure(parser, "e", 0, "[a-cb-d] expected");
     assertFailure(parser, "", "[a-cb-d] expected");
+  }
+
+  @Test
+  public void testPatternWithAdjacentRange() {
+    Parser parser = pattern("c-ea-c");
+    assertSuccess(parser, "a", 'a');
+    assertSuccess(parser, "b", 'b');
+    assertSuccess(parser, "c", 'c');
+    assertSuccess(parser, "d", 'd');
+    assertSuccess(parser, "e", 'e');
+    assertFailure(parser, "f", 0, "[a-cc-e] expected");
+    assertFailure(parser, "", "[a-cc-e] expected");
+  }
+
+  @Test
+  public void testPatternWithPrefixRange() {
+    Parser parser = pattern("a-ea-c");
+    assertSuccess(parser, "a", 'a');
+    assertSuccess(parser, "b", 'b');
+    assertSuccess(parser, "c", 'c');
+    assertSuccess(parser, "d", 'd');
+    assertSuccess(parser, "e", 'e');
+    assertFailure(parser, "f", 0, "[a-ea-c] expected");
+    assertFailure(parser, "", "[a-ea-c] expected");
+  }
+
+  @Test
+  public void testPatternWithPostfixRange() {
+    Parser parser = pattern("a-ec-e");
+    assertSuccess(parser, "a", 'a');
+    assertSuccess(parser, "b", 'b');
+    assertSuccess(parser, "c", 'c');
+    assertSuccess(parser, "d", 'd');
+    assertSuccess(parser, "e", 'e');
+    assertFailure(parser, "f", 0, "[a-ec-e] expected");
+    assertFailure(parser, "", "[a-ec-e] expected");
+  }
+
+  @Test
+  public void testPatternWithRepeatedRange() {
+    Parser parser = pattern("a-ea-e");
+    assertSuccess(parser, "a", 'a');
+    assertSuccess(parser, "b", 'b');
+    assertSuccess(parser, "c", 'c');
+    assertSuccess(parser, "d", 'd');
+    assertSuccess(parser, "e", 'e');
+    assertFailure(parser, "f", 0, "[a-ec-e] expected");
+    assertFailure(parser, "", "[a-ec-e] expected");
   }
 
   @Test

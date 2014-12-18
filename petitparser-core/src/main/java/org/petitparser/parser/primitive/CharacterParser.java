@@ -4,14 +4,12 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
  * Parses a single character.
  */
 public class CharacterParser extends Parser {
-
 
   /**
    * Returns a parser that accepts a specific {@link CharacterPredicate}.
@@ -110,7 +108,7 @@ public class CharacterParser extends Parser {
 
   /**
    * Returns a parser that accepts a specific character pattern.
-   * <p/>
+   * <p>
    * Characters match themselves. A dash {@code -} between two characters matches the range of those
    * characters. A caret {@code ^} at the beginning negates the pattern.
    */
@@ -119,26 +117,8 @@ public class CharacterParser extends Parser {
   }
 
   public static Parser pattern(String pattern, String message) {
-    return of((CharacterPredicate) PATTERN.parse(pattern).get(), message);
+    return of(CharacterPredicate.pattern(pattern), message);
   }
-
-  private static final Parser PATTERN_SIMPLE = any().map(CharacterPredicate::of);
-  private static final Parser PATTERN_RANGE = any().seq(of('-')).seq(any())
-      .map((List<Character> characters) -> {
-        return CharacterPredicate.range(characters.get(0), characters.get(2));
-      });
-  private static final Parser PATTERN_POSITIVE = PATTERN_RANGE.or(PATTERN_SIMPLE).plus()
-      .map((List<CharacterPredicate> matchers) -> {
-        CharacterPredicate result = matchers.remove(0);
-        for (CharacterPredicate matcher : matchers) {
-          result = result.or(matcher);
-        }
-        return result;
-      });
-  private static final Parser PATTERN = of('^').optional().seq(PATTERN_POSITIVE)
-      .map((List<CharacterPredicate> matchers) -> {
-        return matchers.get(0) == null ? matchers.get(1) : matchers.get(1).not();
-      }).end();
 
   /**
    * Returns a parser that accepts a specific character range.
