@@ -209,7 +209,7 @@ public class CharacterTest {
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, "b", 'b');
     assertSuccess(parser, "c", 'c');
-    assertFailure(parser, "d", 0, "[abc] expected");
+    assertFailure(parser, "d", "[abc] expected");
     assertFailure(parser, "", "[abc] expected");
   }
 
@@ -217,7 +217,7 @@ public class CharacterTest {
   public void testPatternWithMessage() {
     Parser parser = pattern("abc", "wrong");
     assertSuccess(parser, "a", 'a');
-    assertFailure(parser, "d", 0, "wrong");
+    assertFailure(parser, "d", "wrong");
     assertFailure(parser, "", "wrong");
   }
 
@@ -227,7 +227,7 @@ public class CharacterTest {
     assertSuccess(parser, "a", 'a');
     assertSuccess(parser, "b", 'b');
     assertSuccess(parser, "c", 'c');
-    assertFailure(parser, "d", 0, "[a-c] expected");
+    assertFailure(parser, "d", "[a-c] expected");
     assertFailure(parser, "", "[a-c] expected");
   }
 
@@ -238,8 +238,8 @@ public class CharacterTest {
     assertSuccess(parser, "b", 'b');
     assertSuccess(parser, "c", 'c');
     assertSuccess(parser, "d", 'd');
-    assertFailure(parser, "e", 0, "[a-cb-d] expected");
-    assertFailure(parser, "", "[a-cb-d] expected");
+    assertFailure(parser, "e", "[b-da-c] expected");
+    assertFailure(parser, "", "[b-da-c] expected");
   }
 
   @Test
@@ -250,8 +250,8 @@ public class CharacterTest {
     assertSuccess(parser, "c", 'c');
     assertSuccess(parser, "d", 'd');
     assertSuccess(parser, "e", 'e');
-    assertFailure(parser, "f", 0, "[a-cc-e] expected");
-    assertFailure(parser, "", "[a-cc-e] expected");
+    assertFailure(parser, "f", "[c-ea-c] expected");
+    assertFailure(parser, "", "[c-ea-c] expected");
   }
 
   @Test
@@ -262,7 +262,7 @@ public class CharacterTest {
     assertSuccess(parser, "c", 'c');
     assertSuccess(parser, "d", 'd');
     assertSuccess(parser, "e", 'e');
-    assertFailure(parser, "f", 0, "[a-ea-c] expected");
+    assertFailure(parser, "f", "[a-ea-c] expected");
     assertFailure(parser, "", "[a-ea-c] expected");
   }
 
@@ -274,7 +274,7 @@ public class CharacterTest {
     assertSuccess(parser, "c", 'c');
     assertSuccess(parser, "d", 'd');
     assertSuccess(parser, "e", 'e');
-    assertFailure(parser, "f", 0, "[a-ec-e] expected");
+    assertFailure(parser, "f", "[a-ec-e] expected");
     assertFailure(parser, "", "[a-ec-e] expected");
   }
 
@@ -286,8 +286,8 @@ public class CharacterTest {
     assertSuccess(parser, "c", 'c');
     assertSuccess(parser, "d", 'd');
     assertSuccess(parser, "e", 'e');
-    assertFailure(parser, "f", 0, "[a-ec-e] expected");
-    assertFailure(parser, "", "[a-ec-e] expected");
+    assertFailure(parser, "f", "[a-ea-e] expected");
+    assertFailure(parser, "", "[a-ea-e] expected");
   }
 
   @Test
@@ -298,9 +298,9 @@ public class CharacterTest {
     assertSuccess(parser, "d", 'd');
     assertSuccess(parser, "f", 'f');
     assertSuccess(parser, "-", '-');
-    assertFailure(parser, "b", 0, "[ac-df-] expected");
-    assertFailure(parser, "e", 0, "[ac-df-] expected");
-    assertFailure(parser, "g", 0, "[ac-df-] expected");
+    assertFailure(parser, "b", "[ac-df-] expected");
+    assertFailure(parser, "e", "[ac-df-] expected");
+    assertFailure(parser, "g", "[ac-df-] expected");
     assertFailure(parser, "", "[ac-df-] expected");
   }
 
@@ -308,7 +308,7 @@ public class CharacterTest {
   public void testPatternWithNegatedSingle() {
     Parser parser = pattern("^a");
     assertSuccess(parser, "b", 'b');
-    assertFailure(parser, "a", 0, "[^a] expected");
+    assertFailure(parser, "a", "[^a] expected");
     assertFailure(parser, "", "[^a] expected");
   }
 
@@ -316,9 +316,9 @@ public class CharacterTest {
   public void testPatternWithNegatedRange() {
     Parser parser = pattern("^a-c");
     assertSuccess(parser, "d", 'd');
-    assertFailure(parser, "a", 0, "[^a-c] expected");
-    assertFailure(parser, "b", 0, "[^a-c] expected");
-    assertFailure(parser, "c", 0, "[^a-c] expected");
+    assertFailure(parser, "a", "[^a-c] expected");
+    assertFailure(parser, "b", "[^a-c] expected");
+    assertFailure(parser, "c", "[^a-c] expected");
     assertFailure(parser, "", "[^a-c] expected");
   }
 
