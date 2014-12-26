@@ -17,11 +17,7 @@ class CharacterRange {
     sortedRanges.sort(new Comparator<CharacterRange>() {
       @Override
       public int compare(CharacterRange first, CharacterRange second) {
-        return first.start < second.start ? -1
-            : first.start > second.start ? +1
-                : first.stop < second.stop ? -1
-                    : first.stop > second.stop ? +1
-                        : 0;
+        return Character.compare(first.start, second.start);
       }
     });
 
