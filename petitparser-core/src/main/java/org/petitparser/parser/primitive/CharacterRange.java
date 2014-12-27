@@ -38,31 +38,27 @@ class CharacterRange {
       }
     }
 
-    // 3. build the corresponding predicates
-    List<CharacterPredicate> predicates = new ArrayList<>();
-    for (CharacterRange range : mergedRanges) {
-      if (range.stop - range.start > 1) {
-        predicates.add(CharacterPredicate.range(range.start, range.stop));
-      } else {
-        for (char value = range.start; value <= range.stop; value++) {
-          predicates.add(CharacterPredicate.of(value));
-        }
+    // 3. build the best resulting predicates
+    if (mergedRanges.isEmpty()) {
+      return CharacterPredicate.none();
+    } else if (mergedRanges.size() == 1) {
+      return mergedRanges.get(0).start == mergedRanges.get(0).stop
+          ? CharacterPredicate.of(mergedRanges.get(0).start)
+          : CharacterPredicate.range(mergedRanges.get(0).start, mergedRanges.get(0).stop);
+    } else {
+      char[] starts = new char[mergedRanges.size()];
+      char[] stops = new char[mergedRanges.size()];
+      for (int i = 0; i < mergedRanges.size(); i++) {
+        starts[i] = mergedRanges.get(i).start;
+        stops[i] = mergedRanges.get(i).stop;
       }
+      return CharacterPredicate.ranges(starts, stops);
     }
 
-    // 4. when necessary build a composite predicate
-    return predicates.size() == 1
-        ? predicates.get(0)
-        : new CharacterPredicate.AltCharacterPredicate(
-            predicates.toArray(new CharacterPredicate[predicates.size()]));
   }
 
   private final char start;
   private final char stop;
-
-  CharacterRange(char start) {
-    this(start, start);
-  }
 
   CharacterRange(char start, char stop) {
     this.start = start;

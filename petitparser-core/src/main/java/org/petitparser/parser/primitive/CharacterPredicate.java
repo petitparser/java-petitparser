@@ -2,7 +2,6 @@ package org.petitparser.parser.primitive;
 
 import org.petitparser.parser.Parser;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +24,7 @@ public interface CharacterPredicate {
    */
   static CharacterPredicate anyOf(String string) {
     List<CharacterRange> ranges = string.chars()
-        .mapToObj((value) -> new CharacterRange((char) value))
+        .mapToObj((value) -> new CharacterRange((char) value, (char) value))
         .collect(Collectors.toList());
     return CharacterRange.toCharacterPredicate(ranges);
   }
@@ -42,7 +41,7 @@ public interface CharacterPredicate {
    */
   static CharacterPredicate noneOf(String string) {
     List<CharacterRange> ranges = string.chars()
-        .mapToObj((value) -> new CharacterRange((char) value))
+        .mapToObj((value) -> new CharacterRange((char) value, (char) value))
         .collect(Collectors.toList());
     return CharacterRange.toCharacterPredicate(ranges).not();
   }
@@ -55,10 +54,33 @@ public interface CharacterPredicate {
   }
 
   /**
-   * Returns a character predicate that matches any character between {@code start} and {@code stop}.
+   * Returns a character predicate that matches any character between {@code start} and {@code
+   * stop}.
    */
   static CharacterPredicate range(char start, char stop) {
     return value -> start <= value && value <= stop;
+  }
+
+  /**
+   * Returns a character predicate that matches character ranges between {@code starts} and {@code
+   * stops}.
+   */
+  static CharacterPredicate ranges(char[] starts, char[] stops) {
+    if (starts.length != stops.length) {
+      throw new IllegalArgumentException("Invalid ranges.");
+    }
+    for (int i = 0; i < starts.length; i++) {
+      if (starts[i] > stops[i]) {
+        throw new IllegalArgumentException("Invalid range: " + starts[i] + "-" + stops[i]);
+      }
+      if (i + 1 < starts.length && starts[i + 1] <= stops[i]) {
+        throw new IllegalArgumentException("Invalid sequence.");
+      }
+    }
+    return value -> {
+      int index = Arrays.binarySearch(starts, value);
+      return index >= 0 || index < -1 && value <= stops[-index - 2];
+    };
   }
 
   /**
@@ -70,7 +92,7 @@ public interface CharacterPredicate {
 
   class PatternParser {
     static final Parser PATTERN_SIMPLE = CharacterParser.any()
-        .map((Character value) -> new CharacterRange(value));
+        .map((Character value) -> new CharacterRange(value, value));
     static final Parser PATTERN_RANGE = CharacterParser.any()
         .seq(CharacterParser.of('-'))
         .seq(CharacterParser.any())
@@ -156,5 +178,4 @@ public interface CharacterPredicate {
       return new AltCharacterPredicate(array);
     }
   }
-
 }
