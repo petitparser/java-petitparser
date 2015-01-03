@@ -5,8 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Internal class to build a {@link CharacterPredicate} from single characters or ranges of
- * characters.
+ * Internal class to build an optimized {@link CharacterPredicate} from single characters
+ * or ranges of characters.
  */
 class CharacterRange {
 
@@ -14,26 +14,22 @@ class CharacterRange {
 
     // 1. sort the ranges
     List<CharacterRange> sortedRanges = new ArrayList<>(ranges);
-    sortedRanges.sort(new Comparator<CharacterRange>() {
-      @Override
-      public int compare(CharacterRange first, CharacterRange second) {
-        return Character.compare(first.start, second.start);
-      }
-    });
+    sortedRanges.sort(Comparator
+        .comparing((CharacterRange range) -> range.start)
+        .thenComparing((CharacterRange range) -> range.stop));
 
     // 2. merge adjacent or overlapping ranges
     List<CharacterRange> mergedRanges = new ArrayList<>();
-    for (CharacterRange currentRange : sortedRanges) {
+    for (CharacterRange thisRange : sortedRanges) {
       if (mergedRanges.isEmpty()) {
-        mergedRanges.add(currentRange);
+        mergedRanges.add(thisRange);
       } else {
         CharacterRange lastRange = mergedRanges.get(mergedRanges.size() - 1);
-        if (lastRange.stop + 1 >= currentRange.start) {
-          mergedRanges.set(mergedRanges.size() - 1, new CharacterRange(
-              lastRange.start < currentRange.start ? lastRange.start : currentRange.start,
-              lastRange.stop > currentRange.stop ? lastRange.stop : currentRange.stop));
+        if (lastRange.stop + 1 >= thisRange.start) {
+          CharacterRange characterRange = new CharacterRange(lastRange.start, thisRange.stop);
+          mergedRanges.set(mergedRanges.size() - 1, characterRange);
         } else {
-          mergedRanges.add(currentRange);
+          mergedRanges.add(thisRange);
         }
       }
     }
@@ -42,9 +38,10 @@ class CharacterRange {
     if (mergedRanges.isEmpty()) {
       return CharacterPredicate.none();
     } else if (mergedRanges.size() == 1) {
-      return mergedRanges.get(0).start == mergedRanges.get(0).stop
-          ? CharacterPredicate.of(mergedRanges.get(0).start)
-          : CharacterPredicate.range(mergedRanges.get(0).start, mergedRanges.get(0).stop);
+      CharacterRange characterRange = mergedRanges.get(0);
+      return characterRange.start == characterRange.stop
+          ? CharacterPredicate.of(characterRange.start)
+          : CharacterPredicate.range(characterRange.start, characterRange.stop);
     } else {
       char[] starts = new char[mergedRanges.size()];
       char[] stops = new char[mergedRanges.size()];
