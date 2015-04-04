@@ -12,14 +12,14 @@ import java.util.Set;
 import java.util.function.Function;
 
 /**
- * Tools to optimize a parser graph.
+ * Tools to transform and optimize parser graphs.
  */
 public class Optimizer {
 
   private final List<Function<Parser, Parser>> transformers = new ArrayList<>();
 
   /**
-   * Adds a generic parser transformer.
+   * Adds a generic transformer.
    */
   public Optimizer add(Function<Parser, Parser> transformer) {
     transformers.add(transformer);
@@ -27,7 +27,7 @@ public class Optimizer {
   }
 
   /**
-   * Adds a parser transformer that removes unnecessary delegates.
+   * Adds a transformer that removes unnecessary delegates.
    */
   public Optimizer removeDelegates() {
     return add(parser -> {
@@ -40,7 +40,7 @@ public class Optimizer {
   }
 
   /**
-   * Adds a parser transformer that collapses unnecessary copies of parsers.
+   * Adds a transformer that collapses unnecessary copies of parsers.
    */
   public Optimizer removeDuplicates() {
     Set<Parser> uniques = new HashSet<>();
