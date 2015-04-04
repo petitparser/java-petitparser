@@ -3,7 +3,6 @@ package org.petitparser.utils;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
-import org.petitparser.utils.Mirror;
 
 import java.util.function.Consumer;
 import java.util.stream.Collectors;

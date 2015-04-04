@@ -7,9 +7,9 @@ import org.petitparser.parser.combinators.SettableParser;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.petitparser.parser.combinators.SettableParser.undefined;
 import static org.petitparser.parser.primitive.CharacterParser.digit;
 import static org.petitparser.parser.primitive.CharacterParser.of;
-import static org.petitparser.parser.combinators.SettableParser.undefined;
 import static org.petitparser.parser.primitive.StringParser.of;
 
 /**

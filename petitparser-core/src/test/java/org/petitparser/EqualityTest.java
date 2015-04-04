@@ -2,8 +2,8 @@ package org.petitparser;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.parser.combinators.DelegateParser;
+import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.parser.primitive.EpsilonParser;
 import org.petitparser.parser.primitive.FailureParser;
 import org.petitparser.parser.primitive.StringParser;

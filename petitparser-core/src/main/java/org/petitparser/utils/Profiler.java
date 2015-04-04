@@ -2,7 +2,6 @@ package org.petitparser.utils;
 
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
-import org.petitparser.utils.Mirror;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -3,7 +3,6 @@ package org.petitparser.utils;
 import org.junit.Test;
 import org.petitparser.ExamplesTest;
 import org.petitparser.context.Result;
-import org.petitparser.utils.Profiler;
 
 import java.util.ArrayList;
 import java.util.List;
