@@ -34,9 +34,7 @@ public class JsonGrammar extends CompositeParser {
 
   protected static String listToString(Collection<Character> characters) {
     StringBuilder builder = new StringBuilder(characters.size());
-    for (Character character : characters) {
-      builder.append(character);
-    }
+    characters.forEach(builder::append);
     return builder.toString();
   }
 

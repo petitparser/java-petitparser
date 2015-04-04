@@ -3,6 +3,7 @@ package org.petitparser.grammar.xml;
 import org.petitparser.tools.CompositeParser;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -96,7 +97,7 @@ public class XmlGrammar extends CompositeParser {
           @Override
           public List<?> apply(List<?> list) {
             if (list.get(4).equals("/>")) {
-              return Arrays.asList(list.get(1), list.get(2), Arrays.asList());
+              return Arrays.asList(list.get(1), list.get(2), Collections.emptyList());
             } else {
               List<?> end = (List<?>) list.get(4);
               if (list.get(1).equals(end.get(3))) {

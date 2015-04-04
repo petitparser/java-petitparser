@@ -5,6 +5,7 @@ import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.SettableParser;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
@@ -154,7 +155,8 @@ public class ExamplesTest {
 
   @Test
   public void testExpression() {
-    Parser number = digit().plus().flatten().trim().map((String value) -> Integer.parseInt(value));
+    Parser number = digit().plus().flatten().trim().map(
+        (Function<String, Integer>) Integer::parseInt);
 
     SettableParser term = SettableParser.undefined();
     SettableParser prod = SettableParser.undefined();

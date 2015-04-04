@@ -120,11 +120,6 @@ public abstract class CompositeParser extends DelegateParser {
    * method during initialization.
    */
   protected final <S, T> void action(String name, final Function<S, T> function) {
-    redef(name, new Function<Parser, Parser>() {
-      @Override
-      public Parser apply(Parser parser) {
-        return parser.map(function);
-      }
-    });
+    redef(name, parser -> parser.map(function));
   }
 }

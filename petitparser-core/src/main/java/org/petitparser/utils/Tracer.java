@@ -36,7 +36,7 @@ public class Tracer {
   /**
    * The trace event type differentiating between activation and return.
    */
-  public static enum TraceEventType {
+  public enum TraceEventType {
     ENTER,
     EXIT
   }

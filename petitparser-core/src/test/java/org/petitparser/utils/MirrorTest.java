@@ -77,7 +77,7 @@ public class MirrorTest {
     parser1.set(parser1);
     Mirror mirror = Mirror.of(parser1);
     List<Parser> parsers = mirror.stream().collect(Collectors.toList());
-    assertEquals(Arrays.<Parser>asList(parser1), parsers);
+    assertEquals(Arrays.asList(parser1), parsers);
   }
 
   @Test

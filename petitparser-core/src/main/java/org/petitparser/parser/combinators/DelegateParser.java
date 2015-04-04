@@ -5,6 +5,7 @@ import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,7 +35,7 @@ public class DelegateParser extends Parser {
 
   @Override
   public List<Parser> getChildren() {
-    return Arrays.asList(delegate);
+    return Collections.singletonList(delegate);
   }
 
   @Override
