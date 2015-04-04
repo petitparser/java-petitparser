@@ -17,7 +17,7 @@ From the command line check out the code and install your own copy:
 
     $ git clone https://github.com/petitparser/java-petitparser.git
     $ cd java-petitparser
-    $ git checkout 2.0.0-alpha-2
+    $ git checkout 2.0.0
     $ mvn install
 
 Then add the following snippet to your `pom.xml` file:
@@ -26,7 +26,7 @@ Then add the following snippet to your `pom.xml` file:
       <dependency>
         <groupId>com.github.petitparser</groupId>
         <artifactId>petitparser</artifactId>
-        <version>2.0.0-alpha-2</version>
+        <version>2.0.0</version>
       </dependency>
     </dependencies>
 
