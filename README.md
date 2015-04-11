@@ -25,7 +25,7 @@ Then add the following snippet to your `pom.xml` file:
     <dependencies>
       <dependency>
         <groupId>com.github.petitparser</groupId>
-        <artifactId>petitparser</artifactId>
+        <artifactId>petitparser-core</artifactId>
         <version>2.0.0</version>
       </dependency>
     </dependencies>
