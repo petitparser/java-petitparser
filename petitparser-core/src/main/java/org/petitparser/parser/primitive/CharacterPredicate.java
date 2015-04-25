@@ -67,7 +67,7 @@ public interface CharacterPredicate {
    */
   static CharacterPredicate ranges(char[] starts, char[] stops) {
     if (starts.length != stops.length) {
-      throw new IllegalArgumentException("Invalid ranges.");
+      throw new IllegalArgumentException("Invalid range sizes.");
     }
     for (int i = 0; i < starts.length; i++) {
       if (starts[i] > stops[i]) {
@@ -137,45 +137,6 @@ public interface CharacterPredicate {
     @Override
     public CharacterPredicate not() {
       return predicate;
-    }
-  }
-
-  /**
-   * Matches either this character predicate or any of the other {@code predicates}.
-   */
-  default CharacterPredicate or(CharacterPredicate... others) {
-    CharacterPredicate[] predicates = new CharacterPredicate[1 + others.length];
-    predicates[0] = this;
-    System.arraycopy(others, 0, predicates, 1, others.length);
-    return new AltCharacterPredicate(predicates);
-  }
-
-  /**
-   * The alternative character predicate.
-   */
-  class AltCharacterPredicate implements CharacterPredicate {
-
-    private final CharacterPredicate[] predicates;
-
-    public AltCharacterPredicate(CharacterPredicate... predicates) {
-      this.predicates = predicates;
-    }
-
-    @Override
-    public boolean test(char value) {
-      for (CharacterPredicate predicate : predicates) {
-        if (predicate.test(value)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    @Override
-    public CharacterPredicate or(CharacterPredicate... others) {
-      CharacterPredicate[] array = Arrays.copyOf(predicates, predicates.length + others.length);
-      System.arraycopy(others, 0, array, predicates.length, others.length);
-      return new AltCharacterPredicate(array);
     }
   }
 }

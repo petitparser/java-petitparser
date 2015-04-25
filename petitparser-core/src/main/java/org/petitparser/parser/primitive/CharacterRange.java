@@ -5,18 +5,21 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Internal class to build an optimized {@link CharacterPredicate} from single characters
- * or ranges of characters.
+ * Internal class to build an optimized {@link CharacterPredicate} from single characters or ranges
+ * of characters.
  */
 class CharacterRange {
+
+  static final Comparator<CharacterRange> CHARACTER_RANGE_COMPARATOR =
+      Comparator
+          .comparing((CharacterRange range) -> range.start)
+          .thenComparing((CharacterRange range) -> range.stop);
 
   static CharacterPredicate toCharacterPredicate(List<CharacterRange> ranges) {
 
     // 1. sort the ranges
     List<CharacterRange> sortedRanges = new ArrayList<>(ranges);
-    sortedRanges.sort(Comparator
-        .comparing((CharacterRange range) -> range.start)
-        .thenComparing((CharacterRange range) -> range.stop));
+    sortedRanges.sort(CHARACTER_RANGE_COMPARATOR);
 
     // 2. merge adjacent or overlapping ranges
     List<CharacterRange> mergedRanges = new ArrayList<>();
@@ -51,7 +54,6 @@ class CharacterRange {
       }
       return CharacterPredicate.ranges(starts, stops);
     }
-
   }
 
   private final char start;
