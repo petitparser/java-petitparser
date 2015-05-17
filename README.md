@@ -167,7 +167,7 @@ term.set(prod.seq(of('+').trim()).seq(term).map((List<Integer> values) -> {
   return values.get(0) + values.get(2);
 }).or(prod));
 prod.set(prim.seq(of('*').trim()).seq(prod).map((List<Integer> values) -> {
-  return values.get(0)values.get(2);
+  return values.get(0) * values.get(2);
 }).or(prim));
 prim.set((of('(').trim().seq(term).seq(of(')').trim())).map((List<Integer> values) -> {
   return values.get(1);
@@ -183,8 +183,8 @@ Parser start = term.end();
 That's it, now we can test our parser and evaluator:
 
 ```java
-System.out.println(start.parse("1 + 23").get());  // 7
-System.out.println(start.parse("(1 + 2)3").get());  // 9
+System.out.println(start.parse("1 + 2 * 3").get());  // 7
+System.out.println(start.parse("(1 + 2) * 3").get());  // 9
 ```
 
 As an exercise we could extend the parser to also accept negative numbers and floating point numbers, not only integers. Furthermore it would be useful to support subtraction and division as well. All these features
