@@ -69,7 +69,7 @@ Result id1 = id.parse("yeah");
 Result id2 = id.parse("f12");
 ```
 
-The method `String` returns `Result`, which is either an instance of `Success` or `Failure`. In both examples above we are successful and can retrieve the parse result using `Success#get():
+The method `String` returns `Result`, which is either an instance of `Success` or `Failure`. In both examples above we are successful and can retrieve the parse result using `Success#get()`:
 
 ```java
 System.out.println(id1.value);  // ['y', ['e', 'a', 'h']]
