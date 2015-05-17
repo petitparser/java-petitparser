@@ -14,21 +14,24 @@ Installation
 
 From the command line check out the code and install your own copy:
 
-    $ git clone https://github.com/petitparser/java-petitparser.git
-    $ cd java-petitparser
-    $ git checkout 2.0.0
-    $ mvn install
+```bash
+git clone https://github.com/petitparser/java-petitparser.git
+cd java-petitparser
+git checkout 2.0.0
+mvn install
+```
 
 Then add the following snippet to your `pom.xml` file:
 
-    <dependencies>
-      <dependency>
-        <groupId>com.github.petitparser</groupId>
-        <artifactId>petitparser-core</artifactId>
-        <version>2.0.0</version>
-      </dependency>
-    </dependencies>
-
+```xml
+<dependencies>
+  <dependency>
+    <groupId>com.github.petitparser</groupId>
+    <artifactId>petitparser-core</artifactId>
+    <version>2.0.0</version>
+  </dependency>
+</dependencies>
+```
 
 Tutorial
 --------
