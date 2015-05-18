@@ -51,7 +51,7 @@ class Example {
 }
 ```
 
-If you look at the object {@code id} in the debugger, you'll notice that the code above builds a tree of parser objects:
+If you look at the object `id` in the debugger, you'll notice that the code above builds a tree of parser objects:
 
 - `SequenceParser`: This parser accepts a sequence of parsers.
   - `CharacterParser`: This parser accepts a single letter.
@@ -72,8 +72,8 @@ Result id2 = id.parse("f12");
 The method `String` returns `Result`, which is either an instance of `Success` or `Failure`. In both examples above we are successful and can retrieve the parse result using `Success#get()`:
 
 ```java
-System.out.println(id1.value);  // ['y', ['e', 'a', 'h']]
-System.out.println(id2.value);  // ['f', ['1', '2']]
+System.out.println(id1.get());  // ['y', ['e', 'a', 'h']]
+System.out.println(id2.get());  // ['f', ['1', '2']]
 ```
 
 While it seems odd to get these nested arrays with characters as a return value, this is the default decomposition of the input into a parse tree. We'll see in a while how that can be customized.
