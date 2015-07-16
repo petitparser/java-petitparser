@@ -11,36 +11,52 @@ import org.petitparser.parser.primitive.StringParser;
 @Deprecated
 public class Parsers {
 
-  private Parsers() {
-  }
+  private Parsers() { }
 
+  /**
+   * Replace this deprecated call with {@link EpsilonParser}.
+   */
   @Deprecated
   public static Parser epsilon() {
     return new EpsilonParser();
   }
 
+  /**
+   * Replace this deprecated call with {@link FailureParser#withMessage(String)}.
+   */
   @Deprecated
   public static Parser failure(String message) {
     return FailureParser.withMessage(message);
   }
 
+  /**
+   * Replace this deprecated call with {@link StringParser#of(String)}.
+   */
   @Deprecated
   public static Parser string(String string) {
     return StringParser.of(string);
   }
 
+  /**
+   * Replace this deprecated call with {@link StringParser#of(String, String)}.
+   */
   @Deprecated
   public static Parser string(String string, String message) {
     return StringParser.of(string, message);
   }
 
+  /**
+   * Replace this deprecated call with {@link StringParser#ofIgnoringCase(String)}.
+   */
   @Deprecated
   public static Parser stringIgnoreCase(String string) {
     return StringParser.ofIgnoringCase(string);
   }
 
+  /**
+   * Replace this deprecated call with {@link StringParser#ofIgnoringCase(String, String)}.
+   */
   public static Parser stringIgnoreCase(String string, String message) {
     return StringParser.ofIgnoringCase(string, message);
   }
-
 }

@@ -1,5 +1,7 @@
 package org.petitparser.utils;
 
+import org.petitparser.parser.Parser;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -46,7 +48,8 @@ public class Functions {
   }
 
   /**
-   * Returns a function that skips the separators of a given list.
+   * Returns a function that skips the separators of a given list, see {@link
+   * Parser#separatedBy(Parser)}.
    */
   public static <T> Function<List<T>, List<T>> withoutSeparators() {
     return (list) -> {

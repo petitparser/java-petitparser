@@ -20,10 +20,10 @@ public abstract class RepeatingParser extends DelegateParser {
     this.min = min;
     this.max = max;
     if (min < 0) {
-      throw new IllegalArgumentException("Invalid min repetitions");
+      throw new IllegalArgumentException("Invalid min repetitions: " + getRange());
     }
     if (max != UNBOUNDED && min > max) {
-      throw new IllegalArgumentException("Invalid max repetitions");
+      throw new IllegalArgumentException("Invalid max repetitions: " + getRange());
     }
   }
 
@@ -36,6 +36,10 @@ public abstract class RepeatingParser extends DelegateParser {
 
   @Override
   public String toString() {
-    return super.toString() + "[" + min + ".." + (max == UNBOUNDED ? "*" : max) + "]";
+    return super.toString() + "[" + getRange() + "]";
+  }
+
+  private String getRange() {
+    return min + ".." + (max == UNBOUNDED ? "*" : max);
   }
 }

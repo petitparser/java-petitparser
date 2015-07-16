@@ -11,6 +11,9 @@ import java.util.Objects;
  */
 public class FailureParser extends Parser {
 
+  /**
+   * Construct a {@link FailureParser} that fails with the supplied {@code message}.
+   */
   public static Parser withMessage(String message) {
     return new FailureParser(message);
   }

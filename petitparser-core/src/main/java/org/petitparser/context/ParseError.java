@@ -12,6 +12,9 @@ public class ParseError extends RuntimeException {
     this.failure = failure;
   }
 
+  /**
+   * Return the parse {@link Context} causing this error.
+   */
   public Failure getFailure() {
     return failure;
   }
