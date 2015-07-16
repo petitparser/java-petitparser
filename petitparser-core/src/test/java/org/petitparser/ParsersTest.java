@@ -437,7 +437,7 @@ public class ParsersTest {
     Token token = parser.parse(" aa ").get();
     assertEquals(1, token.getStart());
     assertEquals(3, token.getStop());
-    assertEquals(Arrays.asList('a', 'a'), token.getValue());
+    assertEquals(Arrays.asList('a', 'a'), token.<List<Character>>getValue());
   }
 
   @Test
