@@ -11,8 +11,7 @@ import java.util.List;
 @Deprecated
 public class Parsing {
 
-  private Parsing() {
-  }
+  private Parsing() { }
 
   @Deprecated
   public static Result parse(Parser parser, String string) {

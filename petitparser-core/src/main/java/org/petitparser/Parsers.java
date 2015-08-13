@@ -11,8 +11,7 @@ import org.petitparser.parser.primitive.StringParser;
 @Deprecated
 public class Parsers {
 
-  private Parsers() {
-  }
+  private Parsers() { }
 
   @Deprecated
   public static Parser epsilon() {
@@ -39,6 +38,7 @@ public class Parsers {
     return StringParser.ofIgnoringCase(string);
   }
 
+  @Deprecated
   public static Parser stringIgnoreCase(String string, String message) {
     return StringParser.ofIgnoringCase(string, message);
   }

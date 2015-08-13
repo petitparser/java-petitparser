@@ -9,8 +9,7 @@ import org.petitparser.parser.primitive.CharacterParser;
 @Deprecated
 public class Chars {
 
-  private Chars() {
-  }
+  private Chars() { }
 
   @Deprecated
   public static Parser any() {
