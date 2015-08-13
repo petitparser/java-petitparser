@@ -1,11 +1,13 @@
 package org.petitparser.tools;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.SettableParser;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.petitparser.parser.combinators.SettableParser.undefined;
 import static org.petitparser.parser.primitive.CharacterParser.digit;
@@ -17,10 +19,46 @@ import static org.petitparser.parser.primitive.StringParser.of;
  */
 public class ExpressionBuilderTest {
 
-  private static final double EPSILON = 1e-5;
-  private static final Parser PARSER = createParser();
+  Parser parser;
 
-  private static Parser createParser() {
+  @Before
+  public void setUpParser() {
+    SettableParser root = undefined();
+    ExpressionBuilder builder = new ExpressionBuilder();
+    builder.group()
+        .primitive(of('(').trim()
+            .seq(root)
+            .seq(of(')').trim()))
+        .primitive(digit().plus().seq(of('.')
+            .seq(digit().plus()).optional())
+            .flatten()
+            .trim());
+    builder.group()
+        .prefix(of('-').trim());
+    builder.group()
+        .postfix(of("++").trim())
+        .postfix(of("--").trim());
+    builder.group()
+        .right(of('^').trim());
+    builder.group()
+        .left(of('*').trim())
+        .left(of('/').trim());
+    builder.group()
+        .left(of('+').trim())
+        .left(of('-').trim());
+    root.set(builder.build());
+    parser = root.end();
+  }
+
+  private void assertParse(String input, Object expected) {
+    Object actual = parser.parse(input).get();
+    assertEquals(expected, actual);
+  }
+
+  Parser evaluator;
+
+  @Before
+  public void setUpEvaluator() {
     SettableParser root = undefined();
     ExpressionBuilder builder = new ExpressionBuilder();
     builder.group()
@@ -47,155 +85,227 @@ public class ExpressionBuilderTest {
         .left(of('+').trim(), (List<Double> values) -> values.get(0) + values.get(2))
         .left(of('-').trim(), (List<Double> values) -> values.get(0) - values.get(2));
     root.set(builder.build());
-    return root.end();
+    evaluator = root.end();
   }
 
-  private static void assertExpression(String input, double expected) {
-    double actual = PARSER.parse(input).get();
-    assertEquals(expected, actual, EPSILON);
-  }
-
-  @Test
-  public void testNumber() {
-    assertExpression("0", 0);
-    assertExpression("0.0", 0);
-    assertExpression("1", 1);
-    assertExpression("1.2", 1.2);
-    assertExpression("34", 34);
-    assertExpression("34.7", 34.7);
-    assertExpression("56.78", 56.78);
+  private void assertEvaluation(String input, double expected) {
+    double actual = evaluator.parse(input).get();
+    assertEquals(expected, actual, 1e-5);
   }
 
   @Test
-  public void testNegativeNumber() {
-    assertExpression("-1", -1);
-    assertExpression("-1.2", -1.2);
+  public void testParseNumber() {
+    assertParse("0", "0");
+    assertParse("1.2", "1.2");
+    assertParse("34.78", "34.78");
   }
 
   @Test
-  public void testAdd() {
-    assertExpression("1 + 2", 3);
-    assertExpression("2 + 1", 3);
-    assertExpression("1 + 2.3", 3.3);
-    assertExpression("2.3 + 1", 3.3);
-    assertExpression("1 + -2", -1);
-    assertExpression("-2 + 1", -1);
+  public void testEvaluateNumber() {
+    assertEvaluation("0", 0);
+    assertEvaluation("0.0", 0);
+    assertEvaluation("1", 1);
+    assertEvaluation("1.2", 1.2);
+    assertEvaluation("34", 34);
+    assertEvaluation("34.7", 34.7);
+    assertEvaluation("56.78", 56.78);
   }
 
   @Test
-  public void testAddMany() {
-    assertExpression("1", 1);
-    assertExpression("1 + 2", 3);
-    assertExpression("1 + 2 + 3", 6);
-    assertExpression("1 + 2 + 3 + 4", 10);
-    assertExpression("1 + 2 + 3 + 4 + 5", 15);
+  public void testParseNegativeNumber() {
+    assertParse("-1", asList('-', "1"));
+    assertParse("-1.2", asList('-', "1.2"));
   }
 
   @Test
-  public void testSub() {
-    assertExpression("1 - 2", -1);
-    assertExpression("1.2 - 1.2", 0);
-    assertExpression("1 - -2", 3);
-    assertExpression("-1 - -2", 1);
+  public void testEvaluateNegativeNumber() {
+    assertEvaluation("-1", -1);
+    assertEvaluation("-1.2", -1.2);
   }
 
   @Test
-  public void testSubMany() {
-    assertExpression("1", 1);
-    assertExpression("1 - 2", -1);
-    assertExpression("1 - 2 - 3", -4);
-    assertExpression("1 - 2 - 3 - 4", -8);
-    assertExpression("1 - 2 - 3 - 4 - 5", -13);
+  public void testParseAdd() {
+    assertParse("1 + 2", asList("1", '+', "2"));
+    assertParse("1 + 2 + 3", asList(asList("1", '+', "2"), '+', "3"));
   }
 
   @Test
-  public void testMul() {
-    assertExpression("2 * 3", 6);
-    assertExpression("2 * -4", -8);
+  public void testEvaluateAdd() {
+    assertEvaluation("1 + 2", 3);
+    assertEvaluation("2 + 1", 3);
+    assertEvaluation("1 + 2.3", 3.3);
+    assertEvaluation("2.3 + 1", 3.3);
+    assertEvaluation("1 + -2", -1);
+    assertEvaluation("-2 + 1", -1);
   }
 
   @Test
-  public void testMulMany() {
-    assertExpression("1 * 2", 2);
-    assertExpression("1 * 2 * 3", 6);
-    assertExpression("1 * 2 * 3 * 4", 24);
-    assertExpression("1 * 2 * 3 * 4 * 5", 120);
+  public void testEvaluateAddMany() {
+    assertEvaluation("1", 1);
+    assertEvaluation("1 + 2", 3);
+    assertEvaluation("1 + 2 + 3", 6);
+    assertEvaluation("1 + 2 + 3 + 4", 10);
+    assertEvaluation("1 + 2 + 3 + 4 + 5", 15);
   }
 
   @Test
-  public void testDiv() {
-    assertExpression("12 / 3", 4);
-    assertExpression("-16 / -4", 4);
+  public void testParseSub() {
+    assertParse("1 - 2", asList("1", '-', "2"));
+    assertParse("1 - 2 - 3", asList(asList("1", '-', "2"), '-', "3"));
   }
 
   @Test
-  public void testDivMany() {
-    assertExpression("100 / 2", 50);
-    assertExpression("100 / 2 / 2", 25);
-    assertExpression("100 / 2 / 2 / 5", 5);
-    assertExpression("100 / 2 / 2 / 5 / 5", 1);
+  public void testEvaluateSub() {
+    assertEvaluation("1 - 2", -1);
+    assertEvaluation("1.2 - 1.2", 0);
+    assertEvaluation("1 - -2", 3);
+    assertEvaluation("-1 - -2", 1);
   }
 
   @Test
-  public void testPow() {
-    assertExpression("2 ^ 3", 8);
-    assertExpression("-2 ^ 3", -8);
-    assertExpression("-2 ^ -3", -0.125);
+  public void testEvaluateSubMany() {
+    assertEvaluation("1", 1);
+    assertEvaluation("1 - 2", -1);
+    assertEvaluation("1 - 2 - 3", -4);
+    assertEvaluation("1 - 2 - 3 - 4", -8);
+    assertEvaluation("1 - 2 - 3 - 4 - 5", -13);
   }
 
   @Test
-  public void testPowMany() {
-    assertExpression("4 ^ 3", 64);
-    assertExpression("4 ^ 3 ^ 2", 262144);
-    assertExpression("4 ^ 3 ^ 2 ^ 1", 262144);
-    assertExpression("4 ^ 3 ^ 2 ^ 1 ^ 0", 262144);
+  public void testParseMul() {
+    assertParse("1 * 2", asList("1", '*', "2"));
+    assertParse("1 * 2 * 3", asList(asList("1", '*', "2"), '*', "3"));
   }
 
   @Test
-  public void testParenthesis() {
-    assertExpression("(1)", 1);
-    assertExpression("(1 + 2)", 3);
-    assertExpression("((1))", 1);
-    assertExpression("((1 + 2))", 3);
-    assertExpression("2 * (3 + 4)", 14);
-    assertExpression("(2 + 3) * 4", 20);
-    assertExpression("6 / (2 + 4)", 1);
-    assertExpression("(2 + 6) / 2", 4);
+  public void testEvaluateMul() {
+    assertEvaluation("2 * 3", 6);
+    assertEvaluation("2 * -4", -8);
   }
 
   @Test
-  public void testPriority() {
-    assertExpression("2 * 3 + 4", 10);
-    assertExpression("2 + 3 * 4", 14);
-    assertExpression("6 / 3 + 4", 6);
-    assertExpression("2 + 6 / 2", 5);
+  public void testEvaluateMulMany() {
+    assertEvaluation("1 * 2", 2);
+    assertEvaluation("1 * 2 * 3", 6);
+    assertEvaluation("1 * 2 * 3 * 4", 24);
+    assertEvaluation("1 * 2 * 3 * 4 * 5", 120);
   }
 
   @Test
-  public void testPostfixAdd() {
-    assertExpression("0++", 1);
-    assertExpression("0++++", 2);
-    assertExpression("0++++++", 3);
-    assertExpression("0+++1", 2);
-    assertExpression("0+++++1", 3);
-    assertExpression("0+++++++1", 4);
+  public void testParseDiv() {
+    assertParse("1 / 2", asList("1", '/', "2"));
+    assertParse("1 / 2 / 3", asList(asList("1", '/', "2"), '/', "3"));
   }
 
   @Test
-  public void testPostfixSub() {
-    assertExpression("1--", 0);
-    assertExpression("2----", 0);
-    assertExpression("3------", 0);
-    assertExpression("2---1", 0);
-    assertExpression("3-----1", 0);
-    assertExpression("4-------1", 0);
+  public void testEvaluateDiv() {
+    assertEvaluation("12 / 3", 4);
+    assertEvaluation("-16 / -4", 4);
   }
 
   @Test
-  public void testPrefixNegate() {
-    assertExpression("1", 1);
-    assertExpression("-1", -1);
-    assertExpression("--1", 1);
-    assertExpression("---1", -1);
+  public void testEvaluateDivMany() {
+    assertEvaluation("100 / 2", 50);
+    assertEvaluation("100 / 2 / 2", 25);
+    assertEvaluation("100 / 2 / 2 / 5", 5);
+    assertEvaluation("100 / 2 / 2 / 5 / 5", 1);
+  }
+
+  @Test
+  public void testParsePow() {
+    assertParse("1 ^ 2", asList("1", '^', "2"));
+    assertParse("1 ^ 2 ^ 3", asList("1", '^', asList("2", '^', "3")));
+  }
+
+  @Test
+  public void testEvaluatePow() {
+    assertEvaluation("2 ^ 3", 8);
+    assertEvaluation("-2 ^ 3", -8);
+    assertEvaluation("-2 ^ -3", -0.125);
+  }
+
+  @Test
+  public void testEvaluatePowMany() {
+    assertEvaluation("4 ^ 3", 64);
+    assertEvaluation("4 ^ 3 ^ 2", 262144);
+    assertEvaluation("4 ^ 3 ^ 2 ^ 1", 262144);
+    assertEvaluation("4 ^ 3 ^ 2 ^ 1 ^ 0", 262144);
+  }
+
+  @Test
+  public void testParseParenthesis() {
+    assertParse("(1)", asList('(', "1", ')'));
+  }
+
+  @Test
+  public void testEvaluateParenthesis() {
+    assertEvaluation("(1)", 1);
+    assertEvaluation("(1 + 2)", 3);
+    assertEvaluation("((1))", 1);
+    assertEvaluation("((1 + 2))", 3);
+    assertEvaluation("2 * (3 + 4)", 14);
+    assertEvaluation("(2 + 3) * 4", 20);
+    assertEvaluation("6 / (2 + 4)", 1);
+    assertEvaluation("(2 + 6) / 2", 4);
+  }
+
+  @Test
+  public void testParsePriority() {
+    assertParse("1 * 2 + 3", asList(asList("1", '*', "2"), '+', "3"));
+    assertParse("1 + 2 * 3", asList("1", '+', asList("2", '*', "3")));
+  }
+
+  @Test
+  public void testEvaluatePriority() {
+    assertEvaluation("2 * 3 + 4", 10);
+    assertEvaluation("2 + 3 * 4", 14);
+    assertEvaluation("6 / 3 + 4", 6);
+    assertEvaluation("2 + 6 / 2", 5);
+  }
+
+  @Test
+  public void testParsePostfixAdd() {
+    assertParse("0++", asList("0", "++"));
+    assertParse("0++++", asList(asList("0", "++"), "++"));
+  }
+
+  @Test
+  public void testEvaluatePostfixAdd() {
+    assertEvaluation("0++", 1);
+    assertEvaluation("0++++", 2);
+    assertEvaluation("0++++++", 3);
+    assertEvaluation("0+++1", 2);
+    assertEvaluation("0+++++1", 3);
+    assertEvaluation("0+++++++1", 4);
+  }
+
+  @Test
+  public void testParsePostfixSub() {
+    assertParse("0--", asList("0", "--"));
+    assertParse("0----", asList(asList("0", "--"), "--"));
+  }
+
+  @Test
+  public void testEvaluatePostfixSub() {
+    assertEvaluation("1--", 0);
+    assertEvaluation("2----", 0);
+    assertEvaluation("3------", 0);
+    assertEvaluation("2---1", 0);
+    assertEvaluation("3-----1", 0);
+    assertEvaluation("4-------1", 0);
+  }
+
+  @Test
+  public void testParsePrefixNegate() {
+    assertParse("-0", asList('-', "0"));
+    assertParse("--0", asList('-', asList('-', "0")));
+  }
+
+  @Test
+  public void testEvaluatePrefixNegate() {
+    assertEvaluation("1", 1);
+    assertEvaluation("-1", -1);
+    assertEvaluation("--1", 1);
+    assertEvaluation("---1", -1);
   }
 }
