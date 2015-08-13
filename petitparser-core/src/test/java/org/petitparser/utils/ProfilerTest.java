@@ -73,4 +73,18 @@ public class ProfilerTest {
     assertEquals(1, actual.get(4).activationCount);
     assertTrue(actual.get(4).elapsedNanoseconds > 0);
   }
+
+  @Test
+  public void testProfileToString() {
+    List<Profiler.Profile> profiles = new ArrayList<>();
+    Profiler.on(ExamplesTest.IDENTIFIER, profiles::add).parse("ab123");
+    for (Profiler.Profile profile : profiles) {
+      String[] token = profile.toString().split("\t");
+      assertEquals(4, token.length);
+      assertEquals(token[0], Integer.toString(profile.activationCount));
+      assertEquals(token[1], Integer.toString(profile.totalActivationCount));
+      assertEquals(token[2], Long.toString(profile.elapsedNanoseconds));
+      assertEquals(token[3], profile.parser.toString());
+    }
+  }
 }
