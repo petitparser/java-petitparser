@@ -5,7 +5,9 @@ import org.petitparser.parser.Parser;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
+import static java.util.function.Function.identity;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.petitparser.Assertions.assertFailure;
@@ -78,6 +80,18 @@ public class CompositeParserTest {
   }
 
   @Test
+  public void testRedefineWithAction() {
+    Parser parser = new CompositeParser() {
+      @Override
+      protected void initialize() {
+        def("start", of('a'));
+        action("start", value -> 'b');
+      }
+    };
+    assertSuccess(parser, "a", 'b', 1);
+  }
+
+  @Test
   public void testRefCompleted() {
     final Map<String, Parser> parsers = new HashMap<>();
     parsers.put("start", of('a'));
@@ -137,6 +151,39 @@ public class CompositeParserTest {
         redef("star1", of('b'));
       }
     };
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testUndefinedRedefWithFunction() {
+    new CompositeParser() {
+      @Override
+      protected void initialize() {
+        def("start", of('a'));
+        redef("star1", identity());
+      }
+    };
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testDefAfterCompleted() {
+    CompositeParser parser = new CompositeParser() {
+      @Override
+      protected void initialize() {
+        def("start", of('a'));
+      }
+    };
+    parser.def("some", of('b'));
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testRedefAfterCompleted() {
+    CompositeParser parser = new CompositeParser() {
+      @Override
+      protected void initialize() {
+        def("start", of('a'));
+      }
+    };
+    parser.redef("start", of('b'));
   }
 
 }
