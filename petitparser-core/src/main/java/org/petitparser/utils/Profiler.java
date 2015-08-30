@@ -72,7 +72,10 @@ public class Profiler {
 
     @Override
     public String toString() {
-      return activationCount + "\t" + elapsedNanoseconds + "\t" + parser;
+      return activationCount + "\t" +
+          totalActivationCount + "\t" +
+          elapsedNanoseconds + "\t" +
+          parser;
     }
   }
 

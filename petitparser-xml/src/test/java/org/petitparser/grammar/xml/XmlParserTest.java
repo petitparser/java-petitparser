@@ -69,27 +69,32 @@ public class XmlParserTest {
 
   @Test
   public void testEmptyElement() {
-    assertParseInvariant("<?xml version=\"1.0\" encoding=\"UTF-8\"?><schema/>");
+    assertParseInvariant("<schema/>");
   }
 
   @Test
   public void testNamespace() {
-    assertParseInvariant("<?xml version=\"1.0\" encoding=\"UTF-8\"?><xs:schema></xs:schema>");
+    assertParseInvariant("<xs:schema></xs:schema>");
+  }
+
+  @Test
+  public void testCdata() {
+    assertParseInvariant("<schema><![CDATA[<[xml]>]]></schema>");
   }
 
   @Test
   public void testSimple() {
-    assertParseInvariant("<?xml version=\"1.0\" encoding=\"UTF-8\"?><schema></schema>");
+    assertParseInvariant("<schema></schema>");
   }
 
   @Test
   public void testSimpleAttribute() {
-    assertParseInvariant("<?xml version=\"1.0\" encoding=\"UTF-8\"?><schema foo=\"bar\"></schema>");
+    assertParseInvariant("<schema foo=\"bar\"></schema>");
   }
 
   @Test
   public void testSimpleAttributeWithSingleQuote() {
-    assertParseInvariant("<?xml version=\"1.0\" encoding=\"UTF-8\"?><schema foo='bar'></schema>");
+    assertParseInvariant("<schema foo='bar'></schema>");
   }
 
   @Test

@@ -56,6 +56,7 @@ public class Parsers {
   /**
    * Replace this deprecated call with {@link StringParser#ofIgnoringCase(String, String)}.
    */
+  @Deprecated
   public static Parser stringIgnoreCase(String string, String message) {
     return StringParser.ofIgnoringCase(string, message);
   }
