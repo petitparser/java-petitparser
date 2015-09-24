@@ -14,6 +14,8 @@ This library is open source, stable and well tested. Development happens on [Git
 Installation
 ------------
 
+### Maven
+
 From the command line check out the code and install your own copy:
 
 ```bash
@@ -34,6 +36,16 @@ Then add the following snippet to your `pom.xml` file:
   </dependency>
 </dependencies>
 ```
+
+### Bazel
+
+Alternatively, if you'd like to use [Bazel](http://bazel.io/) checkout the repository as above, but then run:
+
+```bash
+bazel build --java_toolchain=//:java_toolchain //petitparser-core:core
+bazel test --java_toolchain=//:java_toolchain //petitparser-core:test 
+```
+
 
 Tutorial
 --------

@@ -2,3 +2,8 @@
 target/
 *.iml
 .DS_Store
+bazel-bin
+bazel-genfiles
+bazel-out
+bazel-petitparser
+bazel-testlogs
