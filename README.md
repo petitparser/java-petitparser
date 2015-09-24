@@ -1,6 +1,8 @@
 PetitParser for Java
 ====================
 
+[![Join the chat at https://gitter.im/petitparser/java-petitparser](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/petitparser/java-petitparser?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/petitparser/java-petitparser.svg)](https://travis-ci.org/petitparser/java-petitparser)
 [![Coverage Status](https://coveralls.io/repos/petitparser/java-petitparser/badge.svg)](https://coveralls.io/r/petitparser/java-petitparser)
 [![Dependency Status](https://www.versioneye.com/user/projects/556c52d56365320026ef4600/badge.svg?style=flat)](https://www.versioneye.com/user/projects/556c52d56365320026ef4600)
