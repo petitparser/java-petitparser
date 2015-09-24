@@ -39,7 +39,7 @@ Then add the following snippet to your `pom.xml` file:
 
 ### Bazel
 
-Alternatively, if you'd like to use [Bazel](http://bazel.io/) checkout the repository as above, but then run:
+Alternatively, if you'd like to use [Bazel](http://bazel.io/), checkout the repository as above and run:
 
 ```bash
 bazel build --java_toolchain=//:java_toolchain //petitparser-core:core
