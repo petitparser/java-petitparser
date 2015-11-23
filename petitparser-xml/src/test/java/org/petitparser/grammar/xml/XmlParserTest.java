@@ -38,13 +38,20 @@ public class XmlParserTest {
   @Test
   public void testComplicated() {
     assertParseInvariant("<?xml foo?>\n"
-        + "<foo>\n"
-        + "  <bar a=\"fasdfasdf\">\n"
-        + "    <zork/>\n"
-        + "    <zonk/>\n"
-        + "  </bar>\n"
-        + "  <!-- with comment -->\n"
-        + "</foo>");
+        + "<!DOCTYPE name [ something ]>\n"
+        + "<ns:foo attr=\"not namespaced\" n1:ans=\"namespace 1\">\n"
+        + "  <element/>\n"
+        + "  <ns:element/>\n"
+        + "  <!-- comment -->\n"
+        + "  <![CDATA[cdata]]>\n"
+        + "  <?processing instruction?>\n"
+        + "</ns:foo>");
+  }
+
+  @Test
+  public void testProcessing() {
+    assertParseInvariant("<?xml?><data />");
+    assertParseInvariant("<?xml version=\"1.0\"?><data />");
   }
 
   @Test
@@ -70,16 +77,20 @@ public class XmlParserTest {
   @Test
   public void testEmptyElement() {
     assertParseInvariant("<schema/>");
+    assertParseInvariant("<schema />");
+    assertParseInvariant("<schema key=\"value\"/>");
+    assertParseInvariant("<schema key=\"value\" />");
   }
 
   @Test
   public void testNamespace() {
-    assertParseInvariant("<xs:schema></xs:schema>");
+    assertParseInvariant("<xs:schema xs:attr=\"1\"></xs:schema>");
   }
 
   @Test
   public void testCdata() {
-    assertParseInvariant("<schema><![CDATA[<[xml]>]]></schema>");
+    assertParseInvariant("<data><![CDATA[]]></data>");
+    assertParseInvariant("<data><![CDATA[<data></data>]]></data>");
   }
 
   @Test
@@ -88,7 +99,7 @@ public class XmlParserTest {
   }
 
   @Test
-  public void testSimpleAttribute() {
+  public void testSimpleAttributeWithDoubleQuote() {
     assertParseInvariant("<schema foo=\"bar\"></schema>");
   }
 

@@ -2,7 +2,7 @@ package org.petitparser;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Smoke test for the deprecated factory methods.

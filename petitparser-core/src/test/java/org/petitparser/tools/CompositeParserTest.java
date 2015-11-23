@@ -5,7 +5,6 @@ import org.petitparser.parser.Parser;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 import static java.util.function.Function.identity;
 import static org.junit.Assert.assertEquals;

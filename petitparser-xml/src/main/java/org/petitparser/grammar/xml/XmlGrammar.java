@@ -72,10 +72,10 @@ public abstract class XmlGrammar<TNode, TName> extends CompositeParser {
         .or(ref("attributeValueSingle"))
         .pick(1));
     def("attributeValueDouble", of(DOUBLE_QUOTE)
-        .seq(any().starLazy(of(DOUBLE_QUOTE)).flatten())
+        .seq(new XmlCharacterParser(DOUBLE_QUOTE, 0))
         .seq(of(DOUBLE_QUOTE)));
     def("attributeValueSingle", of(SINGLE_QUOTE)
-        .seq(any().starLazy(of(SINGLE_QUOTE)).flatten())
+        .seq(new XmlCharacterParser(SINGLE_QUOTE, 0))
         .seq(of(SINGLE_QUOTE)));
     def("attributes", ref("space")
         .seq(ref("attribute"))
@@ -153,7 +153,7 @@ public abstract class XmlGrammar<TNode, TName> extends CompositeParser {
     def("qualified", ref("nameToken")
         .map(this::createQualified));
 
-    def("characterData", pattern(CHAR_DATA).plus().flatten().map(this::createText));
+    def("characterData", new XmlCharacterParser(OPEN_ELEMENT, 1).map(this::createText));
     def("misc", ref("space")
         .or(ref("comment"))
         .or(ref("processing"))
