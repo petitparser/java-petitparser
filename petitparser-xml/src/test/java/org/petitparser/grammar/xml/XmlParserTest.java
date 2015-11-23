@@ -32,7 +32,7 @@ public class XmlParserTest {
 
   @Test
   public void testCommentWithXml() {
-    assertParseInvariant("<?xml version=\"1.0\" encoding=\"UTF-8\"?><schema><!-- <foo></foo> --></schema>");
+    assertParseInvariant("<?xml version=\"1.0\" encoding=\"UTF-8\"?><schema><!-- <foo /> --></schema>");
   }
 
   @Test
@@ -198,7 +198,9 @@ public class XmlParserTest {
 
   private void assertParseInvariant(String input) {
     XmlNode tree = parser.parse(input).get();
-    assertEquals(tree, parser.parse(tree.toXmlString()).get());
+    XmlNode other = parser.parse(tree.toXmlString()).get();
+    assertEquals(tree.toXmlString(), other.toXmlString());
+    assertEquals(tree, other);
     assertInvariants(tree);
   }
 

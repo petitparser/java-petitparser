@@ -1,5 +1,7 @@
 package org.petitparser.grammar.xml.ast;
 
+import org.petitparser.grammar.xml.XmlGrammar;
+
 /**
  * XML text node.
  */
@@ -11,6 +13,8 @@ public class XmlCdata extends XmlData {
 
   @Override
   public void writeTo(StringBuffer buffer) {
-    buffer.append("<![CDATA[").append(getData()).append("]]>");
+    buffer.append(XmlGrammar.OPEN_CDATA);
+    buffer.append(getData());
+    buffer.append(XmlGrammar.CLOSE_CDATA);
   }
 }

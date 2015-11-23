@@ -2,7 +2,6 @@ package org.petitparser.grammar.xml;
 
 import org.petitparser.grammar.xml.ast.XmlAttribute;
 import org.petitparser.grammar.xml.ast.XmlCdata;
-import org.petitparser.grammar.xml.ast.XmlComment;
 import org.petitparser.grammar.xml.ast.XmlDoctype;
 import org.petitparser.grammar.xml.ast.XmlDocument;
 import org.petitparser.grammar.xml.ast.XmlElement;
@@ -13,51 +12,54 @@ import org.petitparser.grammar.xml.ast.XmlText;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * XML parser definition.
  */
-public class XmlParser extends XmlGrammar {
+public class XmlParser extends XmlGrammar<XmlNode, XmlName> {
 
   @Override
-  protected void initialize() {
-    super.initialize();
-    action("attribute", new Function<List<?>, XmlAttribute>() {
-      @Override
-      public XmlAttribute apply(List<?> argument) {
-        return new XmlAttribute((XmlName) argument.get(0),
-            (String) argument.get(1));
-      }
-    });
-    action("comment", XmlComment::new);
-    action("cdata", XmlCdata::new);
-    action("doctype", XmlDoctype::new);
-    action("document", new Function<List<XmlNode>, XmlDocument>() {
-      @Override
-      public XmlDocument apply(List<XmlNode> nodes) {
-        return new XmlDocument(nodes.stream().filter(Objects::nonNull).collect(Collectors.toList()));
-      }
-    });
-    action("element", new Function<List<?>, XmlElement>() {
-      @Override
-      @SuppressWarnings("unchecked")
-      public XmlElement apply(List<?> list) {
-        return new XmlElement((XmlName) list.get(0),
-            (Collection<XmlAttribute>) list.get(1),
-            (Collection<XmlNode>) list.get(2));
-      }
-    });
-    action("processing", new Function<List<String>, XmlProcessing>() {
-      @Override
-      public XmlProcessing apply(List<String> list) {
-        return new XmlProcessing(list.get(0), list.get(1));
-      }
-    });
-    action("qualified", XmlName::new);
-    action("characterData", XmlText::new);
+  protected XmlNode createAttribute(XmlName name, String text) {
+    return new XmlAttribute(name, text);
   }
 
+  @Override
+  protected XmlNode createComment(String text) {
+    return new XmlText(text);
+  }
+
+  @Override
+  protected XmlNode createCDATA(String text) {
+    return new XmlCdata(text);
+  }
+
+  @Override
+  protected XmlNode createDoctype(String text) {
+    return new XmlDoctype(text);
+  }
+
+  @Override
+  protected XmlNode createDocument(Collection<XmlNode> children) {
+    return new XmlDocument(children);
+  }
+
+  @Override
+  protected XmlNode createElement(XmlName name, Collection<XmlNode> attributes, Collection<XmlNode> children) {
+    return new XmlElement(name, (List<XmlAttribute>) (List<?>) attributes, children);
+  }
+
+  @Override
+  protected XmlNode createProcessing(String target, String text) {
+    return new XmlProcessing(target, text);
+  }
+
+  @Override
+  protected XmlName createQualified(String name) {
+    return new XmlName(name);
+  }
+
+  @Override
+  protected XmlNode createText(String text) {
+    return new XmlText(text);
+  }
 }

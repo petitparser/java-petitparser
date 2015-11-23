@@ -1,5 +1,7 @@
 package org.petitparser.grammar.xml.ast;
 
+import org.petitparser.grammar.xml.XmlGrammar;
+
 import java.util.Objects;
 
 /**
@@ -26,7 +28,10 @@ public class XmlAttribute extends XmlNode {
   @Override
   public void writeTo(StringBuffer buffer) {
     name.writeTo(buffer);
-    buffer.append("=\"").append(value).append("\"");
+    buffer.append(XmlGrammar.EQUALS);
+    buffer.append(XmlGrammar.DOUBLE_QUOTE);
+    buffer.append(value);
+    buffer.append(XmlGrammar.DOUBLE_QUOTE);
   }
 
   @Override
