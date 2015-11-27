@@ -104,14 +104,14 @@ public class JsonParserTest {
 
   @Test
   public void testFloat() {
-    assertEquals(0.0, (double) assertValid("0.0").get(), EPSILON);
-    assertEquals(0.12, (double) assertValid("0.12").get(), EPSILON);
-    assertEquals(-0.12, (double) assertValid("-0.12").get(), EPSILON);
-    assertEquals(12.34, (double) assertValid("12.34").get(), EPSILON);
-    assertEquals(-12.34, (double) assertValid("-12.34").get(), EPSILON);
-    assertEquals(1.2, (double) assertValid("1.2e0").get(), EPSILON);
-    assertEquals(1.2e-1, (double) assertValid("1.2e-1").get(), EPSILON);
-    assertEquals(1.2e-1, (double) assertValid("1.2E-1").get(), EPSILON);
+    assertEquals(0.0, assertValid("0.0").get(), EPSILON);
+    assertEquals(0.12, assertValid("0.12").get(), EPSILON);
+    assertEquals(-0.12, assertValid("-0.12").get(), EPSILON);
+    assertEquals(12.34, assertValid("12.34").get(), EPSILON);
+    assertEquals(-12.34, assertValid("-12.34").get(), EPSILON);
+    assertEquals(1.2, assertValid("1.2e0").get(), EPSILON);
+    assertEquals(1.2e-1, assertValid("1.2e-1").get(), EPSILON);
+    assertEquals(1.2e-1, assertValid("1.2E-1").get(), EPSILON);
   }
 
   @Test

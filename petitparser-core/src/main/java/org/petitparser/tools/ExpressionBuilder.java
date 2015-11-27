@@ -213,13 +213,7 @@ public class ExpressionBuilder {
 
     // helper to connect operator parser and action, and add to list
     private <T, R> void addTo(List<Parser> list, Parser parser, final Function<T, R> action) {
-      list.add(parser.map(new Function<Object, ExpressionResult>() {
-        @Override
-        @SuppressWarnings("unchecked")
-        public ExpressionResult apply(Object operator) {
-          return new ExpressionResult(operator, (Function<Object, Object>) action);
-        }
-      }));
+      list.add(parser.map(operator -> new ExpressionResult(operator, (Function<Object, Object>) action)));
     }
 
     // helper to build an optimal choice parser

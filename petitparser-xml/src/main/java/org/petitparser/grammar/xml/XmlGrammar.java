@@ -25,7 +25,6 @@ public abstract class XmlGrammar<TNode, TName> extends CompositeParser {
       + "\u3001\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD";
   protected static final String NAME_CHARS = "-.0-9\u00B7\u0300-\u036F\u203F-\u2040"
       + NAME_START_CHARS;
-  protected static final String CHAR_DATA = "^<";
 
   // basic tokens
   public static final String DOUBLE_QUOTE = "\"";
