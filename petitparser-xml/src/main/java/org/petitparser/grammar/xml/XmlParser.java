@@ -45,6 +45,7 @@ public class XmlParser extends XmlGrammar<XmlNode, XmlName> {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   protected XmlNode createElement(XmlName name, Collection<XmlNode> attributes, Collection<XmlNode> children) {
     return new XmlElement(name, (List<XmlAttribute>) (List<?>) attributes, children);
   }

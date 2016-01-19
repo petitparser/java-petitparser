@@ -119,7 +119,7 @@ public abstract class CompositeParser extends DelegateParser {
    * Attaches an action {@code function} to an existing production {@code name}. Only call this
    * method during initialization.
    */
-  protected final <S, T> void action(String name, final Function<S, T> function) {
+  protected final <S, T> void action(String name, Function<S, T> function) {
     redef(name, parser -> parser.map(function));
   }
 }

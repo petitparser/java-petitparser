@@ -212,7 +212,8 @@ public class ExpressionBuilder {
     }
 
     // helper to connect operator parser and action, and add to list
-    private <T, R> void addTo(List<Parser> list, Parser parser, final Function<T, R> action) {
+    @SuppressWarnings("unchecked")
+    private <T, R> void addTo(List<Parser> list, Parser parser, Function<T, R> action) {
       list.add(parser.map(operator -> new ExpressionResult(operator, (Function<Object, Object>) action)));
     }
 

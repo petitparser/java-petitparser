@@ -58,6 +58,7 @@ public abstract class XmlGrammar<TNode, TName> extends CompositeParser {
   protected abstract TNode createText(String text);
 
   @Override
+  @SuppressWarnings("unchecked")
   protected void initialize() {
     def("start", ref("document").end());
 

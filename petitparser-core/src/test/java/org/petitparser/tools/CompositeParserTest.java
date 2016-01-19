@@ -65,7 +65,7 @@ public class CompositeParserTest {
     Parser parser = new CompositeParser() {
       @Override
       protected void initialize() {
-        final Parser b = of('b');
+        Parser b = of('b');
         def("start", b);
         redef("start", parser -> {
           assertEquals(b, parser);
@@ -92,11 +92,11 @@ public class CompositeParserTest {
 
   @Test
   public void testRefCompleted() {
-    final Map<String, Parser> parsers = new HashMap<>();
+    Map<String, Parser> parsers = new HashMap<>();
     parsers.put("start", of('a'));
     parsers.put("something", of('b'));
     parsers.put("else", of('c'));
-    final CompositeParser parser = new CompositeParser() {
+    CompositeParser parser = new CompositeParser() {
       @Override
       protected void initialize() {
         for (Map.Entry<String, Parser> entry : parsers.entrySet()) {
