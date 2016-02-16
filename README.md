@@ -1,11 +1,11 @@
 PetitParser for Java
 ====================
 
+[![Release Status](https://jitpack.io/v/petitparser/java-petitparser.svg)](https://jitpack.io/#petitparser/java-petitparser)
 [![Build Status](https://travis-ci.org/petitparser/java-petitparser.svg)](https://travis-ci.org/petitparser/java-petitparser)
 [![Coverage Status](https://coveralls.io/repos/petitparser/java-petitparser/badge.svg)](https://coveralls.io/r/petitparser/java-petitparser)
 [![Dependency Status](https://www.versioneye.com/user/projects/556c52d56365320026ef4600/badge.svg?style=flat)](https://www.versioneye.com/user/projects/556c52d56365320026ef4600)
 [![Github Issues](http://githubbadges.herokuapp.com/petitparser/java-petitparser/issues.svg)](https://github.com/petitparser/java-petitparser/issues)
-[![Gitter chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/petitparser/java-petitparser?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Grammars for programming languages are traditionally specified statically. They are hard to compose and reuse due to ambiguities that inevitably arise. PetitParser combines ideas from scannnerless parsing, parser combinators, parsing expression grammars and packrat parsers to model grammars and parsers as objects that can be reconfigured dynamically.
 
