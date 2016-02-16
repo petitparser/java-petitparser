@@ -15,28 +15,7 @@ This library is open source, stable and well tested. Development happens on [Git
 Installation
 ------------
 
-To get the latest release follow the instructions below:
-
-### Gradle
-
-Append the repository to your root `build.gradle` file:
-
-```gradle
-allprojects {
-  repositories {
-    ...
-    maven { url "https://jitpack.io" }
-  }
-}
-```
-
-Then add the dependency to PetitParser:
-
-```gradle
-dependencies {
-  compile 'com.github.petitparser:java-petitparser:2.0.0'
-}
-```
+To include the latest release in your Java project follow the instructions below. Instructions for alternative build systems such as Gradle, SBT, or Leiningen you can find on [JitPack](https://jitpack.io/#petitparser/java-petitparser).
 
 ### Maven
 
@@ -47,23 +26,25 @@ Append the repository to your `pom.xml` file:
   <repository>
     <id>jitpack.io</id>
     <url>https://jitpack.io</url>
-</repository>
+  </repository>
 </repositories>
 ```
 
 Then add the dependency to PetitParser:
 
 ```xml
-<dependency>
-  <groupId>com.github.petitparser</groupId>
-  <artifactId>java-petitparser</artifactId>
-  <version>2.0.0</version>
-</dependency>
+<dependencies>
+  <dependency>
+    <groupId>com.github.petitparser</groupId>
+    <artifactId>java-petitparser</artifactId>
+    <version>2.0.0</version>
+  </dependency>
+</dependencies>
 ```
 
 ### Bazel
 
-Alternatively, if you'd like to use the latest code clone the repository:
+Alternatively, if you'd like to latest code clone the repository:
 
 ```bash
 git clone https://github.com/petitparser/java-petitparser.git
@@ -71,7 +52,7 @@ cd java-petitparser
 git checkout master
 ```
 
-Then build with [Bazel](http://bazel.io/) (or Maven):
+Then build with [Bazel](http://bazel.io/):
 
 ```bash
 bazel build --java_toolchain=//:java_toolchain //petitparser-core:core
