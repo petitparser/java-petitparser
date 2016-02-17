@@ -24,7 +24,7 @@ public interface CharacterPredicate {
    */
   static CharacterPredicate anyOf(String string) {
     List<CharacterRange> ranges = string.chars()
-        .mapToObj((value) -> new CharacterRange((char) value, (char) value))
+        .mapToObj(value -> new CharacterRange((char) value, (char) value))
         .collect(Collectors.toList());
     return CharacterRange.toCharacterPredicate(ranges);
   }
@@ -41,7 +41,7 @@ public interface CharacterPredicate {
    */
   static CharacterPredicate noneOf(String string) {
     List<CharacterRange> ranges = string.chars()
-        .mapToObj((value) -> new CharacterRange((char) value, (char) value))
+        .mapToObj(value -> new CharacterRange((char) value, (char) value))
         .collect(Collectors.toList());
     return CharacterRange.toCharacterPredicate(ranges).not();
   }
