@@ -79,7 +79,7 @@ public abstract class XmlNode implements Iterable<XmlNode> {
    */
   public final XmlNode getFirstChild() {
     List<XmlNode> children = getChildren();
-    return children.size() > 0 ? children.get(0) : null;
+    return !children.isEmpty() ? children.get(0) : null;
   }
 
   /**
@@ -87,7 +87,7 @@ public abstract class XmlNode implements Iterable<XmlNode> {
    */
   public final XmlNode getLastChild() {
     List<XmlNode> children = getChildren();
-    return children.size() > 0 ? children.get(children.size() - 1) : null;
+    return !children.isEmpty() ? children.get(children.size() - 1) : null;
   }
 
   /**

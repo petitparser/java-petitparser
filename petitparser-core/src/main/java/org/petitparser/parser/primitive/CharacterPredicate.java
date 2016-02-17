@@ -91,6 +91,10 @@ public interface CharacterPredicate {
   }
 
   class PatternParser {
+    
+    private PatternParser() {
+        
+    }
     static final Parser PATTERN_SIMPLE = CharacterParser.any()
         .map((Character value) -> new CharacterRange(value, value));
     static final Parser PATTERN_RANGE = CharacterParser.any()
