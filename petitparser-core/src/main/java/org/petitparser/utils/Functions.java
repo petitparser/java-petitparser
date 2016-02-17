@@ -11,6 +11,10 @@ import java.util.function.Function;
  */
 public class Functions {
 
+  private Functions() {
+      
+  }  
+    
   /**
    * Returns a function that returns the first value of a list.
    */
