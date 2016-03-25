@@ -132,7 +132,7 @@ public abstract class XmlGrammar<TNode, TName> extends CompositeParser {
           @Override
           public TNode apply(List<?> list) {
             if (list.get(4).equals(CLOSE_END_ELEMENT)) {
-              return createElement((TName) list.get(1), (List<TNode>) list.get(2), Collections.<TNode>emptyList());
+              return createElement((TName) list.get(1), (List<TNode>) list.get(2), Collections.emptyList());
             } else {
               List<?> end = (List<?>) list.get(4);
               if (list.get(1).equals(end.get(3))) {

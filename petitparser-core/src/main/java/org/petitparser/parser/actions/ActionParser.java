@@ -28,7 +28,7 @@ public class ActionParser<T, R> extends DelegateParser {
   public Result parseOn(Context context) {
     Result result = delegate.parseOn(context);
     if (result.isSuccess()) {
-      return result.success(function.apply(result.<T> get()));
+      return result.success(function.apply(result.get()));
     } else {
       return result;
     }
