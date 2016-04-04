@@ -252,6 +252,7 @@ PetitParser was originally implemented in [Smalltalk](http://scg.unibe.ch/resear
 
 - [Dart](https://github.com/petitparser/dart-petitparser)
 - [PHP](https://github.com/mindplay-dk/petitparserphp)
+- [TypeScript](https://github.com/mindplay-dk/petitparser-ts)
 - [Smalltalk](http://scg.unibe.ch/research/helvetia/petitparser)
 
 ### License
