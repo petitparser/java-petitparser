@@ -33,7 +33,19 @@ Append the repository to your `pom.xml` file:
 </repositories>
 ```
 
-Then add the dependency to PetitParser:
+To depend on the `petitparser-core` library only (excluding the example grammars) add the following dependency:
+
+```xml
+<dependencies>
+  <dependency>
+    <groupId>com.github.petitparser.java-petitparser</groupId>
+    <artifactId>petitparser-core</artifactId>
+    <version>2.0.0</version>
+  </dependency>
+</dependencies>
+```
+
+To depend on all libraries instead add: 
 
 ```xml
 <dependencies>
