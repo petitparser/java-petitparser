@@ -59,7 +59,7 @@ To also include the example grammars, use the following dependency:
 
 ### Bazel
 
-Alternatively, if you'd like to latest code clone the repository:
+Alternatively, if you'd like the latest code clone the repository:
 
 ```bash
 git clone https://github.com/petitparser/java-petitparser.git
