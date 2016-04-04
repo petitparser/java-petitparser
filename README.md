@@ -33,7 +33,7 @@ Append the repository to your `pom.xml` file:
 </repositories>
 ```
 
-To depend on the `petitparser-core` library only (excluding the example grammars) add the following dependency:
+To depend on the core library, add the following dependency:
 
 ```xml
 <dependencies>
@@ -45,7 +45,7 @@ To depend on the `petitparser-core` library only (excluding the example grammars
 </dependencies>
 ```
 
-To depend on all libraries instead add: 
+To also include the example grammars, use the following dependency: 
 
 ```xml
 <dependencies>
