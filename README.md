@@ -40,19 +40,19 @@ To depend on the core library, add the following dependency:
   <dependency>
     <groupId>com.github.petitparser.java-petitparser</groupId>
     <artifactId>petitparser-core</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
   </dependency>
 </dependencies>
 ```
 
-To also include the example grammars, use the following dependency: 
+To also include the example grammars, use the following dependency:
 
 ```xml
 <dependencies>
   <dependency>
     <groupId>com.github.petitparser</groupId>
     <artifactId>java-petitparser</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
   </dependency>
 </dependencies>
 ```
@@ -71,7 +71,7 @@ Then build with [Bazel](http://bazel.io/):
 
 ```bash
 bazel build --java_toolchain=//:java_toolchain //petitparser-core:core
-bazel test --java_toolchain=//:java_toolchain //petitparser-core:test 
+bazel test --java_toolchain=//:java_toolchain //petitparser-core:test
 ```
 
 
