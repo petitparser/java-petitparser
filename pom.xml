@@ -54,8 +54,8 @@
   </issueManagement>
 
   <ciManagement>
-    <system>Jenkins</system>
-    <url>http://jenkins.lukas-renggli.ch/job/java-petitparser/</url>
+    <system>Travis</system>
+    <url>https://travis-ci.org/petitparser/java-petitparser</url>
   </ciManagement>
 
   <modules>
