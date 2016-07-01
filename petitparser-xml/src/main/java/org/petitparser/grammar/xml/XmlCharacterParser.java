@@ -300,17 +300,6 @@ public class XmlCharacterParser extends Parser {
       .seq(of(';'))
       .pick(1);
 
-  // Encode a string to be serialized as an XML text node.
-  public static String encodeXmlText(String input) {
-    // only & and < need to be encoded in text
-    return input.replace("&", "&amp;").replace("<", "&lt;");
-  }
-
-  // Encode a string to be serialized as an XML attribute value.
-  public static String encodeXmlAttributeValue(String input) {
-    // only " needs to be encoded in attribute value
-    return input.replaceAll("\"", "&quot;");
-  }
 
   private final char stopper;
   private final int minLength;
@@ -322,6 +311,18 @@ public class XmlCharacterParser extends Parser {
   XmlCharacterParser(char stopper, int minLength) {
     this.stopper = stopper;
     this.minLength = minLength;
+  }
+
+  // Encode a string to be serialized as an XML text node.
+  public static String encodeXmlText(String input) {
+    // only & and < need to be encoded in text
+    return input.replace("&", "&amp;").replace("<", "&lt;");
+  }
+
+  // Encode a string to be serialized as an XML attribute value.
+  public static String encodeXmlAttributeValue(String input) {
+    // only " needs to be encoded in attribute value
+    return input.replaceAll("\"", "&quot;");
   }
 
   @Override

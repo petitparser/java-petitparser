@@ -12,6 +12,17 @@ import java.util.function.Predicate;
  */
 public class StringParser extends Parser {
 
+
+  private final int size;
+  private final Predicate<String> predicate;
+  private final String message;
+
+  private StringParser(int size, Predicate<String> predicate, String message) {
+    this.size = size;
+    this.predicate = Objects.requireNonNull(predicate, "Undefined predicate");
+    this.message = Objects.requireNonNull(message, "Undefined message");
+  }
+
   /**
    * Construct a parser that accepts the provides {@link String} {@code value}.
    */
@@ -40,16 +51,6 @@ public class StringParser extends Parser {
    */
   public static Parser ofIgnoringCase(String value, String message) {
     return new StringParser(value.length(), value::equalsIgnoreCase, message);
-  }
-
-  private final int size;
-  private final Predicate<String> predicate;
-  private final String message;
-
-  private StringParser(int size, Predicate<String> predicate, String message) {
-    this.size = size;
-    this.predicate = Objects.requireNonNull(predicate, "Undefined predicate");
-    this.message = Objects.requireNonNull(message, "Undefined message");
   }
 
   @Override

@@ -37,6 +37,11 @@ public class Token {
   private final Object value;
 
   /**
+   * Returns a parser for that detects newlines platform independently.
+   */
+  public static final Parser NEWLINE_PARSER = of('\n').or(of('\r').seq(of('\n').optional()));
+
+  /**
    * Constructs a token from the parsed value, the input buffer, and the start and stop position in
    * the input buffer.
    */
@@ -138,11 +143,6 @@ public class Token {
   public int hashCode() {
     return Objects.hash(value, buffer, start, stop);
   }
-
-  /**
-   * Returns a parser for that detects newlines platform independently.
-   */
-  public static final Parser NEWLINE_PARSER = of('\n').or(of('\r').seq(of('\n').optional()));
 
   /**
    * Converts the {@code position} index in a {@code buffer} to a line and column tuple.

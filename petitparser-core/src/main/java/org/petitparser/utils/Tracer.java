@@ -65,18 +65,19 @@ public class Tracer {
      */
     public final Context context;
 
-    /**
-     * The current invocation level.
-     */
-    public int getLevel() {
-      return parent != null ? 1 + parent.getLevel() : 0;
-    }
 
     private TraceEvent(TraceEventType type, TraceEvent parent, Parser parser, Context context) {
       this.type = type;
       this.parent = parent;
       this.parser = parser;
       this.context = context;
+    }
+
+    /**
+     * The current invocation level.
+     */
+    public int getLevel() {
+      return parent != null ? 1 + parent.getLevel() : 0;
     }
 
     @Override
