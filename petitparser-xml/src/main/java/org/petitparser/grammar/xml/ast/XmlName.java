@@ -39,12 +39,12 @@ public class XmlName implements Cloneable {
   }
 
   public String toXmlString() {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     writeTo(buffer);
     return buffer.toString();
   }
 
-  public void writeTo(StringBuffer buffer) {
+  public void writeTo(StringBuilder buffer) {
     if (prefix != null) {
       buffer.append(prefix).append(':');
     }
