@@ -49,7 +49,7 @@ public class XmlElement extends XmlParent {
   }
 
   @Override
-  public void writeTo(StringBuffer buffer) {
+  public void writeTo(StringBuilder buffer) {
     buffer.append(XmlGrammar.OPEN_ELEMENT);
     getName().writeTo(buffer);
     for (XmlAttribute attribute : getAttributes()) {
