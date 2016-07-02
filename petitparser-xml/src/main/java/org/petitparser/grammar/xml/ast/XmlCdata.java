@@ -12,7 +12,7 @@ public class XmlCdata extends XmlData {
   }
 
   @Override
-  public void writeTo(StringBuffer buffer) {
+  public void writeTo(StringBuilder buffer) {
     buffer.append(XmlGrammar.OPEN_CDATA);
     buffer.append(getData());
     buffer.append(XmlGrammar.CLOSE_CDATA);

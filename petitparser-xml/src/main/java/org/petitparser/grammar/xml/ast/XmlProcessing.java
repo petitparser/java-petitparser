@@ -21,7 +21,7 @@ public class XmlProcessing extends XmlData {
   }
 
   @Override
-  public void writeTo(StringBuffer buffer) {
+  public void writeTo(StringBuilder buffer) {
     buffer.append(XmlGrammar.OPEN_PROCESSING);
     buffer.append(getTarget());
     if (!getData().isEmpty()) {

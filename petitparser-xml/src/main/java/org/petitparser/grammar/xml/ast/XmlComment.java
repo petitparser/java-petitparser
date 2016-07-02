@@ -12,7 +12,7 @@ public class XmlComment extends XmlData {
   }
 
   @Override
-  public void writeTo(StringBuffer buffer) {
+  public void writeTo(StringBuilder buffer) {
     buffer.append(XmlGrammar.OPEN_COMMENT);
     buffer.append(getData());
     buffer.append(XmlGrammar.CLOSE_COMMENT);

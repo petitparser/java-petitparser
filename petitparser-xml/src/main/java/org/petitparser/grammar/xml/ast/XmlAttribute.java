@@ -27,7 +27,7 @@ public class XmlAttribute extends XmlNode {
   }
 
   @Override
-  public void writeTo(StringBuffer buffer) {
+  public void writeTo(StringBuilder buffer) {
     name.writeTo(buffer);
     buffer.append(XmlGrammar.EQUALS);
     buffer.append(XmlGrammar.DOUBLE_QUOTE);

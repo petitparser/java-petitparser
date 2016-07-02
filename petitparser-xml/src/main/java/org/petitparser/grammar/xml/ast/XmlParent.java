@@ -24,7 +24,7 @@ public abstract class XmlParent extends XmlNode {
   }
 
   @Override
-  public void writeTo(StringBuffer buffer) {
+  public void writeTo(StringBuilder buffer) {
     for (XmlNode node : getChildren()) {
       node.writeTo(buffer);
     }

@@ -136,7 +136,7 @@ public abstract class XmlNode implements Iterable<XmlNode> {
    * Answer an XML string of the receiver.
    */
   public String toXmlString() {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     writeTo(buffer);
     return buffer.toString();
   }
@@ -144,5 +144,5 @@ public abstract class XmlNode implements Iterable<XmlNode> {
   /**
    * Writes the XML string of the receiver to a {@code buffer}.
    */
-  public abstract void writeTo(StringBuffer buffer);
+  public abstract void writeTo(StringBuilder buffer);
 }
