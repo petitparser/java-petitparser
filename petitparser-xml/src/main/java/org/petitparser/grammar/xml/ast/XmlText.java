@@ -12,7 +12,7 @@ public class XmlText extends XmlData {
   }
 
   @Override
-  public void writeTo(StringBuffer buffer) {
+  public void writeTo(StringBuilder buffer) {
     buffer.append(XmlCharacterParser.encodeXmlText(getData()));
   }
 }

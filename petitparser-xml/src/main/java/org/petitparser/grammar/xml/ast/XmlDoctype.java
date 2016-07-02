@@ -12,7 +12,7 @@ public class XmlDoctype extends XmlData {
   }
 
   @Override
-  public void writeTo(StringBuffer buffer) {
+  public void writeTo(StringBuilder buffer) {
     buffer.append(XmlGrammar.OPEN_DOCTYPE);
     buffer.append(XmlGrammar.WHITESPACE);
     buffer.append(getData());
