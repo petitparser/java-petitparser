@@ -36,9 +36,6 @@ public class XmlProcessing extends XmlData {
     if (this == obj) {
       return true;
     }
-    if (obj == null) {
-      return false;
-    }
     if (!super.equals(obj) || getClass() != obj.getClass()) {
       return false;
     }

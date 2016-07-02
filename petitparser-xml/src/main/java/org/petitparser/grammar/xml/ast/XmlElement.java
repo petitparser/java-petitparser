@@ -73,9 +73,6 @@ public class XmlElement extends XmlParent {
     if (this == obj) {
       return true;
     }
-    if (obj == null) {
-      return false;
-    }
     if (!super.equals(obj) || getClass() != obj.getClass()) {
       return false;
     }
