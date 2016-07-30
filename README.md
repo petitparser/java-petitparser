@@ -70,8 +70,8 @@ git checkout master
 Then build with [Bazel](http://bazel.io/):
 
 ```bash
-bazel build --java_toolchain=//:java_toolchain //petitparser-core:core
-bazel test --java_toolchain=//:java_toolchain //petitparser-core:test
+bazel build ...:all
+bazel test ...:all
 ```
 
 

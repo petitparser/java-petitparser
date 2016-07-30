@@ -3,32 +3,29 @@ package(default_visibility = ["//visibility:public"])
 licenses(["notice"])  # MIT
 
 java_library(
-    name = "xml",
+    name = "main",
     srcs = glob(["src/main/**/*.java"]),
-    deps = [
-        "//petitparser-core:core",
-    ],
+    deps = ["//petitparser-core:main"],
 )
 
-java_binary(
-    name = "benchmark",
-    main_class = "org.petitparser.grammar.xml.XmlBenchmark",
-    srcs = [
-        "src/test/java/org/petitparser/grammar/xml/XmlBenchmark.java",
-    ],
-    deps = [
-        ":xml",
-        "//petitparser-core:core",
-    ],
-)
-
-java_test(
+java_library(
     name = "test",
-    size = "small",
-    srcs = glob(["src/test/**/*Test.java"]),
+    srcs = glob(["src/test/**/*.java"]),
     deps = [
-        ":xml",
-        "//third_party:junit4",
-        "//petitparser-core:core",
+        ":main",
+        "//external:junit",
+        "//external:hamcrest",
+        "//petitparser-core:main",
+        "//petitparser-core:test"
     ],
 )
+
+[java_test(
+    name = FILE[:-5], 
+    srcs = [FILE],
+    deps = [
+        ":main",
+        ":test",
+        "//petitparser-core:main",
+    ],
+) for FILE in glob(["src/test/**/*Test.java"])]

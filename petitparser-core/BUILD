@@ -3,28 +3,25 @@ package(default_visibility = ["//visibility:public"])
 licenses(["notice"])  # MIT
 
 java_library(
-    name = "core",
+    name = "main",
     srcs = glob(["src/main/**/*.java"]),
 )
 
 java_library(
-    name = "test-support",
-    srcs = [
-        "src/test/java/org/petitparser/Assertions.java",
-    ],
+    name = "test",
+    srcs = glob(["src/test/**/*.java"]),
     deps = [
-        ":core",
-        "//:junit",
+        ":main",
+        "//external:junit",
+        "//external:hamcrest",
     ],
 )
 
-java_test(
-    name = "test",
-    size = "small",
-    srcs = glob(["src/test/**/*Test.java"]),
+[java_test(
+    name = FILE[:-5], 
+    srcs = [FILE],
     deps = [
-        ":core",
-        ":test-support",
-        "//:junit",
+        ":main",
+        ":test",
     ],
-)
+) for FILE in glob(["src/test/**/*Test.java"])]
