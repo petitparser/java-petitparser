@@ -11,17 +11,18 @@ import java.util.Objects;
  */
 public class FailureParser extends Parser {
 
-  /**
-   * Construct a {@link FailureParser} that fails with the supplied {@code message}.
-   */
-  public static Parser withMessage(String message) {
-    return new FailureParser(message);
-  }
 
   private final String message;
 
   private FailureParser(String message) {
     this.message = Objects.requireNonNull(message, "Undefined message");
+  }
+
+  /**
+   * Construct a {@link FailureParser} that fails with the supplied {@code message}.
+   */
+  public static Parser withMessage(String message) {
+    return new FailureParser(message);
   }
 
   @Override

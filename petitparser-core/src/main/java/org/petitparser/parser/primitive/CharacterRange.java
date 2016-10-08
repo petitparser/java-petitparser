@@ -15,6 +15,15 @@ class CharacterRange {
           .comparing((CharacterRange range) -> range.start)
           .thenComparing((CharacterRange range) -> range.stop);
 
+
+  private final char start;
+  private final char stop;
+
+  CharacterRange(char start, char stop) {
+    this.start = start;
+    this.stop = stop;
+  }
+
   static CharacterPredicate toCharacterPredicate(List<CharacterRange> ranges) {
 
     // 1. sort the ranges
@@ -56,11 +65,4 @@ class CharacterRange {
     }
   }
 
-  private final char start;
-  private final char stop;
-
-  CharacterRange(char start, char stop) {
-    this.start = start;
-    this.stop = stop;
-  }
 }

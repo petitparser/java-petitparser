@@ -19,6 +19,10 @@ import static org.petitparser.parser.primitive.StringParser.of;
  */
 public class JsonGrammar extends CompositeParser {
 
+
+  protected static final Map<Character, Character> ESCAPE_TABLE = createEscapeTable();
+  protected static final Function<Character, Character> ESCAPE_TABLE_FUNCTION = ESCAPE_TABLE::get;
+
   protected static Map<Character, Character> createEscapeTable() {
     Map<Character, Character> table = new HashMap<>();
     table.put('\\', '\\');
@@ -37,9 +41,6 @@ public class JsonGrammar extends CompositeParser {
     characters.forEach(builder::append);
     return builder.toString();
   }
-
-  protected static final Map<Character, Character> ESCAPE_TABLE = createEscapeTable();
-  protected static final Function<Character, Character> ESCAPE_TABLE_FUNCTION = ESCAPE_TABLE::get;
 
   @Override
   protected void initialize() {

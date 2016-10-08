@@ -8,6 +8,10 @@ import org.petitparser.parser.primitive.FailureParser;
  */
 public class SettableParser extends DelegateParser {
 
+  public SettableParser(Parser delegate) {
+    super(delegate);
+  }
+
   /**
    * Constructs a {@link SettableParser} that currently refers to an {@link FailureParser}.
    */
@@ -28,10 +32,6 @@ public class SettableParser extends DelegateParser {
    */
   public static SettableParser with(Parser parser) {
     return new SettableParser(parser);
-  }
-
-  public SettableParser(Parser delegate) {
-    super(delegate);
   }
 
   /**

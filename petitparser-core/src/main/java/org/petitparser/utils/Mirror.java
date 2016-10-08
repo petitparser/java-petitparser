@@ -22,17 +22,18 @@ import java.util.stream.StreamSupport;
  */
 public class Mirror implements Iterable<Parser> {
 
-  /**
-   * Constructs a mirror of the provided {@code parser}.
-   */
-  public static Mirror of(Parser parser) {
-    return new Mirror(parser);
-  }
 
   private final Parser parser;
 
   private Mirror(Parser parser) {
     this.parser = Objects.requireNonNull(parser, "Undefined parser");
+  }
+
+  /**
+   * Constructs a mirror of the provided {@code parser}.
+   */
+  public static Mirror of(Parser parser) {
+    return new Mirror(parser);
   }
 
   @Override

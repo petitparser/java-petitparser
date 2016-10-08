@@ -11,6 +11,15 @@ import java.util.Objects;
  */
 public class CharacterParser extends Parser {
 
+
+  private final CharacterPredicate matcher;
+  private final String message;
+
+  private CharacterParser(CharacterPredicate matcher, String message) {
+    this.matcher = Objects.requireNonNull(matcher, "Undefined matcher");
+    this.message = Objects.requireNonNull(message, "Undefined message");
+  }
+
   /**
    * Returns a parser that accepts a specific {@link CharacterPredicate}.
    */
@@ -162,14 +171,6 @@ public class CharacterParser extends Parser {
 
   public static Parser word(String message) {
     return of(Character::isLetterOrDigit, message);
-  }
-
-  private final CharacterPredicate matcher;
-  private final String message;
-
-  private CharacterParser(CharacterPredicate matcher, String message) {
-    this.matcher = Objects.requireNonNull(matcher, "Undefined matcher");
-    this.message = Objects.requireNonNull(message, "Undefined message");
   }
 
   @Override
