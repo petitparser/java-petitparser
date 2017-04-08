@@ -1,6 +1,15 @@
 package org.petitparser.grammar.xml;
 
-import org.petitparser.grammar.xml.ast.*;
+import org.petitparser.grammar.xml.ast.XmlAttribute;
+import org.petitparser.grammar.xml.ast.XmlCdata;
+import org.petitparser.grammar.xml.ast.XmlComment;
+import org.petitparser.grammar.xml.ast.XmlDoctype;
+import org.petitparser.grammar.xml.ast.XmlDocument;
+import org.petitparser.grammar.xml.ast.XmlElement;
+import org.petitparser.grammar.xml.ast.XmlName;
+import org.petitparser.grammar.xml.ast.XmlNode;
+import org.petitparser.grammar.xml.ast.XmlProcessing;
+import org.petitparser.grammar.xml.ast.XmlText;
 
 import java.util.Collection;
 

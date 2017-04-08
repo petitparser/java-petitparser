@@ -9,7 +9,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.petitparser.parser.primitive.CharacterParser.*;
+import static org.petitparser.parser.primitive.CharacterParser.any;
+import static org.petitparser.parser.primitive.CharacterParser.pattern;
+import static org.petitparser.parser.primitive.CharacterParser.whitespace;
 import static org.petitparser.parser.primitive.StringParser.of;
 
 /**

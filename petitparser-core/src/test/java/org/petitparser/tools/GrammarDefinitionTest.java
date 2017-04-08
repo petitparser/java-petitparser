@@ -9,7 +9,11 @@ import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.petitparser.parser.primitive.CharacterParser.*;
+import static org.petitparser.parser.primitive.CharacterParser.digit;
+import static org.petitparser.parser.primitive.CharacterParser.letter;
+import static org.petitparser.parser.primitive.CharacterParser.of;
+import static org.petitparser.parser.primitive.CharacterParser.pattern;
+import static org.petitparser.parser.primitive.CharacterParser.word;
 
 /**
  * Tests {@link GrammarDefinition}.
