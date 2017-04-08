@@ -9,6 +9,7 @@ import org.petitparser.grammar.xml.ast.XmlNode;
 import org.petitparser.parser.Parser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -91,6 +92,12 @@ public class XmlParserTest {
   public void testCdata() {
     assertParseInvariant("<data><![CDATA[]]></data>");
     assertParseInvariant("<data><![CDATA[<data></data>]]></data>");
+  }
+
+  @Test
+  public void testDocument() {
+    XmlDocument document = new XmlDocument(Collections.emptyList());
+    assertNull(document.getRootElement());
   }
 
   @Test
