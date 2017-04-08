@@ -7,6 +7,7 @@ import org.petitparser.parser.primitive.EpsilonParser;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.petitparser.parser.primitive.CharacterParser.*;
 
@@ -168,6 +169,14 @@ public class GrammarDefinitionTest {
   @Test(expected = UnsupportedOperationException.class)
   public void testReferenceCopy() {
     buggedDefinition.ref("start").copy();
+  }
+
+  @Test
+  public void testReferenceEquals(){
+    Parser reference = buggedDefinition.ref("start");
+    assertTrue(reference.equals(reference));
+    assertFalse(reference.equals(null));
+    assertFalse(reference.equals("start"));
   }
 
   @Test
