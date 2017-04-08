@@ -1,8 +1,7 @@
 package org.petitparser.grammar.xml;
 
-import org.petitparser.tools.CompositeParser;
+import org.petitparser.tools.GrammarDefinition;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -10,16 +9,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.petitparser.parser.primitive.CharacterParser.any;
-import static org.petitparser.parser.primitive.CharacterParser.pattern;
-import static org.petitparser.parser.primitive.CharacterParser.whitespace;
+import static org.petitparser.parser.primitive.CharacterParser.*;
 import static org.petitparser.parser.primitive.StringParser.of;
 
 /**
  * XML grammar definition.
  */
-public abstract class XmlGrammar<TNode, TName> extends CompositeParser {
+public class XmlDefinition<TName, TNode, TAttribute> extends GrammarDefinition {
 
+  // basic char sets
   protected static final String NAME_START_CHARS = ":A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6"
       + "\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF"
       + "\u3001\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD";
@@ -46,20 +44,8 @@ public abstract class XmlGrammar<TNode, TName> extends CompositeParser {
   public static final String OPEN_PROCESSING = "<?";
   public static final String CLOSE_PROCESSING = "?>";
 
-  // parser callbacks
-  protected abstract TNode createAttribute(TName name, String text);
-  protected abstract TNode createComment(String text);
-  protected abstract TNode createCDATA(String text);
-  protected abstract TNode createDoctype(String text);
-  protected abstract TNode createDocument(Collection<TNode> children);
-  protected abstract TNode createElement(TName name, Collection<TNode> attributes, Collection<TNode> children);
-  protected abstract TNode createProcessing(String target, String text);
-  protected abstract TName createQualified(String name);
-  protected abstract TNode createText(String text);
-
-  @Override
   @SuppressWarnings("unchecked")
-  protected void initialize() {
+  public XmlDefinition(XmlCallback<TName, TNode, TAttribute> callback) {
     def("start", ref("document").end());
 
     def("attribute", ref("qualified")
@@ -67,7 +53,7 @@ public abstract class XmlGrammar<TNode, TName> extends CompositeParser {
         .seq(of(EQUALS))
         .seq(ref("space optional"))
         .seq(ref("attributeValue"))
-        .map((List<?> list) -> createAttribute((TName) list.get(0), (String) list.get(4))));
+        .map((List<?> list) -> callback.createAttribute((TName) list.get(0), (String) list.get(4))));
     def("attributeValue", ref("attributeValueDouble")
         .or(ref("attributeValueSingle"))
         .pick(1));
@@ -84,11 +70,11 @@ public abstract class XmlGrammar<TNode, TName> extends CompositeParser {
     def("comment", of(OPEN_COMMENT)
         .seq(any().starLazy(of(CLOSE_COMMENT)).flatten())
         .seq(of(CLOSE_COMMENT))
-        .map((List<String> list) -> createComment(list.get(1))));
+        .map((List<String> list) -> callback.createComment(list.get(1))));
     def("cdata", of(OPEN_CDATA)
         .seq(any().starLazy(of(CLOSE_CDATA)).flatten())
         .seq(of(CLOSE_CDATA))
-        .map((List<String> list) -> createCDATA(list.get(1))));
+        .map((List<String> list) -> callback.createCDATA(list.get(1))));
     def("content", ref("characterData")
         .or(ref("element"))
         .or(ref("processing"))
@@ -108,14 +94,14 @@ public abstract class XmlGrammar<TNode, TName> extends CompositeParser {
             .flatten())
         .seq(ref("space optional"))
         .seq(of(CLOSE_DOCTYPE))
-        .map((List<String> list) -> createDoctype(list.get(2))));
+        .map((List<String> list) -> callback.createDoctype(list.get(2))));
     def("document", ref("processing").optional()
         .seq(ref("misc"))
         .seq(ref("doctype").optional())
         .seq(ref("misc"))
         .seq(ref("element"))
         .seq(ref("misc"))
-        .map((List<TNode> list) -> createDocument(Stream.of(list.get(0), list.get(2), list.get(4))
+        .map((List<TNode> list) -> callback.createDocument(Stream.of(list.get(0), list.get(2), list.get(4))
             .filter(Objects::nonNull)
             .collect(Collectors.toList()))));
     def("element", of(OPEN_ELEMENT)
@@ -132,11 +118,11 @@ public abstract class XmlGrammar<TNode, TName> extends CompositeParser {
           @Override
           public TNode apply(List<?> list) {
             if (list.get(4).equals(CLOSE_END_ELEMENT)) {
-              return createElement((TName) list.get(1), (List<TNode>) list.get(2), Collections.emptyList());
+              return callback.createElement((TName) list.get(1), (List<TAttribute>) list.get(2), Collections.emptyList());
             } else {
               List<?> end = (List<?>) list.get(4);
               if (list.get(1).equals(end.get(3))) {
-                return createElement((TName) list.get(1), (List<TNode>) list.get(2), (List<TNode>) end.get(1));
+                return callback.createElement((TName) list.get(1), (List<TAttribute>) list.get(2), (List<TNode>) end.get(1));
               } else {
                 throw new IllegalStateException("Expected </" + list.get(1) + ">, but found </" + end.get(3));
               }
@@ -149,11 +135,11 @@ public abstract class XmlGrammar<TNode, TName> extends CompositeParser {
             .seq(any().starLazy(of(CLOSE_PROCESSING)).flatten())
             .pick(1).optional(""))
         .seq(of(CLOSE_PROCESSING))
-        .map((List<String> list) -> createProcessing(list.get(1), list.get(2))));
+        .map((List<String> list) -> callback.createProcessing(list.get(1), list.get(2))));
     def("qualified", ref("nameToken")
-        .map(this::createQualified));
+        .map(callback::createQualified));
 
-    def("characterData", new XmlCharacterParser(OPEN_ELEMENT, 1).map(this::createText));
+    def("characterData", new XmlCharacterParser(OPEN_ELEMENT, 1).map(callback::createText));
     def("misc", ref("space")
         .or(ref("comment"))
         .or(ref("processing"))

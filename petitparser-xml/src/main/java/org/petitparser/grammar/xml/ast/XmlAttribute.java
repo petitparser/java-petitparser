@@ -1,7 +1,7 @@
 package org.petitparser.grammar.xml.ast;
 
 import org.petitparser.grammar.xml.XmlCharacterParser;
-import org.petitparser.grammar.xml.XmlGrammar;
+import org.petitparser.grammar.xml.XmlDefinition;
 
 import java.util.Objects;
 
@@ -29,10 +29,10 @@ public class XmlAttribute extends XmlNode {
   @Override
   public void writeTo(StringBuilder buffer) {
     name.writeTo(buffer);
-    buffer.append(XmlGrammar.EQUALS);
-    buffer.append(XmlGrammar.DOUBLE_QUOTE);
+    buffer.append(XmlDefinition.EQUALS);
+    buffer.append(XmlDefinition.DOUBLE_QUOTE);
     buffer.append(XmlCharacterParser.encodeXmlAttributeValue(value));
-    buffer.append(XmlGrammar.DOUBLE_QUOTE);
+    buffer.append(XmlDefinition.DOUBLE_QUOTE);
   }
 
   @Override

@@ -16,6 +16,7 @@ import static org.petitparser.parser.primitive.CharacterParser.of;
 /**
  * Tests {@link CompositeParser}.
  */
+@Deprecated
 public class CompositeParserTest {
 
   @Test

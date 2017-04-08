@@ -1,6 +1,6 @@
 package org.petitparser.grammar.xml.ast;
 
-import org.petitparser.grammar.xml.XmlGrammar;
+import org.petitparser.grammar.xml.XmlDefinition;
 
 /**
  * XML doctype node.
@@ -13,9 +13,9 @@ public class XmlDoctype extends XmlData {
 
   @Override
   public void writeTo(StringBuilder buffer) {
-    buffer.append(XmlGrammar.OPEN_DOCTYPE);
-    buffer.append(XmlGrammar.WHITESPACE);
+    buffer.append(XmlDefinition.OPEN_DOCTYPE);
+    buffer.append(XmlDefinition.WHITESPACE);
     buffer.append(getData());
-    buffer.append(XmlGrammar.CLOSE_DOCTYPE);
+    buffer.append(XmlDefinition.CLOSE_DOCTYPE);
   }
 }

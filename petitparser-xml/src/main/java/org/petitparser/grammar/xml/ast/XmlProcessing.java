@@ -1,6 +1,6 @@
 package org.petitparser.grammar.xml.ast;
 
-import org.petitparser.grammar.xml.XmlGrammar;
+import org.petitparser.grammar.xml.XmlDefinition;
 
 import java.util.Objects;
 
@@ -22,13 +22,13 @@ public class XmlProcessing extends XmlData {
 
   @Override
   public void writeTo(StringBuilder buffer) {
-    buffer.append(XmlGrammar.OPEN_PROCESSING);
+    buffer.append(XmlDefinition.OPEN_PROCESSING);
     buffer.append(getTarget());
     if (!getData().isEmpty()) {
-      buffer.append(XmlGrammar.WHITESPACE);
+      buffer.append(XmlDefinition.WHITESPACE);
       buffer.append(getData());
     }
-    buffer.append(XmlGrammar.CLOSE_PROCESSING);
+    buffer.append(XmlDefinition.CLOSE_PROCESSING);
   }
 
   @Override

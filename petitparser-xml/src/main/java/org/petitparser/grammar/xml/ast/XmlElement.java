@@ -1,6 +1,6 @@
 package org.petitparser.grammar.xml.ast;
 
-import org.petitparser.grammar.xml.XmlGrammar;
+import org.petitparser.grammar.xml.XmlDefinition;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,21 +50,21 @@ public class XmlElement extends XmlParent {
 
   @Override
   public void writeTo(StringBuilder buffer) {
-    buffer.append(XmlGrammar.OPEN_ELEMENT);
+    buffer.append(XmlDefinition.OPEN_ELEMENT);
     getName().writeTo(buffer);
     for (XmlAttribute attribute : getAttributes()) {
-      buffer.append(XmlGrammar.WHITESPACE);
+      buffer.append(XmlDefinition.WHITESPACE);
       attribute.writeTo(buffer);
     }
     if (getChildren().isEmpty()) {
-      buffer.append(XmlGrammar.WHITESPACE);
-      buffer.append(XmlGrammar.CLOSE_END_ELEMENT);
+      buffer.append(XmlDefinition.WHITESPACE);
+      buffer.append(XmlDefinition.CLOSE_END_ELEMENT);
     } else {
-      buffer.append(XmlGrammar.CLOSE_ELEMENT);
+      buffer.append(XmlDefinition.CLOSE_ELEMENT);
       super.writeTo(buffer);
-      buffer.append(XmlGrammar.OPEN_END_ELEMENT);
+      buffer.append(XmlDefinition.OPEN_END_ELEMENT);
       getName().writeTo(buffer);
-      buffer.append(XmlGrammar.CLOSE_ELEMENT);
+      buffer.append(XmlDefinition.CLOSE_ELEMENT);
     }
   }
 

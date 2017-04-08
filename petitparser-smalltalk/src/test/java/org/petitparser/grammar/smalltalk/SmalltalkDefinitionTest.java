@@ -3,17 +3,16 @@ package org.petitparser.grammar.smalltalk;
 import org.junit.Test;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
-import org.petitparser.tools.CompositeParser;
 
 /**
- * Tests {@link SmalltalkGrammar}.
+ * Tests {@link SmalltalkDefinition}.
  */
-public class SmalltalkGrammarTest {
+public class SmalltalkDefinitionTest {
 
-  private final CompositeParser smalltalk = new SmalltalkGrammar();
+  private final SmalltalkDefinition smalltalk = new SmalltalkDefinition();
 
   private <T> T validate(String source, String production) {
-    Parser parser = smalltalk.ref(production).end();
+    Parser parser = smalltalk.build(production).end();
     Result result = parser.parse(source);
     return result.get();
   }

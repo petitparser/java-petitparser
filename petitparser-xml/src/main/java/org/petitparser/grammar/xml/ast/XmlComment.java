@@ -1,6 +1,6 @@
 package org.petitparser.grammar.xml.ast;
 
-import org.petitparser.grammar.xml.XmlGrammar;
+import org.petitparser.grammar.xml.XmlDefinition;
 
 /**
  * An XML comment node.
@@ -13,8 +13,8 @@ public class XmlComment extends XmlData {
 
   @Override
   public void writeTo(StringBuilder buffer) {
-    buffer.append(XmlGrammar.OPEN_COMMENT);
+    buffer.append(XmlDefinition.OPEN_COMMENT);
     buffer.append(getData());
-    buffer.append(XmlGrammar.CLOSE_COMMENT);
+    buffer.append(XmlDefinition.CLOSE_COMMENT);
   }
 }

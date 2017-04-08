@@ -2,7 +2,7 @@ package org.petitparser.grammar.smalltalk;
 
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.primitive.EpsilonParser;
-import org.petitparser.tools.CompositeParser;
+import org.petitparser.tools.GrammarDefinition;
 
 import static org.petitparser.parser.primitive.CharacterParser.any;
 import static org.petitparser.parser.primitive.CharacterParser.digit;
@@ -15,10 +15,9 @@ import static org.petitparser.parser.primitive.StringParser.of;
 /**
  * Smalltalk grammar definition.
  */
-public class SmalltalkGrammar extends CompositeParser {
+public class SmalltalkDefinition extends GrammarDefinition {
 
-  @Override
-  protected void initialize() {
+  public SmalltalkDefinition() {
     other();
     number();
     smalltalk();

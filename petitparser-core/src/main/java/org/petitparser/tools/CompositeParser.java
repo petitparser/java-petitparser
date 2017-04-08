@@ -12,14 +12,22 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
- * Helper to compose complex grammars from various primitive parsers. To create a new composite
- * grammar subclass {@link CompositeParser}. Override the method {@link #initialize} and for every
- * production call {@link CompositeParser#def(String, org.petitparser.parser.Parser)} giving the
- * parsers a name. The start production must be named 'start'. To refer to other productions use
- * {@link CompositeParser#ref(String)}. To redefine or attach actions to productions use {@link
- * CompositeParser#redef(String, Function)}, {@link CompositeParser#redef(String,
- * org.petitparser.parser.Parser)} and {@link CompositeParser#action(String, Function)}.
+ * Helper to compose complex grammars from various primitive parsers.
+ * <p>
+ * Note, this class is deprecated in favor of {@link GrammarDefinition} that provides a more
+ * flexible way to define composite parsers.
+ * <p>
+ * To create a new composite grammar subclass {@link CompositeParser}. Override the method {@link
+ * #initialize} and for every production call {@link CompositeParser#def(String,
+ * org.petitparser.parser.Parser)} giving the parsers a name. The start production must be named
+ * 'start'.
+ * <p>
+ * To refer to other productions use {@link CompositeParser#ref(String)}. To redefine or attach
+ * actions to productions use {@link CompositeParser#redef(String, Function)}, {@link
+ * CompositeParser#redef(String, org.petitparser.parser.Parser)} and {@link
+ * CompositeParser#action(String, Function)}.
  */
+@Deprecated
 public abstract class CompositeParser extends DelegateParser {
 
   private boolean completed = false;
