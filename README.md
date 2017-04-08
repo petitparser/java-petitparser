@@ -40,7 +40,7 @@ To depend on the core library, add the following dependency:
   <dependency>
     <groupId>com.github.petitparser.java-petitparser</groupId>
     <artifactId>petitparser-core</artifactId>
-    <version>2.0.3</version>
+    <version>2.1.0</version>
   </dependency>
 </dependencies>
 ```
@@ -52,7 +52,7 @@ To also include the example grammars, use the following dependency:
   <dependency>
     <groupId>com.github.petitparser</groupId>
     <artifactId>java-petitparser</artifactId>
-    <version>2.0.3</version>
+    <version>2.1.0</version>
   </dependency>
 </dependencies>
 ```
