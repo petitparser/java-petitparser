@@ -25,7 +25,7 @@ public class GrammarDefinitionTest {
 
   class ListParserDefinition extends ListGrammarDefinition {
     ListParserDefinition() {
-      redef("element", (element) -> element.map((String value) -> Integer.parseInt(value)));
+      action("element", (String value) -> Integer.parseInt(value));
     }
   }
 
@@ -42,6 +42,8 @@ public class GrammarDefinitionTest {
       def("delegation1", ref("delegation2"));
       def("delegation2", ref("delegation3"));
       def("delegation3", new EpsilonParser());
+
+      def("unknownReference", ref("unknown"));
     }
   }
 
@@ -128,6 +130,46 @@ public class GrammarDefinitionTest {
     buggedDefinition.build("indirectRecursion3");
   }
 
+  @Test(expected = IllegalStateException.class)
+  public void testUnknownReferenceOutside() {
+    buggedDefinition.build("unknown");
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testUnknownReferenceInside() {
+    buggedDefinition.build("unknownReference");
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testDuplicateDefinition() {
+    buggedDefinition.def("start", new EpsilonParser());
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testUnknownRedefinition() {
+    buggedDefinition.redef("unknown", new EpsilonParser());
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testUnknownRedefinitionFunction() {
+    buggedDefinition.redef("unknown", (start) -> new EpsilonParser());
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testUnknownAction() {
+    buggedDefinition.action("unknown", (object) -> null);
+  }
+
+  @Test(expected = UnsupportedOperationException.class)
+  public void testReferenceParse() {
+    buggedDefinition.ref("start").parse("abc");
+  }
+
+  @Test(expected = UnsupportedOperationException.class)
+  public void testReferenceCopy() {
+    buggedDefinition.ref("start").copy();
+  }
+
   @Test
   public void testDelegation1() {
     assertTrue(buggedDefinition.build("delegation1") instanceof EpsilonParser);
@@ -145,7 +187,7 @@ public class GrammarDefinitionTest {
 
   @Test
   public void testLambdaGrammar() {
-    Parser parser = lambdaDefinition.build();
+    Parser parser = new GrammarParser(lambdaDefinition);
     assertTrue(parser.accept("x"));
     assertTrue(parser.accept("xy"));
     assertTrue(parser.accept("x12"));
@@ -159,7 +201,7 @@ public class GrammarDefinitionTest {
 
   @Test
   public void testExpressionGrammar() {
-    Parser parser = expressionDefinition.build();
+    Parser parser = new GrammarParser(expressionDefinition, "start");
     assertTrue(parser.accept("1"));
     assertTrue(parser.accept("12"));
     assertTrue(parser.accept("1.23"));

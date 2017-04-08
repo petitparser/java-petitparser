@@ -118,10 +118,8 @@ public class GrammarDefinition {
       while (parser instanceof Reference) {
         Reference otherReference = (Reference) parser;
         if (references.contains(otherReference)) {
-          throw new IllegalStateException("Recursive references detected: " +
-              String.join(", ", references.stream()
-                  .map(ref -> ref.name)
-                  .collect(Collectors.joining(", "))));
+          throw new IllegalStateException("Recursive references detected: " + String.join(", ",
+              references.stream().map(ref -> ref.name).collect(Collectors.joining(", "))));
         }
         references.add(otherReference);
         parser = otherReference.resolve();
@@ -160,8 +158,12 @@ public class GrammarDefinition {
 
     @Override
     public boolean equals(Object other) {
-      if (this == other) return true;
-      if (other == null || getClass() != other.getClass()) return false;
+      if (this == other) {
+        return true;
+      }
+      if (other == null || getClass() != other.getClass()) {
+        return false;
+      }
       Reference reference = (Reference) other;
       return name.equals(reference.name);
     }
