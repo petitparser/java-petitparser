@@ -178,7 +178,6 @@ public class GrammarDefinitionTest {
   @Test
   public void testReferenceEquals(){
     Parser reference = buggedDefinition.ref("start");
-    assertTrue(reference.equals(reference));
     assertFalse(reference.equals(null));
     assertFalse(reference.equals("start"));
   }
