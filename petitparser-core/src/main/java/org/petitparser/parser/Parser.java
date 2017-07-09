@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -349,14 +350,11 @@ public abstract class Parser {
    */
   public Parser separatedBy(Parser separator) {
     return new SequenceParser(this, new SequenceParser(separator, this).star())
-        .map(new Function<List<List<List<Object>>>, List<Object>>() {
-          @Override
-          public List<Object> apply(List<List<List<Object>>> input) {
-            List<Object> result = new ArrayList<>();
-            result.add(input.get(0));
-            input.get(1).forEach(result::addAll);
-            return result;
-          }
+        .map((List<List<List<Object>>> input) -> {
+          List<Object> result = new ArrayList<>();
+          result.add(input.get(0));
+          input.get(1).forEach(result::addAll);
+          return result;
         });
   }
 
@@ -367,15 +365,12 @@ public abstract class Parser {
   public Parser delimitedBy(Parser separator) {
     return separatedBy(separator)
         .seq(separator.optional())
-        .map(new Function<List<List<Object>>, List<Object>>() {
-          @Override
-          public List<Object> apply(List<List<Object>> input) {
-            List<Object> result = new ArrayList<>(input.get(0));
-            if (input.get(1) != null) {
-              result.add(input.get(1));
-            }
-            return result;
+        .map((List<List<Object>> input) -> {
+          List<Object> result = new ArrayList<>(input.get(0));
+          if (input.get(1) != null) {
+            result.add(input.get(1));
           }
+          return result;
         });
   }
 
@@ -402,7 +397,7 @@ public abstract class Parser {
       return true;
     }
     seen.add(this);
-    return getClass().equals(other.getClass())
+    return Objects.equals(getClass(), other.getClass())
         && hasEqualProperties(other)
         && hasEqualChildren(other, seen);
   }

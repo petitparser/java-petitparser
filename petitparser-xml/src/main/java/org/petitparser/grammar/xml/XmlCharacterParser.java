@@ -4,10 +4,11 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static org.petitparser.parser.primitive.CharacterParser.digit;
 import static org.petitparser.parser.primitive.CharacterParser.of;
@@ -296,7 +297,7 @@ public class XmlCharacterParser extends Parser {
   // named character reference
   private static final Parser ENTITY = of('&')
       .seq(ENTITY_DIGIT.or(word().plus().flatten()
-          .map((String value) -> NAME_TO_CHAR.containsKey(value) ? NAME_TO_CHAR.get(value) : null)))
+          .map((Function<String, Character>) NAME_TO_CHAR::get)))
       .seq(of(';'))
       .pick(1);
 
@@ -360,7 +361,7 @@ public class XmlCharacterParser extends Parser {
 
   @Override
   public List<Parser> getChildren() {
-    return Arrays.asList(ENTITY);
+    return Collections.singletonList(ENTITY);
   }
 
   @Override

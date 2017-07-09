@@ -29,7 +29,7 @@ public class Profiler {
         return result;
       });
     }).callCC((continuation, context) -> {
-      builders.values().stream()
+      builders.values()
           .forEach(ProfileBuilder::reset);
       Result result = continuation.apply(context);
       builders.values().stream()

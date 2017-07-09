@@ -1,5 +1,7 @@
 package org.petitparser.grammar.xml.ast;
 
+import java.util.Objects;
+
 /**
  * Abstract XML data node.
  */
@@ -24,7 +26,7 @@ public abstract class XmlData extends XmlNode {
       return false;
     }
     XmlData other = (XmlData) obj;
-    return data.equals(other.data);
+    return Objects.equals(data, other.data);
   }
 
   @Override

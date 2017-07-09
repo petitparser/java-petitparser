@@ -93,7 +93,7 @@ public class GrammarDefinition {
     return resolve(new Reference(name));
   }
 
-  private final Parser resolve(Reference reference) {
+  private Parser resolve(Reference reference) {
     Map<Reference, Parser> mapping = new HashMap<>();
     List<Parser> todo = new ArrayList<>();
     todo.add(dereference(mapping, reference));
@@ -171,7 +171,7 @@ public class GrammarDefinition {
         return false;
       }
       Reference reference = (Reference) other;
-      return name.equals(reference.name);
+      return Objects.equals(name, reference.name);
     }
 
     @Override

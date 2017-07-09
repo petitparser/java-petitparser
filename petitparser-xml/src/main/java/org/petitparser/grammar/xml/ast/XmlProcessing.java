@@ -40,7 +40,7 @@ public class XmlProcessing extends XmlData {
       return false;
     }
     XmlProcessing other = (XmlProcessing) obj;
-    return target.equals(other.target);
+    return Objects.equals(target, other.target);
   }
 
   @Override

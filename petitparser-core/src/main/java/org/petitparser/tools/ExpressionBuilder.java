@@ -85,18 +85,14 @@ public class ExpressionBuilder {
         return inner;
       } else {
         Parser sequence = new SequenceParser(buildChoice(prefix).star(), inner);
-        return sequence.map(new Function<List<Object>, Object>() {
-          @Override
-          @SuppressWarnings("unchecked")
-          public Object apply(List<Object> tuple) {
-            Object value = tuple.get(1);
-            List<ExpressionResult> tuples = (List<ExpressionResult>) tuple.get(0);
-            Collections.reverse(tuples);
-            for (ExpressionResult result : tuples) {
-              value = result.action.apply(Arrays.asList(result.operator, value));
-            }
-            return value;
+        return sequence.map((List<List<ExpressionResult>> tuple) -> {
+          Object value = tuple.get(1);
+          List<ExpressionResult> tuples = tuple.get(0);
+          Collections.reverse(tuples);
+          for (ExpressionResult result : tuples) {
+            value = result.action.apply(Arrays.asList(result.operator, value));
           }
+          return value;
         });
       }
     }
@@ -123,16 +119,12 @@ public class ExpressionBuilder {
         return inner;
       } else {
         Parser sequence = new SequenceParser(inner, buildChoice(postfix).star());
-        return sequence.map(new Function<List<Object>, Object>() {
-          @Override
-          @SuppressWarnings("unchecked")
-          public Object apply(List<Object> tuple) {
-            Object value = tuple.get(0);
-            for (ExpressionResult result : (List<ExpressionResult>) tuple.get(1)) {
-              value = result.action.apply(Arrays.asList(value, result.operator));
-            }
-            return value;
+        return sequence.map((List<List<ExpressionResult>> tuple) -> {
+          Object value = tuple.get(0);
+          for (ExpressionResult result : tuple.get(1)) {
+            value = result.action.apply(Arrays.asList(value, result.operator));
           }
+          return value;
         });
       }
     }
@@ -159,17 +151,14 @@ public class ExpressionBuilder {
         return inner;
       } else {
         Parser sequence = inner.separatedBy(buildChoice(right));
-        return sequence.map(new Function<List<Object>, Object>() {
-          @Override
-          public Object apply(List<Object> sequence) {
-            Object result = sequence.get(sequence.size() - 1);
-            for (int i = sequence.size() - 2; i > 0; i -= 2) {
-              ExpressionResult expressionResult = (ExpressionResult) sequence.get(i);
-              result = expressionResult.action
-                  .apply(Arrays.asList(sequence.get(i - 1), expressionResult.operator, result));
-            }
-            return result;
+        return sequence.map((List<Object> innerSequence) -> {
+          Object result = innerSequence.get(innerSequence.size() - 1);
+          for (int i = innerSequence.size() - 2; i > 0; i -= 2) {
+            ExpressionResult expressionResult = (ExpressionResult) innerSequence.get(i);
+            result = expressionResult.action
+                .apply(Arrays.asList(innerSequence.get(i - 1), expressionResult.operator, result));
           }
+          return result;
         });
       }
     }
@@ -196,17 +185,14 @@ public class ExpressionBuilder {
         return inner;
       } else {
         Parser sequence = inner.separatedBy(buildChoice(left));
-        return sequence.map(new Function<List<Object>, Object>() {
-          @Override
-          public Object apply(List<Object> sequence) {
-            Object result = sequence.get(0);
-            for (int i = 1; i < sequence.size(); i += 2) {
-              ExpressionResult expressionResult = (ExpressionResult) sequence.get(i);
-              result = expressionResult.action
-                  .apply(Arrays.asList(result, expressionResult.operator, sequence.get(i + 1)));
-            }
-            return result;
+        return sequence.map((List<Object> innerSequence) -> {
+          Object result = innerSequence.get(0);
+          for (int i = 1; i < innerSequence.size(); i += 2) {
+            ExpressionResult expressionResult = (ExpressionResult) innerSequence.get(i);
+            result = expressionResult.action
+                .apply(Arrays.asList(result, expressionResult.operator, innerSequence.get(i + 1)));
           }
+          return result;
         });
       }
     }

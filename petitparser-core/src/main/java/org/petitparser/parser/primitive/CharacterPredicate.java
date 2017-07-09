@@ -97,7 +97,8 @@ public interface CharacterPredicate {
         .seq(CharacterParser.of('-'))
         .seq(CharacterParser.any())
         .map((List<Character> values) -> new CharacterRange(values.get(0), values.get(2)));
-    static final Parser PATTERN_POSITIVE = PATTERN_RANGE.or(PATTERN_SIMPLE).star()
+    static final Parser PATTERN_POSITIVE = PATTERN_RANGE
+        .or(PATTERN_SIMPLE).star()
         .map(CharacterRange::toCharacterPredicate);
     static final Parser PATTERN = CharacterParser.of('^').optional()
         .seq(PATTERN_POSITIVE)

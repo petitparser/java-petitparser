@@ -5,7 +5,6 @@ import org.petitparser.tools.GrammarDefinition;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -115,19 +114,18 @@ public class XmlDefinition<TName, TNode, TAttribute> extends GrammarDefinition {
             .seq(of(OPEN_END_ELEMENT))
             .seq(ref("qualified"))
             .seq(ref("space optional"))
-            .seq(of(CLOSE_ELEMENT))))
-        .map(new Function<List<?>, TNode>() {
-          @Override
-          public TNode apply(List<?> list) {
-            if (list.get(4).equals(CLOSE_END_ELEMENT)) {
-              return callback.createElement((TName) list.get(1), (List<TAttribute>) list.get(2), Collections.emptyList());
+            .seq(of(CLOSE_ELEMENT)))).map((List<?> list) -> {
+          if (Objects.equals(list.get(4), CLOSE_END_ELEMENT)) {
+            return callback.createElement((TName) list.get(1), (List<TAttribute>) list.get(2),
+                Collections.emptyList());
+          } else {
+            List<?> end = (List<?>) list.get(4);
+            if (Objects.equals(list.get(1), end.get(3))) {
+              return callback.createElement((TName) list.get(1), (List<TAttribute>) list.get(2),
+                  (List<TNode>) end.get(1));
             } else {
-              List<?> end = (List<?>) list.get(4);
-              if (list.get(1).equals(end.get(3))) {
-                return callback.createElement((TName) list.get(1), (List<TAttribute>) list.get(2), (List<TNode>) end.get(1));
-              } else {
-                throw new IllegalStateException("Expected </" + list.get(1) + ">, but found </" + end.get(3));
-              }
+              throw new IllegalStateException(
+                  "Expected </" + list.get(1) + ">, but found </" + end.get(3));
             }
           }
         }));

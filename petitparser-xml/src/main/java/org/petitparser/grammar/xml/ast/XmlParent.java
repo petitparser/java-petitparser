@@ -3,6 +3,7 @@ package org.petitparser.grammar.xml.ast;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Abstract XML node with actual children.
@@ -39,7 +40,7 @@ public abstract class XmlParent extends XmlNode {
       return false;
     }
     XmlParent other = (XmlParent) obj;
-    return children.equals(other.children);
+    return Objects.equals(children, other.children);
   }
 
   @Override

@@ -11,6 +11,7 @@ import org.petitparser.parser.Parser;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -236,12 +237,12 @@ public class XmlParserTest {
     for (XmlNode node : anXmlNode) {
       assertEquals(node, node);
       assertEquals(node.hashCode(), node.hashCode());
-      assertFalse(node.equals(node.getParent()));
+      assertFalse(Objects.equals(node, node.getParent()));
       for (XmlNode child : node.getChildren()) {
-        assertFalse(node.equals(child));
+        assertFalse(Objects.equals(node, child));
       }
       for (XmlNode child : node.getAttributes()) {
-        assertFalse(node.equals(child));
+        assertFalse(Objects.equals(node, child));
       }
     }
   }

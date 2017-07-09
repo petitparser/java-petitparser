@@ -4,6 +4,7 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -82,7 +83,7 @@ public class Tracer {
     @Override
     public String toString() {
       String indent = Stream.generate(() -> "  ").limit(getLevel()).collect(Collectors.joining());
-      return indent + (TraceEventType.ENTER.equals(type) ? parser : context);
+      return indent + (Objects.equals(TraceEventType.ENTER, type) ? parser : context);
     }
   }
 }

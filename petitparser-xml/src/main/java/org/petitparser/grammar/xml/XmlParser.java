@@ -8,6 +8,6 @@ import org.petitparser.tools.GrammarParser;
 public class XmlParser extends GrammarParser {
 
   public XmlParser() {
-    super(new XmlDefinition(new XmlBuilder()));
+    super(new XmlDefinition<>(new XmlBuilder()));
   }
 }

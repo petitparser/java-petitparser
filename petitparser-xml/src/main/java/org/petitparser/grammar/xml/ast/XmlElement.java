@@ -41,7 +41,7 @@ public class XmlElement extends XmlParent {
 
   public XmlAttribute getAttributeNode(String key) {
     for (XmlAttribute attribute : attributes) {
-      if (attribute.getName().getLocal().equals(key)) {
+      if (Objects.equals(attribute.getName().getLocal(), key)) {
         return attribute;
       }
     }
@@ -77,7 +77,8 @@ public class XmlElement extends XmlParent {
       return false;
     }
     XmlElement other = (XmlElement) obj;
-    return name.equals(other.name) && attributes.equals(other.attributes);
+    return Objects.equals(name, other.name)
+        && Objects.equals(attributes, other.attributes);
   }
 
   @Override

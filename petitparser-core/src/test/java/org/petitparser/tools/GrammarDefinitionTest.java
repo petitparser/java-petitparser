@@ -5,6 +5,8 @@ import org.petitparser.parser.Parser;
 import org.petitparser.parser.primitive.EpsilonParser;
 
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -30,7 +32,7 @@ public class GrammarDefinitionTest {
 
   class ListParserDefinition extends ListGrammarDefinition {
     ListParserDefinition() {
-      action("element", (String value) -> Integer.parseInt(value));
+      action("element", (Function<String, Integer>) Integer::parseInt);
     }
   }
 
@@ -175,11 +177,13 @@ public class GrammarDefinitionTest {
     buggedDefinition.ref("start").copy();
   }
 
+
   @Test
+  @SuppressWarnings("EqualsBetweenInconvertibleTypes")
   public void testReferenceEquals(){
     Parser reference = buggedDefinition.ref("start");
-    assertFalse(reference.equals(null));
-    assertFalse(reference.equals("start"));
+    assertFalse(Objects.equals(reference, null));
+    assertFalse(Objects.equals(reference, "start"));
   }
 
   @Test
