@@ -15,7 +15,7 @@ public class EpsilonParser extends Parser {
   }
 
   @Override
-  public Parser copy() {
+  public EpsilonParser copy() {
     return new EpsilonParser();
   }
 }

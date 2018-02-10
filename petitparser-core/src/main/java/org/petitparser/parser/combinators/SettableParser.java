@@ -49,7 +49,7 @@ public class SettableParser extends DelegateParser {
   }
 
   @Override
-  public Parser copy() {
+  public SettableParser copy() {
     return new SettableParser(delegate);
   }
 }

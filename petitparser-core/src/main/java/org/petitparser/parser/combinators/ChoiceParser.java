@@ -28,14 +28,14 @@ public class ChoiceParser extends ListParser {
   }
 
   @Override
-  public Parser or(Parser... others) {
+  public ChoiceParser or(Parser... others) {
     Parser[] array = Arrays.copyOf(parsers, parsers.length + others.length);
     System.arraycopy(others, 0, array, parsers.length, others.length);
     return new ChoiceParser(array);
   }
 
   @Override
-  public Parser copy() {
+  public ChoiceParser copy() {
     return new ChoiceParser(Arrays.copyOf(parsers, parsers.length));
   }
 }

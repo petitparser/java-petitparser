@@ -48,7 +48,7 @@ public class LazyRepeatingParser extends LimitedRepeatingParser {
   }
 
   @Override
-  public Parser copy() {
+  public LazyRepeatingParser copy() {
     return new LazyRepeatingParser(delegate, limit, min, max);
   }
 }

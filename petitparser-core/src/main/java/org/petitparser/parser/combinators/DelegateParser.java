@@ -38,7 +38,7 @@ public class DelegateParser extends Parser {
   }
 
   @Override
-  public Parser copy() {
+  public DelegateParser copy() {
     return new DelegateParser(delegate);
   }
 }

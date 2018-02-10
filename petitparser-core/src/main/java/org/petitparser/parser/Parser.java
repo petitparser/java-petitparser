@@ -193,7 +193,7 @@ public abstract class Parser {
    * others}. Calling this method on an existing sequence code not nest this sequence into a new one,
    * but instead augments the existing sequence with {@code others}.
    */
-  public Parser seq(Parser... others) {
+  public SequenceParser seq(Parser... others) {
     Parser[] parsers = new Parser[1 + others.length];
     parsers[0] = this;
     System.arraycopy(others, 0, parsers, 1, others.length);
@@ -205,7 +205,7 @@ public abstract class Parser {
    * parse result of the receiver, if the receiver fails it returns the parse result of {@code
    * other} (exclusive ordered choice).
    */
-  public Parser or(Parser... others) {
+  public ChoiceParser or(Parser... others) {
     Parser[] parsers = new Parser[1 + others.length];
     parsers[0] = this;
     System.arraycopy(others, 0, parsers, 1, others.length);

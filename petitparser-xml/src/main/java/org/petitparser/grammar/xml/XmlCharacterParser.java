@@ -365,7 +365,7 @@ public class XmlCharacterParser extends Parser {
   }
 
   @Override
-  public Parser copy() {
+  public XmlCharacterParser copy() {
     return new XmlCharacterParser(stopper, minLength);
   }
 }

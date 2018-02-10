@@ -27,7 +27,7 @@ public class FlattenParser extends DelegateParser {
   }
 
   @Override
-  public Parser copy() {
+  public FlattenParser copy() {
     return new FlattenParser(delegate);
   }
 }

@@ -36,7 +36,7 @@ public class FailureParser extends Parser {
   }
 
   @Override
-  public Parser copy() {
+  public FailureParser copy() {
     return new FailureParser(message);
   }
 

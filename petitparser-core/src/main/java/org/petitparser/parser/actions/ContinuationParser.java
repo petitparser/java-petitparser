@@ -38,7 +38,7 @@ public class ContinuationParser extends DelegateParser {
   }
 
   @Override
-  public Parser copy() {
+  public ContinuationParser copy() {
     return new ContinuationParser(delegate, handler);
   }
 }

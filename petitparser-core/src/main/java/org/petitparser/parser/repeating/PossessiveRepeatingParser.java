@@ -40,7 +40,7 @@ public class PossessiveRepeatingParser extends RepeatingParser {
   }
 
   @Override
-  public Parser copy() {
+  public PossessiveRepeatingParser copy() {
     return new PossessiveRepeatingParser(delegate, min, max);
   }
 }

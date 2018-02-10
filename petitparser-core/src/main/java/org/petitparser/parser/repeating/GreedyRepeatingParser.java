@@ -56,7 +56,7 @@ public class GreedyRepeatingParser extends LimitedRepeatingParser {
   }
 
   @Override
-  public Parser copy() {
+  public GreedyRepeatingParser copy() {
     return new GreedyRepeatingParser(delegate, limit, min, max);
   }
 }

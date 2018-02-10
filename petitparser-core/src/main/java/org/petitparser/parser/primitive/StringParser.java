@@ -75,7 +75,7 @@ public class StringParser extends Parser {
   }
 
   @Override
-  public Parser copy() {
+  public StringParser copy() {
     return new StringParser(size, predicate, message);
   }
 

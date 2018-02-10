@@ -33,14 +33,14 @@ public class SequenceParser extends ListParser {
   }
 
   @Override
-  public Parser seq(Parser... others) {
+  public SequenceParser seq(Parser... others) {
     Parser[] array = Arrays.copyOf(parsers, parsers.length + others.length);
     System.arraycopy(others, 0, array, parsers.length, others.length);
     return new SequenceParser(array);
   }
 
   @Override
-  public Parser copy() {
+  public SequenceParser copy() {
     return new SequenceParser(Arrays.copyOf(parsers, parsers.length));
   }
 }

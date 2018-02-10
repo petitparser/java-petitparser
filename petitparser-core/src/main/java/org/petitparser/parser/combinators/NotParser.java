@@ -35,7 +35,7 @@ public class NotParser extends DelegateParser {
   }
 
   @Override
-  public Parser copy() {
+  public NotParser copy() {
     return new NotParser(delegate, message);
   }
 

@@ -59,7 +59,7 @@ public class TrimmingParser extends DelegateParser {
   }
 
   @Override
-  public Parser copy() {
+  public TrimmingParser copy() {
     return new TrimmingParser(delegate, left, right);
   }
 }

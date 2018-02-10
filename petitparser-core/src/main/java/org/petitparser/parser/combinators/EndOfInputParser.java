@@ -37,7 +37,7 @@ public class EndOfInputParser extends DelegateParser {
   }
 
   @Override
-  public Parser copy() {
+  public EndOfInputParser copy() {
     return new EndOfInputParser(delegate, message);
   }
 

@@ -41,7 +41,7 @@ public class ActionParser<T, R> extends DelegateParser {
   }
 
   @Override
-  public Parser copy() {
+  public ActionParser<T, R> copy() {
     return new ActionParser<>(delegate, function);
   }
 }

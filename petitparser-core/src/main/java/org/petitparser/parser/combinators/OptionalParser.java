@@ -35,7 +35,7 @@ public class OptionalParser extends DelegateParser {
   }
 
   @Override
-  public Parser copy() {
+  public OptionalParser copy() {
     return new OptionalParser(delegate, otherwise);
   }
 }

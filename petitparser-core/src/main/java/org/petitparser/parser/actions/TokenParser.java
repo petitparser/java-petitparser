@@ -28,7 +28,7 @@ public class TokenParser extends DelegateParser {
   }
 
   @Override
-  public Parser copy() {
+  public TokenParser copy() {
     return new TokenParser(delegate);
   }
 }
