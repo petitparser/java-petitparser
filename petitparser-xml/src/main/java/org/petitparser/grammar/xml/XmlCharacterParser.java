@@ -340,7 +340,7 @@ public class XmlCharacterParser extends Parser {
       } else if (value == '&') {
         Result result = ENTITY.parseOn(context.success(null, position));
         if (result.isSuccess() && result.get() != null) {
-          output.append(input.substring(start, position));
+          output.append(input, start, position);
           output.append((char) result.get());
           position = result.getPosition();
           start = position;
@@ -351,7 +351,7 @@ public class XmlCharacterParser extends Parser {
         position++;
       }
     }
-    output.append(input.substring(start, position));
+    output.append(input, start, position);
 
     // check for the minimum length
     return output.length() < minLength
