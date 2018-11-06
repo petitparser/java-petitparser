@@ -18,44 +18,64 @@ This library is open source, stable and well tested. Development happens on [Git
 Installation
 ------------
 
-To include the latest release in your Java project follow the instructions below. Instructions for alternative build systems such as Gradle, SBT, or Leiningen you can find on [JitPack](https://jitpack.io/#petitparser/java-petitparser).
+To include the latest release in your Java project follow the instructions below.
 
-### Maven
+### Maven Central
 
-Append the repository to your `pom.xml` file:
-
-```xml
-<repositories>
-  <repository>
-    <id>jitpack.io</id>
-    <url>https://jitpack.io</url>
-  </repository>
-</repositories>
-```
-
-To depend on the core library, add the following dependency:
+To depend on the core library, add the following dependency to your `pom.xml` file:
 
 ```xml
-<dependencies>
-  <dependency>
-    <groupId>com.github.petitparser.java-petitparser</groupId>
-    <artifactId>petitparser-core</artifactId>
-    <version>2.1.0</version>
-  </dependency>
-</dependencies>
+<dependency>
+  <groupId>com.github.petitparser</groupId>
+  <artifactId>petitparser-core</artifactId>
+  <version>2.2.0</version>
+</dependency>
 ```
 
 To also include the example grammars, use the following dependency:
 
 ```xml
-<dependencies>
-  <dependency>
-    <groupId>com.github.petitparser</groupId>
-    <artifactId>java-petitparser</artifactId>
-    <version>2.1.0</version>
-  </dependency>
-</dependencies>
+<dependency>
+  <groupId>com.github.petitparser</groupId>
+  <artifactId>petitparser</artifactId>
+  <version>2.2.0</version>
+</dependency>
 ```
+
+Instructions for alternative build systems you can find on [Maven Central](https://search.maven.org/artifact/com.github.petitparser/petitparser-core).
+
+### Maven JitPack
+
+JitPack requires you to first append the repository to your `pom.xml` file:
+
+```xml
+<repository>
+  <id>jitpack.io</id>
+  <url>https://jitpack.io</url>
+</repository>
+```
+
+To depend on the core library, add the following dependency:
+
+```xml
+<dependency>
+  <groupId>com.github.petitparser.java-petitparser</groupId>
+  <artifactId>petitparser-core</artifactId>
+  <version>2.2.0</version>
+</dependency>
+```
+
+To also include the example grammars, use the following dependency:
+
+```xml
+<dependency>
+  <groupId>com.github.petitparser</groupId>
+  <artifactId>java-petitparser</artifactId>
+  <version>2.2.0</version>
+</dependency>
+```
+
+Instructions for alternative build systems such as Gradle, SBT, or Leiningen you can find on [JitPack](https://jitpack.io/#petitparser/java-petitparser).
 
 ### Bazel
 
