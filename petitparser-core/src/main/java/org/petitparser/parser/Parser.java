@@ -307,7 +307,7 @@ public abstract class Parser {
    * return a failure with the {@code message}.
    */
   public Parser end(String message) {
-    return new EndOfInputParser(this, message);
+    return new SequenceParser(this, new EndOfInputParser(message)).pick(0);
   }
 
   /**

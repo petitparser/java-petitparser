@@ -9,25 +9,18 @@ import java.util.Objects;
 /**
  * A parser that succeeds only at the end of the input stream.
  */
-public class EndOfInputParser extends DelegateParser {
+public class EndOfInputParser extends Parser {
 
   protected final String message;
 
-  public EndOfInputParser(Parser delegate, String message) {
-    super(delegate);
+  public EndOfInputParser(String message) {
     this.message = Objects.requireNonNull(message, "Undefined message");
   }
 
   @Override
   public Result parseOn(Context context) {
-    Result result = delegate.parseOn(context);
-    if (result.isFailure()) {
-      return result;
-    }
-    if (result.getPosition() == result.getBuffer().length()) {
-      return result;
-    }
-    return result.failure(message, result.getPosition());
+    return context.getPosition() < context.getBuffer().length() ?
+        context.failure(message) : context.success(null);
   }
 
   @Override
@@ -38,7 +31,7 @@ public class EndOfInputParser extends DelegateParser {
 
   @Override
   public EndOfInputParser copy() {
-    return new EndOfInputParser(delegate, message);
+    return new EndOfInputParser(message);
   }
 
   @Override
