@@ -15,6 +15,11 @@ public class EpsilonParser extends Parser {
   }
 
   @Override
+  public int fastParseOn(String buffer, int position) {
+    return position;
+  }
+
+  @Override
   public EpsilonParser copy() {
     return new EpsilonParser();
   }

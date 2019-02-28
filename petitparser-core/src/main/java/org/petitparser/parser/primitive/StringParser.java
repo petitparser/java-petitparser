@@ -20,7 +20,8 @@ public class StringParser extends Parser {
   }
 
   /**
-   * Construct a parser that accepts the provides {@link String} {@code value}, and that fails with
+   * Construct a parser that accepts the provides {@link String} {@code value
+   * }, and that fails with
    * the error provided error {@code message}.
    */
   public static Parser of(String value, String message) {
@@ -28,14 +29,16 @@ public class StringParser extends Parser {
   }
 
   /**
-   * Construct a parser that accepts the provides {@link String} {@code value} case insensitive.
+   * Construct a parser that accepts the provides {@link String} {@code value
+   * } case insensitive.
    */
   public static Parser ofIgnoringCase(String value) {
     return ofIgnoringCase(value, value + " expected");
   }
 
   /**
-   * Construct a parser that accepts the provides {@link String} {@code value} case insensitive, and
+   * Construct a parser that accepts the provides {@link String} {@code value
+   * } case insensitive, and
    * that fails with the error provided error {@code message}.
    */
   public static Parser ofIgnoringCase(String value, String message) {
@@ -64,6 +67,13 @@ public class StringParser extends Parser {
       }
     }
     return context.failure(message);
+  }
+
+  @Override
+  public int fastParseOn(String buffer, int position) {
+    int stop = position + size;
+    return stop <= buffer.length() &&
+        predicate.test(buffer.substring(position, stop)) ? stop : -1;
   }
 
   @Override

@@ -29,6 +29,12 @@ public class OptionalParser extends DelegateParser {
   }
 
   @Override
+  public int fastParseOn(String buffer, int position) {
+    int result = delegate.fastParseOn(buffer, position);
+    return result < 0 ? position : result;
+  }
+
+  @Override
   protected boolean hasEqualProperties(Parser other) {
     return super.hasEqualProperties(other) &&
         Objects.equals(otherwise, ((OptionalParser) other).otherwise);

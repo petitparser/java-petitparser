@@ -12,7 +12,8 @@ import java.util.Objects;
 public class FailureParser extends Parser {
 
   /**
-   * Construct a {@link FailureParser} that fails with the supplied {@code message}.
+   * Construct a {@link FailureParser} that fails with the supplied {@code
+   * message}.
    */
   public static Parser withMessage(String message) {
     return new FailureParser(message);
@@ -27,6 +28,11 @@ public class FailureParser extends Parser {
   @Override
   public Result parseOn(Context context) {
     return context.failure(message);
+  }
+
+  @Override
+  public int fastParseOn(String buffer, int position) {
+    return -1;
   }
 
   @Override

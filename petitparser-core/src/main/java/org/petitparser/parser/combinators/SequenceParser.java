@@ -33,6 +33,17 @@ public class SequenceParser extends ListParser {
   }
 
   @Override
+  public int fastParseOn(String buffer, int position) {
+    for (Parser parser : parsers) {
+      position = parser.fastParseOn(buffer, position);
+      if (position < 0) {
+        return position;
+      }
+    }
+    return position;
+  }
+
+  @Override
   public SequenceParser seq(Parser... others) {
     Parser[] array = Arrays.copyOf(parsers, parsers.length + others.length);
     System.arraycopy(others, 0, array, parsers.length, others.length);

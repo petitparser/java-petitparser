@@ -20,26 +20,46 @@ public class TrimmingParser extends DelegateParser {
   public TrimmingParser(Parser delegate, Parser left, Parser right) {
     super(delegate);
     this.left = Objects.requireNonNull(left, "Undefined left trimming parser");
-    this.right = Objects.requireNonNull(right, "Undefined right trimming parser");
+    this.right =
+        Objects.requireNonNull(right, "Undefined right trimming parser");
   }
 
   @Override
   public Result parseOn(Context context) {
-    Result leftResult = consume(left, context);
-    Result delegateResult = delegate.parseOn(leftResult);
-    if (delegateResult.isFailure()) {
-      return delegateResult;
+    String buffer = context.getBuffer();
+
+    // Trim the left part:
+    int before = consume(left, buffer, context.getPosition());
+    if (before != context.getPosition()) {
+      context = new Context(buffer, before);
     }
-    Result rightResult = consume(right, delegateResult);
-    return rightResult.success(delegateResult.get());
+
+    // Consume the delegate:
+    Result result = delegate.parseOn(context);
+    if (result.isFailure()) {
+      return result;
+    }
+
+    // Trim the right part:
+    int after = consume(right, buffer, result.getPosition());
+    return after == result.getPosition() ? result :
+        result.success(result.get(), after);
   }
 
-  private Result consume(Parser parser, Context context) {
-    Result result = parser.parseOn(context);
-    while (result.isSuccess()) {
-      result = parser.parseOn(result);
+  @Override
+  public int fastParseOn(String buffer, int position) {
+    int result = delegate.fastParseOn(buffer, consume(left, buffer, position));
+    return result < 0 ? result : consume(right, buffer, result);
+  }
+
+  private int consume(Parser parser, String buffer, int position) {
+    for (; ; ) {
+      int result = parser.fastParseOn(buffer, position);
+      if (result < 0) {
+        return position;
+      }
+      position = result;
     }
-    return result;
   }
 
   @Override

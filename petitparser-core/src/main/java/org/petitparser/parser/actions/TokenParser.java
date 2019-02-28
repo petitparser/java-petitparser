@@ -28,6 +28,11 @@ public class TokenParser extends DelegateParser {
   }
 
   @Override
+  public int fastParseOn(String buffer, int position) {
+    return delegate.fastParseOn(buffer, position);
+  }
+
+  @Override
   public TokenParser copy() {
     return new TokenParser(delegate);
   }

@@ -23,6 +23,7 @@ public class Assertions {
     assertEquals("Position", position, result.getPosition());
     assertEquals("Result", expected, result.get());
     assertNull("No message expected", result.getMessage());
+    assertEquals("Fast parse", position, parser.fastParseOn(input, 0));
   }
 
   public static <T> void assertFailure(Parser parser, String input) {
@@ -47,6 +48,7 @@ public class Assertions {
     } else {
       assertEquals("Message", message, result.getMessage());
     }
+    assertEquals("Expected fast parse failure", -1, parser.fastParseOn(input, 0));
     try {
       result.get();
     } catch (ParseError error) {

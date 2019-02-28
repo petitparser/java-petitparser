@@ -28,6 +28,18 @@ public class ChoiceParser extends ListParser {
   }
 
   @Override
+  public int fastParseOn(String buffer, int position) {
+    int result = -1;
+    for (Parser parser : parsers) {
+      result = parser.fastParseOn(buffer, position);
+      if (result >= 0) {
+        return result;
+      }
+    }
+    return result;
+  }
+
+  @Override
   public ChoiceParser or(Parser... others) {
     Parser[] array = Arrays.copyOf(parsers, parsers.length + others.length);
     System.arraycopy(others, 0, array, parsers.length, others.length);

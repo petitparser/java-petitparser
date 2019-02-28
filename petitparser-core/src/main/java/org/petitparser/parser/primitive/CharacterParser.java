@@ -14,7 +14,8 @@ public class CharacterParser extends Parser {
   /**
    * Returns a parser that accepts a specific {@link CharacterPredicate}.
    */
-  public static CharacterParser of(CharacterPredicate predicate, String message) {
+  public static CharacterParser of(
+      CharacterPredicate predicate, String message) {
     return new CharacterParser(predicate, message);
   }
 
@@ -109,7 +110,8 @@ public class CharacterParser extends Parser {
   /**
    * Returns a parser that accepts a specific character pattern.
    * <p>
-   * Characters match themselves. A dash {@code -} between two characters matches the range of those
+   * Characters match themselves. A dash {@code -} between two characters
+   * matches the range of those
    * characters. A caret {@code ^} at the beginning negates the pattern.
    */
   public static CharacterParser pattern(String pattern) {
@@ -183,6 +185,12 @@ public class CharacterParser extends Parser {
       }
     }
     return context.failure(message);
+  }
+
+  @Override
+  public int fastParseOn(String buffer, int position) {
+    return position < buffer.length() && matcher.test(buffer.charAt(position)) ?
+        position + 1 : -1;
   }
 
   @Override

@@ -7,7 +7,8 @@ import org.petitparser.parser.Parser;
 import java.util.Objects;
 
 /**
- * The not-predicate, a parser that succeeds whenever its delegate does not, but consumes no input
+ * The not-predicate, a parser that succeeds whenever its delegate does not,
+ * but consumes no input
  * [Parr 1994, 1995].
  */
 public class NotParser extends DelegateParser {
@@ -30,8 +31,15 @@ public class NotParser extends DelegateParser {
   }
 
   @Override
+  public int fastParseOn(String buffer, int position) {
+    int result = delegate.fastParseOn(buffer, position);
+    return result < 0 ? position : -1;
+  }
+
+  @Override
   protected boolean hasEqualProperties(Parser other) {
-    return super.hasEqualProperties(other) && Objects.equals(message, ((NotParser) other).message);
+    return super.hasEqualProperties(other) &&
+        Objects.equals(message, ((NotParser) other).message);
   }
 
   @Override

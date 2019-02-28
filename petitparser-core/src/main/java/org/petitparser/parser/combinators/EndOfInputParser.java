@@ -24,6 +24,11 @@ public class EndOfInputParser extends Parser {
   }
 
   @Override
+  public int fastParseOn(String buffer, int position) {
+    return position < buffer.length() ? -1 : position;
+  }
+
+  @Override
   protected boolean hasEqualProperties(Parser other) {
     return super.hasEqualProperties(other) &&
         Objects.equals(message, ((EndOfInputParser) other).message);
