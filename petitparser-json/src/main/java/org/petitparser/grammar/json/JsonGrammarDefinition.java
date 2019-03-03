@@ -63,11 +63,11 @@ public class JsonGrammarDefinition extends GrammarDefinition {
         .or(ref("object"))
         .or(ref("array")));
 
-    def("trueToken", of("true").flatten().trim());
-    def("falseToken", of("false").flatten().trim());
-    def("nullToken", of("null").flatten().trim());
-    def("stringToken", ref("stringPrimitive").flatten().trim());
-    def("numberToken", ref("numberPrimitive").flatten().trim());
+    def("trueToken", of("true").flatten("Expected 'true'").trim());
+    def("falseToken", of("false").flatten("Expected 'false'").trim());
+    def("nullToken", of("null").flatten("Expected 'null'").trim());
+    def("stringToken", ref("stringPrimitive").flatten("Expected string").trim());
+    def("numberToken", ref("numberPrimitive").flatten("Expected number").trim());
 
     def("characterPrimitive", ref("characterEscape")
         .or(ref("characterOctal"))

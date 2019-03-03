@@ -284,19 +284,25 @@ public class XmlCharacterParser extends Parser {
 
   // hexadecimal character reference
   private static final Parser ENTITY_HEX = pattern("xX")
-      .seq(pattern("A-Fa-f0-9").plus().flatten()
+      .seq(pattern("A-Fa-f0-9")
+          .plus()
+          .flatten("Expected hexadecimal character reference")
           .map((String value) -> (char) Integer.parseInt(value, 16)))
       .pick(1);
 
   // decimal character reference
   private static final Parser ENTITY_DIGIT = of('#')
-      .seq(ENTITY_HEX.or(digit().plus().flatten()
+      .seq(ENTITY_HEX.or(digit()
+          .plus()
+          .flatten("Expected decimal character reference")
           .map((String value) -> (char) Integer.parseInt(value))))
       .pick(1);
 
   // named character reference
   private static final Parser ENTITY = of('&')
-      .seq(ENTITY_DIGIT.or(word().plus().flatten()
+      .seq(ENTITY_DIGIT.or(word()
+          .plus()
+          .flatten("Expected named character reference")
           .map((Function<String, Character>) NAME_TO_CHAR::get)))
       .seq(of(';'))
       .pick(1);
@@ -357,6 +363,21 @@ public class XmlCharacterParser extends Parser {
     return output.length() < minLength
         ? context.failure("Unable to parse character data.")
         : context.success(output.toString(), position);
+  }
+
+  @Override
+  public int fastParseOn(String buffer, int position) {
+    int start = position;
+    int length = buffer.length();
+    while (position < length) {
+      char value = buffer.charAt(position);
+      if (value == stopper) {
+        break;
+      } else {
+        position++;
+      }
+    }
+    return position - start < minLength ? -1 : position;
   }
 
   @Override

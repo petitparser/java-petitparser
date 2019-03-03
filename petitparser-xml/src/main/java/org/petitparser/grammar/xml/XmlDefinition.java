@@ -69,11 +69,15 @@ public class XmlDefinition<TName, TNode, TAttribute> extends GrammarDefinition {
         .pick(1)
         .star());
     def("comment", of(OPEN_COMMENT)
-        .seq(any().starLazy(of(CLOSE_COMMENT)).flatten())
+        .seq(any()
+            .starLazy(of(CLOSE_COMMENT))
+            .flatten("Expected comment content"))
         .seq(of(CLOSE_COMMENT))
         .map((List<String> list) -> callback.createComment(list.get(1))));
     def("cdata", of(OPEN_CDATA)
-        .seq(any().starLazy(of(CLOSE_CDATA)).flatten())
+        .seq(any()
+            .starLazy(of(CLOSE_CDATA))
+            .flatten("Expected CDATA content"))
         .seq(of(CLOSE_CDATA))
         .map((List<String> list) -> callback.createCDATA(list.get(1))));
     def("content", ref("characterData")
@@ -92,7 +96,7 @@ public class XmlDefinition<TName, TNode, TAttribute> extends GrammarDefinition {
                 .seq(any().starLazy(of(CLOSE_DOCTYPE_BLOCK)))
                 .seq(of(CLOSE_DOCTYPE_BLOCK)))
             .separatedBy(ref("space"))
-            .flatten())
+            .flatten("Expected doctype content"))
         .seq(ref("space optional"))
         .seq(of(CLOSE_DOCTYPE))
         .map((List<String> list) -> callback.createDoctype(list.get(2))));
@@ -132,7 +136,9 @@ public class XmlDefinition<TName, TNode, TAttribute> extends GrammarDefinition {
     def("processing", of(OPEN_PROCESSING)
         .seq(ref("nameToken"))
         .seq(ref("space")
-            .seq(any().starLazy(of(CLOSE_PROCESSING)).flatten())
+            .seq(any()
+                .starLazy(of(CLOSE_PROCESSING))
+                .flatten("Expected processing instruction content"))
             .pick(1).optional(""))
         .seq(of(CLOSE_PROCESSING))
         .map((List<String> list) -> callback.createProcessing(list.get(1), list.get(2))));
@@ -149,7 +155,7 @@ public class XmlDefinition<TName, TNode, TAttribute> extends GrammarDefinition {
 
     def("nameToken", ref("nameStartChar")
         .seq(ref("nameChar").star())
-        .flatten());
+        .flatten("Expected name"));
     def("nameStartChar", pattern(NAME_START_CHARS, "Expected name"));
     def("nameChar", pattern(NAME_CHARS));
   }
