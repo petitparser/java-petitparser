@@ -73,11 +73,26 @@ public class ParsersTest {
   }
 
   @Test
-  public void testFlatten() {
-    Parser parser = CharacterParser.digit().plus().flatten();
-    assertFailure(parser, "");
-    assertFailure(parser, "a");
-    assertSuccess(parser, "1", "1");
+  public void testFlatten1() {
+    Parser parser =
+        CharacterParser.digit().repeat(2, RepeatingParser.UNBOUNDED).flatten();
+    assertFailure(parser, "", 0, "digit expected");
+    assertFailure(parser, "a", 0, "digit expected");
+    assertFailure(parser, "1", 1, "digit expected");
+    assertFailure(parser, "1a", 1, "digit expected");
+    assertSuccess(parser, "12", "12");
+    assertSuccess(parser, "123", "123");
+    assertSuccess(parser, "1234", "1234");
+  }
+
+  @Test
+  public void testFlatten2() {
+    Parser parser = CharacterParser.digit().repeat(2, RepeatingParser.UNBOUNDED)
+        .flatten("gimme a number");
+    assertFailure(parser, "", 0, "gimme a number");
+    assertFailure(parser, "a", 0, "gimme a number");
+    assertFailure(parser, "1", 0, "gimme a number");
+    assertFailure(parser, "1a", 0, "gimme a number");
     assertSuccess(parser, "12", "12");
     assertSuccess(parser, "123", "123");
     assertSuccess(parser, "1234", "1234");

@@ -119,8 +119,13 @@ public class EqualityTest {
   }
 
   @Test
-  public void flatten() {
+  public void flatten1() {
     verify(CharacterParser.digit().flatten());
+  }
+
+  @Test
+  public void flatten2() {
+    verify(CharacterParser.digit().flatten("digit"));
   }
 
   @Test
