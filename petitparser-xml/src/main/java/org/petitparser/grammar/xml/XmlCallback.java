@@ -17,7 +17,9 @@ public interface XmlCallback<TName, TNode, TAttribute> {
 
   TNode createDocument(Collection<TNode> children);
 
-  TNode createElement(TName name, Collection<TAttribute> attributes, Collection<TNode> children);
+  TNode createElement(
+      TName name, Collection<TAttribute> attributes,
+      Collection<TNode> children);
 
   TNode createProcessing(String target, String text);
 

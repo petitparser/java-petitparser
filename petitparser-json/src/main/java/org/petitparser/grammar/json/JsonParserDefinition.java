@@ -42,7 +42,8 @@ public class JsonParserDefinition extends JsonGrammarDefinition {
       }
     });
 
-    action("stringPrimitive", (List<List<Character>> input) -> listToString(input.get(1)));
+    action("stringPrimitive",
+        (List<List<Character>> input) -> listToString(input.get(1)));
     action("characterEscape", Functions.lastOfList());
     action("characterEscape", ESCAPE_TABLE_FUNCTION);
     action("characterOctal", (List<String> input) -> {

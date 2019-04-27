@@ -9,9 +9,8 @@ import java.util.List;
 
 /**
  * A greedy repeating parser, commonly seen in regular expression
- * implementations. It aggressively
- * consumes as much input as possible and then backtracks to meet the 'limit'
- * condition.
+ * implementations. It aggressively consumes as much input as possible and then
+ * backtracks to meet the 'limit' condition.
  */
 public class GreedyRepeatingParser extends LimitedRepeatingParser {
 

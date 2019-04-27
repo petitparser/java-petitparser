@@ -41,7 +41,8 @@ public class Mirror implements Iterable<Parser> {
   }
 
   /**
-   * Returns an {@link Iterator} over {@code parser} and all its reachable descendants.
+   * Returns an {@link Iterator} over {@code parser} and all its reachable
+   * descendants.
    */
   @Override
   public Iterator<Parser> iterator() {
@@ -80,12 +81,12 @@ public class Mirror implements Iterable<Parser> {
   }
 
   /**
-   * Returns a {@link Stream} over {@code parser} and all its reachable descendants.
+   * Returns a {@link Stream} over {@code parser} and all its reachable
+   * descendants.
    */
   public Stream<Parser> stream() {
-    return StreamSupport.stream(
-        Spliterators.spliteratorUnknownSize(iterator(), Spliterator.DISTINCT | Spliterator.NONNULL),
-        false);
+    return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator(),
+        Spliterator.DISTINCT | Spliterator.NONNULL), false);
   }
 
   /**

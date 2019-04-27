@@ -9,17 +9,16 @@ import org.petitparser.parser.primitive.FailureParser;
 public class SettableParser extends DelegateParser {
 
   /**
-   * Constructs a {@link SettableParser} that currently refers to an
-   * {@link FailureParser}.
+   * Constructs a {@link SettableParser} that currently refers to an {@link
+   * FailureParser}.
    */
   public static SettableParser undefined() {
     return undefined("Undefined parser");
   }
 
   /**
-   * Constructs a {@link SettableParser} that currently refers to an
-   * {@link FailureParser} with the
-   * provided {@code message}.
+   * Constructs a {@link SettableParser} that currently refers to an {@link
+   * FailureParser} with the provided {@code message}.
    */
   public static SettableParser undefined(String message) {
     return with(FailureParser.withMessage(message));

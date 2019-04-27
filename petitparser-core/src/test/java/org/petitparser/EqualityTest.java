@@ -20,8 +20,8 @@ import static org.junit.Assert.assertTrue;
 import static org.petitparser.parser.primitive.CharacterParser.of;
 
 /**
- * Tests {@link Parser#copy}, {@link Parser#equals(Object)}, and {@link Parser#replace(Parser,
- * Parser)}.
+ * Tests {@link Parser#copy}, {@link Parser#equals(Object)}, and {@link
+ * Parser#replace(Parser, Parser)}.
  */
 public class EqualityTest {
 
@@ -220,6 +220,7 @@ public class EqualityTest {
 
   @Test
   public void trim() {
-    verify(CharacterParser.digit().trim(CharacterParser.of('a'), CharacterParser.of('b')));
+    verify(CharacterParser.digit()
+        .trim(CharacterParser.of('a'), CharacterParser.of('b')));
   }
 }

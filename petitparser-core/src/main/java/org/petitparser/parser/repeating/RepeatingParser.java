@@ -6,7 +6,8 @@ import org.petitparser.parser.combinators.DelegateParser;
 import java.util.Objects;
 
 /**
- * An abstract parser that repeatedly parses between 'min' and 'max' instances of its delegate.
+ * An abstract parser that repeatedly parses between 'min' and 'max' instances
+ * of its delegate.
  */
 public abstract class RepeatingParser extends DelegateParser {
 
@@ -20,10 +21,12 @@ public abstract class RepeatingParser extends DelegateParser {
     this.min = min;
     this.max = max;
     if (min < 0) {
-      throw new IllegalArgumentException("Invalid min repetitions: " + getRange());
+      throw new IllegalArgumentException(
+          "Invalid min repetitions: " + getRange());
     }
     if (max != UNBOUNDED && min > max) {
-      throw new IllegalArgumentException("Invalid max repetitions: " + getRange());
+      throw new IllegalArgumentException(
+          "Invalid max repetitions: " + getRange());
     }
   }
 

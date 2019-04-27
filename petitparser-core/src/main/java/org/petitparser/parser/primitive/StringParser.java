@@ -20,26 +20,25 @@ public class StringParser extends Parser {
   }
 
   /**
-   * Construct a parser that accepts the provides {@link String} {@code value
-   * }, and that fails with
-   * the error provided error {@code message}.
+   * Construct a parser that accepts the provides {@link String} {@code value },
+   * and that fails with the error provided error {@code message}.
    */
   public static Parser of(String value, String message) {
     return new StringParser(value.length(), value::equals, message);
   }
 
   /**
-   * Construct a parser that accepts the provides {@link String} {@code value
-   * } case insensitive.
+   * Construct a parser that accepts the provides {@link String} {@code value }
+   * case insensitive.
    */
   public static Parser ofIgnoringCase(String value) {
     return ofIgnoringCase(value, value + " expected");
   }
 
   /**
-   * Construct a parser that accepts the provides {@link String} {@code value
-   * } case insensitive, and
-   * that fails with the error provided error {@code message}.
+   * Construct a parser that accepts the provides {@link String} {@code value }
+   * case insensitive, and that fails with the error provided error {@code
+   * message}.
    */
   public static Parser ofIgnoringCase(String value, String message) {
     return new StringParser(value.length(), value::equalsIgnoreCase, message);

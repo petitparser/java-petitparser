@@ -15,19 +15,22 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Helper to conveniently define and build complex, recursive grammars using plain Java code.
- * <p>
- * To create a new grammar definition subclass {@link GrammarDefinition}. For every production call
- * {@link GrammarDefinition#def(String, Parser)} giving the parsers a name. The start production
- * should be named 'start'.
- * <p>
- * To refer to other productions use {@link GrammarDefinition#ref(String)}. To redefine or attach
- * actions to productions use {@link GrammarDefinition#redef(String, Function)}, {@link
- * GrammarDefinition#redef(String, org.petitparser.parser.Parser)} and {@link
- * GrammarDefinition#action(String, Function)}.
- * <p>
- * To build the resulting grammar call {@link GrammarDefinition#build()}, or wrap it in the class
- * {@link GrammarParser}.
+ * Helper to conveniently define and build complex, recursive grammars using
+ * plain Java code.
+ *
+ * <p>To create a new grammar definition subclass {@link GrammarDefinition}.
+ * For every production call {@link GrammarDefinition#def(String, Parser)}
+ * giving the parsers a name. The start production should be named 'start'.
+ *
+ * <p>To refer to other productions use {@link GrammarDefinition#ref(String)}.
+ * To redefine or attach actions to productions use {@link
+ * GrammarDefinition#redef(String, Function)},
+ * {@link GrammarDefinition#redef(String,
+ * org.petitparser.parser.Parser)} and {@link GrammarDefinition#action(String,
+ * Function)}.
+ *
+ * <p>To build the resulting grammar call {@link GrammarDefinition#build()}, or
+ * wrap it in the class {@link GrammarParser}.
  */
 public class GrammarDefinition {
 
@@ -51,7 +54,8 @@ public class GrammarDefinition {
   }
 
   /**
-   * Redefines an existing production with a {@code name} and a new {@code parser}.
+   * Redefines an existing production with a {@code name} and a new {@code
+   * parser}.
    */
   protected final void redef(String name, Parser parser) {
     if (!parsers.containsKey(name)) {
@@ -61,8 +65,8 @@ public class GrammarDefinition {
   }
 
   /**
-   * Redefines an existing production with a {@code name} and a {@code function} producing a new
-   * parser. Only call this method during initialization.
+   * Redefines an existing production with a {@code name} and a {@code function}
+   * producing a new parser. Only call this method during initialization.
    */
   protected final void redef(String name, Function<Parser, Parser> function) {
     if (!parsers.containsKey(name)) {
@@ -72,8 +76,8 @@ public class GrammarDefinition {
   }
 
   /**
-   * Attaches an action {@code function} to an existing production {@code name}. Only call this
-   * method during initialization.
+   * Attaches an action {@code function} to an existing production {@code name}.
+   * Only call this method during initialization.
    */
   protected final <S, T> void action(String name, Function<S, T> function) {
     redef(name, parser -> parser.map(function));
@@ -115,7 +119,8 @@ public class GrammarDefinition {
     return mapping.get(reference);
   }
 
-  private Parser dereference(Map<Reference, Parser> mapping, Reference reference) {
+  private Parser dereference(
+      Map<Reference, Parser> mapping, Reference reference) {
     Parser parser = mapping.get(reference);
     if (parser == null) {
       List<Reference> references = new ArrayList<>();
@@ -124,8 +129,9 @@ public class GrammarDefinition {
       while (parser instanceof Reference) {
         Reference otherReference = (Reference) parser;
         if (references.contains(otherReference)) {
-          throw new IllegalStateException("Recursive references detected: " + String.join(", ",
-              references.stream().map(ref -> ref.name).collect(Collectors.joining(", "))));
+          throw new IllegalStateException("Recursive references detected: " +
+              String.join(", ", references.stream().map(ref -> ref.name)
+                  .collect(Collectors.joining(", "))));
         }
         references.add(otherReference);
         parser = otherReference.resolve();

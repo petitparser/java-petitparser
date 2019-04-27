@@ -12,10 +12,11 @@ import java.util.function.Consumer;
  */
 public class Profiler {
 
-  private Profiler() { }
-    
+  private Profiler() {}
+
   /**
-   * Returns a parser that calls the provided consumer with a {@link Profile} of every parser.
+   * Returns a parser that calls the provided consumer with a {@link Profile} of
+   * every parser.
    */
   public static Parser on(Parser source, Consumer<Profile> consumer) {
     Map<Parser, ProfileBuilder> builders = new LinkedHashMap<>();
@@ -29,12 +30,9 @@ public class Profiler {
         return result;
       });
     }).callCC((continuation, context) -> {
-      builders.values()
-          .forEach(ProfileBuilder::reset);
+      builders.values().forEach(ProfileBuilder::reset);
       Result result = continuation.apply(context);
-      builders.values().stream()
-          .map(ProfileBuilder::build)
-          .forEach(consumer);
+      builders.values().stream().map(ProfileBuilder::build).forEach(consumer);
       return result;
     });
   }
@@ -55,7 +53,8 @@ public class Profiler {
     public final int activationCount;
 
     /**
-     * The number of times the parser got activated in total (including nested calls).
+     * The number of times the parser got activated in total (including nested
+     * calls).
      */
     public final int totalActivationCount;
 
@@ -64,7 +63,8 @@ public class Profiler {
      */
     public final long elapsedNanoseconds;
 
-    private Profile(Parser parser, int activationCount, int totalActivationCount,
+    private Profile(
+        Parser parser, int activationCount, int totalActivationCount,
         long elapsedNanoseconds) {
       this.parser = parser;
       this.activationCount = activationCount;
@@ -74,10 +74,8 @@ public class Profiler {
 
     @Override
     public String toString() {
-      return activationCount + "\t" +
-          totalActivationCount + "\t" +
-          elapsedNanoseconds + "\t" +
-          parser;
+      return activationCount + "\t" + totalActivationCount + "\t" +
+          elapsedNanoseconds + "\t" + parser;
     }
   }
 
@@ -123,7 +121,8 @@ public class Profiler {
     }
 
     private Profile build() {
-      return new Profile(parser, activationCount, totalActivationCount, elapsedNanoseconds);
+      return new Profile(parser, activationCount, totalActivationCount,
+          elapsedNanoseconds);
     }
   }
 }

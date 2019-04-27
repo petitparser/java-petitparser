@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A greedy parser that repeatedly parses between 'min' and 'max' instances
- * of its delegate.
+ * A greedy parser that repeatedly parses between 'min' and 'max' instances of
+ * its delegate.
  */
 public class PossessiveRepeatingParser extends RepeatingParser {
 

@@ -60,8 +60,8 @@ public class XmlName implements Cloneable {
       return false;
     }
     XmlName other = (XmlName) obj;
-    return Objects.equals(prefix, other.prefix)
-        && Objects.equals(local, other.local);
+    return Objects.equals(prefix, other.prefix) &&
+        Objects.equals(local, other.local);
   }
 
   @Override

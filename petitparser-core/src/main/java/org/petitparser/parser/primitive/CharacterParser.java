@@ -109,10 +109,10 @@ public class CharacterParser extends Parser {
 
   /**
    * Returns a parser that accepts a specific character pattern.
-   * <p>
-   * Characters match themselves. A dash {@code -} between two characters
-   * matches the range of those
-   * characters. A caret {@code ^} at the beginning negates the pattern.
+   *
+   * <p>Characters match themselves. A dash {@code -} between two characters
+   * matches the range of those characters. A caret {@code ^} at the beginning
+   * negates the pattern.
    */
   public static CharacterParser pattern(String pattern) {
     return pattern(pattern, "[" + pattern + "] expected");

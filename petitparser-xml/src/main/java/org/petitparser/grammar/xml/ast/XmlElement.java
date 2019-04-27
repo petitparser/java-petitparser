@@ -15,7 +15,8 @@ public class XmlElement extends XmlParent {
   private final XmlName name;
   private final List<XmlAttribute> attributes;
 
-  public XmlElement(XmlName name, Collection<XmlAttribute> attributes,
+  public XmlElement(
+      XmlName name, Collection<XmlAttribute> attributes,
       Collection<XmlNode> children) {
     super(children);
     this.name = name;
@@ -77,8 +78,8 @@ public class XmlElement extends XmlParent {
       return false;
     }
     XmlElement other = (XmlElement) obj;
-    return Objects.equals(name, other.name)
-        && Objects.equals(attributes, other.attributes);
+    return Objects.equals(name, other.name) &&
+        Objects.equals(attributes, other.attributes);
   }
 
   @Override

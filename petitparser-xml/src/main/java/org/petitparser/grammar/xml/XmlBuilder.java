@@ -45,7 +45,8 @@ public class XmlBuilder implements XmlCallback<XmlName, XmlNode, XmlAttribute> {
 
   @Override
   public XmlNode createElement(
-      XmlName name, Collection<XmlAttribute> attributes, Collection<XmlNode> children) {
+      XmlName name, Collection<XmlAttribute> attributes,
+      Collection<XmlNode> children) {
     return new XmlElement(name, attributes, children);
   }
 

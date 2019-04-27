@@ -12,7 +12,7 @@ import java.util.function.Function;
 public class Functions {
 
   private Functions() { }
-    
+
   /**
    * Returns a function that returns the first value of a list.
    */
@@ -28,18 +28,19 @@ public class Functions {
   }
 
   /**
-   * Returns a function that returns the value at the given index. Negative indexes are counted from
-   * the end of the list.
+   * Returns a function that returns the value at the given index. Negative
+   * indexes are counted from the end of the list.
    */
   public static <T> Function<List<T>, T> nthOfList(int index) {
     return list -> list.get(index < 0 ? list.size() + index : index);
   }
 
   /**
-   * Returns a function that returns the permutation of a given list. Negative indexes are counted
-   * from the end of the list.
+   * Returns a function that returns the permutation of a given list. Negative
+   * indexes are counted from the end of the list.
    */
-  public static <T> Function<List<T>, List<T>> permutationOfList(int... indexes) {
+  public static <T> Function<List<T>, List<T>> permutationOfList(
+      int... indexes) {
     return list -> {
       List<T> result = new ArrayList<>(indexes.length);
       for (int index : indexes) {

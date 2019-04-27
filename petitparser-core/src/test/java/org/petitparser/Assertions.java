@@ -16,7 +16,8 @@ public class Assertions {
     assertSuccess(parser, input, result, input.length());
   }
 
-  public static <T> void assertSuccess(Parser parser, String input, T expected, int position) {
+  public static <T> void assertSuccess(
+      Parser parser, String input, T expected, int position) {
     Result result = parser.parse(input);
     assertNotNull(result.toString());
     assertTrue("Expected parse success", result.isSuccess());
@@ -30,15 +31,18 @@ public class Assertions {
     assertFailure(parser, input, 0);
   }
 
-  public static <T> void assertFailure(Parser parser, String input, int position) {
+  public static <T> void assertFailure(
+      Parser parser, String input, int position) {
     assertFailure(parser, input, position, null);
   }
 
-  public static <T> void assertFailure(Parser parser, String input, String message) {
+  public static <T> void assertFailure(
+      Parser parser, String input, String message) {
     assertFailure(parser, input, 0, message);
   }
 
-  public static <T> void assertFailure(Parser parser, String input, int position, String message) {
+  public static <T> void assertFailure(
+      Parser parser, String input, int position, String message) {
     Result result = parser.parse(input);
     assertNotNull(result.toString());
     assertTrue("Expected parse failure", result.isFailure());
@@ -48,7 +52,8 @@ public class Assertions {
     } else {
       assertEquals("Message", message, result.getMessage());
     }
-    assertEquals("Expected fast parse failure", -1, parser.fastParseOn(input, 0));
+    assertEquals("Expected fast parse failure", -1,
+        parser.fastParseOn(input, 0));
     try {
       result.get();
     } catch (ParseError error) {

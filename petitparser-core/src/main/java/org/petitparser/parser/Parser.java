@@ -39,28 +39,28 @@ public abstract class Parser {
 
   /**
    * Primitive method doing the actual parsing.
-   * <p>
-   * The method is overridden in concrete subclasses to implement the parser
-   * specific logic. The methods takes a parse {@code context} and returns
-   * the resulting context, which is either a
-   * {@link org.petitparser.context.Success} or
-   * {@link org.petitparser.context.Failure} context.
+   *
+   * <p>The method is overridden in concrete subclasses to implement the parser
+   * specific logic. The methods takes a parse {@code context} and returns the
+   * resulting context, which is either a
+   * {@link org.petitparser.context.Success}
+   * or {@link org.petitparser.context.Failure} context.
    */
   public abstract Result parseOn(Context context);
 
   /**
    * Primitive method doing the actual parsing.
-   * <p>
-   * This method is an optimized version of {@link #parseOn(Context)} that is
-   * getting its speed advantage by avoiding any unnecessary memory
+   *
+   * <p>This method is an optimized version of {@link #parseOn(Context)} that
+   * is getting its speed advantage by avoiding any unnecessary memory
    * allocations.
-   * <p>
-   * The method is overridden in most concrete subclasses to implement the
+   *
+   * <p>The method is overridden in most concrete subclasses to implement the
    * optimized logic. As an input the method takes a {@code buffer} and the
    * current {@code position} in that buffer. It returns a new (positive)
    * position in case of a successful parse, or `-1` in case of a failure.
-   * <p>
-   * Subclasses don't necessarily have to override this method, since it is
+   *
+   * <p>Subclasses don't necessarily have to override this method, since it is
    * emulated using its slower brother.
    */
   public int fastParseOn(String buffer, int position) {
@@ -124,8 +124,8 @@ public abstract class Parser {
   /**
    * Returns a parser that accepts the receiver zero or more times. The
    * resulting parser returns a list of the parse results of the receiver.
-   * <p>
-   * This is a greedy and blind implementation that tries to consume as much
+   *
+   * <p>This is a greedy and blind implementation that tries to consume as much
    * input as possible and that does not consider what comes afterwards.
    */
   public Parser star() {
@@ -135,8 +135,8 @@ public abstract class Parser {
   /**
    * Returns a parser that parses the receiver zero or more times until it
    * reaches a {@code limit}.
-   * <p>
-   * This is a greedy non-blind implementation of the {@link Parser#star()}
+   *
+   * <p>This is a greedy non-blind implementation of the {@link Parser#star()}
    * operator. The {@code limit} is not consumed.
    */
   public Parser starGreedy(Parser limit) {
@@ -146,8 +146,8 @@ public abstract class Parser {
   /**
    * Returns a parser that parses the receiver zero or more times until it
    * reaches a {@code limit}.
-   * <p>
-   * This is a lazy non-blind implementation of the {@link Parser#star()}
+   *
+   * <p>This is a lazy non-blind implementation of the {@link Parser#star()}
    * operator. The {@code limit} is not consumed.
    */
   public Parser starLazy(Parser limit) {
@@ -155,10 +155,10 @@ public abstract class Parser {
   }
 
   /**
-   * Returns a parser that accepts the receiver one or more times. The
-   * resulting parser returns a list of the parse results of the receiver.
-   * <p>
-   * This is a greedy and blind implementation that tries to consume as much
+   * Returns a parser that accepts the receiver one or more times. The resulting
+   * parser returns a list of the parse results of the receiver.
+   *
+   * <p>This is a greedy and blind implementation that tries to consume as much
    * input as possible and that does not consider what comes afterwards.
    */
   public Parser plus() {
@@ -168,8 +168,8 @@ public abstract class Parser {
   /**
    * Returns a parser that parses the receiver one or more times until it
    * reaches {@code limit}.
-   * <p>
-   * This is a greedy non-blind implementation of the {@link Parser#plus()}
+   *
+   * <p>This is a greedy non-blind implementation of the {@link Parser#plus()}
    * operator. The {@code limit} is not consumed.
    */
   public Parser plusGreedy(Parser limit) {
@@ -179,8 +179,8 @@ public abstract class Parser {
   /**
    * Returns a parser that parses the receiver one or more times until it
    * reaches a {@code limit}.
-   * <p>
-   * This is a lazy non-blind implementation of the {@link Parser#plus()}
+   *
+   * <p>This is a lazy non-blind implementation of the {@link Parser#plus()}
    * operator. The {@code limit} is not consumed.
    */
   public Parser plusLazy(Parser limit) {
@@ -188,11 +188,11 @@ public abstract class Parser {
   }
 
   /**
-   * Returns a parser that accepts the receiver between {@code min} and
-   * {@code max} times. The resulting parser returns a list of the parse
-   * results of the receiver.
-   * <p>
-   * This is a greedy and blind implementation that tries to consume as much
+   * Returns a parser that accepts the receiver between {@code min} and {@code
+   * max} times. The resulting parser returns a list of the parse results of the
+   * receiver.
+   *
+   * <p>This is a greedy and blind implementation that tries to consume as much
    * input as possible and that does not consider what comes afterwards.
    */
   public Parser repeat(int min, int max) {
@@ -200,22 +200,21 @@ public abstract class Parser {
   }
 
   /**
-   * Returns a parser that parses the receiver at least {@code min} and at
-   * most {@code max} times until it reaches a {@code limit}.
-   * <p>
-   * This is a greedy non-blind implementation of the
-   * {@link Parser#repeat(int, int)} operator. The {@code limit} is not
-   * consumed.
+   * Returns a parser that parses the receiver at least {@code min} and at most
+   * {@code max} times until it reaches a {@code limit}.
+   *
+   * <p>This is a greedy non-blind implementation of the {@link
+   * Parser#repeat(int, int)} operator. The {@code limit} is not consumed.
    */
   public Parser repeatGreedy(Parser limit, int min, int max) {
     return new GreedyRepeatingParser(this, limit, min, max);
   }
 
   /**
-   * Returns a parser that parses the receiver at least {@code min} and at
-   * most {@code max} times until it reaches a {@code limit}.
-   * <p>
-   * This is a lazy non-blind implementation of the {@link
+   * Returns a parser that parses the receiver at least {@code min} and at most
+   * {@code max} times until it reaches a {@code limit}.
+   *
+   * <p>This is a lazy non-blind implementation of the {@link
    * Parser#repeat(int, int)} operator. The {@code limit} is not consumed.
    */
   public Parser repeatLazy(Parser limit, int min, int max) {
@@ -223,19 +222,19 @@ public abstract class Parser {
   }
 
   /**
-   * Returns a parser that accepts the receiver exactly {@code count} times.
-   * The resulting parser eturns a list of the parse results of the receiver.
+   * Returns a parser that accepts the receiver exactly {@code count} times. The
+   * resulting parser eturns a list of the parse results of the receiver.
    */
   public Parser times(int count) {
     return repeat(count, count);
   }
 
   /**
-   * Returns a parser that accepts the receiver followed by {@code others}.
-   * The resulting parser returns a list of the parse result of the receiver
+   * Returns a parser that accepts the receiver followed by {@code others}. The
+   * resulting parser returns a list of the parse result of the receiver
    * followed by the parse result of {@code others}.
-   * <p>
-   * Calling this method on an existing sequence code not nest this sequence
+   *
+   * <p>Calling this method on an existing sequence code not nest this sequence
    * into a new one, but instead augments the existing sequence with {@code
    * others}.
    */
@@ -247,10 +246,9 @@ public abstract class Parser {
   }
 
   /**
-   * Returns a parser that accepts the receiver or {@code other}. The
-   * resulting parser returns the parse result of the receiver, if the
-   * receiver fails it returns the parse result of {@code other} (exclusive
-   * ordered choice).
+   * Returns a parser that accepts the receiver or {@code other}. The resulting
+   * parser returns the parse result of the receiver, if the receiver fails it
+   * returns the parse result of {@code other} (exclusive ordered choice).
    */
   public ChoiceParser or(Parser... others) {
     Parser[] parsers = new Parser[1 + others.length];
@@ -324,10 +322,10 @@ public abstract class Parser {
   }
 
   /**
-   * Returns a parser that returns a {@link Token}. The token carries the
-   * parsed value of the receiver {@link Token#getValue()}, as well as the
-   * consumed input {@link Token#getInput()} from  {@link Token#getStart()}
-   * to {@link Token#getStop()} of the input being parsed.
+   * Returns a parser that returns a {@link Token}. The token carries the parsed
+   * value of the receiver {@link Token#getValue()}, as well as the consumed
+   * input {@link Token#getInput()} from  {@link Token#getStart()} to {@link
+   * Token#getStop()} of the input being parsed.
    */
   public Parser token() {
     return new TokenParser(this);
@@ -341,47 +339,48 @@ public abstract class Parser {
   }
 
   /**
-   * Returns a parser that consumes input on {@code both} sides of the receiver.
+   * Returns a parser that consumes input on {@code both} sides of the
+   * receiver.
    */
   public Parser trim(Parser both) {
     return trim(both, both);
   }
 
   /**
-   * Returns a parser that consumes input {@code before} and {@code after}
-   * the receiver.
+   * Returns a parser that consumes input {@code before} and {@code after} the
+   * receiver.
    */
   public Parser trim(Parser before, Parser after) {
     return new TrimmingParser(this, before, after);
   }
 
   /**
-   * Returns a parser that succeeds only if the receiver consumes the
-   * complete input.
+   * Returns a parser that succeeds only if the receiver consumes the complete
+   * input.
    */
   public Parser end() {
     return end("end of input expected");
   }
 
   /**
-   * Returns a parser that succeeds only if the receiver consumes the
-   * complete input, otherwise return a failure with the {@code message}.
+   * Returns a parser that succeeds only if the receiver consumes the complete
+   * input, otherwise return a failure with the {@code message}.
    */
   public Parser end(String message) {
     return new SequenceParser(this, new EndOfInputParser(message)).pick(0);
   }
 
   /**
-   * Returns a parser that points to the receiver, but can be changed to
-   * point to something else at a later point in time.
+   * Returns a parser that points to the receiver, but can be changed to point
+   * to something else at a later point in time.
    */
   public SettableParser settable() {
     return SettableParser.with(this);
   }
 
   /**
-   * Returns a parser that evaluates a {@code function} as the production
-   * action on success of the receiver.
+   * Returns a parser that evaluates a {@code function} as the production action
+   * on success of the receiver.
    *
    * @param function production action without side-effects.
    */
@@ -390,8 +389,8 @@ public abstract class Parser {
   }
 
   /**
-   * Returns a parser that evaluates a {@code function} as the production
-   * action on success of the receiver.
+   * Returns a parser that evaluates a {@code function} as the production action
+   * on success of the receiver.
    *
    * @param function production action with possible side-effects.
    */
@@ -400,18 +399,18 @@ public abstract class Parser {
   }
 
   /**
-   * Returns a parser that transform a successful parse result by returning
-   * the element at {@code index} of a list. A negative index can be used to
-   * access the elements from the back of the list.
+   * Returns a parser that transform a successful parse result by returning the
+   * element at {@code index} of a list. A negative index can be used to access
+   * the elements from the back of the list.
    */
   public Parser pick(int index) {
     return map(Functions.nthOfList(index));
   }
 
   /**
-   * Returns a parser that transforms a successful parse result by returning
-   * the permuted elements at {@code indexes} of a list. Negative indexes can
-   * be used to access the elements from the back of the list.
+   * Returns a parser that transforms a successful parse result by returning the
+   * permuted elements at {@code indexes} of a list. Negative indexes can be
+   * used to access the elements from the back of the list.
    */
   public Parser permute(int... indexes) {
     return this.map(Functions.permutationOfList(indexes));
@@ -453,9 +452,9 @@ public abstract class Parser {
 
   /**
    * Recursively tests for structural similarity of two parsers.
-   * <p>
-   * The code can automatically deals with recursive parsers and parsers that
-   * refer to other parsers. This code is supposed to be overridden by
+   *
+   * <p>The code can automatically deals with recursive parsers and parsers
+   * that refer to other parsers. This code is supposed to be overridden by
    * parsers that add other state.
    */
   public boolean isEqualTo(Parser other) {
@@ -476,8 +475,8 @@ public abstract class Parser {
 
   /**
    * Compares the properties of two parsers.
-   * <p>
-   * Override this method in all subclasses that add new state.
+   *
+   * <p>Override this method in all subclasses that add new state.
    */
   protected boolean hasEqualProperties(Parser other) {
     return true;
@@ -485,9 +484,9 @@ public abstract class Parser {
 
   /**
    * Compares the children of two parsers.
-   * <p>
-   * Normally subclasses should not override this method, but instead
-   * {@link #getChildren()}.
+   *
+   * <p>Normally subclasses should not override this method, but instead {@link
+   * #getChildren()}.
    */
   protected boolean hasEqualChildren(Parser other, Set<Parser> seen) {
     List<Parser> thisChildren = this.getChildren();

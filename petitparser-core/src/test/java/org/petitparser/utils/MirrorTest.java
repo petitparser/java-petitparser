@@ -30,8 +30,10 @@ public class MirrorTest {
   public void testToString() {
     Parser parser = lowerCase();
     Mirror mirror = Mirror.of(parser);
-    assertEquals("CharacterParser[lowercase letter expected]", parser.toString());
-    assertEquals("Mirror of CharacterParser[lowercase letter expected]", mirror.toString());
+    assertEquals("CharacterParser[lowercase letter expected]",
+        parser.toString());
+    assertEquals("Mirror of CharacterParser[lowercase letter expected]",
+        mirror.toString());
   }
 
   @Test
@@ -121,8 +123,8 @@ public class MirrorTest {
   public void testReplaceRootTransformation() {
     Parser source = lowerCase();
     Parser target = upperCase();
-    Parser output = Mirror.of(source).transform(
-        parser -> source.isEqualTo(parser) ? target : parser);
+    Parser output = Mirror.of(source)
+        .transform(parser -> source.isEqualTo(parser) ? target : parser);
     assertNotEquals(source, output);
     assertFalse(source.isEqualTo(output));
     assertEquals(output, target);
@@ -133,7 +135,8 @@ public class MirrorTest {
     Parser source = lowerCase();
     Parser input = source.settable();
     Parser target = upperCase();
-    Parser output = Mirror.of(input).transform(parser -> source.isEqualTo(parser) ? target : parser);
+    Parser output = Mirror.of(input)
+        .transform(parser -> source.isEqualTo(parser) ? target : parser);
     assertNotEquals(input, output);
     assertFalse(input.isEqualTo(output));
     assertEquals(input.getChildren().get(0), source);
@@ -145,7 +148,8 @@ public class MirrorTest {
     Parser source = lowerCase();
     Parser input = source.seq(source);
     Parser target = upperCase();
-    Parser output = Mirror.of(input).transform(parser -> source.isEqualTo(parser) ? target : parser);
+    Parser output = Mirror.of(input)
+        .transform(parser -> source.isEqualTo(parser) ? target : parser);
     assertNotEquals(input, output);
     assertFalse(input.isEqualTo(output));
     assertTrue(input.isEqualTo(source.seq(source)));
@@ -157,13 +161,15 @@ public class MirrorTest {
   @Test
   public void testExistingLoopTransformation() {
     Parser input = undefined().settable().settable().settable();
-    SettableParser settable = (SettableParser) input.getChildren().get(0).getChildren().get(0);
+    SettableParser settable =
+        (SettableParser) input.getChildren().get(0).getChildren().get(0);
     settable.set(input);
     Parser output = Mirror.of(input).transform(Function.identity());
     assertNotEquals(input, output);
     assertTrue(input.isEqualTo(output));
     Set<Parser> inputs = Mirror.of(input).stream().collect(Collectors.toSet());
-    Set<Parser> outputs = Mirror.of(output).stream().collect(Collectors.toSet());
+    Set<Parser> outputs =
+        Mirror.of(output).stream().collect(Collectors.toSet());
     inputs.forEach(each -> assertFalse(outputs.contains(each)));
     outputs.forEach(each -> assertFalse(inputs.contains(each)));
   }
@@ -172,10 +178,11 @@ public class MirrorTest {
   public void testNewLoopTransformation() {
     Parser source = lowerCase();
     Parser target = undefined().settable().settable().settable();
-    SettableParser settable = (SettableParser) target.getChildren().get(0).getChildren().get(0);
+    SettableParser settable =
+        (SettableParser) target.getChildren().get(0).getChildren().get(0);
     settable.set(source);
-    Parser output = Mirror.of(source).transform(
-        parser -> source.isEqualTo(parser) ? target : parser);
+    Parser output = Mirror.of(source)
+        .transform(parser -> source.isEqualTo(parser) ? target : parser);
     assertNotEquals(source, output);
     assertFalse(source.isEqualTo(output));
     assertTrue(output.isEqualTo(target));

@@ -119,7 +119,7 @@ public class CharacterTest {
     assertFailure(parser, "h", "wrong");
     assertFailure(parser, "i", "wrong");
     assertFailure(parser, "o", "wrong");
-   assertFailure(parser, "p", "wrong");
+    assertFailure(parser, "p", "wrong");
     assertFailure(parser, "r", "wrong");
     assertFailure(parser, "t", "wrong");
     assertFailure(parser, "y", "wrong");

@@ -61,14 +61,12 @@ public class GrammarDefinitionTest {
           .or(ref("abstraction"))
           .or(ref("application")));
       def("variable", letter().seq(word().star()).flatten().trim());
-      def("abstraction", of('\\').trim()
-          .seq(ref("variable"))
-          .seq(of('.').trim())
-          .seq(ref("expression")));
-      def("application", of('(').trim()
-          .seq(ref("expression"))
-          .seq(ref("expression"))
-          .seq(of(')').trim()));
+      def("abstraction",
+          of('\\').trim().seq(ref("variable")).seq(of('.').trim())
+              .seq(ref("expression")));
+      def("application",
+          of('(').trim().seq(ref("expression")).seq(ref("expression"))
+              .seq(of(')').trim()));
     }
   }
 
@@ -96,11 +94,15 @@ public class GrammarDefinitionTest {
     }
   }
 
-  private final GrammarDefinition grammarDefinition = new ListGrammarDefinition();
+  private final GrammarDefinition grammarDefinition =
+      new ListGrammarDefinition();
   private final GrammarDefinition parserDefinition = new ListParserDefinition();
-  private final GrammarDefinition buggedDefinition = new BuggedGrammarDefinition();
-  private final GrammarDefinition lambdaDefinition = new LambdaGrammarDefinition();
-  private final GrammarDefinition expressionDefinition = new ExpressionGrammarDefinition();
+  private final GrammarDefinition buggedDefinition =
+      new BuggedGrammarDefinition();
+  private final GrammarDefinition lambdaDefinition =
+      new LambdaGrammarDefinition();
+  private final GrammarDefinition expressionDefinition =
+      new ExpressionGrammarDefinition();
 
   @Test
   public void testGrammar() {
@@ -114,7 +116,8 @@ public class GrammarDefinitionTest {
   public void testParser() {
     Parser parser = parserDefinition.build();
     assertEquals(Arrays.asList(1, ",", 2), parser.parse("1,2").get());
-    assertEquals(Arrays.asList(1, ",", Arrays.asList(2, ",", 3)), parser.parse("1,2,3").get());
+    assertEquals(Arrays.asList(1, ",", Arrays.asList(2, ",", 3)),
+        parser.parse("1,2,3").get());
   }
 
   @Test(expected = IllegalStateException.class)
@@ -177,10 +180,9 @@ public class GrammarDefinitionTest {
     buggedDefinition.ref("start").copy();
   }
 
-
   @Test
   @SuppressWarnings("EqualsBetweenInconvertibleTypes")
-  public void testReferenceEquals(){
+  public void testReferenceEquals() {
     Parser reference = buggedDefinition.ref("start");
     assertFalse(Objects.equals(reference, null));
     assertFalse(Objects.equals(reference, "start"));

@@ -9,10 +9,10 @@ import static org.petitparser.parser.primitive.CharacterParser.of;
 
 /**
  * A immutable token represents a parsed part of the input.
- * <p>
- * The token holds the resulting value of the input, the input buffer, and the start and stop
- * position in the input buffer. It provides many convenience methods to access the state of the
- * token.
+ *
+ * <p>The token holds the resulting value of the input, the input buffer, and
+ * the start and stop position in the input buffer. It provides many convenience
+ * methods to access the state of the token.
  */
 public class Token {
 
@@ -37,8 +37,8 @@ public class Token {
   private final Object value;
 
   /**
-   * Constructs a token from the parsed value, the input buffer, and the start and stop position in
-   * the input buffer.
+   * Constructs a token from the parsed value, the input buffer, and the start
+   * and stop position in the input buffer.
    */
   public Token(String buffer, int start, int stop, Object value) {
     this.buffer = buffer;
@@ -142,10 +142,12 @@ public class Token {
   /**
    * Returns a parser for that detects newlines platform independently.
    */
-  public static final Parser NEWLINE_PARSER = of('\n').or(of('\r').seq(of('\n').optional()));
+  public static final Parser NEWLINE_PARSER =
+      of('\n').or(of('\r').seq(of('\n').optional()));
 
   /**
-   * Converts the {@code position} index in a {@code buffer} to a line and column tuple.
+   * Converts the {@code position} index in a {@code buffer} to a line and
+   * column tuple.
    */
   public static int[] lineAndColumnOf(String buffer, int position) {
     List<Token> tokens = NEWLINE_PARSER.token().matchesSkipping(buffer);

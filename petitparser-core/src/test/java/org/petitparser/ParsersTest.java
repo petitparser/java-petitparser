@@ -85,8 +85,8 @@ public class ParsersTest {
 
   @Test
   public void testMap() {
-    Parser parser =
-        CharacterParser.digit().map((Function<Character, Integer>) Character::getNumericValue);
+    Parser parser = CharacterParser.digit()
+        .map((Function<Character, Integer>) Character::getNumericValue);
     assertSuccess(parser, "1", 1);
     assertSuccess(parser, "4", 4);
     assertSuccess(parser, "9", 9);
@@ -96,7 +96,8 @@ public class ParsersTest {
 
   @Test
   public void testPick() {
-    Parser parser = CharacterParser.digit().seq(CharacterParser.letter()).pick(1);
+    Parser parser =
+        CharacterParser.digit().seq(CharacterParser.letter()).pick(1);
     assertSuccess(parser, "1a", 'a');
     assertSuccess(parser, "2b", 'b');
     assertFailure(parser, "");
@@ -106,7 +107,8 @@ public class ParsersTest {
 
   @Test
   public void testPickLast() {
-    Parser parser = CharacterParser.digit().seq(CharacterParser.letter()).pick(-1);
+    Parser parser =
+        CharacterParser.digit().seq(CharacterParser.letter()).pick(-1);
     assertSuccess(parser, "1a", 'a');
     assertSuccess(parser, "2b", 'b');
     assertFailure(parser, "");
@@ -116,7 +118,8 @@ public class ParsersTest {
 
   @Test
   public void testPermute() {
-    Parser parser = CharacterParser.digit().seq(CharacterParser.letter()).permute(1, 0);
+    Parser parser =
+        CharacterParser.digit().seq(CharacterParser.letter()).permute(1, 0);
     assertSuccess(parser, "1a", Arrays.asList('a', '1'));
     assertSuccess(parser, "2b", Arrays.asList('b', '2'));
     assertFailure(parser, "");
@@ -126,7 +129,8 @@ public class ParsersTest {
 
   @Test
   public void testPermuteLast() {
-    Parser parser = CharacterParser.digit().seq(CharacterParser.letter()).permute(-1, 0);
+    Parser parser =
+        CharacterParser.digit().seq(CharacterParser.letter()).permute(-1, 0);
     assertSuccess(parser, "1a", Arrays.asList('a', '1'));
     assertSuccess(parser, "2b", Arrays.asList('b', '2'));
     assertFailure(parser, "");
@@ -271,7 +275,8 @@ public class ParsersTest {
 
   @Test
   public void testRepeatGreedy() {
-    Parser parser = CharacterParser.word().repeatGreedy(CharacterParser.digit(), 2, 4);
+    Parser parser =
+        CharacterParser.word().repeatGreedy(CharacterParser.digit(), 2, 4);
     assertFailure(parser, "", 0, "letter or digit expected");
     assertFailure(parser, "a", 1, "letter or digit expected");
     assertFailure(parser, "ab", 2, "digit expected");
@@ -300,8 +305,10 @@ public class ParsersTest {
 
   @Test
   public void testRepeatGreedyUnbounded() {
-    StringBuilder builderLetter = new StringBuilder(), builderDigit = new StringBuilder();
-    List<Character> listLetter = new ArrayList<>(), listDigit = new ArrayList<>();
+    StringBuilder builderLetter = new StringBuilder(), builderDigit =
+        new StringBuilder();
+    List<Character> listLetter = new ArrayList<>(), listDigit =
+        new ArrayList<>();
     for (int i = 0; i < 100000; i++) {
       builderLetter.append('a');
       listLetter.add('a');
@@ -310,15 +317,17 @@ public class ParsersTest {
     }
     builderLetter.append('1');
     builderDigit.append('1');
-    Parser parser =
-        CharacterParser.word().repeatGreedy(CharacterParser.digit(), 2, RepeatingParser.UNBOUNDED);
-    assertSuccess(parser, builderLetter.toString(), listLetter, listLetter.size());
+    Parser parser = CharacterParser.word()
+        .repeatGreedy(CharacterParser.digit(), 2, RepeatingParser.UNBOUNDED);
+    assertSuccess(parser, builderLetter.toString(), listLetter,
+        listLetter.size());
     assertSuccess(parser, builderDigit.toString(), listDigit, listDigit.size());
   }
 
   @Test
   public void testRepeatLazy() {
-    Parser parser = CharacterParser.word().repeatLazy(CharacterParser.digit(), 2, 4);
+    Parser parser =
+        CharacterParser.word().repeatLazy(CharacterParser.digit(), 2, 4);
     assertFailure(parser, "", 0, "letter or digit expected");
     assertFailure(parser, "a", 1, "letter or digit expected");
     assertFailure(parser, "ab", 2, "digit expected");
@@ -354,8 +363,8 @@ public class ParsersTest {
       list.add('a');
     }
     builder.append("1111");
-    Parser parser =
-        CharacterParser.word().repeatLazy(CharacterParser.digit(), 2, RepeatingParser.UNBOUNDED);
+    Parser parser = CharacterParser.word()
+        .repeatLazy(CharacterParser.digit(), 2, RepeatingParser.UNBOUNDED);
     assertSuccess(parser, builder.toString(), list, list.size());
   }
 
@@ -371,8 +380,7 @@ public class ParsersTest {
 
   @Test
   public void testSequence3() {
-    Parser parser =
-        of('a').seq(of('b')).seq(of('c'));
+    Parser parser = of('a').seq(of('b')).seq(of('c'));
     assertSuccess(parser, "abc", Arrays.asList('a', 'b', 'c'));
     assertFailure(parser, "");
     assertFailure(parser, "x");
@@ -493,21 +501,21 @@ public class ParsersTest {
     assertSuccess(parser, "aba", Arrays.asList('a', 'b', 'a'));
     assertSuccess(parser, "abab", Arrays.asList('a', 'b', 'a', 'b'));
     assertSuccess(parser, "ababa", Arrays.asList('a', 'b', 'a', 'b', 'a'));
-    assertSuccess(parser, "ababab", Arrays.asList('a', 'b', 'a', 'b', 'a', 'b'));
+    assertSuccess(parser, "ababab",
+        Arrays.asList('a', 'b', 'a', 'b', 'a', 'b'));
   }
 
   @Test
   public void testContinuationDelegating() {
-    Parser parser = CharacterParser.digit()
-        .callCC(Function::apply);
+    Parser parser = CharacterParser.digit().callCC(Function::apply);
     assertTrue(parser.parse("1").isSuccess());
     assertFalse(parser.parse("a").isSuccess());
   }
 
   @Test
   public void testContinuationRedirecting() {
-    Parser parser = CharacterParser.digit()
-        .callCC((continuation, context) -> CharacterParser.letter().parseOn(context));
+    Parser parser = CharacterParser.digit().callCC(
+        (continuation, context) -> CharacterParser.letter().parseOn(context));
     assertFalse(parser.parse("1").isSuccess());
     assertTrue(parser.parse("a").isSuccess());
   }

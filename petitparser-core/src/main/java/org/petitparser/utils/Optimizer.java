@@ -46,8 +46,7 @@ public class Optimizer {
     Set<Parser> uniques = new HashSet<>();
     return add(parser -> {
       Optional<Parser> target = uniques.stream()
-          .filter(each -> parser != each && parser.isEqualTo(each))
-          .findFirst();
+          .filter(each -> parser != each && parser.isEqualTo(each)).findFirst();
       if (target.isPresent()) {
         return target.get();
       } else {
@@ -61,9 +60,9 @@ public class Optimizer {
    * Transforms the provided parsers using the selected optimizations.
    */
   public Parser transform(Parser parser) {
-    Function<Parser, Parser> transformer = transformers.stream()
-        .reduce(Function::andThen)
-        .orElse(Function.identity());
+    Function<Parser, Parser> transformer =
+        transformers.stream().reduce(Function::andThen)
+            .orElse(Function.identity());
     return Mirror.of(parser).transform(transformer);
   }
 }

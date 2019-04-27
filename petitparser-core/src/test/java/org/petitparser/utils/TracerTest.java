@@ -33,11 +33,9 @@ public class TracerTest {
         "Success[1:2]: a"
     );
     List<Tracer.TraceEvent> actual = new ArrayList<>();
-    Result result = Tracer.on(ExamplesTest.IDENTIFIER, actual::add)
-        .parse("a");
+    Result result = Tracer.on(ExamplesTest.IDENTIFIER, actual::add).parse("a");
     assertTrue(result.isSuccess());
-    assertEquals(expected, actual.stream()
-        .map(Tracer.TraceEvent::toString)
+    assertEquals(expected, actual.stream().map(Tracer.TraceEvent::toString)
         .collect(Collectors.toList()));
   }
 
@@ -52,11 +50,9 @@ public class TracerTest {
         "Failure[1:1]: letter expected"
     );
     List<Tracer.TraceEvent> actual = new ArrayList<>();
-    Result result = Tracer.on(ExamplesTest.IDENTIFIER, actual::add)
-        .parse("1");
+    Result result = Tracer.on(ExamplesTest.IDENTIFIER, actual::add).parse("1");
     assertFalse(result.isSuccess());
-    assertEquals(expected, actual.stream()
-        .map(Tracer.TraceEvent::toString)
+    assertEquals(expected, actual.stream().map(Tracer.TraceEvent::toString)
         .collect(Collectors.toList()));
   }
 

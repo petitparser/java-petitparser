@@ -10,8 +10,7 @@ import java.util.function.Function;
 
 /**
  * A parser that performs a transformation with a given function on the
- * successful parse result of
- * the delegate.
+ * successful parse result of the delegate.
  *
  * @param <T> The type of the function argument.
  * @param <R> The type of the function result.

@@ -24,15 +24,18 @@ public class TokenTest {
 
   @Test
   public void testBuffer() {
-    Object[] expected = {buffer, buffer, buffer, buffer, buffer, buffer, buffer, buffer, buffer,
-        buffer, buffer, buffer, buffer, buffer};
+    Object[] expected =
+        {buffer, buffer, buffer, buffer, buffer, buffer, buffer, buffer, buffer,
+            buffer, buffer, buffer, buffer, buffer};
     Object[] actual = result.stream().map(Token::getBuffer).toArray();
     assertArrayEquals(expected, actual);
   }
 
   @Test
   public void testInput() {
-    Object[] expected = {"1", "\r", "1", "2", "\r", "\n", "1", "2", "3", "\n", "1", "2", "3", "4"};
+    Object[] expected =
+        {"1", "\r", "1", "2", "\r", "\n", "1", "2", "3", "\n", "1", "2", "3",
+            "4"};
     Object[] actual = result.stream().map(Token::getInput).toArray();
     assertArrayEquals(expected, actual);
   }
@@ -60,7 +63,8 @@ public class TokenTest {
 
   @Test
   public void testValue() {
-    Object[] expected = {49, 13, 49, 50, 13, 10, 49, 50, 51, 10, 49, 50, 51, 52};
+    Object[] expected =
+        {49, 13, 49, 50, 13, 10, 49, 50, 51, 10, 49, 50, 51, 52};
     Object[] actual = result.stream().map(Token::getValue).toArray();
     assertArrayEquals(expected, actual);
   }
@@ -81,16 +85,20 @@ public class TokenTest {
 
   @Test
   public void testString() {
-    Object[] expected = {"Token[1:1]: 49", "Token[1:2]: 13", "Token[2:1]: 49", "Token[2:2]: 50",
-        "Token[2:3]: 13", "Token[2:4]: 10", "Token[3:1]: 49", "Token[3:2]: 50", "Token[3:3]: 51",
-        "Token[3:4]: 10", "Token[4:1]: 49", "Token[4:2]: 50", "Token[4:3]: 51", "Token[4:4]: 52"};
+    Object[] expected =
+        {"Token[1:1]: 49", "Token[1:2]: 13", "Token[2:1]: 49", "Token[2:2]: 50",
+            "Token[2:3]: 13", "Token[2:4]: 10", "Token[3:1]: 49",
+            "Token[3:2]: 50", "Token[3:3]: 51", "Token[3:4]: 10",
+            "Token[4:1]: 49", "Token[4:2]: 50", "Token[4:3]: 51",
+            "Token[4:4]: 52"};
     Object[] actual = result.stream().map(Token::toString).toArray();
     assertArrayEquals(expected, actual);
   }
 
   @Test
   public void testHashCode() {
-    Set<Integer> uniques = result.stream().map(Token::hashCode).collect(Collectors.toSet());
+    Set<Integer> uniques =
+        result.stream().map(Token::hashCode).collect(Collectors.toSet());
     assertEquals(result.size(), uniques.size());
   }
 
@@ -106,19 +114,22 @@ public class TokenTest {
           assertNotEquals(first, second);
         }
       }
-      assertEquals(first, new Token(first.getBuffer(), first.getStart(), first.getStop(), first
-          .getValue()));
+      assertEquals(first,
+          new Token(first.getBuffer(), first.getStart(), first.getStop(),
+              first.getValue()));
       assertNotEquals(first, null);
       assertNotEquals(first, "Some random string");
-      assertNotEquals(first, new Token("", first.getStart(), first.getStop(), first
-          .getValue()));
       assertNotEquals(first,
-          new Token(first.getBuffer(), first.getStart() + 1, first.getStop(), first
-              .getValue()));
+          new Token("", first.getStart(), first.getStop(), first.getValue()));
       assertNotEquals(first,
-          new Token(first.getBuffer(), first.getStart(), first.getStop() + 1, first
-              .getValue()));
-      assertNotEquals(first, new Token(first.getBuffer(), first.getStart(), first.getStop(), null));
+          new Token(first.getBuffer(), first.getStart() + 1, first.getStop(),
+              first.getValue()));
+      assertNotEquals(first,
+          new Token(first.getBuffer(), first.getStart(), first.getStop() + 1,
+              first.getValue()));
+      assertNotEquals(first,
+          new Token(first.getBuffer(), first.getStart(), first.getStop(),
+              null));
     }
   }
 

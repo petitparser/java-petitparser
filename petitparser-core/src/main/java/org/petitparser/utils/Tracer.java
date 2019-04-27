@@ -15,30 +15,32 @@ import java.util.stream.Stream;
 public class Tracer {
 
   /**
-   * Returns a parser that calls the provided consumer with a {@link TraceEvent} whenever a parser
-   * is activated or returning.
+   * Returns a parser that calls the provided consumer with a {@link TraceEvent}
+   * whenever a parser is activated or returning.
    */
   public static Parser on(Parser source, Consumer<TraceEvent> consumer) {
     TraceEvent[] parentClosure = new TraceEvent[1];
-    return Mirror.of(source).transform(parser -> parser.callCC((continuation, context) -> {
-      TraceEvent parent = parentClosure[0];
-      TraceEvent enter = new TraceEvent(TraceEventType.ENTER, parent, parser, context);
-      consumer.accept(enter);
-      parentClosure[0] = enter;
-      Result result = continuation.apply(context);
-      parentClosure[0] = parent;
-      TraceEvent exit = new TraceEvent(TraceEventType.EXIT, parent, parser, result);
-      consumer.accept(exit);
-      return result;
-    }));
+    return Mirror.of(source)
+        .transform(parser -> parser.callCC((continuation, context) -> {
+          TraceEvent parent = parentClosure[0];
+          TraceEvent enter =
+              new TraceEvent(TraceEventType.ENTER, parent, parser, context);
+          consumer.accept(enter);
+          parentClosure[0] = enter;
+          Result result = continuation.apply(context);
+          parentClosure[0] = parent;
+          TraceEvent exit =
+              new TraceEvent(TraceEventType.EXIT, parent, parser, result);
+          consumer.accept(exit);
+          return result;
+        }));
   }
 
   /**
    * The trace event type differentiating between activation and return.
    */
   public enum TraceEventType {
-    ENTER,
-    EXIT
+    ENTER, EXIT
   }
 
   /**
@@ -73,7 +75,9 @@ public class Tracer {
       return parent != null ? 1 + parent.getLevel() : 0;
     }
 
-    private TraceEvent(TraceEventType type, TraceEvent parent, Parser parser, Context context) {
+    private TraceEvent(
+        TraceEventType type, TraceEvent parent, Parser parser,
+        Context context) {
       this.type = type;
       this.parent = parent;
       this.parser = parser;
@@ -82,8 +86,10 @@ public class Tracer {
 
     @Override
     public String toString() {
-      String indent = Stream.generate(() -> "  ").limit(getLevel()).collect(Collectors.joining());
-      return indent + (Objects.equals(TraceEventType.ENTER, type) ? parser : context);
+      String indent = Stream.generate(() -> "  ").limit(getLevel())
+          .collect(Collectors.joining());
+      return indent +
+          (Objects.equals(TraceEventType.ENTER, type) ? parser : context);
     }
   }
 }

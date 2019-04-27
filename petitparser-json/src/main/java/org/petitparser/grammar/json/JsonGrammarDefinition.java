@@ -38,8 +38,10 @@ public class JsonGrammarDefinition extends GrammarDefinition {
     return builder.toString();
   }
 
-  protected static final Map<Character, Character> ESCAPE_TABLE = createEscapeTable();
-  protected static final Function<Character, Character> ESCAPE_TABLE_FUNCTION = ESCAPE_TABLE::get;
+  protected static final Map<Character, Character> ESCAPE_TABLE =
+      createEscapeTable();
+  protected static final Function<Character, Character> ESCAPE_TABLE_FUNCTION =
+      ESCAPE_TABLE::get;
 
   public JsonGrammarDefinition() {
     def("start", ref("value").end());
@@ -66,8 +68,10 @@ public class JsonGrammarDefinition extends GrammarDefinition {
     def("trueToken", of("true").flatten("Expected 'true'").trim());
     def("falseToken", of("false").flatten("Expected 'false'").trim());
     def("nullToken", of("null").flatten("Expected 'null'").trim());
-    def("stringToken", ref("stringPrimitive").flatten("Expected string").trim());
-    def("numberToken", ref("numberPrimitive").flatten("Expected number").trim());
+    def("stringToken",
+        ref("stringPrimitive").flatten("Expected string").trim());
+    def("numberToken",
+        ref("numberPrimitive").flatten("Expected number").trim());
 
     def("characterPrimitive", ref("characterEscape")
         .or(ref("characterOctal"))

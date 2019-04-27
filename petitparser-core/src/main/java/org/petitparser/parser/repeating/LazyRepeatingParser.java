@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A lazy repeating parser, commonly seen in regular expression
- * implementations. It limits its
- * consumption to meet the 'limit' condition as early as possible.
+ * A lazy repeating parser, commonly seen in regular expression implementations.
+ * It limits its consumption to meet the 'limit' condition as early as
+ * possible.
  */
 public class LazyRepeatingParser extends LimitedRepeatingParser {
 

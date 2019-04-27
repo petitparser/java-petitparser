@@ -44,8 +44,8 @@ public class XmlAttribute extends XmlNode {
       return false;
     }
     XmlAttribute other = (XmlAttribute) obj;
-    return Objects.equals(name, other.name)
-        && Objects.equals(value, other.value);
+    return Objects.equals(name, other.name) &&
+        Objects.equals(value, other.value);
   }
 
   @Override

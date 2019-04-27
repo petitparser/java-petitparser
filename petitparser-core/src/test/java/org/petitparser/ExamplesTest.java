@@ -155,8 +155,8 @@ public class ExamplesTest {
 
   @Test
   public void testExpression() {
-    Parser number = digit().plus().flatten().trim().map(
-        (Function<String, Integer>) Integer::parseInt);
+    Parser number = digit().plus().flatten().trim()
+        .map((Function<String, Integer>) Integer::parseInt);
 
     SettableParser term = SettableParser.undefined();
     SettableParser prod = SettableParser.undefined();
@@ -168,9 +168,10 @@ public class ExamplesTest {
     prod.set(prim.seq(of('*').trim()).seq(prod).map((List<Integer> values) -> {
       return values.get(0) * values.get(2);
     }).or(prim));
-    prim.set((of('(').trim().seq(term).seq(of(')').trim())).map((List<Integer> values) -> {
-      return values.get(1);
-    }).or(number));
+    prim.set((of('(').trim().seq(term).seq(of(')').trim()))
+        .map((List<Integer> values) -> {
+          return values.get(1);
+        }).or(number));
 
     Parser start = term.end();
 

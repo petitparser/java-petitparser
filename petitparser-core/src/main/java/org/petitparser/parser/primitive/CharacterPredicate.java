@@ -20,7 +20,8 @@ public interface CharacterPredicate {
   }
 
   /**
-   * Returns a character predicate that matches any of the characters in {@code string}.
+   * Returns a character predicate that matches any of the characters in {@code
+   * string}.
    */
   static CharacterPredicate anyOf(String string) {
     List<CharacterRange> ranges = string.chars()
@@ -37,7 +38,8 @@ public interface CharacterPredicate {
   }
 
   /**
-   * Returns a character predicate that matches none of the characters in {@code string}.
+   * Returns a character predicate that matches none of the characters in {@code
+   * string}.
    */
   static CharacterPredicate noneOf(String string) {
     List<CharacterRange> ranges = string.chars()
@@ -54,16 +56,16 @@ public interface CharacterPredicate {
   }
 
   /**
-   * Returns a character predicate that matches any character between {@code start} and {@code
-   * stop}.
+   * Returns a character predicate that matches any character between {@code
+   * start} and {@code stop}.
    */
   static CharacterPredicate range(char start, char stop) {
     return value -> start <= value && value <= stop;
   }
 
   /**
-   * Returns a character predicate that matches character ranges between {@code starts} and {@code
-   * stops}.
+   * Returns a character predicate that matches character ranges between {@code
+   * starts} and {@code stops}.
    */
   static CharacterPredicate ranges(char[] starts, char[] stops) {
     if (starts.length != stops.length) {
@@ -71,7 +73,8 @@ public interface CharacterPredicate {
     }
     for (int i = 0; i < starts.length; i++) {
       if (starts[i] > stops[i]) {
-        throw new IllegalArgumentException("Invalid range: " + starts[i] + "-" + stops[i]);
+        throw new IllegalArgumentException(
+            "Invalid range: " + starts[i] + "-" + stops[i]);
       }
       if (i + 1 < starts.length && starts[i + 1] <= stops[i]) {
         throw new IllegalArgumentException("Invalid sequence.");
@@ -93,18 +96,20 @@ public interface CharacterPredicate {
   class PatternParser {
     static final Parser PATTERN_SIMPLE = CharacterParser.any()
         .map((Character value) -> new CharacterRange(value, value));
-    static final Parser PATTERN_RANGE = CharacterParser.any()
-        .seq(CharacterParser.of('-'))
-        .seq(CharacterParser.any())
-        .map((List<Character> values) -> new CharacterRange(values.get(0), values.get(2)));
-    static final Parser PATTERN_POSITIVE = PATTERN_RANGE
-        .or(PATTERN_SIMPLE).star()
-        .map(CharacterRange::toCharacterPredicate);
-    static final Parser PATTERN = CharacterParser.of('^').optional()
-        .seq(PATTERN_POSITIVE)
-        .map((List<CharacterPredicate> predicate) -> {
-          return predicate.get(0) == null ? predicate.get(1) : predicate.get(1).not();
-        }).end();
+    static final Parser PATTERN_RANGE =
+        CharacterParser.any().seq(CharacterParser.of('-'))
+            .seq(CharacterParser.any()).map(
+            (List<Character> values) -> new CharacterRange(values.get(0),
+                values.get(2)));
+    static final Parser PATTERN_POSITIVE =
+        PATTERN_RANGE.or(PATTERN_SIMPLE).star()
+            .map(CharacterRange::toCharacterPredicate);
+    static final Parser PATTERN =
+        CharacterParser.of('^').optional().seq(PATTERN_POSITIVE)
+            .map((List<CharacterPredicate> predicate) -> {
+              return predicate.get(0) == null ? predicate.get(1) :
+                  predicate.get(1).not();
+            }).end();
   }
 
   /**

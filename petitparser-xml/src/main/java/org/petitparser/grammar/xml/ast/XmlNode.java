@@ -59,16 +59,16 @@ public abstract class XmlNode implements Iterable<XmlNode> {
   }
 
   /**
-   * Answer the root of the subtree in which this node is found, whether that's a document or
-   * another element.
+   * Answer the root of the subtree in which this node is found, whether that's
+   * a document or another element.
    */
   public XmlNode getRoot() {
     return parent == null ? this : parent.getRoot();
   }
 
   /**
-   * Answer the document that contains this node, or {@code null} if the node is not part of a
-   * document.
+   * Answer the document that contains this node, or {@code null} if the node is
+   * not part of a document.
    */
   public XmlDocument getDocument() {
     return parent == null ? null : parent.getDocument();

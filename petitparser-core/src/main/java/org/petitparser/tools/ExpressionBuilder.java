@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * A builder that allows the simple definition of expression grammars with prefix, postfix, and
- * left- and right-associative infix operators.
+ * A builder that allows the simple definition of expression grammars with
+ * prefix, postfix, and left- and right-associative infix operators.
  */
 public class ExpressionBuilder {
 
@@ -32,8 +32,8 @@ public class ExpressionBuilder {
    * Builds the expression parser.
    */
   public Parser build() {
-    Parser parser =
-        FailureParser.withMessage("Highest priority group should define a primitive parser.");
+    Parser parser = FailureParser.withMessage(
+        "Highest priority group should define a primitive parser.");
     for (ExpressionGroup group : groups) {
       parser = group.build(parser);
     }
@@ -72,8 +72,8 @@ public class ExpressionBuilder {
     }
 
     /**
-     * Adds a prefix operator {@code parser}. Evaluates the optional {@code action} with the parsed
-     * {@code operator} and {@code value}.
+     * Adds a prefix operator {@code parser}. Evaluates the optional {@code
+     * action} with the parsed {@code operator} and {@code value}.
      */
     public <T, R> ExpressionGroup prefix(Parser parser, Function<T, R> action) {
       addTo(prefix, parser, action);
@@ -106,10 +106,11 @@ public class ExpressionBuilder {
     }
 
     /**
-     * Adds a postfix operator {@code parser}. Evaluates the optional {@code action} with the parsed
-     * {@code value} and {@code operator}.
+     * Adds a postfix operator {@code parser}. Evaluates the optional {@code
+     * action} with the parsed {@code value} and {@code operator}.
      */
-    public <T, R> ExpressionGroup postfix(Parser parser, Function<T, R> action) {
+    public <T, R> ExpressionGroup postfix(
+        Parser parser, Function<T, R> action) {
       addTo(postfix, parser, action);
       return this;
     }
@@ -118,7 +119,8 @@ public class ExpressionBuilder {
       if (postfix.isEmpty()) {
         return inner;
       } else {
-        Parser sequence = new SequenceParser(inner, buildChoice(postfix).star());
+        Parser sequence =
+            new SequenceParser(inner, buildChoice(postfix).star());
         return sequence.map((List<List<ExpressionResult>> tuple) -> {
           Object value = tuple.get(0);
           for (ExpressionResult result : tuple.get(1)) {
@@ -138,8 +140,9 @@ public class ExpressionBuilder {
     }
 
     /**
-     * Adds a right-associative operator {@code parser}. Evaluates the optional {@code action} with
-     * the parsed {@code left} term, {@code operator}, and {@code right} term.
+     * Adds a right-associative operator {@code parser}. Evaluates the optional
+     * {@code action} with the parsed {@code left} term, {@code operator}, and
+     * {@code right} term.
      */
     public <T, R> ExpressionGroup right(Parser parser, Function<T, R> action) {
       addTo(right, parser, action);
@@ -154,9 +157,11 @@ public class ExpressionBuilder {
         return sequence.map((List<Object> innerSequence) -> {
           Object result = innerSequence.get(innerSequence.size() - 1);
           for (int i = innerSequence.size() - 2; i > 0; i -= 2) {
-            ExpressionResult expressionResult = (ExpressionResult) innerSequence.get(i);
-            result = expressionResult.action
-                .apply(Arrays.asList(innerSequence.get(i - 1), expressionResult.operator, result));
+            ExpressionResult expressionResult =
+                (ExpressionResult) innerSequence.get(i);
+            result = expressionResult.action.apply(Arrays
+                .asList(innerSequence.get(i - 1), expressionResult.operator,
+                    result));
           }
           return result;
         });
@@ -172,8 +177,9 @@ public class ExpressionBuilder {
     }
 
     /**
-     * Adds a left-associative operator {@code parser}. Evaluates the optional {@code action} with
-     * the parsed {@code left} term, {@code operator}, and {@code right} term.
+     * Adds a left-associative operator {@code parser}. Evaluates the optional
+     * {@code action} with the parsed {@code left} term, {@code operator}, and
+     * {@code right} term.
      */
     public <T, R> ExpressionGroup left(Parser parser, Function<T, R> action) {
       addTo(left, parser, action);
@@ -188,9 +194,11 @@ public class ExpressionBuilder {
         return sequence.map((List<Object> innerSequence) -> {
           Object result = innerSequence.get(0);
           for (int i = 1; i < innerSequence.size(); i += 2) {
-            ExpressionResult expressionResult = (ExpressionResult) innerSequence.get(i);
-            result = expressionResult.action
-                .apply(Arrays.asList(result, expressionResult.operator, innerSequence.get(i + 1)));
+            ExpressionResult expressionResult =
+                (ExpressionResult) innerSequence.get(i);
+            result = expressionResult.action.apply(Arrays
+                .asList(result, expressionResult.operator,
+                    innerSequence.get(i + 1)));
           }
           return result;
         });
@@ -199,8 +207,10 @@ public class ExpressionBuilder {
 
     // helper to connect operator parser and action, and add to list
     @SuppressWarnings("unchecked")
-    private <T, R> void addTo(List<Parser> list, Parser parser, Function<T, R> action) {
-      list.add(parser.map(operator -> new ExpressionResult(operator, (Function<Object, Object>) action)));
+    private <T, R> void addTo(
+        List<Parser> list, Parser parser, Function<T, R> action) {
+      list.add(parser.map(operator -> new ExpressionResult(operator,
+          (Function<Object, Object>) action)));
     }
 
     // helper to build an optimal choice parser
@@ -220,7 +230,8 @@ public class ExpressionBuilder {
 
     // helper to build the group of parsers
     private Parser build(Parser inner) {
-      return buildLeft(buildRight(buildPostfix(buildPrefix(buildPrimitive(inner)))));
+      return buildLeft(
+          buildRight(buildPostfix(buildPrefix(buildPrimitive(inner)))));
     }
   }
 

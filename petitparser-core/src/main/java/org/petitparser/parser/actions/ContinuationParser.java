@@ -9,8 +9,8 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
- * Continuation parser that when activated captures a continuation function and passes it together
- * with the current context into the handler.
+ * Continuation parser that when activated captures a continuation function and
+ * passes it together with the current context into the handler.
  */
 public class ContinuationParser extends DelegateParser {
 

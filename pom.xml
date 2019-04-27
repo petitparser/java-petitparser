@@ -41,8 +41,11 @@
   </organization>
 
   <scm>
-    <connection>scm:git:git@github.com:petitparser/java-petitparser.git</connection>
-    <developerConnection>scm:git:git@github.com:petitparser/java-petitparser.git</developerConnection>
+    <connection>scm:git:git@github.com:petitparser/java-petitparser.git
+    </connection>
+    <developerConnection>
+      scm:git:git@github.com:petitparser/java-petitparser.git
+    </developerConnection>
     <url>https://github.com/petitparser/java-petitparser/</url>
     <tag>HEAD</tag>
   </scm>
