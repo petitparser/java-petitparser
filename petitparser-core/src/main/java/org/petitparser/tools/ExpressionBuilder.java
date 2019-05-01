@@ -1,8 +1,10 @@
 package org.petitparser.tools;
 
+import com.sun.istack.internal.Nullable;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.ChoiceParser;
 import org.petitparser.parser.combinators.SequenceParser;
+import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.parser.primitive.FailureParser;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.function.Function;
  */
 public class ExpressionBuilder {
 
+  private final SettableParser loopback = SettableParser.undefined();
   private final List<ExpressionGroup> groups = new ArrayList<>();
 
   /**
@@ -37,15 +40,17 @@ public class ExpressionBuilder {
     for (ExpressionGroup group : groups) {
       parser = group.build(parser);
     }
+    loopback.set(parser);
     return parser;
   }
 
   /**
    * Models a group of operators of the same precedence.
    */
-  public static class ExpressionGroup {
+  public class ExpressionGroup {
 
     private final List<Parser> primitives = new ArrayList<>();
+    private final List<Parser> wrappers = new ArrayList<>();
     private final List<Parser> prefix = new ArrayList<>();
     private final List<Parser> postfix = new ArrayList<>();
     private final List<Parser> right = new ArrayList<>();
@@ -55,7 +60,16 @@ public class ExpressionBuilder {
      * Defines a new primitive or literal {@code parser}.
      */
     public ExpressionGroup primitive(Parser parser) {
-      primitives.add(parser);
+      return primitive(parser, null);
+    }
+
+    /**
+     * Defines a new primitive or literal {@code parser}. Evaluates the optional
+     * {@code action} with the parsed {@code value}.
+     */
+    public <T, R> ExpressionGroup primitive(
+        Parser parser, @Nullable Function<T, R> action) {
+      primitives.add(action == null ? parser : parser.map(action));
       return this;
     }
 
@@ -64,18 +78,43 @@ public class ExpressionBuilder {
     }
 
     /**
+     * Defines a new wrapper using {@code left} and {@code right} parsers.
+     */
+    public ExpressionGroup wrapper(Parser left, Parser right) {
+      return wrapper(left, right, null);
+    }
+
+    /**
+     * Defines a new wrapper using {@code left} and {@code right} parsers.
+     * Evaluates the optional {@code action} with the parsed {@code left},
+     * {@code value} and {@code right}.
+     */
+    public <T, R> ExpressionGroup wrapper(
+        Parser left, Parser right, @Nullable Function<T, R> action) {
+      Parser parser = new SequenceParser(left, loopback, right);
+      wrappers.add(action == null ? parser : parser.map(action));
+      return this;
+    }
+
+    private Parser buildWrapper(Parser inner) {
+      List<Parser> choices = new ArrayList<>(wrappers);
+      choices.add(inner);
+      return buildChoice(choices, inner);
+    }
+
+    /**
      * Adds a prefix operator {@code parser}.
      */
     public ExpressionGroup prefix(Parser parser) {
-      addTo(prefix, parser, Function.identity());
-      return this;
+      return prefix(parser, null);
     }
 
     /**
      * Adds a prefix operator {@code parser}. Evaluates the optional {@code
      * action} with the parsed {@code operator} and {@code value}.
      */
-    public <T, R> ExpressionGroup prefix(Parser parser, Function<T, R> action) {
+    public <T, R> ExpressionGroup prefix(
+        Parser parser, @Nullable Function<T, R> action) {
       addTo(prefix, parser, action);
       return this;
     }
@@ -101,8 +140,7 @@ public class ExpressionBuilder {
      * Adds a postfix operator {@code parser}.
      */
     public ExpressionGroup postfix(Parser parser) {
-      addTo(postfix, parser, Function.identity());
-      return this;
+      return postfix(parser, null);
     }
 
     /**
@@ -110,7 +148,7 @@ public class ExpressionBuilder {
      * action} with the parsed {@code value} and {@code operator}.
      */
     public <T, R> ExpressionGroup postfix(
-        Parser parser, Function<T, R> action) {
+        Parser parser, @Nullable Function<T, R> action) {
       addTo(postfix, parser, action);
       return this;
     }
@@ -135,8 +173,7 @@ public class ExpressionBuilder {
      * Adds a right-associative operator {@code parser}.
      */
     public ExpressionGroup right(Parser parser) {
-      addTo(right, parser, Function.identity());
-      return this;
+      return right(parser, null);
     }
 
     /**
@@ -144,7 +181,8 @@ public class ExpressionBuilder {
      * {@code action} with the parsed {@code left} term, {@code operator}, and
      * {@code right} term.
      */
-    public <T, R> ExpressionGroup right(Parser parser, Function<T, R> action) {
+    public <T, R> ExpressionGroup right(
+        Parser parser, @Nullable Function<T, R> action) {
       addTo(right, parser, action);
       return this;
     }
@@ -172,8 +210,7 @@ public class ExpressionBuilder {
      * Adds a left-associative operator {@code parser}.
      */
     public ExpressionGroup left(Parser parser) {
-      addTo(left, parser, Function.identity());
-      return this;
+      return left(parser, null);
     }
 
     /**
@@ -181,7 +218,8 @@ public class ExpressionBuilder {
      * {@code action} with the parsed {@code left} term, {@code operator}, and
      * {@code right} term.
      */
-    public <T, R> ExpressionGroup left(Parser parser, Function<T, R> action) {
+    public <T, R> ExpressionGroup left(
+        Parser parser, @Nullable Function<T, R> action) {
       addTo(left, parser, action);
       return this;
     }
@@ -208,9 +246,10 @@ public class ExpressionBuilder {
     // helper to connect operator parser and action, and add to list
     @SuppressWarnings("unchecked")
     private <T, R> void addTo(
-        List<Parser> list, Parser parser, Function<T, R> action) {
-      list.add(parser.map(operator -> new ExpressionResult(operator,
-          (Function<Object, Object>) action)));
+        List<Parser> list, Parser parser, @Nullable Function<T, R> action) {
+      Function<Object, Object> mapper = action == null ? Function.identity() :
+          (Function<Object, Object>) action;
+      list.add(parser.map(operator -> new ExpressionResult(operator, mapper)));
     }
 
     // helper to build an optimal choice parser
@@ -230,8 +269,8 @@ public class ExpressionBuilder {
 
     // helper to build the group of parsers
     private Parser build(Parser inner) {
-      return buildLeft(
-          buildRight(buildPostfix(buildPrefix(buildPrimitive(inner)))));
+      return buildLeft(buildRight(
+          buildPostfix(buildPrefix(buildWrapper(buildPrimitive(inner))))));
     }
   }
 

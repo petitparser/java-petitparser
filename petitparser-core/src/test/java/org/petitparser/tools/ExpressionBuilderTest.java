@@ -3,13 +3,11 @@ package org.petitparser.tools;
 import org.junit.Before;
 import org.junit.Test;
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.combinators.SettableParser;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.petitparser.parser.combinators.SettableParser.undefined;
 import static org.petitparser.parser.primitive.CharacterParser.digit;
 import static org.petitparser.parser.primitive.CharacterParser.of;
 import static org.petitparser.parser.primitive.StringParser.of;
@@ -23,16 +21,13 @@ public class ExpressionBuilderTest {
 
   @Before
   public void setUpParser() {
-    SettableParser root = undefined();
     ExpressionBuilder builder = new ExpressionBuilder();
     builder.group()
-        .primitive(of('(').trim()
-            .seq(root)
-            .seq(of(')').trim()))
         .primitive(digit().plus().seq(of('.')
             .seq(digit().plus()).optional())
             .flatten()
-            .trim());
+            .trim())
+        .wrapper(of('(').trim(), of(')').trim());
     builder.group()
         .prefix(of('-').trim());
     builder.group()
@@ -46,8 +41,7 @@ public class ExpressionBuilderTest {
     builder.group()
         .left(of('+').trim())
         .left(of('-').trim());
-    root.set(builder.build());
-    parser = root.end();
+    parser = builder.build().end();
   }
 
   private void assertParse(String input, Object expected) {
@@ -59,18 +53,17 @@ public class ExpressionBuilderTest {
 
   @Before
   public void setUpEvaluator() {
-    SettableParser root = undefined();
     ExpressionBuilder builder = new ExpressionBuilder();
     builder.group()
-        .primitive(of('(').trim()
-            .seq(root)
-            .seq(of(')').trim())
-            .pick(1))
         .primitive(digit().plus().seq(of('.')
             .seq(digit().plus()).optional())
             .flatten()
             .trim()
-            .map(Double::parseDouble));
+            .map(Double::parseDouble))
+        .wrapper(
+            of('(').trim(),
+            of(')').trim(),
+            (List<Double> values) -> values.get(1));
     builder.group()
         .prefix(of('-').trim(), (List<Double> values) -> -values.get(1));
     builder.group()
@@ -84,8 +77,7 @@ public class ExpressionBuilderTest {
     builder.group()
         .left(of('+').trim(), (List<Double> values) -> values.get(0) + values.get(2))
         .left(of('-').trim(), (List<Double> values) -> values.get(0) - values.get(2));
-    root.set(builder.build());
-    evaluator = root.end();
+    evaluator = builder.build().end();
   }
 
   private void assertEvaluation(String input, double expected) {
@@ -235,6 +227,14 @@ public class ExpressionBuilderTest {
   @Test
   public void testParseParenthesis() {
     assertParse("(1)", asList('(', "1", ')'));
+    assertParse("(1 + 2)", asList('(', asList("1", '+', "2"), ')'));
+    assertParse("((1))", asList('(', asList('(', "1", ')'), ')'));
+    assertParse("((1 + 2))",
+        asList('(', asList('(', asList("1", '+', "2"), ')'), ')'));
+    assertParse("2 * (3 + 4)",
+        asList("2", '*', asList('(', asList("3", '+', "4"), ')')));
+    assertParse("(2 + 3) * 4",
+        asList(asList('(', asList("2", '+', "3"), ')'), '*', "4"));
   }
 
   @Test
