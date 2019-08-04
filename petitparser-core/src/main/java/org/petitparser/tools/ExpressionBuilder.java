@@ -1,12 +1,12 @@
 package org.petitparser.tools;
 
-import com.sun.istack.internal.Nullable;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.ChoiceParser;
 import org.petitparser.parser.combinators.SequenceParser;
 import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.parser.primitive.FailureParser;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
