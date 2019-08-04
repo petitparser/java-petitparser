@@ -5,6 +5,9 @@ licenses(["notice"])  # MIT
 java_library(
     name = "main",
     srcs = glob(["src/main/**/*.java"]),
+    deps = [
+        "//external:jsr305",
+    ],
 )
 
 java_library(
