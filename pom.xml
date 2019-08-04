@@ -5,8 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.release>12</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.sourceEncoding>UTF-8</project.reporting.sourceEncoding>
   </properties>
@@ -87,26 +86,26 @@
   <build>
     <pluginManagement>
       <plugins>
-        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin/3.8.0 -->
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin/3.8.1 -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
+          <version>3.8.1</version>
         </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
-      <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin/3.8.0 -->
+      <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin/3.8.1 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.0</version>
+        <version>3.8.1</version>
         <configuration>
           <compilerId>javac-with-errorprone</compilerId>
           <forceJavacCompilerUse>true</forceJavacCompilerUse>
         </configuration>
         <dependencies>
-          <!-- https://mvnrepository.com/artifact/org.codehaus.plexus/plexus-compiler-javac-errorprone -->
+          <!-- https://mvnrepository.com/artifact/org.codehaus.plexus/plexus-compiler-javac-errorprone/2.8.5 -->
           <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-compiler-javac-errorprone</artifactId>
@@ -114,11 +113,11 @@
           </dependency>
         </dependencies>
       </plugin>
-      <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-source-plugin -->
+      <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-source-plugin/3.1.0 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.0.1</version>
+        <version>3.1.0</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -128,11 +127,11 @@
           </execution>
         </executions>
       </plugin>
-      <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-javadoc-plugin -->
+      <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-javadoc-plugin/3.1.1 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.0.1</version>
+        <version>3.1.1</version>
         <configuration>
           <additionalparam>-Xdoclint:none</additionalparam>
           <additionalOptions>-Xdoclint:none</additionalOptions>
@@ -147,7 +146,7 @@
           </execution>
         </executions>
       </plugin>
-      <!-- https://mvnrepository.com/artifact/org.eluder.coveralls/coveralls-maven-plugin -->
+      <!-- https://mvnrepository.com/artifact/org.eluder.coveralls/coveralls-maven-plugin/4.3.0 -->
       <plugin>
         <groupId>org.eluder.coveralls</groupId>
         <artifactId>coveralls-maven-plugin</artifactId>
@@ -163,11 +162,11 @@
           </dependency>
         </dependencies>
       </plugin>
-      <!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+      <!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin/0.8.4 -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.2</version>
+        <version>0.8.4</version>
         <executions>
           <execution>
             <id>default-prepare-agent</id>
