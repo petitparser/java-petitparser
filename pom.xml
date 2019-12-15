@@ -192,7 +192,18 @@
     </plugins>
   </build>
 
-  <!-- Deploy to Maven Central: mvn -Poss -DskipTests deploy -->
+  <!-- Instructions: https://central.sonatype.org/pages/ossrh-guide.html -->
+  <!-- 1. Create PGP key -->
+  <!--    $ gpg -gen-key -->
+  <!--    $ gpg -list-keys -->
+  <!--    $ gpg -keyserver hkp://keyserver.ubuntu.com -send-keys XXX -->
+  <!--    * Verify upload at http://keyserver.ubuntu.com -->
+  <!-- 2. Configure ~/.m2/settings.xml -->
+  <!--    $ Add sonatype password -->
+  <!--    $ Add gpg.keyname XXX -->
+  <!-- 3. Deploy to Sonatype: -->
+  <!--    $ mvn -Poss -DskipTests deploy -X -->
+  <!-- Congrats, the nightmare is over. -->
   <profiles>
     <profile>
       <id>oss</id>
@@ -210,10 +221,9 @@
                   <goal>sign</goal>
                 </goals>
                 <configuration>
-                  <executable>gpg2</executable>
+                  <executable>gpg</executable>
                   <useAgent>true</useAgent>
                   <keyname>${gpg.keyname}</keyname>
-                  <passphraseServerId>${gpg.keyname}</passphraseServerId>
                 </configuration>
               </execution>
             </executions>
@@ -238,8 +248,7 @@
         </snapshotRepository>
         <repository>
           <id>ossrh</id>
-          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/
-          </url>
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
       </distributionManagement>
     </profile>
