@@ -252,6 +252,65 @@ System.out.println(start.parse("(1 + 2) * 3").get());  // 9
 As an exercise we could extend the parser to also accept negative numbers and floating point numbers, not only integers. Furthermore it would be useful to support subtraction and division as well. All these features
 can be added with a few lines of PetitParser code.
 
+### Using the Expression Builder
+
+Writing such expression parsers is pretty common and can be quite tricky to get right. To simplify things, PetitParser comes with a builder that can help you to define such grammars easily. It supports the definition of operator precedence; and prefix, postfix, left- and right-associative operators.
+
+The following code creates the empty expression builder:
+
+```java
+ExpressionBuilder builder = new ExpressionBuilder();
+```
+
+Then we define the operator-groups in descending precedence. The highest precedence are the literal numbers themselves. This time we accept floating point numbers, not just integers. In the same group we add support for parenthesis:
+
+```java
+builder.group()
+    .primitive(digit().plus().seq(of('.')
+        .seq(digit().plus()).optional())
+        .flatten().trim().map(Double::parseDouble))
+    .wrapper(of('(').trim(), of(')').trim(),
+        (List<Double> values) -> values.get(1));
+```
+
+Then come the normal arithmetic operators. Note, that the action blocks receive both, the terms and the parsed operator in the order they appear in the parsed input:
+
+```java
+// negation is a prefix operator
+builder.group()
+  .prefix(of('-').trim(), (List<Double> values) -> -values.get(1));
+
+// power is right-associative
+builder.group()
+  .right(of('^').trim(), (List<Double> values) -> Math.pow(values.get(0), values.get(2)));
+
+// multiplication and addition are left-associative
+builder.group()
+  .left(of('*').trim(), (List<Double> values) -> values.get(0) * values.get(2))
+  .left(of('/').trim(), (List<Double> values) -> values.get(0) / values.get(2));
+builder.group()
+  .left(of('+').trim(), (List<Double> values) -> values.get(0) + values.get(2))
+  .left(of('-').trim(), (List<Double> values) -> values.get(0) - values.get(2));
+```
+
+Finally we can build the parser:
+
+```java
+Parser parser = builder.build().end();
+```
+
+After executing the above code we get an efficient parser that correctly
+evaluates expressions like:
+
+```java
+parser.parse("-8");      // -8
+parser.parse("1+2*3");   // 7
+parser.parse("1*2+3");   // 5
+parser.parse("8/4/2");   // 1
+parser.parse("2^2^3");   // 256
+```
+
+You can find this example as test case here: [ExamplesTest.java](petitparser-core/src/test/java/org/petitparser/ExamplesTest.java)
 
 Misc
 ----
