@@ -3,6 +3,7 @@ package org.petitparser;
 import org.junit.Test;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.SettableParser;
+import org.petitparser.tools.ExpressionBuilder;
 
 import java.util.List;
 import java.util.function.Function;
@@ -44,6 +45,10 @@ public class ExamplesTest {
       .seq(of("*/"))
       .flatten();
 
+  public static final Parser DOUBLE = digit().plus().seq(of('.')
+          .seq(digit().plus()).optional())
+          .flatten().trim().map(Double::parseDouble);
+  
   @Test
   public void testIdentifierSuccess() {
     assertSuccess(IDENTIFIER, "a", "a");
@@ -179,4 +184,64 @@ public class ExamplesTest {
     assertSuccess(start, "(1 + 2) * 3", 9);
   }
 
+  @Test
+  public void testExpressionBuilderWithSettableExample() throws Exception {
+    SettableParser recursion = SettableParser.undefined();
+
+    Parser bracket = of('(')
+			.seq(recursion)
+			.seq(of(')')).map((List<Double> values) -> values.get(1));
+	  
+    ExpressionBuilder builder = new ExpressionBuilder();
+    builder.group()
+    .primitive(bracket.or(DOUBLE));
+    
+    initOps(builder);
+
+    recursion.set(builder.build());
+    
+    Parser parser = recursion.end();
+    assertCalculatorExample(parser);
+  }
+
+  @Test
+  public void testExpressionBuilderWithWrapperExample() throws Exception {
+    ExpressionBuilder builder = new ExpressionBuilder();
+    builder.group()
+    .primitive(DOUBLE)
+    .wrapper(of('(').trim(), of(')').trim(),
+        (List<Double> values) -> values.get(1));
+    
+    initOps(builder);
+
+    Parser parser = builder.build().end();
+    assertCalculatorExample(parser);
+  }
+  
+  private void initOps(ExpressionBuilder builder) {
+	// negation is a prefix operator
+    builder.group()
+      .prefix(of('-').trim(), (List<Double> values) -> -values.get(1));
+
+    // power is right-associative
+    builder.group()
+      .right(of('^').trim(), (List<Double> values) -> Math.pow(values.get(0), values.get(2)));
+
+    // multiplication and addition are left-associative
+    builder.group()
+      .left(of('*').trim(), (List<Double> values) -> values.get(0) * values.get(2))
+      .left(of('/').trim(), (List<Double> values) -> values.get(0) / values.get(2));
+    builder.group()
+      .left(of('+').trim(), (List<Double> values) -> values.get(0) + values.get(2))
+      .left(of('-').trim(), (List<Double> values) -> values.get(0) - values.get(2));
+  }
+  
+  private void assertCalculatorExample(Parser parser) {
+	Parser intCalculator = parser.map(Double::intValue);
+	assertSuccess(intCalculator, "-8", -8);
+    assertSuccess(intCalculator, "1+2*3", 7);
+    assertSuccess(intCalculator, "1*2+3", 5);
+    assertSuccess(intCalculator, "8/4/2", 1);
+    assertSuccess(intCalculator, "2^2^3", 256);
+  }
 }
