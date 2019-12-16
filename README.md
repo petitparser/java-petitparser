@@ -266,11 +266,11 @@ Then we define the operator-groups in descending precedence. The highest precede
 
 ```java
 builder.group()
-    .primitive(digit().plus().seq(of('.')
-        .seq(digit().plus()).optional())
-        .flatten().trim().map(Double::parseDouble))
-    .wrapper(of('(').trim(), of(')').trim(),
-        (List<Double> values) -> values.get(1));
+  .primitive(digit().plus().seq(of('.')
+      .seq(digit().plus()).optional())
+      .flatten().trim().map(Double::parseDouble))
+  .wrapper(of('(').trim(), of(')').trim(),
+      (List<Double> values) -> values.get(1));
 ```
 
 Then come the normal arithmetic operators. Note, that the action blocks receive both, the terms and the parsed operator in the order they appear in the parsed input:
