@@ -202,6 +202,7 @@
   <!--    $ Add sonatype password -->
   <!--    $ Add gpg.keyname XXX -->
   <!-- 3. Deploy to Sonatype: -->
+  <!--    $ export GPG_TTY=$(tty)
   <!--    $ mvn -Poss -DskipTests deploy -X -->
   <!-- Congrats, the nightmare is over. -->
   <profiles>
