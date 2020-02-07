@@ -24,7 +24,7 @@ public class ChoiceParser extends ListParser {
         return result;
       }
     }
-    return result;
+    return result == null ? context.failure("Empty choice") : result;
   }
 
   @Override

@@ -5,6 +5,7 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.context.Token;
 import org.petitparser.parser.Parser;
+import org.petitparser.parser.combinators.ChoiceParser;
 import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.parser.primitive.StringParser;
@@ -570,5 +571,11 @@ public class ParsersTest {
         .callCC((continuation, context) -> context.failure("Always fail"));
     assertFalse(parser.parse("1").isSuccess());
     assertFalse(parser.parse("a").isSuccess());
+  }
+
+  @Test
+  public void testEmptyChoice() {
+    Parser parser = new ChoiceParser();
+    assertFalse(parser.parse("whatever").isSuccess());
   }
 }
