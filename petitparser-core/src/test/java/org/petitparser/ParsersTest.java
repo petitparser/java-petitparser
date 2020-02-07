@@ -5,6 +5,7 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.context.Token;
 import org.petitparser.parser.Parser;
+import org.petitparser.parser.combinators.ChoiceParser;
 import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.parser.primitive.StringParser;
@@ -33,6 +34,11 @@ public class ParsersTest {
     assertSuccess(parser, "a", 'a', 0);
     assertFailure(parser, "b", "'a' expected");
     assertFailure(parser, "");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testChoice0() {
+    new ChoiceParser();
   }
 
   @Test

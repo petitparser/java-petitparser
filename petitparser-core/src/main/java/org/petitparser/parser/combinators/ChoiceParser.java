@@ -13,6 +13,9 @@ public class ChoiceParser extends ListParser {
 
   public ChoiceParser(Parser... parsers) {
     super(parsers);
+    if (parsers.length == 0) {
+      throw new IllegalArgumentException("Choice parser cannot be empty.");
+    }
   }
 
   @Override
