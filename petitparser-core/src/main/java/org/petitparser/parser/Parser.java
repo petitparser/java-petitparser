@@ -6,6 +6,7 @@ import org.petitparser.context.Token;
 import org.petitparser.parser.actions.ActionParser;
 import org.petitparser.parser.actions.ContinuationParser;
 import org.petitparser.parser.actions.FlattenParser;
+import org.petitparser.parser.actions.FlattenJoiner;
 import org.petitparser.parser.actions.TokenParser;
 import org.petitparser.parser.actions.TrimmingParser;
 import org.petitparser.parser.combinators.AndParser;
@@ -319,6 +320,15 @@ public abstract class Parser {
    */
   public Parser flatten(String message) {
     return new FlattenParser(this, message);
+  }
+
+  /**
+   * Returns a parser that discards the result of the receiver, and returns a
+   * joined result of the current consumed results using the given joiner. Report
+   * the provided {@code message} in case of an error.
+   */
+  public Parser flatten(String message, FlattenJoiner joiner) {
+    return new FlattenParser(this, message, joiner);
   }
 
   /**
