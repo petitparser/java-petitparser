@@ -305,17 +305,17 @@ public abstract class Parser {
   }
 
   /**
-   * Returns a parser that discards the result of the receiver, and returns a
-   * sub-string of the consumed range in the string/list being parsed.
+   * Returns a parser that discards the result of the receiver, and instead
+   * returns a sub-string of the consumed range in the buffer being parsed.
    */
   public Parser flatten() {
     return new FlattenParser(this);
   }
 
   /**
-   * Returns a parser that discards the result of the receiver, and returns a
-   * sub-string of the consumed range in the string/list being parsed. Report
-   * the provided {@code message} in case of an error.
+   * Returns a parser that discards the result of the receiver, and instead
+   * returns a sub-string of the consumed range in the buffer being parsed.
+   * Reports the provided {@code message} in case of an error.
    */
   public Parser flatten(String message) {
     return new FlattenParser(this, message);
