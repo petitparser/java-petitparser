@@ -5,7 +5,9 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.context.Token;
 import org.petitparser.parser.Parser;
+import org.petitparser.parser.actions.FlattenJoiner;
 import org.petitparser.parser.combinators.ChoiceParser;
+import org.petitparser.parser.combinators.SequenceParser;
 import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.parser.primitive.StringParser;
@@ -22,6 +24,8 @@ import static org.junit.Assert.assertTrue;
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
 import static org.petitparser.parser.primitive.CharacterParser.of;
+import static org.petitparser.parser.primitive.CharacterParser.digit;
+import static org.petitparser.parser.primitive.CharacterParser.letter;
 
 /**
  * Tests {@link Parser} factory methods.
@@ -102,6 +106,24 @@ public class ParsersTest {
     assertSuccess(parser, "12", "12");
     assertSuccess(parser, "123", "123");
     assertSuccess(parser, "1234", "1234");
+  }
+
+  @Test
+  public void testFlattenCustom() throws Exception {
+    assertSuccess(createCustomFlattenParser(null), "1 2 3 4 5 6 7 8 9 10", 55);
+    assertSuccess(createCustomFlattenParser("some message"), "1 2 3 4 5", 15);
+  }
+
+  private Parser createCustomFlattenParser(String message) {
+    Parser numbers = digit().plus()
+            .trim()
+            .flatten()
+            .map(s -> Integer.parseInt((String) s)).star();
+
+    return numbers.flatten(message, (context, toBeJoined) -> {
+      List<Integer> list = toBeJoined.get();
+      return toBeJoined.success(list.stream().mapToInt(i -> i).sum());
+    }).end();
   }
 
   @Test
@@ -499,6 +521,26 @@ public class ParsersTest {
     assertFailure(parser, "b", "'a' expected");
     assertFailure(parser, "*b", 1, "'a' expected");
     assertFailure(parser, "**b", 2, "'a' expected");
+  }
+
+  @Test
+  public void testTrimTwice() throws Exception {
+    Parser parser = of('a').flatten().trim().flatten().trim();
+    assertSuccess(parser, " a ", "a");
+
+    parser = letter().plus().flatten().trim().flatten().trim();
+    assertSuccess(parser, "   hello  ", "hello");
+  }
+
+  @Test
+  public void testTrimBetween() throws Exception {
+    Parser parser = new SequenceParser(
+            of('a').flatten().trim(),
+            of('b').flatten().trim(),
+            of('c').flatten().trim())
+            .flatten().trim();
+
+    assertSuccess(parser, " a b c ", "abc");
   }
 
   @Test

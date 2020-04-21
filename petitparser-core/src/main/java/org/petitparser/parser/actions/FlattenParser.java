@@ -10,6 +10,7 @@ import org.petitparser.parser.combinators.DelegateParser;
  */
 public class FlattenParser extends DelegateParser {
 
+  private FlattenJoiner joiner;
   protected final String message;
 
   public FlattenParser(Parser delegate) {
@@ -17,8 +18,13 @@ public class FlattenParser extends DelegateParser {
   }
 
   public FlattenParser(Parser delegate, String message) {
+    this(delegate,message, new DefaultFlattenJoiner());
+  }
+
+  public FlattenParser(Parser delegate, String message, FlattenJoiner joiner) {
     super(delegate);
     this.message = message;
+    this.joiner = joiner;
   }
 
   @Override
@@ -26,9 +32,7 @@ public class FlattenParser extends DelegateParser {
     if (message == null) {
       Result result = delegate.parseOn(context);
       if (result.isSuccess()) {
-        String flattened = context.getBuffer()
-            .substring(context.getPosition(), result.getPosition());
-        return result.success(flattened);
+        return joiner.join(context, result);
       } else {
         return result;
       }
@@ -39,9 +43,9 @@ public class FlattenParser extends DelegateParser {
       if (position < 0) {
         return context.failure(message);
       }
-      String output =
-          context.getBuffer().substring(context.getPosition(), position);
-      return context.success(output, position);
+
+      Result result = delegate.parseOn(context);
+      return joiner.join(context, result);
     }
   }
 
