@@ -25,10 +25,12 @@ public class ActionParser<T, R> extends DelegateParser {
   }
 
   @Override
-  public Result parseOn(Context context) {
-    Result result = delegate.parseOn(context);
+  public <U> Result<U> parseOn(Context<U> context) {
+    Result<U> result = delegate.parseOn(context);
     if (result.isSuccess()) {
-      return result.success(function.apply(result.get()));
+      return function instanceof Action
+             ? result.success(((Action<T,R,U>)function).apply(result.get(), context.getUserContext()))
+             : result.success(function.apply(result.get()));
     } else {
       return result;
     }

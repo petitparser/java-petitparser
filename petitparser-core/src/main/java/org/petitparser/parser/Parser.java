@@ -3,6 +3,7 @@ package org.petitparser.parser;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.context.Token;
+import org.petitparser.parser.actions.Action;
 import org.petitparser.parser.actions.ActionParser;
 import org.petitparser.parser.actions.ContinuationParser;
 import org.petitparser.parser.actions.FlattenParser;
@@ -40,14 +41,16 @@ public abstract class Parser {
   /**
    * Primitive method doing the actual parsing.
    */
-  public abstract Result parseOn(Context context);
+  public abstract <U> Result<U> parseOn(Context<U> context);
 
   /**
    * Returns the parse result of the {@code input}.
    */
   public Result parse(String input) {
-    return parseOn(new Context(input, 0));
+    return parse(input, null);
   }
+
+  public <T> Result parse(String input, T userContext) { return parseOn(new Context(input, 0, userContext)); }
 
   /**
    * Tests if the {@code input} can be successfully parsed.
@@ -324,6 +327,11 @@ public abstract class Parser {
    */
   public <A, B> Parser map(Function<A, B> function) {
     return new ActionParser<>(this, function);
+  }
+
+  public <A, B, U> Parser map(Action<A, B, U> action)
+  {
+    return new ActionParser<>(this, action);
   }
 
   /**

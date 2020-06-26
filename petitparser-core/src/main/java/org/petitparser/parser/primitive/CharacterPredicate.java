@@ -87,7 +87,7 @@ public interface CharacterPredicate {
    * Returns a character predicate that matches the provided pattern.
    */
   static CharacterPredicate pattern(String pattern) {
-    return PatternParser.PATTERN.parse(pattern).get();
+    return (CharacterPredicate) PatternParser.PATTERN.parse(pattern).get();
   }
 
   class PatternParser {

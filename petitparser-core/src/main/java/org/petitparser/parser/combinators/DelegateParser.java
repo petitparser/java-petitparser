@@ -20,7 +20,7 @@ public class DelegateParser extends Parser {
   }
 
   @Override
-  public Result parseOn(Context context) {
+  public <U> Result<U> parseOn(Context<U> context) {
     return delegate.parseOn(context);
   }
 
