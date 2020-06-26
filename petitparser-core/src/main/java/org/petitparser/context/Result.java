@@ -3,10 +3,10 @@ package org.petitparser.context;
 /**
  * An immutable abstract parse result.
  */
-public abstract class Result extends Context {
+public abstract class Result<U> extends Context<U> {
 
-  public Result(String buffer, int position) {
-    super(buffer, position);
+  public Result(String buffer, int position, U userContext) {
+    super(buffer, position, userContext);
   }
 
   /**

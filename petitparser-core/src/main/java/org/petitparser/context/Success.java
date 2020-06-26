@@ -3,12 +3,12 @@ package org.petitparser.context;
 /**
  * An immutable parse success.
  */
-public class Success extends Result {
+public class Success<U> extends Result<U> {
 
   private final Object result;
 
-  public Success(String buffer, int position, Object result) {
-    super(buffer, position);
+  public Success(String buffer, int position, U userContext, Object result) {
+    super(buffer, position, userContext);
     this.result = result;
   }
 

@@ -3,12 +3,12 @@ package org.petitparser.context;
 /**
  * An immutable parse failure.
  */
-public class Failure extends Result {
+public class Failure<U> extends Result<U> {
 
   private final String message;
 
-  public Failure(String buffer, int position, String message) {
-    super(buffer, position);
+  public Failure(String buffer, int position, U userContext, String message) {
+    super(buffer, position, userContext);
     this.message = message;
   }
 

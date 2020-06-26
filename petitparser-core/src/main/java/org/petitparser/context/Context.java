@@ -3,7 +3,7 @@ package org.petitparser.context;
 /**
  * An immutable parse context.
  */
-public class Context {
+public class Context<T> {
 
   /**
    * The input buffer.
@@ -15,16 +15,25 @@ public class Context {
    */
   protected final int position;
 
+
+  protected final T userContext;
+
+
+  public Context(String buffer, int position, T userContext) {
+    this.buffer = buffer;
+    this.position = position;
+    this.userContext = userContext;
+  }
+
   /**
    * Constructs an immutable parse context.
    *
    * @param buffer the buffer this context is using
    * @param position the position this context is pointing at
    */
-  public Context(String buffer, int position) {
-    this.buffer = buffer;
-    this.position = position;
-  }
+//  public Context(String buffer, int position) {
+//    this(buffer, position, null);
+//  }
 
   /**
    * Returns the input buffer.
@@ -38,6 +47,10 @@ public class Context {
    */
   public int getPosition() {
     return position;
+  }
+
+  public T getUserContext() {
+    return userContext;
   }
 
   /**
@@ -56,7 +69,7 @@ public class Context {
    * @param position the position of the parse result
    */
   public Success success(Object value, int position) {
-    return new Success(buffer, position, value);
+    return new Success(buffer, position, userContext, value);
   }
 
   /**
@@ -75,7 +88,7 @@ public class Context {
    * @param position the position of the parse result
    */
   public Failure failure(String message, int position) {
-    return new Failure(buffer, position, message);
+    return new Failure(buffer, position, userContext, message);
   }
 
   @Override
