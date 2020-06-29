@@ -46,11 +46,11 @@ public abstract class Parser {
   /**
    * Returns the parse result of the {@code input}.
    */
-  public Result parse(String input) {
+  public <T> Result<T> parse(String input) {
     return parse(input, null);
   }
 
-  public <T> Result parse(String input, T userContext) { return parseOn(new Context(input, 0, userContext)); }
+  public <T> Result<T> parse(String input, T userContext) { return parseOn(new Context<>(input, 0, userContext)); }
 
   /**
    * Tests if the {@code input} can be successfully parsed.
@@ -65,7 +65,7 @@ public abstract class Parser {
   @SuppressWarnings("unchecked")
   public <T> List<T> matches(String input) {
     List<Object> list = new ArrayList<>();
-    this.and().map(list::add).seq(any()).or(any()).star().parse(input);
+    this.and().map(e -> list.add(e)).seq(any()).or(any()).star().parse(input);
     return (List<T>) list;
   }
 
@@ -75,7 +75,7 @@ public abstract class Parser {
   @SuppressWarnings("unchecked")
   public <T> List<T> matchesSkipping(String input) {
     List<Object> list = new ArrayList<>();
-    this.map(list::add).or(any()).star().parse(input);
+    this.map(e-> list.add(e)).or(any()).star().parse(input);
     return (List<T>) list;
   }
 
