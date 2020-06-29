@@ -58,7 +58,7 @@ public class Context<T> {
    *
    * @param value the value of the parse result
    */
-  public Success success(Object value) {
+  public Success<T> success(Object value) {
     return success(value, position);
   }
 
@@ -68,8 +68,8 @@ public class Context<T> {
    * @param value the value of the parse result
    * @param position the position of the parse result
    */
-  public Success success(Object value, int position) {
-    return new Success(buffer, position, userContext, value);
+  public Success<T> success(Object value, int position) {
+    return new Success<>(buffer, position, userContext, value);
   }
 
   /**
@@ -77,7 +77,7 @@ public class Context<T> {
    *
    * @param message the error message of the parse result
    */
-  public Failure failure(String message) {
+  public Failure<T> failure(String message) {
     return failure(message, position);
   }
 
@@ -87,8 +87,8 @@ public class Context<T> {
    * @param message the error message of the parse result
    * @param position the position of the parse result
    */
-  public Failure failure(String message, int position) {
-    return new Failure(buffer, position, userContext, message);
+  public Failure<T> failure(String message, int position) {
+    return new Failure<>(buffer, position, userContext, message);
   }
 
   @Override
