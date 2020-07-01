@@ -2,6 +2,8 @@ package org.petitparser.context;
 
 /**
  * An immutable abstract parse result.
+ *
+ * @param <U> Custom context type
  */
 public abstract class Result<U> extends Context<U> {
 

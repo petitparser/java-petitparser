@@ -2,6 +2,8 @@ package org.petitparser.context;
 
 /**
  * An immutable parse context.
+ *
+ * @param <T> Custom context type
  */
 public class Context<T> {
 
@@ -15,10 +17,19 @@ public class Context<T> {
    */
   protected final int position;
 
-
+  /**
+   * Custom context with data to be used on mapping actions
+   */
   protected final T userContext;
 
 
+  /**
+   * Constructs an immutable parse context.
+   *
+   * @param buffer the buffer this context is using
+   * @param position the position this context is pointing at
+   * @param userContext a custom context with needed data for actions
+   */
   public Context(String buffer, int position, T userContext) {
     this.buffer = buffer;
     this.position = position;
@@ -31,9 +42,9 @@ public class Context<T> {
    * @param buffer the buffer this context is using
    * @param position the position this context is pointing at
    */
-//  public Context(String buffer, int position) {
-//    this(buffer, position, null);
-//  }
+  public Context(String buffer, int position) {
+    this(buffer, position, null);
+  }
 
   /**
    * Returns the input buffer.

@@ -2,6 +2,8 @@ package org.petitparser.context;
 
 /**
  * An immutable parse success.
+ *
+ * @param <U> Custom context type
  */
 public class Success<U> extends Result<U> {
 

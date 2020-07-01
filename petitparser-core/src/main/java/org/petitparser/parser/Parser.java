@@ -50,6 +50,9 @@ public abstract class Parser {
     return parse(input, null);
   }
 
+  /**
+   * Returns the parse result of the {@code input}. It is provided of a custom context
+   */
   public <T> Result<T> parse(String input, T userContext) { return parseOn(new Context<>(input, 0, userContext)); }
 
   /**
@@ -329,6 +332,10 @@ public abstract class Parser {
     return new ActionParser<>(this, function);
   }
 
+  /**
+   * Returns a parser that evaluates a {@code function} as the production action on success of the
+   * receiver. This action make use of a custom context
+   */
   public <A, B, U> Parser map(Action<A, B, U> action)
   {
     return new ActionParser<>(this, action);
