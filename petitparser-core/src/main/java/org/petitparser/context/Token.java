@@ -143,7 +143,7 @@ public class Token {
    * Returns a parser for that detects newlines platform independently.
    */
   public static final Parser NEWLINE_PARSER =
-      of('\n').or(of('\r', "'NEWLINE' expected").seq(of('\n').optional()));
+      of('\n').or(of('\r').seq(of('\n').optional()));
 
   /**
    * Converts the {@code position} index in a {@code buffer} to a line and

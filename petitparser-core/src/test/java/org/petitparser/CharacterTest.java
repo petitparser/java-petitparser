@@ -57,6 +57,15 @@ public class CharacterTest {
   }
 
   @Test
+  public void testAnyOfSpecial() {
+    Parser parser = anyOf("\n\r\t");
+    assertSuccess(parser, "\n", '\n');
+    assertSuccess(parser, "\r", '\r');
+    assertSuccess(parser, "\t", '\t');
+    assertFailure(parser, "x", "any of '\\n\\r\\t' expected");
+  }
+
+  @Test
   public void testAnyOfWithMessage() {
     Parser parser = anyOf("uncopyrightable", "wrong");
     assertSuccess(parser, "c", 'c');
@@ -111,6 +120,14 @@ public class CharacterTest {
   }
 
   @Test
+  public void testNoneOfSpecial() {
+    Parser parser = noneOf("\b\f");
+    assertSuccess(parser, "a", 'a');
+    assertFailure(parser, "\b", "none of '\\b\\f' expected");
+    assertFailure(parser, "\f", "none of '\\b\\f' expected");
+  }
+
+  @Test
   public void testNoneOfWithMessage() {
     Parser parser = noneOf("uncopyrightable", "wrong");
     assertSuccess(parser, "x", 'x');
@@ -134,7 +151,7 @@ public class CharacterTest {
   }
 
   @Test
-  public void testIs() {
+  public void testOf() {
     Parser parser = of('a');
     assertSuccess(parser, "a", 'a');
     assertFailure(parser, "b", "'a' expected");
@@ -142,7 +159,14 @@ public class CharacterTest {
   }
 
   @Test
-  public void testIsWithMessage() {
+  public void testOfSpecial() {
+    Parser parser = of('\u0001');
+    assertSuccess(parser, "\u0001", '\u0001');
+    assertFailure(parser, "a", "'\\u0001' expected");
+  }
+
+  @Test
+  public void testOfWithMessage() {
     Parser parser = of('a', "wrong");
     assertSuccess(parser, "a", 'a');
     assertFailure(parser, "b", "wrong");

@@ -23,7 +23,7 @@ public class CharacterParser extends Parser {
    * Returns a parser that accepts a specific {@code character}.
    */
   public static CharacterParser of(char character) {
-    return of(character, "'" + character + "' expected");
+    return of(character, "'" + toReadableString(character) + "' expected");
   }
 
   public static CharacterParser of(char character, String message) {
@@ -44,8 +44,8 @@ public class CharacterParser extends Parser {
   /**
    * Returns a parser that accepts any of the provided characters.
    */
-  public static CharacterParser anyOf(String chars) {
-    return anyOf(chars, "any of '" + chars + "' expected");
+  public static CharacterParser anyOf(String characters) {
+    return anyOf(characters, "any of '" + toReadableString(characters) + "' expected");
   }
 
   public static CharacterParser anyOf(String chars, String message) {
@@ -66,8 +66,8 @@ public class CharacterParser extends Parser {
   /**
    * Returns a parser that accepts none of the provided characters.
    */
-  public static CharacterParser noneOf(String chars) {
-    return noneOf(chars, "none of '" + chars + "' expected");
+  public static CharacterParser noneOf(String characters) {
+    return noneOf(characters, "none of '" + toReadableString(characters) + "' expected");
   }
 
   public static CharacterParser noneOf(String chars, String message) {
@@ -111,11 +111,10 @@ public class CharacterParser extends Parser {
    * Returns a parser that accepts a specific character pattern.
    *
    * <p>Characters match themselves. A dash {@code -} between two characters
-   * matches the range of those characters. A caret {@code ^} at the beginning
-   * negates the pattern.
+   * matches the range of those characters. A caret {@code ^} at the beginning negates the pattern.
    */
   public static CharacterParser pattern(String pattern) {
-    return pattern(pattern, "[" + pattern + "] expected");
+    return pattern(pattern, "[" + toReadableString(pattern) + "] expected");
   }
 
   public static CharacterParser pattern(String pattern, String message) {
@@ -126,7 +125,8 @@ public class CharacterParser extends Parser {
    * Returns a parser that accepts a specific character range.
    */
   public static CharacterParser range(char start, char stop) {
-    return range(start, stop, start + ".." + stop + " expected");
+    return range(start, stop,
+        toReadableString(start) + ".." + toReadableString(stop) + " expected");
   }
 
   public static CharacterParser range(char start, char stop, String message) {
@@ -214,5 +214,36 @@ public class CharacterParser extends Parser {
   @Override
   public String toString() {
     return super.toString() + "[" + message + "]";
+  }
+
+  private static String toReadableString(String characters) {
+    StringBuilder buffer = new StringBuilder();
+    for (int i = 0; i < characters.length(); i++) {
+      buffer.append(toReadableString(characters.charAt(i)));
+    }
+    return buffer.toString();
+  }
+
+  private static String toReadableString(char character) {
+    switch (character) {
+      case '\b':
+        return "\\b";  // backspace
+      case '\t':
+        return "\\t";  // horizontal tab
+      case '\n':
+        return "\\n";  // new line
+      case '\f':
+        return "\\f";  // form feed
+      case '\r':
+        return "\\r";  // carriage return
+    }
+    if (Character.isISOControl(character)) {
+      String escape = Integer.toHexString(character);
+      while (escape.length() < 4) {
+        escape = "0" + escape;
+      }
+      return "\\u" + escape;
+    }
+    return Character.toString(character);
   }
 }
