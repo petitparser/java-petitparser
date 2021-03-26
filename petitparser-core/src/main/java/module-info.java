@@ -1,4 +1,5 @@
 module petitparser.core {
+  requires jsr305;
   exports org.petitparser.context;
   exports org.petitparser.parser;
   exports org.petitparser.parser.actions;
