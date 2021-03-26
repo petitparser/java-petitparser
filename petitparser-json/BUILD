@@ -13,8 +13,8 @@ java_library(
     srcs = glob(["src/test/**/*.java"]),
     deps = [
         ":main",
-        "//external:junit",
-        "//external:hamcrest",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
         "//petitparser-core:main",
         "//petitparser-core:test"
     ],

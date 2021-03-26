@@ -6,7 +6,7 @@ java_library(
     name = "main",
     srcs = glob(["src/main/**/*.java"]),
     deps = [
-        "//external:jsr305",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -15,8 +15,8 @@ java_library(
     srcs = glob(["src/test/**/*.java"]),
     deps = [
         ":main",
-        "//external:junit",
-        "//external:hamcrest",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
 
