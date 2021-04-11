@@ -1,10 +1,10 @@
 package org.petitparser;
 
-import org.junit.Test;
-import org.petitparser.parser.Parser;
-
 import static org.petitparser.Assertions.assertSuccess;
 import static org.petitparser.parser.primitive.CharacterParser.of;
+
+import org.junit.Test;
+import org.petitparser.parser.Parser;
 
 /**
  * Various regressions amd tricky examples.

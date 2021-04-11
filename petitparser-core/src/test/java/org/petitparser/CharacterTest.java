@@ -1,9 +1,5 @@
 package org.petitparser;
 
-import org.junit.Test;
-import org.petitparser.parser.Parser;
-import org.petitparser.parser.primitive.CharacterParser;
-
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
 import static org.petitparser.parser.primitive.CharacterParser.any;
@@ -19,6 +15,10 @@ import static org.petitparser.parser.primitive.CharacterParser.range;
 import static org.petitparser.parser.primitive.CharacterParser.upperCase;
 import static org.petitparser.parser.primitive.CharacterParser.whitespace;
 import static org.petitparser.parser.primitive.CharacterParser.word;
+
+import org.junit.Test;
+import org.petitparser.parser.Parser;
+import org.petitparser.parser.primitive.CharacterParser;
 
 /**
  * Tests {@link CharacterParser}.

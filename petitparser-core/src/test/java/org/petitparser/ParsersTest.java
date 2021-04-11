@@ -1,5 +1,12 @@
 package org.petitparser;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.petitparser.Assertions.assertFailure;
+import static org.petitparser.Assertions.assertSuccess;
+import static org.petitparser.parser.primitive.CharacterParser.of;
+
 import org.junit.Test;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
@@ -15,13 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.petitparser.Assertions.assertFailure;
-import static org.petitparser.Assertions.assertSuccess;
-import static org.petitparser.parser.primitive.CharacterParser.of;
 
 /**
  * Tests {@link Parser} factory methods.

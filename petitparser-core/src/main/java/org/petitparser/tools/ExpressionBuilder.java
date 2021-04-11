@@ -6,7 +6,6 @@ import org.petitparser.parser.combinators.SequenceParser;
 import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.parser.primitive.FailureParser;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -68,7 +67,7 @@ public class ExpressionBuilder {
      * {@code action} with the parsed {@code value}.
      */
     public <T, R> ExpressionGroup primitive(
-        Parser parser, @Nullable Function<T, R> action) {
+        Parser parser, /*@Nullable*/ Function<T, R> action) {
       primitives.add(action == null ? parser : parser.map(action));
       return this;
     }
@@ -90,7 +89,7 @@ public class ExpressionBuilder {
      * {@code value} and {@code right}.
      */
     public <T, R> ExpressionGroup wrapper(
-        Parser left, Parser right, @Nullable Function<T, R> action) {
+        Parser left, Parser right, /*@Nullable*/ Function<T, R> action) {
       Parser parser = new SequenceParser(left, loopback, right);
       wrappers.add(action == null ? parser : parser.map(action));
       return this;
@@ -114,7 +113,7 @@ public class ExpressionBuilder {
      * action} with the parsed {@code operator} and {@code value}.
      */
     public <T, R> ExpressionGroup prefix(
-        Parser parser, @Nullable Function<T, R> action) {
+        Parser parser, /*@Nullable*/ Function<T, R> action) {
       addTo(prefix, parser, action);
       return this;
     }
@@ -148,7 +147,7 @@ public class ExpressionBuilder {
      * action} with the parsed {@code value} and {@code operator}.
      */
     public <T, R> ExpressionGroup postfix(
-        Parser parser, @Nullable Function<T, R> action) {
+        Parser parser, /*@Nullable*/ Function<T, R> action) {
       addTo(postfix, parser, action);
       return this;
     }
@@ -182,7 +181,7 @@ public class ExpressionBuilder {
      * {@code right} term.
      */
     public <T, R> ExpressionGroup right(
-        Parser parser, @Nullable Function<T, R> action) {
+        Parser parser, /*@Nullable*/ Function<T, R> action) {
       addTo(right, parser, action);
       return this;
     }
@@ -219,7 +218,7 @@ public class ExpressionBuilder {
      * {@code right} term.
      */
     public <T, R> ExpressionGroup left(
-        Parser parser, @Nullable Function<T, R> action) {
+        Parser parser, /*@Nullable*/ Function<T, R> action) {
       addTo(left, parser, action);
       return this;
     }
@@ -246,7 +245,7 @@ public class ExpressionBuilder {
     // helper to connect operator parser and action, and add to list
     @SuppressWarnings("unchecked")
     private <T, R> void addTo(
-        List<Parser> list, Parser parser, @Nullable Function<T, R> action) {
+        List<Parser> list, Parser parser, /*@Nullable*/ Function<T, R> action) {
       Function<Object, Object> mapper = action == null ? Function.identity() :
           (Function<Object, Object>) action;
       list.add(parser.map(operator -> new ExpressionResult(operator, mapper)));

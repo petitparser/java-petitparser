@@ -1,5 +1,10 @@
 package org.petitparser.grammar.xml;
 
+import static org.petitparser.parser.primitive.CharacterParser.digit;
+import static org.petitparser.parser.primitive.CharacterParser.of;
+import static org.petitparser.parser.primitive.CharacterParser.pattern;
+import static org.petitparser.parser.primitive.CharacterParser.word;
+
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
@@ -9,11 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-
-import static org.petitparser.parser.primitive.CharacterParser.digit;
-import static org.petitparser.parser.primitive.CharacterParser.of;
-import static org.petitparser.parser.primitive.CharacterParser.pattern;
-import static org.petitparser.parser.primitive.CharacterParser.word;
 
 /**
  * Optimized parser to read character data.

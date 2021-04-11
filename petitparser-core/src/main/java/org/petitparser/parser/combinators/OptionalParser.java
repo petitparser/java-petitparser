@@ -4,7 +4,6 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 /**
@@ -14,7 +13,7 @@ public class OptionalParser extends DelegateParser {
 
   protected final Object otherwise;
 
-  public OptionalParser(Parser delegate, @Nullable Object otherwise) {
+  public OptionalParser(Parser delegate, /*@Nullable*/ Object otherwise) {
     super(delegate);
     this.otherwise = otherwise;
   }

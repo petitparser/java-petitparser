@@ -1,9 +1,5 @@
 package org.petitparser.utils;
 
-import org.junit.Test;
-
-import java.util.List;
-
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.petitparser.utils.Functions.constant;
@@ -12,6 +8,10 @@ import static org.petitparser.utils.Functions.lastOfList;
 import static org.petitparser.utils.Functions.nthOfList;
 import static org.petitparser.utils.Functions.permutationOfList;
 import static org.petitparser.utils.Functions.withoutSeparators;
+
+import org.junit.Test;
+
+import java.util.List;
 
 /**
  * Tests {@link Functions}.
