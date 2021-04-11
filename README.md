@@ -2,9 +2,7 @@ PetitParser for Java
 ====================
 
 [![Release Status](https://jitpack.io/v/petitparser/java-petitparser.svg)](https://jitpack.io/#petitparser/java-petitparser)
-[![Build Status](https://travis-ci.org/petitparser/java-petitparser.svg)](https://travis-ci.org/petitparser/java-petitparser)
-[![Coverage Status](https://coveralls.io/repos/petitparser/java-petitparser/badge.svg)](https://coveralls.io/r/petitparser/java-petitparser)
-[![Known Vulnerabilities](https://snyk.io/test/github/petitparser/java-petitparser/badge.svg?targetFile=pom.xml)](https://snyk.io/test/github/petitparser/java-petitparser?targetFile=pom.xml)
+[![Java CI](https://github.com/petitparser/java-petitparser/actions/workflows/maven.yml/badge.svg)](https://github.com/petitparser/java-petitparser/actions/workflows/maven.yml)
 [![GitHub Issues](https://img.shields.io/github/issues/petitparser/java-petitparser.svg)](https://github.com/petitparser/java-petitparser/issues)
 [![GitHub Forks](https://img.shields.io/github/forks/petitparser/java-petitparser.svg)](https://github.com/petitparser/java-petitparser/network)
 [![GitHub Stars](https://img.shields.io/github/stars/petitparser/java-petitparser.svg)](https://github.com/petitparser/java-petitparser/stargazers)
