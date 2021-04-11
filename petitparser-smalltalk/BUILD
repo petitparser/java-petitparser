@@ -4,13 +4,13 @@ licenses(["notice"])  # MIT
 
 java_library(
     name = "main",
-    srcs = glob(["src/main/**/*.java"]),
+    srcs = glob(["src/main/java/org/**/*.java"]),
     deps = ["//petitparser-core:main"],
 )
 
 java_library(
     name = "test",
-    srcs = glob(["src/test/**/*.java"]),
+    srcs = glob(["src/test/java/org/**/*.java"]),
     deps = [
         ":main",
         "@maven//:junit_junit",

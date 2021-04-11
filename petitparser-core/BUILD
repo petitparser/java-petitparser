@@ -4,15 +4,12 @@ licenses(["notice"])  # MIT
 
 java_library(
     name = "main",
-    srcs = glob(["src/main/**/*.java"]),
-    deps = [
-        "@maven//:com_google_code_findbugs_jsr305",
-    ],
+    srcs = glob(["src/main/java/org/**/*.java"]),
 )
 
 java_library(
     name = "test",
-    srcs = glob(["src/test/**/*.java"]),
+    srcs = glob(["src/test/java/org/**/*.java"]),
     deps = [
         ":main",
         "@maven//:junit_junit",
