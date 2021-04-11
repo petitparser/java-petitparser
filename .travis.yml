@@ -1,5 +1,0 @@
-language: java
-jdk:
-  - oraclejdk12
-after_success:
-  - mvn clean test jacoco:report coveralls:report

@@ -140,55 +140,6 @@
           </execution>
         </executions>
       </plugin>
-      <!-- https://mvnrepository.com/artifact/org.eluder.coveralls/coveralls-maven-plugin/4.3.0 -->
-      <plugin>
-        <groupId>org.eluder.coveralls</groupId>
-        <artifactId>coveralls-maven-plugin</artifactId>
-        <version>4.3.0</version>
-        <configuration>
-          <repoToken>${env.COVERALLS_TOKEN}</repoToken>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.2.3</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-      <!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin/0.8.4 -->
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.4</version>
-        <executions>
-          <execution>
-            <id>default-prepare-agent</id>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>default-prepare-agent-integration</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <goal>prepare-agent-integration</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>default-report</id>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>default-report-integration</id>
-            <goals>
-              <goal>report-integration</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 
