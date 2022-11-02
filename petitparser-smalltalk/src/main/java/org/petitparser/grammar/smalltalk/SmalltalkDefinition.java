@@ -1,5 +1,9 @@
 package org.petitparser.grammar.smalltalk;
 
+import org.petitparser.parser.Parser;
+import org.petitparser.parser.primitive.EpsilonParser;
+import org.petitparser.tools.GrammarDefinition;
+
 import static org.petitparser.parser.primitive.CharacterParser.any;
 import static org.petitparser.parser.primitive.CharacterParser.digit;
 import static org.petitparser.parser.primitive.CharacterParser.of;
@@ -7,10 +11,6 @@ import static org.petitparser.parser.primitive.CharacterParser.pattern;
 import static org.petitparser.parser.primitive.CharacterParser.whitespace;
 import static org.petitparser.parser.primitive.CharacterParser.word;
 import static org.petitparser.parser.primitive.StringParser.of;
-
-import org.petitparser.parser.Parser;
-import org.petitparser.parser.primitive.EpsilonParser;
-import org.petitparser.tools.GrammarDefinition;
 
 /**
  * Smalltalk grammar definition.

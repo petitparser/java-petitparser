@@ -1,11 +1,11 @@
 package org.petitparser.context;
 
-import static org.petitparser.parser.primitive.CharacterParser.of;
-
 import org.petitparser.parser.Parser;
 
 import java.util.List;
 import java.util.Objects;
+
+import static org.petitparser.parser.primitive.CharacterParser.of;
 
 /**
  * A immutable token represents a parsed part of the input.

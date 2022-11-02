@@ -1,13 +1,13 @@
 package org.petitparser;
 
-import static org.petitparser.Assertions.assertFailure;
-import static org.petitparser.Assertions.assertSuccess;
-
 import org.junit.Test;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.primitive.EpsilonParser;
 import org.petitparser.parser.primitive.FailureParser;
 import org.petitparser.parser.primitive.StringParser;
+
+import static org.petitparser.Assertions.assertFailure;
+import static org.petitparser.Assertions.assertSuccess;
 
 /**
  * Tests {@link EpsilonParser}, {@link FailureParser} and {@link StringParser}.

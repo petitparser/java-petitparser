@@ -1,16 +1,16 @@
 package org.petitparser.tools;
 
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.petitparser.parser.primitive.CharacterParser.digit;
-import static org.petitparser.parser.primitive.CharacterParser.of;
-import static org.petitparser.parser.primitive.StringParser.of;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.petitparser.parser.Parser;
 
 import java.util.List;
+
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.petitparser.parser.primitive.CharacterParser.digit;
+import static org.petitparser.parser.primitive.CharacterParser.of;
+import static org.petitparser.parser.primitive.StringParser.of;
 
 /**
  * Tests {@link ExpressionBuilder}.

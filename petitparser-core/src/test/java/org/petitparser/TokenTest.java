@@ -1,10 +1,5 @@
 package org.petitparser;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.petitparser.parser.primitive.CharacterParser.any;
-
 import org.junit.Test;
 import org.petitparser.context.Token;
 import org.petitparser.parser.Parser;
@@ -12,6 +7,11 @@ import org.petitparser.parser.Parser;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.petitparser.parser.primitive.CharacterParser.any;
 
 /**
  * Tests {@link Token}.

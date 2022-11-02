@@ -1,13 +1,13 @@
 package org.petitparser.grammar.xml;
 
-import static org.junit.Assert.assertEquals;
-import static org.petitparser.grammar.xml.XmlCharacterParser.encodeXmlAttributeValue;
-import static org.petitparser.grammar.xml.XmlCharacterParser.encodeXmlText;
-
 import org.junit.Test;
 import org.petitparser.grammar.xml.ast.XmlDocument;
 import org.petitparser.grammar.xml.ast.XmlText;
 import org.petitparser.parser.Parser;
+
+import static org.junit.Assert.assertEquals;
+import static org.petitparser.grammar.xml.XmlCharacterParser.encodeXmlAttributeValue;
+import static org.petitparser.grammar.xml.XmlCharacterParser.encodeXmlText;
 
 /**
  * Tests entity encoding and decoding.

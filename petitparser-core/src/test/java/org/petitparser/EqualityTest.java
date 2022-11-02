@@ -1,12 +1,5 @@
 package org.petitparser;
 
-import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.petitparser.parser.primitive.CharacterParser.of;
-
 import org.junit.Test;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.DelegateParser;
@@ -18,6 +11,13 @@ import org.petitparser.parser.primitive.StringParser;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+
+import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.petitparser.parser.primitive.CharacterParser.of;
 
 /**
  * Tests {@link Parser#copy}, {@link Parser#equals(Object)}, and {@link

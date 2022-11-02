@@ -1,10 +1,5 @@
 package org.petitparser.grammar.json;
 
-import static org.petitparser.parser.primitive.CharacterParser.anyOf;
-import static org.petitparser.parser.primitive.CharacterParser.digit;
-import static org.petitparser.parser.primitive.CharacterParser.of;
-import static org.petitparser.parser.primitive.StringParser.of;
-
 import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.tools.GrammarDefinition;
 
@@ -13,6 +8,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
+import static org.petitparser.parser.primitive.CharacterParser.anyOf;
+import static org.petitparser.parser.primitive.CharacterParser.digit;
+import static org.petitparser.parser.primitive.CharacterParser.of;
+import static org.petitparser.parser.primitive.StringParser.of;
 
 /**
  * JSON grammar definition.

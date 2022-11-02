@@ -1,5 +1,13 @@
 package org.petitparser.tools;
 
+import org.junit.Test;
+import org.petitparser.parser.Parser;
+import org.petitparser.parser.primitive.EpsilonParser;
+
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.function.Function;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -8,14 +16,6 @@ import static org.petitparser.parser.primitive.CharacterParser.letter;
 import static org.petitparser.parser.primitive.CharacterParser.of;
 import static org.petitparser.parser.primitive.CharacterParser.pattern;
 import static org.petitparser.parser.primitive.CharacterParser.word;
-
-import org.junit.Test;
-import org.petitparser.parser.Parser;
-import org.petitparser.parser.primitive.EpsilonParser;
-
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.function.Function;
 
 /**
  * Tests {@link GrammarDefinition}.

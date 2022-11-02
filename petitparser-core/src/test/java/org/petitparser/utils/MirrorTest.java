@@ -1,14 +1,5 @@
 package org.petitparser.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.petitparser.parser.combinators.SettableParser.undefined;
-import static org.petitparser.parser.primitive.CharacterParser.lowerCase;
-import static org.petitparser.parser.primitive.CharacterParser.upperCase;
-
 import org.junit.Test;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.SettableParser;
@@ -20,6 +11,15 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.petitparser.parser.combinators.SettableParser.undefined;
+import static org.petitparser.parser.primitive.CharacterParser.lowerCase;
+import static org.petitparser.parser.primitive.CharacterParser.upperCase;
 
 /**
  * Tests {@link Mirror}.

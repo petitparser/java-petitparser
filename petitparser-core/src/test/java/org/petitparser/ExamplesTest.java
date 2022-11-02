@@ -1,5 +1,13 @@
 package org.petitparser;
 
+import org.junit.Test;
+import org.petitparser.parser.Parser;
+import org.petitparser.parser.combinators.SettableParser;
+import org.petitparser.tools.ExpressionBuilder;
+
+import java.util.List;
+import java.util.function.Function;
+
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
 import static org.petitparser.parser.primitive.CharacterParser.any;
@@ -9,14 +17,6 @@ import static org.petitparser.parser.primitive.CharacterParser.of;
 import static org.petitparser.parser.primitive.CharacterParser.whitespace;
 import static org.petitparser.parser.primitive.CharacterParser.word;
 import static org.petitparser.parser.primitive.StringParser.of;
-
-import org.junit.Test;
-import org.petitparser.parser.Parser;
-import org.petitparser.parser.combinators.SettableParser;
-import org.petitparser.tools.ExpressionBuilder;
-
-import java.util.List;
-import java.util.function.Function;
 
 /**
  * Tests some small but realistic parser examples.
