@@ -1,7 +1,5 @@
 package org.petitparser.parser;
 
-import static org.petitparser.parser.primitive.CharacterParser.any;
-
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.context.Token;
@@ -22,6 +20,7 @@ import org.petitparser.parser.repeating.GreedyRepeatingParser;
 import org.petitparser.parser.repeating.LazyRepeatingParser;
 import org.petitparser.parser.repeating.PossessiveRepeatingParser;
 import org.petitparser.parser.repeating.RepeatingParser;
+import org.petitparser.utils.FailureJoiner;
 import org.petitparser.utils.Functions;
 
 import java.util.ArrayList;
@@ -31,6 +30,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+
+import static org.petitparser.parser.primitive.CharacterParser.any;
 
 /**
  * An abstract parser that forms the root of all parsers in this package.
@@ -246,15 +247,25 @@ public abstract class Parser {
   }
 
   /**
-   * Returns a parser that accepts the receiver or {@code other}. The resulting
-   * parser returns the parse result of the receiver, if the receiver fails it
-   * returns the parse result of {@code other} (exclusive ordered choice).
+   * Returns a parser that accepts the receiver or {@code others}. The resulting
+   * parser returns the parse result of first succeeding parser (exclusive
+   * ordered choice). If all parsers fail, the last parse error is returned.
    */
   public ChoiceParser or(Parser... others) {
+    return or(new FailureJoiner.SelectLast(), others);
+  }
+
+  /**
+   * Returns a parser that accepts the receiver or {@code others}. The resulting
+   * parser returns the parse result of first succeeding parser (exclusive
+   * ordered choice). If all parers fail, the parse failure is created using
+   * the provided {@code failureJoiner}.
+   */
+  public ChoiceParser or(FailureJoiner failureJoiner, Parser... others) {
     Parser[] parsers = new Parser[1 + others.length];
     parsers[0] = this;
     System.arraycopy(others, 0, parsers, 1, others.length);
-    return new ChoiceParser(parsers);
+    return new ChoiceParser(failureJoiner, parsers);
   }
 
   /**

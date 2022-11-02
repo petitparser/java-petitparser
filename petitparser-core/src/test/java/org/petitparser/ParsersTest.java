@@ -1,14 +1,8 @@
 package org.petitparser;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.petitparser.Assertions.assertFailure;
-import static org.petitparser.Assertions.assertSuccess;
-import static org.petitparser.parser.primitive.CharacterParser.of;
-
 import org.junit.Test;
 import org.petitparser.context.Context;
+import org.petitparser.context.Failure;
 import org.petitparser.context.Result;
 import org.petitparser.context.Token;
 import org.petitparser.parser.Parser;
@@ -17,11 +11,20 @@ import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.parser.primitive.StringParser;
 import org.petitparser.parser.repeating.RepeatingParser;
+import org.petitparser.utils.FailureJoiner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.petitparser.Assertions.assertFailure;
+import static org.petitparser.Assertions.assertSuccess;
+import static org.petitparser.parser.primitive.CharacterParser.anyOf;
+import static org.petitparser.parser.primitive.CharacterParser.of;
 
 /**
  * Tests {@link Parser} factory methods.
@@ -58,6 +61,118 @@ public class ParsersTest {
     assertSuccess(parser, "c", 'c');
     assertFailure(parser, "d");
     assertFailure(parser, "");
+  }
+
+  private static final Failure failureA0 = new Failure("A0", 0, "A0");
+  private static final Failure failureA1 = new Failure("A1", 1, "A1");
+  private static final Failure failureB0 = new Failure("B0", 0, "B0");
+  private static final Failure failureB1 = new Failure("B1", 1, "B1");
+  private static final Parser[] choiceParsers = new Parser[]{
+      anyOf("ab").plus().seq(anyOf("12").plus()).flatten(),
+      anyOf("ac").plus().seq(anyOf("13").plus()).flatten(),
+      anyOf("ad").plus().seq(anyOf("14").plus()).flatten(),
+  };
+
+  @Test
+  public void testChoice_FailureJoiner_SelectFirst() {
+    FailureJoiner failureJoiner = new FailureJoiner.SelectFirst();
+    assertEquals(failureJoiner.apply(failureA0, failureB0), failureA0);
+    assertEquals(failureJoiner.apply(failureB0, failureA0), failureB0);
+    Parser choiceParser = new ChoiceParser(failureJoiner, choiceParsers);
+    assertSuccess(choiceParser, "ab12", "ab12");
+    assertSuccess(choiceParser, "ac13", "ac13");
+    assertSuccess(choiceParser, "ad14", "ad14");
+    assertFailure(choiceParser, "", "any of 'ab' expected");
+    assertFailure(choiceParser, "a", 1, "any of '12' expected");
+    assertFailure(choiceParser, "ab", 2, "any of '12' expected");
+    assertFailure(choiceParser, "ac", 1, "any of '12' expected");
+    assertFailure(choiceParser, "ad", 1, "any of '12' expected");
+  }
+
+  @Test
+  public void testChoice_FailureJoiner_SelectLast() {
+    FailureJoiner failureJoiner = new FailureJoiner.SelectLast();
+    assertEquals(failureJoiner.apply(failureA0, failureB0), failureB0);
+    assertEquals(failureJoiner.apply(failureB0, failureA0), failureA0);
+    Parser choiceParser = new ChoiceParser(failureJoiner, choiceParsers);
+    assertSuccess(choiceParser, "ab12", "ab12");
+    assertSuccess(choiceParser, "ac13", "ac13");
+    assertSuccess(choiceParser, "ad14", "ad14");
+    assertFailure(choiceParser, "", "any of 'ad' expected");
+    assertFailure(choiceParser, "a", 1, "any of '14' expected");
+    assertFailure(choiceParser, "ab", 1, "any of '14' expected");
+    assertFailure(choiceParser, "ac", 1, "any of '14' expected");
+    assertFailure(choiceParser, "ad", 2, "any of '14' expected");
+  }
+
+  @Test
+  public void testChoice_FailureJoiner_SelectFarthest() {
+    FailureJoiner failureJoiner = new FailureJoiner.SelectFarthest();
+    assertEquals(failureJoiner.apply(failureA0, failureB0), failureB0);
+    assertEquals(failureJoiner.apply(failureA0, failureB1), failureB1);
+    assertEquals(failureJoiner.apply(failureB0, failureA0), failureA0);
+    assertEquals(failureJoiner.apply(failureB1, failureA0), failureB1);
+    Parser choiceParser = new ChoiceParser(failureJoiner, choiceParsers);
+    assertSuccess(choiceParser, "ab12", "ab12");
+    assertSuccess(choiceParser, "ac13", "ac13");
+    assertSuccess(choiceParser, "ad14", "ad14");
+    assertFailure(choiceParser, "", "any of 'ad' expected");
+    assertFailure(choiceParser, "a", 1, "any of '14' expected");
+    assertFailure(choiceParser, "ab", 2, "any of '12' expected");
+    assertFailure(choiceParser, "ac", 2, "any of '13' expected");
+    assertFailure(choiceParser, "ad", 2, "any of '14' expected");
+  }
+
+  @Test
+  public void testChoice_FailureJoiner_SelectFarthestJoined() {
+    FailureJoiner failureJoiner = new FailureJoiner.SelectFarthestJoined();
+    assertEquals(failureJoiner.apply(failureA0, failureB1), failureB1);
+    assertEquals(failureJoiner.apply(failureB1, failureA0), failureB1);
+    assertEquals(failureJoiner.apply(failureA0, failureB0).getMessage(), "A0 " +
+        "OR B0");
+    assertEquals(failureJoiner.apply(failureB0, failureA0).getMessage(), "B0 " +
+        "OR A0");
+    assertEquals(failureJoiner.apply(failureA1, failureB1).getMessage(), "A1 " +
+        "OR B1");
+    assertEquals(failureJoiner.apply(failureB1, failureA1).getMessage(), "B1 " +
+        "OR A1");
+    Parser choiceParser = new ChoiceParser(failureJoiner, choiceParsers);
+    assertSuccess(choiceParser, "ab12", "ab12");
+    assertSuccess(choiceParser, "ac13", "ac13");
+    assertSuccess(choiceParser, "ad14", "ad14");
+    assertFailure(choiceParser, "", "any of 'ab' expected OR any of 'ac' " +
+        "expected OR any of 'ad' expected");
+    assertFailure(choiceParser, "a", 1, "any of '12' expected OR any of '13' " +
+        "expected OR any of '14' expected");
+    assertFailure(choiceParser, "ab", 2, "any of '12' expected");
+    assertFailure(choiceParser, "ac", 2, "any of '13' expected");
+    assertFailure(choiceParser, "ad", 2, "any of '14' expected");
+  }
+
+  @Test
+  public void testChoice_FailureJoiner_SelectFarthestJoined_CustomMessage() {
+    FailureJoiner failureJoiner = new FailureJoiner.SelectFarthestJoined("; ");
+    assertEquals(failureJoiner.apply(failureA0, failureB1), failureB1);
+    assertEquals(failureJoiner.apply(failureB1, failureA0), failureB1);
+    assertEquals(failureJoiner.apply(failureA0, failureB0).getMessage(), "A0;" +
+        " B0");
+    assertEquals(failureJoiner.apply(failureB0, failureA0).getMessage(), "B0;" +
+        " A0");
+    assertEquals(failureJoiner.apply(failureA1, failureB1).getMessage(), "A1;" +
+        " B1");
+    assertEquals(failureJoiner.apply(failureB1, failureA1).getMessage(), "B1;" +
+        " A1");
+    Parser choiceParser = new ChoiceParser(failureJoiner, choiceParsers);
+    assertSuccess(choiceParser, "ab12", "ab12");
+    assertSuccess(choiceParser, "ac13", "ac13");
+    assertSuccess(choiceParser, "ad14", "ad14");
+    assertFailure(choiceParser, "", "any of 'ab' expected; any of 'ac' " +
+        "expected; any of 'ad' expected");
+    assertFailure(choiceParser, "a", 1, "any of '12' expected; any of '13' " +
+        "expected; any of '14' expected");
+    assertFailure(choiceParser, "ab", 2, "any of '12' expected");
+    assertFailure(choiceParser, "ac", 2, "any of '13' expected");
+    assertFailure(choiceParser, "ad", 2, "any of '14' expected");
   }
 
   @Test
