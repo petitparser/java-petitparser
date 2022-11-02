@@ -45,7 +45,8 @@ public class CharacterParser extends Parser {
    * Returns a parser that accepts any of the provided characters.
    */
   public static CharacterParser anyOf(String characters) {
-    return anyOf(characters, "any of '" + toReadableString(characters) + "' expected");
+    return anyOf(characters, "any of '" + toReadableString(characters) + "' " +
+        "expected");
   }
 
   public static CharacterParser anyOf(String chars, String message) {
@@ -67,7 +68,8 @@ public class CharacterParser extends Parser {
    * Returns a parser that accepts none of the provided characters.
    */
   public static CharacterParser noneOf(String characters) {
-    return noneOf(characters, "none of '" + toReadableString(characters) + "' expected");
+    return noneOf(characters, "none of '" + toReadableString(characters) + "'" +
+        " expected");
   }
 
   public static CharacterParser noneOf(String chars, String message) {
@@ -111,7 +113,8 @@ public class CharacterParser extends Parser {
    * Returns a parser that accepts a specific character pattern.
    *
    * <p>Characters match themselves. A dash {@code -} between two characters
-   * matches the range of those characters. A caret {@code ^} at the beginning negates the pattern.
+   * matches the range of those characters. A caret {@code ^} at the
+   * beginning negates the pattern.
    */
   public static CharacterParser pattern(String pattern) {
     return pattern(pattern, "[" + toReadableString(pattern) + "] expected");

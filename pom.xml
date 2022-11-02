@@ -2,201 +2,206 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <properties>
-    <maven.compiler.release>11</maven.compiler.release>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.sourceEncoding>UTF-8</project.reporting.sourceEncoding>
-  </properties>
+    <properties>
+        <maven.compiler.release>11</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.sourceEncoding>UTF-8
+        </project.reporting.sourceEncoding>
+    </properties>
 
-  <groupId>com.github.petitparser</groupId>
-  <artifactId>petitparser</artifactId>
-  <version>2.3.1</version>
-  <packaging>pom</packaging>
+    <groupId>com.github.petitparser</groupId>
+    <artifactId>petitparser</artifactId>
+    <version>2.3.1</version>
+    <packaging>pom</packaging>
 
-  <name>PetitParser</name>
-  <description>Dynamic Grammars in Java</description>
-  <url>http://github.com/petitparser/java-petitparser</url>
-
-  <licenses>
-    <license>
-      <name>MIT License</name>
-      <url>http://www.opensource.org/licenses/mit-license.php</url>
-    </license>
-  </licenses>
-
-  <developers>
-    <developer>
-      <name>Lukas Renggli</name>
-      <email>renggli@gmail.com</email>
-      <url>http://lukas-renggli.ch/</url>
-    </developer>
-  </developers>
-
-  <organization>
     <name>PetitParser</name>
-    <url>http://github.com/petitparser/</url>
-  </organization>
+    <description>Dynamic Grammars in Java</description>
+    <url>http://github.com/petitparser/java-petitparser</url>
 
-  <scm>
-    <connection>scm:git:git@github.com:petitparser/java-petitparser.git
-    </connection>
-    <developerConnection>
-      scm:git:git@github.com:petitparser/java-petitparser.git
-    </developerConnection>
-    <url>https://github.com/petitparser/java-petitparser/</url>
-    <tag>HEAD</tag>
-  </scm>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
 
-  <issueManagement>
-    <system>GitHub</system>
-    <url>https://github.com/petitparser/java-petitparser/issues</url>
-  </issueManagement>
+    <developers>
+        <developer>
+            <name>Lukas Renggli</name>
+            <email>renggli@gmail.com</email>
+            <url>http://lukas-renggli.ch/</url>
+        </developer>
+    </developers>
 
-  <ciManagement>
-    <system>Travis</system>
-    <url>https://travis-ci.org/petitparser/java-petitparser</url>
-  </ciManagement>
+    <organization>
+        <name>PetitParser</name>
+        <url>http://github.com/petitparser/</url>
+    </organization>
 
-  <modules>
-    <module>petitparser-core</module>
-    <module>petitparser-json</module>
-    <module>petitparser-smalltalk</module>
-    <module>petitparser-xml</module>
-  </modules>
+    <scm>
+        <connection>scm:git:git@github.com:petitparser/java-petitparser.git
+        </connection>
+        <developerConnection>
+            scm:git:git@github.com:petitparser/java-petitparser.git
+        </developerConnection>
+        <url>https://github.com/petitparser/java-petitparser/</url>
+        <tag>HEAD</tag>
+    </scm>
 
-  <dependencies>
-    <!-- https://mvnrepository.com/artifact/junit/junit -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.hamcrest/java-hamcrest -->
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>java-hamcrest</artifactId>
-      <version>2.0.0.0</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/petitparser/java-petitparser/issues</url>
+    </issueManagement>
 
-  <build>
-    <pluginManagement>
-      <plugins>
-        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin/3.8.1 -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.10.1</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-    <plugins>
-      <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin/3.8.1 -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.10.1</version>
-      </plugin>
-      <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-source-plugin/3.1.0 -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.2.1</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-javadoc-plugin/3.1.1 -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.4.0</version>
-        <configuration>
-          <additionalOptions>-Xdoclint:none</additionalOptions>
-          <additionalJOption>-Xdoclint:none</additionalJOption>
-          <additionalOptions>-html5</additionalOptions>
-        </configuration>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+    <ciManagement>
+        <system>Travis</system>
+        <url>https://travis-ci.org/petitparser/java-petitparser</url>
+    </ciManagement>
 
-  <!-- Instructions: https://central.sonatype.org/pages/ossrh-guide.html -->
-  <!-- 1. Create PGP key -->
-  <!--    $ gpg -gen-key -->
-  <!--    $ gpg -list-keys -->
-  <!--    $ gpg -keyserver hkp://keyserver.ubuntu.com -send-keys XXX -->
-  <!--    * Verify upload at http://keyserver.ubuntu.com -->
-  <!-- 2. Configure ~/.m2/settings.xml -->
-  <!--    $ Add sonatype password -->
-  <!--    $ Add gpg.keyname XXX -->
-  <!-- 3. Deploy to Sonatype: -->
-  <!--    $ export GPG_TTY=$(tty) -->
-  <!--    $ mvn -Poss -DskipTests deploy -X -->
-  <!-- Congrats, the nightmare is over. -->
-  <profiles>
-    <profile>
-      <id>oss</id>
-      <build>
+    <modules>
+        <module>petitparser-core</module>
+        <module>petitparser-json</module>
+        <module>petitparser-smalltalk</module>
+        <module>petitparser-xml</module>
+    </modules>
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hamcrest/java-hamcrest -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>java-hamcrest</artifactId>
+            <version>2.0.0.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin/3.8.1 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.10.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.0.1</version>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin/3.8.1 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+            </plugin>
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-source-plugin/3.1.0 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-javadoc-plugin/3.1.1 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.4.0</version>
                 <configuration>
-                  <executable>gpg</executable>
-                  <useAgent>true</useAgent>
-                  <keyname>${gpg.keyname}</keyname>
+                    <additionalOptions>-Xdoclint:none</additionalOptions>
+                    <additionalJOption>-Xdoclint:none</additionalJOption>
+                    <additionalOptions>-html5</additionalOptions>
                 </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>1.6.13</version>
-            <extensions>true</extensions>
-            <configuration>
-              <serverId>ossrh</serverId>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <autoReleaseAfterClose>true</autoReleaseAfterClose>
-            </configuration>
-          </plugin>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-      </build>
-      <distributionManagement>
-        <snapshotRepository>
-          <id>ossrh</id>
-          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-          <id>ossrh</id>
-          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-      </distributionManagement>
-    </profile>
-  </profiles>
+    </build>
+
+    <!-- Instructions: https://central.sonatype.org/pages/ossrh-guide.html -->
+    <!-- 1. Create PGP key -->
+    <!--    $ gpg -gen-key -->
+    <!--    $ gpg -list-keys -->
+    <!--    $ gpg -keyserver hkp://keyserver.ubuntu.com -send-keys XXX -->
+    <!--    * Verify upload at http://keyserver.ubuntu.com -->
+    <!-- 2. Configure ~/.m2/settings.xml -->
+    <!--    $ Add sonatype password -->
+    <!--    $ Add gpg.keyname XXX -->
+    <!-- 3. Deploy to Sonatype: -->
+    <!--    $ export GPG_TTY=$(tty) -->
+    <!--    $ mvn -Poss -DskipTests deploy -X -->
+    <!-- Congrats, the nightmare is over. -->
+    <profiles>
+        <profile>
+            <id>oss</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>gpg</executable>
+                                    <useAgent>true</useAgent>
+                                    <keyname>${gpg.keyname}</keyname>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.13</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>
+                        https://oss.sonatype.org/content/repositories/snapshots
+                    </url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>
+                        https://oss.sonatype.org/service/local/staging/deploy/maven2/
+                    </url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 </project>

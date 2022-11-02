@@ -87,17 +87,17 @@ public class CharacterPredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testRangesInvalidSize() {
-    CharacterPredicate.ranges(new char[] {}, new char[] {'a'});
+    CharacterPredicate.ranges(new char[]{}, new char[]{'a'});
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testRangesInvalidOrder() {
-    CharacterPredicate.ranges(new char[] {'b'}, new char[] {'a'});
+    CharacterPredicate.ranges(new char[]{'b'}, new char[]{'a'});
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testRangesInvalidSequence() {
-    CharacterPredicate.ranges(new char[] {'a', 'c'}, new char[] {'c', 'f'});
+    CharacterPredicate.ranges(new char[]{'a', 'c'}, new char[]{'c', 'f'});
   }
 
   @Test

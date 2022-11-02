@@ -25,7 +25,9 @@ public class GrammarDefinitionTest {
   class ListGrammarDefinition extends GrammarDefinition {
     ListGrammarDefinition() {
       def("start", ref("list").end());
-      def("list", ref("element").seq(of(',').flatten()).seq(ref("list")).or(ref("element")));
+      def("list",
+          ref("element").seq(of(',').flatten()).seq(ref("list")).or(ref(
+              "element")));
       def("element", digit().plus().flatten());
     }
   }
@@ -75,10 +77,12 @@ public class GrammarDefinitionTest {
       def("start", ref("terms").end());
 
       def("terms", ref("addition").or(ref("factors")));
-      def("addition", ref("factors").separatedBy(pattern("+-").flatten().trim()));
+      def("addition",
+          ref("factors").separatedBy(pattern("+-").flatten().trim()));
 
       def("factors", ref("multiplication").or(ref("power")));
-      def("multiplication", ref("power").separatedBy(pattern("*/").flatten().trim()));
+      def("multiplication",
+          ref("power").separatedBy(pattern("*/").flatten().trim()));
 
       def("power", ref("primary").separatedBy(of('^').flatten().trim()));
       def("primary", ref("number").or(ref("parentheses")));

@@ -2,24 +2,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>com.github.petitparser</groupId>
-    <artifactId>petitparser</artifactId>
-    <version>2.3.1</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
+    <parent>
+        <groupId>com.github.petitparser</groupId>
+        <artifactId>petitparser</artifactId>
+        <version>2.3.1</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-  <artifactId>petitparser-smalltalk</artifactId>
-  <name>PetitParser Smalltalk</name>
-  <description>Smalltalk grammar</description>
+    <artifactId>petitparser-smalltalk</artifactId>
+    <name>PetitParser Smalltalk</name>
+    <description>Smalltalk grammar</description>
 
-  <dependencies>
-    <dependency>
-      <groupId>com.github.petitparser</groupId>
-      <artifactId>petitparser-core</artifactId>
-      <version>2.3.1</version>
-    </dependency>
-  </dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>com.github.petitparser</groupId>
+            <artifactId>petitparser-core</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+    </dependencies>
 </project>

@@ -19,10 +19,13 @@ import static org.petitparser.parser.primitive.StringParser.of;
 public class XmlDefinition<TName, TNode, TAttribute> extends GrammarDefinition {
 
   // basic char sets
-  protected static final String NAME_START_CHARS = ":A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6"
-      + "\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF"
+  protected static final String NAME_START_CHARS = ":A-Z_a-z\u00C0-\u00D6" +
+      "\u00D8-\u00F6"
+      + "\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F" +
+      "\u2C00-\u2FEF"
       + "\u3001\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD";
-  protected static final String NAME_CHARS = "-.0-9\u00B7\u0300-\u036F\u203F-\u2040"
+  protected static final String NAME_CHARS = "-.0-9\u00B7\u0300-\u036F\u203F" +
+      "-\u2040"
       + NAME_START_CHARS;
 
   // basic tokens
@@ -54,7 +57,8 @@ public class XmlDefinition<TName, TNode, TAttribute> extends GrammarDefinition {
         .seq(of(EQUALS))
         .seq(ref("space optional"))
         .seq(ref("attributeValue"))
-        .map((List<?> list) -> callback.createAttribute((TName) list.get(0), (String) list.get(4))));
+        .map((List<?> list) -> callback.createAttribute((TName) list.get(0),
+            (String) list.get(4))));
     def("attributeValue", ref("attributeValueDouble")
         .or(ref("attributeValueSingle"))
         .pick(1));
@@ -120,12 +124,14 @@ public class XmlDefinition<TName, TNode, TAttribute> extends GrammarDefinition {
             .seq(ref("space optional"))
             .seq(of(CLOSE_ELEMENT)))).map((List<?> list) -> {
           if (Objects.equals(list.get(4), CLOSE_END_ELEMENT)) {
-            return callback.createElement((TName) list.get(1), (List<TAttribute>) list.get(2),
+            return callback.createElement((TName) list.get(1),
+                (List<TAttribute>) list.get(2),
                 Collections.emptyList());
           } else {
             List<?> end = (List<?>) list.get(4);
             if (Objects.equals(list.get(1), end.get(3))) {
-              return callback.createElement((TName) list.get(1), (List<TAttribute>) list.get(2),
+              return callback.createElement((TName) list.get(1),
+                  (List<TAttribute>) list.get(2),
                   (List<TNode>) end.get(1));
             } else {
               throw new IllegalStateException(
@@ -141,11 +147,13 @@ public class XmlDefinition<TName, TNode, TAttribute> extends GrammarDefinition {
                 .flatten("Expected processing instruction content"))
             .pick(1).optional(""))
         .seq(of(CLOSE_PROCESSING))
-        .map((List<String> list) -> callback.createProcessing(list.get(1), list.get(2))));
+        .map((List<String> list) -> callback.createProcessing(list.get(1),
+            list.get(2))));
     def("qualified", ref("nameToken")
         .map(callback::createQualified));
 
-    def("characterData", new XmlCharacterParser(OPEN_ELEMENT, 1).map(callback::createText));
+    def("characterData",
+        new XmlCharacterParser(OPEN_ELEMENT, 1).map(callback::createText));
     def("misc", ref("space")
         .or(ref("comment"))
         .or(ref("processing"))

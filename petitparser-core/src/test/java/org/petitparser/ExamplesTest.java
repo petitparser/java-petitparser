@@ -46,7 +46,7 @@ public class ExamplesTest {
       .flatten();
 
   public static final Parser DOUBLE = digit().plus().seq(of('.')
-      .seq(digit().plus()).optional())
+          .seq(digit().plus()).optional())
       .flatten().trim().map(Double::parseDouble);
 
   @Test
@@ -226,15 +226,20 @@ public class ExamplesTest {
 
     // power is right-associative
     builder.group()
-        .right(of('^').trim(), (List<Double> values) -> Math.pow(values.get(0), values.get(2)));
+        .right(of('^').trim(),
+            (List<Double> values) -> Math.pow(values.get(0), values.get(2)));
 
     // multiplication and addition are left-associative
     builder.group()
-        .left(of('*').trim(), (List<Double> values) -> values.get(0) * values.get(2))
-        .left(of('/').trim(), (List<Double> values) -> values.get(0) / values.get(2));
+        .left(of('*').trim(),
+            (List<Double> values) -> values.get(0) * values.get(2))
+        .left(of('/').trim(),
+            (List<Double> values) -> values.get(0) / values.get(2));
     builder.group()
-        .left(of('+').trim(), (List<Double> values) -> values.get(0) + values.get(2))
-        .left(of('-').trim(), (List<Double> values) -> values.get(0) - values.get(2));
+        .left(of('+').trim(),
+            (List<Double> values) -> values.get(0) + values.get(2))
+        .left(of('-').trim(),
+            (List<Double> values) -> values.get(0) - values.get(2));
   }
 
   private void assertCalculatorExample(Parser parser) {

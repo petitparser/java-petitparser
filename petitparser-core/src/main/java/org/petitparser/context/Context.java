@@ -18,7 +18,7 @@ public class Context {
   /**
    * Constructs an immutable parse context.
    *
-   * @param buffer the buffer this context is using
+   * @param buffer   the buffer this context is using
    * @param position the position this context is pointing at
    */
   public Context(String buffer, int position) {
@@ -52,7 +52,7 @@ public class Context {
   /**
    * Returns a successful parse result.
    *
-   * @param value the value of the parse result
+   * @param value    the value of the parse result
    * @param position the position of the parse result
    */
   public Success success(Object value, int position) {
@@ -71,7 +71,7 @@ public class Context {
   /**
    * Returns a successful parse result.
    *
-   * @param message the error message of the parse result
+   * @param message  the error message of the parse result
    * @param position the position of the parse result
    */
   public Failure failure(String message, int position) {

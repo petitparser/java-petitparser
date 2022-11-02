@@ -8,19 +8,31 @@ PetitParser for Java
 [![GitHub Stars](https://img.shields.io/github/stars/petitparser/java-petitparser.svg)](https://github.com/petitparser/java-petitparser/stargazers)
 [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/petitparser/java-petitparser/master/LICENSE)
 
-Grammars for programming languages are traditionally specified statically. They are hard to compose and reuse due to ambiguities that inevitably arise. PetitParser combines ideas from [scannnerless parsing](https://en.wikipedia.org/wiki/Scannerless_parsing), [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator), [parsing expression grammars](https://en.wikipedia.org/wiki/Parsing_expression_grammar) (PEG) and packrat parsers to model grammars and parsers as objects that can be reconfigured dynamically.
+Grammars for programming languages are traditionally specified statically. They
+are hard to compose and reuse due to ambiguities that inevitably arise.
+PetitParser combines ideas
+from [scannnerless parsing](https://en.wikipedia.org/wiki/Scannerless_parsing)
+, [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator)
+, [parsing expression grammars](https://en.wikipedia.org/wiki/Parsing_expression_grammar) (
+PEG) and packrat parsers to model grammars and parsers as objects that can be
+reconfigured dynamically.
 
-This library is open source, stable and well tested. Development happens on [GitHub](https://github.com/petitparser/java-petitparser). Feel free to report issues or create a pull-request there. General questions are best asked on [StackOverflow](http://stackoverflow.com/questions/tagged/petitparser+java).
+This library is open source, stable and well tested. Development happens
+on [GitHub](https://github.com/petitparser/java-petitparser). Feel free to
+report issues or create a pull-request there. General questions are best asked
+on [StackOverflow](http://stackoverflow.com/questions/tagged/petitparser+java).
 
 
 Installation
 ------------
 
-To include the latest release in your Java project follow the instructions below.
+To include the latest release in your Java project follow the instructions
+below.
 
 ### Maven Central
 
-To depend on the core library, add the following dependency to your `pom.xml` file:
+To depend on the core library, add the following dependency to your `pom.xml`
+file:
 
 ```xml
 <dependency>
@@ -40,7 +52,9 @@ To also include the example grammars, use the following dependency:
 </dependency>
 ```
 
-Instructions for alternative build systems you can find on [Maven Central](https://search.maven.org/artifact/com.github.petitparser/petitparser-core).
+Instructions for alternative build systems you can find
+on [Maven Central](https://search.maven.org/artifact/com.github.petitparser/petitparser-core)
+.
 
 ### Maven JitPack
 
@@ -73,7 +87,8 @@ To also include the example grammars, use the following dependency:
 </dependency>
 ```
 
-Instructions for alternative build systems such as Gradle, SBT, or Leiningen you can find on [JitPack](https://jitpack.io/#petitparser/java-petitparser).
+Instructions for alternative build systems such as Gradle, SBT, or Leiningen you
+can find on [JitPack](https://jitpack.io/#petitparser/java-petitparser).
 
 ### Bazel
 
@@ -92,13 +107,14 @@ bazel build ...:all
 bazel test ...:all
 ```
 
-
 Tutorial
 --------
 
 ### Writing a Simple Grammar
 
-Writing grammars with PetitParser is simple as writing Java code. For example, to write a grammar that can parse identifiers that start with a letter followed by zero or more letter or digits is defined as follows:
+Writing grammars with PetitParser is simple as writing Java code. For example,
+to write a grammar that can parse identifiers that start with a letter followed
+by zero or more letter or digits is defined as follows:
 
 ```java
 import static org.petitparser.parser.primitive.CharacterParser.*;
@@ -111,14 +127,16 @@ class Example {
 }
 ```
 
-If you look at the object `id` in the debugger, you'll notice that the code above builds a tree of parser objects:
+If you look at the object `id` in the debugger, you'll notice that the code
+above builds a tree of parser objects:
 
 - `SequenceParser`: This parser accepts a sequence of parsers.
-  - `CharacterParser`: This parser accepts a single letter.
-  - `PossessiveRepeatingParser`: This parser accepts zero or more times another parser.
-    - `ChoiceParser`: This parser accepts a single word character.
-      - `CharacterParser`: This parser accepts a single letter.
-      - `CharacterParser`: This parser accepts a single digit.
+    - `CharacterParser`: This parser accepts a single letter.
+    - `PossessiveRepeatingParser`: This parser accepts zero or more times
+      another parser.
+        - `ChoiceParser`: This parser accepts a single word character.
+            - `CharacterParser`: This parser accepts a single letter.
+            - `CharacterParser`: This parser accepts a single digit.
 
 ### Parsing Some Input
 
@@ -129,16 +147,22 @@ Result id1 = id.parse("yeah");
 Result id2 = id.parse("f12");
 ```
 
-The method `String` returns `Result`, which is either an instance of `Success` or `Failure`. In both examples above we are successful and can retrieve the parse result using `Success#get()`:
+The method `String` returns `Result`, which is either an instance of `Success`
+or `Failure`. In both examples above we are successful and can retrieve the
+parse result using `Success#get()`:
 
 ```java
 System.out.println(id1.get());  // ['y', ['e', 'a', 'h']]
 System.out.println(id2.get());  // ['f', ['1', '2']]
 ```
 
-While it seems odd to get these nested arrays with characters as a return value, this is the default decomposition of the input into a parse tree. We'll see in a while how that can be customized.
+While it seems odd to get these nested arrays with characters as a return value,
+this is the default decomposition of the input into a parse tree. We'll see in a
+while how that can be customized.
 
-If we try to parse something invalid we get an instance of `Failure` as an answer and we can retrieve a descriptive error message using `Failure#getMessage()`:
+If we try to parse something invalid we get an instance of `Failure` as an
+answer and we can retrieve a descriptive error message
+using `Failure#getMessage()`:
 
 ```java
 Result id3 = id.parse('123');
@@ -146,9 +170,12 @@ System.out.println(id3.getMessage());  // "letter expected"
 System.out.println(id3.getPosition());  // 0
 ```
 
-Trying to retrieve the parse result by calling `Failure#get()` would throw the exception `ParseError`. `Result#isSuccess()` and `Result#isFailure()` can be used to decide if the parse was successful.
+Trying to retrieve the parse result by calling `Failure#get()` would throw the
+exception `ParseError`. `Result#isSuccess()` and `Result#isFailure()` can be
+used to decide if the parse was successful.
 
-If you are only interested if a given string matches or not you can use the helper method `Parser#accept(String)`:
+If you are only interested if a given string matches or not you can use the
+helper method `Parser#accept(String)`:
 
 ```java
 System.out.println(id.accept("foo"));  // true
@@ -157,7 +184,9 @@ System.out.println(id.accept("123"));  // false
 
 ### Different Kinds of Parsers
 
-PetitParser provide a large set of ready-made parser that you can compose to consume and transform arbitrarily complex languages. The terminal parsers are the most simple ones. We've already seen a few of those:
+PetitParser provide a large set of ready-made parser that you can compose to
+consume and transform arbitrarily complex languages. The terminal parsers are
+the most simple ones. We've already seen a few of those:
 
 - `CharacterParser.of('a')` parses the character _a_.
 - `StringParser.of("abc")` parses the string _abc_.
@@ -168,7 +197,8 @@ PetitParser provide a large set of ready-made parser that you can compose to con
 
 Many other parsers are available in `CharacterParser` and `StringParser`.
 
-So instead of using the letter and digit predicate, we could have written our identifier parser like this:
+So instead of using the letter and digit predicate, we could have written our
+identifier parser like this:
 
 ```java
 Parser id = letter().seq(word().star());
@@ -185,7 +215,8 @@ The next set of parsers are used to combine other parsers together:
 - `p.not()` parses `p` and succeed when p fails, but does not consume its input.
 - `p.end()` parses `p` and succeed at the end of the input.
 
-To attach an action or transformation to a parser we can use the following methods:
+To attach an action or transformation to a parser we can use the following
+methods:
 
 - `p.map(value -> ...)` performs the transformation given the function.
 - `p.pick(n)` returns the `n`-th element of the list `p` returns.
@@ -199,24 +230,32 @@ To return a string of the parsed identifier, we can modify our parser like this:
 Parser id = letter().seq(word().star()).flatten();
 ```
 
-To conveniently find all matches in a given input string you can use `Parser#matchesSkipping(String)`:
+To conveniently find all matches in a given input string you can
+use `Parser#matchesSkipping(String)`:
 
 ```java
-List<Object> matches = id.matchesSkipping("foo 123 bar4");
-System.out.println(matches);  // ["foo", "bar4"]
+List<Object> matches=id.matchesSkipping("foo 123 bar4");
+    System.out.println(matches);  // ["foo", "bar4"]
 ```
 
-These are the basic elements to build parsers. There are a few more well documented and tested factory methods in the `Parser` class. If you want, browse their documentation and tests.
+These are the basic elements to build parsers. There are a few more well
+documented and tested factory methods in the `Parser` class. If you want, browse
+their documentation and tests.
 
 ### Writing a More Complicated Grammar
 
-Now we are able to write a more complicated grammar for evaluating simple arithmetic expressions. Within a file we start with the grammar for a number (actually an integer):
+Now we are able to write a more complicated grammar for evaluating simple
+arithmetic expressions. Within a file we start with the grammar for a number (
+actually an integer):
 
 ```java
 Parser number = digit().plus().flatten().trim().map((String value) -> Integer.parseInt(value));
 ```
 
-Then we define the productions for addition and multiplication in order of precedence. Note that we instantiate the productions with undefined parsers upfront, because they recursively refer to each other. Later on we can resolve this recursion by setting their reference:
+Then we define the productions for addition and multiplication in order of
+precedence. Note that we instantiate the productions with undefined parsers
+upfront, because they recursively refer to each other. Later on we can resolve
+this recursion by setting their reference:
 
 ```java
 SettableParser term = SettableParser.undefined();
@@ -234,7 +273,8 @@ prim.set((of('(').trim().seq(term).seq(of(')').trim())).map((List<Integer> value
 }).or(number));
 ```
 
-To make sure that our parser consumes all input we wrap it with the `end()` parser into the start production:
+To make sure that our parser consumes all input we wrap it with the `end()`
+parser into the start production:
 
 ```java
 Parser start = term.end();
@@ -247,12 +287,17 @@ System.out.println(start.parse("1 + 2 * 3").get());  // 7
 System.out.println(start.parse("(1 + 2) * 3").get());  // 9
 ```
 
-As an exercise we could extend the parser to also accept negative numbers and floating point numbers, not only integers. Furthermore it would be useful to support subtraction and division as well. All these features
+As an exercise we could extend the parser to also accept negative numbers and
+floating point numbers, not only integers. Furthermore it would be useful to
+support subtraction and division as well. All these features
 can be added with a few lines of PetitParser code.
 
 ### Using the Expression Builder
 
-Writing such expression parsers is pretty common and can be quite tricky to get right. To simplify things, PetitParser comes with a builder that can help you to define such grammars easily. It supports the definition of operator precedence; and prefix, postfix, left- and right-associative operators.
+Writing such expression parsers is pretty common and can be quite tricky to get
+right. To simplify things, PetitParser comes with a builder that can help you to
+define such grammars easily. It supports the definition of operator precedence;
+and prefix, postfix, left- and right-associative operators.
 
 The following code creates the empty expression builder:
 
@@ -260,7 +305,10 @@ The following code creates the empty expression builder:
 ExpressionBuilder builder = new ExpressionBuilder();
 ```
 
-Then we define the operator-groups in descending precedence. The highest precedence are the literal numbers themselves. This time we accept floating point numbers, not just integers. In the same group we add support for parenthesis:
+Then we define the operator-groups in descending precedence. The highest
+precedence are the literal numbers themselves. This time we accept floating
+point numbers, not just integers. In the same group we add support for
+parenthesis:
 
 ```java
 builder.group()
@@ -271,7 +319,9 @@ builder.group()
       (List<Double> values) -> values.get(1));
 ```
 
-Then come the normal arithmetic operators. Note, that the action blocks receive both, the terms and the parsed operator in the order they appear in the parsed input:
+Then come the normal arithmetic operators. Note, that the action blocks receive
+both, the terms and the parsed operator in the order they appear in the parsed
+input:
 
 ```java
 // negation is a prefix operator
@@ -308,14 +358,16 @@ parser.parse("8/4/2");   // 1
 parser.parse("2^2^3");   // 256
 ```
 
-You can find this example as test case here: [ExamplesTest.java](petitparser-core/src/test/java/org/petitparser/ExamplesTest.java)
+You can find this example as test case
+here: [ExamplesTest.java](petitparser-core/src/test/java/org/petitparser/ExamplesTest.java)
 
 Misc
 ----
 
 ### Examples
 
-The package comes with a large collections of grammars and language experiments ready to explore:
+The package comes with a large collections of grammars and language experiments
+ready to explore:
 
 - `petitparser-json` contains a complete JSON grammar and parser.
 - `petitparser-xml` contains a complete XML grammar and parser.
@@ -323,7 +375,13 @@ The package comes with a large collections of grammars and language experiments 
 
 ### History
 
-PetitParser was originally implemented in [Smalltalk](http://scg.unibe.ch/research/helvetia/petitparser). Later on, as a mean to learn these languages, I reimplemented PetitParser in [Java](https://github.com/petitparser/java-petitparser) and [Dart](https://github.com/petitparser/dart-petitparser). The implementations are very similar in their API and the supported features. If possible, the implementations adopt best practises of the target language.
+PetitParser was originally implemented
+in [Smalltalk](http://scg.unibe.ch/research/helvetia/petitparser). Later on, as
+a mean to learn these languages, I reimplemented PetitParser
+in [Java](https://github.com/petitparser/java-petitparser)
+and [Dart](https://github.com/petitparser/dart-petitparser). The implementations
+are very similar in their API and the supported features. If possible, the
+implementations adopt best practises of the target language.
 
 ### Implementations
 
@@ -336,4 +394,6 @@ PetitParser was originally implemented in [Smalltalk](http://scg.unibe.ch/resear
 
 ### License
 
-The MIT License, see [LICENSE](https://raw.githubusercontent.com/petitparser/java-petitparser/master/LICENSE).
+The MIT License,
+see [LICENSE](https://raw.githubusercontent.com/petitparser/java-petitparser/master/LICENSE)
+.

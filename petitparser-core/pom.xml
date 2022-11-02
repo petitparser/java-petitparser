@@ -2,17 +2,17 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>com.github.petitparser</groupId>
-    <artifactId>petitparser</artifactId>
-    <version>2.3.1</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
+    <parent>
+        <groupId>com.github.petitparser</groupId>
+        <artifactId>petitparser</artifactId>
+        <version>2.3.1</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-  <artifactId>petitparser-core</artifactId>
-  <name>PetitParser Core</name>
-  <description>PetitParser library</description>
+    <artifactId>petitparser-core</artifactId>
+    <name>PetitParser Core</name>
+    <description>PetitParser library</description>
 
 </project>

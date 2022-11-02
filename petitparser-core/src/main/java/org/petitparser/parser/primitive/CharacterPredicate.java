@@ -99,8 +99,8 @@ public interface CharacterPredicate {
     static final Parser PATTERN_RANGE =
         CharacterParser.any().seq(CharacterParser.of('-'))
             .seq(CharacterParser.any()).map(
-            (List<Character> values) -> new CharacterRange(values.get(0),
-                values.get(2)));
+                (List<Character> values) -> new CharacterRange(values.get(0),
+                    values.get(2)));
     static final Parser PATTERN_POSITIVE =
         PATTERN_RANGE.or(PATTERN_SIMPLE).star()
             .map(CharacterRange::toCharacterPredicate);

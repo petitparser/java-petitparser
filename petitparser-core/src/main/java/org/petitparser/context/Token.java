@@ -154,11 +154,11 @@ public class Token {
     int line = 1, offset = 0;
     for (Token token : tokens) {
       if (position < token.stop) {
-        return new int[] {line, position - offset + 1};
+        return new int[]{line, position - offset + 1};
       }
       line++;
       offset = token.stop;
     }
-    return new int[] {line, position - offset + 1};
+    return new int[]{line, position - offset + 1};
   }
 }

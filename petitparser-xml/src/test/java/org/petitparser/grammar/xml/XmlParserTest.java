@@ -29,12 +29,14 @@ public class XmlParserTest {
 
   @Test
   public void testComment() {
-    assertParseInvariant("<?xml version=\"1.0\" encoding=\"UTF-8\"?><schema><!-- comment --></schema>");
+    assertParseInvariant("<?xml version=\"1.0\" " +
+        "encoding=\"UTF-8\"?><schema><!-- comment --></schema>");
   }
 
   @Test
   public void testCommentWithXml() {
-    assertParseInvariant("<?xml version=\"1.0\" encoding=\"UTF-8\"?><schema><!-- <foo /> --></schema>");
+    assertParseInvariant("<?xml version=\"1.0\" " +
+        "encoding=\"UTF-8\"?><schema><!-- <foo /> --></schema>");
   }
 
   @Test
@@ -60,7 +62,8 @@ public class XmlParserTest {
   public void testDoctype() {
     assertParseInvariant("<!DOCTYPE root-name SYSTEM 'uri-reference'>" +
         "<root />");
-    assertParseInvariant("<!DOCTYPE root-name PUBLIC 'public-identifier' 'uri-reference'>" +
+    assertParseInvariant("<!DOCTYPE root-name PUBLIC 'public-identifier' " +
+        "'uri-reference'>" +
         "<root />");
     assertParseInvariant("<!DOCTYPE root [" +
         "  <!ELEMENT root (child)>" +
@@ -177,10 +180,12 @@ public class XmlParserTest {
         + "\n"
         + "  <xsd:complexType name=\"Items\">\n"
         + "    <xsd:sequence>\n"
-        + "      <xsd:element name=\"item\" minOccurs=\"0\" maxOccurs=\"UNBOUNDED\">\n"
+        + "      <xsd:element name=\"item\" minOccurs=\"0\" " +
+        "maxOccurs=\"UNBOUNDED\">\n"
         + "        <xsd:complexType>\n"
         + "          <xsd:sequence>\n"
-        + "            <xsd:element name=\"productName\" type=\"xsd:string\"/>\n"
+        + "            <xsd:element name=\"productName\" " +
+        "type=\"xsd:string\"/>\n"
         + "            <xsd:element name=\"quantity\">\n"
         + "              <xsd:simpleType>\n"
         + "                <xsd:restriction base=\"xsd:positiveInteger\">\n"
@@ -190,9 +195,11 @@ public class XmlParserTest {
         + "            </xsd:element>\n"
         + "            <xsd:element name=\"USPrice\"  type=\"xsd:decimal\"/>\n"
         + "            <xsd:element ref=\"comment\"   minOccurs=\"0\"/>\n"
-        + "            <xsd:element name=\"shipDate\" type=\"xsd:date\" minOccurs=\"0\"/>\n"
+        + "            <xsd:element name=\"shipDate\" type=\"xsd:date\" " +
+        "minOccurs=\"0\"/>\n"
         + "          </xsd:sequence>\n"
-        + "          <xsd:attribute name=\"partNum\" type=\"SKU\" use=\"required\"/>\n"
+        + "          <xsd:attribute name=\"partNum\" type=\"SKU\" " +
+        "use=\"required\"/>\n"
         + "        </xsd:complexType>\n" + "      </xsd:element>\n"
         + "    </xsd:sequence>\n" + "  </xsd:complexType>\n" + "\n"
         + "  <!-- Stock Keeping Unit, a code for identifying products -->\n"
@@ -209,7 +216,8 @@ public class XmlParserTest {
         + "<app:service>"
         + "<app:workspace>"
         +
-        "<cmisra:repositoryInfo xmlns:ns3=\"http://docs.oasis-open.org/ns/cmis/messaging/200908/\">"
+        "<cmisra:repositoryInfo xmlns:ns3=\"http://docs.oasis-open" +
+        ".org/ns/cmis/messaging/200908/\">"
         + "</cmisra:repositoryInfo>"
         + "</app:workspace>"
         + "</app:service>");
@@ -314,7 +322,8 @@ public class XmlParserTest {
     if (anXmlName.getPrefix() != null) {
       assertFalse(anXmlName.getPrefix().isEmpty());
       assertTrue(anXmlName.getQualified().startsWith(anXmlName.getPrefix()));
-      assertEquals(anXmlName.getPrefix().length(), anXmlName.getQualified().indexOf(':'));
+      assertEquals(anXmlName.getPrefix().length(),
+          anXmlName.getQualified().indexOf(':'));
     }
     assertEquals(anXmlName.getQualified(), anXmlName.toXmlString());
     assertNotNull(anXmlName.toString());
@@ -325,8 +334,10 @@ public class XmlParserTest {
       if (node instanceof XmlElement) {
         XmlElement element = (XmlElement) node;
         for (XmlAttribute attribute : element.getAttributes()) {
-          assertEquals(element.getAttribute(attribute.getName().getLocal()), attribute.getValue());
-          assertSame(element.getAttributeNode(attribute.getName().getLocal()), attribute);
+          assertEquals(element.getAttribute(attribute.getName().getLocal()),
+              attribute.getValue());
+          assertSame(element.getAttributeNode(attribute.getName().getLocal())
+              , attribute);
         }
         if (element.getAttributes().isEmpty()) {
           assertNull(element.getAttribute("foo"));

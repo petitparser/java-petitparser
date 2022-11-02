@@ -24,7 +24,7 @@ public class ExpressionBuilderTest {
     ExpressionBuilder builder = new ExpressionBuilder();
     builder.group()
         .primitive(digit().plus().seq(of('.')
-            .seq(digit().plus()).optional())
+                .seq(digit().plus()).optional())
             .flatten()
             .trim())
         .wrapper(of('(').trim(), of(')').trim());
@@ -56,7 +56,7 @@ public class ExpressionBuilderTest {
     ExpressionBuilder builder = new ExpressionBuilder();
     builder.group()
         .primitive(digit().plus().seq(of('.')
-            .seq(digit().plus()).optional())
+                .seq(digit().plus()).optional())
             .flatten()
             .trim()
             .map(Double::parseDouble))
@@ -70,13 +70,18 @@ public class ExpressionBuilderTest {
         .postfix(of("++").trim(), (List<Double> values) -> values.get(0) + 1)
         .postfix(of("--").trim(), (List<Double> values) -> values.get(0) - 1);
     builder.group()
-        .right(of('^').trim(), (List<Double> values) -> Math.pow(values.get(0), values.get(2)));
+        .right(of('^').trim(),
+            (List<Double> values) -> Math.pow(values.get(0), values.get(2)));
     builder.group()
-        .left(of('*').trim(), (List<Double> values) -> values.get(0) * values.get(2))
-        .left(of('/').trim(), (List<Double> values) -> values.get(0) / values.get(2));
+        .left(of('*').trim(),
+            (List<Double> values) -> values.get(0) * values.get(2))
+        .left(of('/').trim(),
+            (List<Double> values) -> values.get(0) / values.get(2));
     builder.group()
-        .left(of('+').trim(), (List<Double> values) -> values.get(0) + values.get(2))
-        .left(of('-').trim(), (List<Double> values) -> values.get(0) - values.get(2));
+        .left(of('+').trim(),
+            (List<Double> values) -> values.get(0) + values.get(2))
+        .left(of('-').trim(),
+            (List<Double> values) -> values.get(0) - values.get(2));
     evaluator = builder.build().end();
   }
 

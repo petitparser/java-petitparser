@@ -89,7 +89,7 @@ public class SmalltalkDefinition extends GrammarDefinition {
     def("array", token("{")
         .seq(ref("expression").separatedBy(ref("periodToken"))
             .seq(ref("periodToken").optional()).optional())
-            .seq(token("}")));
+        .seq(token("}")));
     def("arrayItem", ref("literal")
         .or(ref("symbolLiteralArray"))
         .or(ref("arrayLiteralArray"))
@@ -215,8 +215,8 @@ public class SmalltalkDefinition extends GrammarDefinition {
     def("statements", ref("expression")
         .seq(ref("periodToken").plus().seq(ref("statements"))
             .or(ref("periodToken").star()))
-            .or(ref("return").seq(ref("periodToken").star()))
-            .or(ref("periodToken").star()));
+        .or(ref("return").seq(ref("periodToken").star()))
+        .or(ref("periodToken").star()));
     def("string", of('\'')
         .seq(of("''").or(pattern("^'")).star())
         .seq(of('\'')));

@@ -12,7 +12,8 @@ import java.util.function.Consumer;
  */
 public class Profiler {
 
-  private Profiler() {}
+  private Profiler() {
+  }
 
   /**
    * Returns a parser that calls the provided consumer with a {@link Profile} of
