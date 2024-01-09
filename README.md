@@ -38,7 +38,7 @@ file:
 <dependency>
   <groupId>com.github.petitparser</groupId>
   <artifactId>petitparser-core</artifactId>
-  <version>2.3.1</version>
+  <version>2.4.0</version>
 </dependency>
 ```
 
@@ -48,7 +48,7 @@ To also include the example grammars, use the following dependency:
 <dependency>
   <groupId>com.github.petitparser</groupId>
   <artifactId>petitparser</artifactId>
-  <version>2.3.1</version>
+  <version>2.4.0</version>
 </dependency>
 ```
 
@@ -73,7 +73,7 @@ To depend on the core library, add the following dependency:
 <dependency>
   <groupId>com.github.petitparser.java-petitparser</groupId>
   <artifactId>petitparser-core</artifactId>
-  <version>2.3.1</version>
+  <version>2.4.0</version>
 </dependency>
 ```
 
@@ -83,7 +83,7 @@ To also include the example grammars, use the following dependency:
 <dependency>
   <groupId>com.github.petitparser</groupId>
   <artifactId>java-petitparser</artifactId>
-  <version>2.3.1</version>
+  <version>2.4.0</version>
 </dependency>
 ```
 
@@ -153,7 +153,9 @@ parse result using `Success#get()`:
 
 ```java
 System.out.println(id1.get());  // ['y', ['e', 'a', 'h']]
-System.out.println(id2.get());  // ['f', ['1', '2']]
+    System.out.
+
+println(id2.get());  // ['f', ['1', '2']]
 ```
 
 While it seems odd to get these nested arrays with characters as a return value,
@@ -166,8 +168,12 @@ using `Failure#getMessage()`:
 
 ```java
 Result id3 = id.parse('123');
-System.out.println(id3.getMessage());  // "letter expected"
-System.out.println(id3.getPosition());  // 0
+System.out.
+
+println(id3.getMessage());  // "letter expected"
+    System.out.
+
+println(id3.getPosition());  // 0
 ```
 
 Trying to retrieve the parse result by calling `Failure#get()` would throw the
@@ -179,7 +185,9 @@ helper method `Parser#accept(String)`:
 
 ```java
 System.out.println(id.accept("foo"));  // true
-System.out.println(id.accept("123"));  // false
+    System.out.
+
+println(id.accept("123"));  // false
 ```
 
 ### Different Kinds of Parsers
@@ -234,8 +242,10 @@ To conveniently find all matches in a given input string you can
 use `Parser#matchesSkipping(String)`:
 
 ```java
-List<Object> matches=id.matchesSkipping("foo 123 bar4");
-    System.out.println(matches);  // ["foo", "bar4"]
+List<Object> matches = id.matchesSkipping("foo 123 bar4");
+    System.out.
+
+println(matches);  // ["foo", "bar4"]
 ```
 
 These are the basic elements to build parsers. There are a few more well
@@ -262,15 +272,59 @@ SettableParser term = SettableParser.undefined();
 SettableParser prod = SettableParser.undefined();
 SettableParser prim = SettableParser.undefined();
 
-term.set(prod.seq(of('+').trim()).seq(term).map((List<Integer> values) -> {
-  return values.get(0) + values.get(2);
-}).or(prod));
-prod.set(prim.seq(of('*').trim()).seq(prod).map((List<Integer> values) -> {
-  return values.get(0) * values.get(2);
-}).or(prim));
-prim.set((of('(').trim().seq(term).seq(of(')').trim())).map((List<Integer> values) -> {
-  return values.get(1);
-}).or(number));
+term.
+
+set(prod.seq(of('+').
+
+trim()).
+
+seq(term).
+
+map((List<Integer> values) ->{
+    return values.
+
+get(0) +values.
+
+get(2);
+}).
+
+or(prod));
+    prod.
+
+set(prim.seq(of('*').
+
+trim()).
+
+seq(prod).
+
+map((List<Integer> values) ->{
+    return values.
+
+get(0) *values.
+
+get(2);
+}).
+
+or(prim));
+    prim.
+
+set((of('(').
+
+trim().
+
+seq(term).
+
+seq(of(')').
+
+trim())).
+
+map((List<Integer> values) ->{
+    return values.
+
+get(1);
+}).
+
+or(number));
 ```
 
 To make sure that our parser consumes all input we wrap it with the `end()`
@@ -283,8 +337,14 @@ Parser start = term.end();
 That's it, now we can test our parser and evaluator:
 
 ```java
-System.out.println(start.parse("1 + 2 * 3").get());  // 7
-System.out.println(start.parse("(1 + 2) * 3").get());  // 9
+System.out.println(start.parse("1 + 2 * 3").
+
+get());  // 7
+    System.out.
+
+println(start.parse("(1 + 2) * 3").
+
+get());  // 9
 ```
 
 As an exercise we could extend the parser to also accept negative numbers and
@@ -312,11 +372,38 @@ parenthesis:
 
 ```java
 builder.group()
-  .primitive(digit().plus().seq(of('.')
-      .seq(digit().plus()).optional())
-      .flatten().trim().map(Double::parseDouble))
-  .wrapper(of('(').trim(), of(')').trim(),
-      (List<Double> values) -> values.get(1));
+  .
+
+primitive(digit().
+
+plus().
+
+seq(of('.')
+      .
+
+seq(digit().
+
+plus()).
+
+optional())
+    .
+
+flatten().
+
+trim().
+
+map(Double::parseDouble))
+    .
+
+wrapper(of('(').
+
+trim(),of(')').
+
+trim(),
+      (
+List<Double> values)->values.
+
+get(1));
 ```
 
 Then come the normal arithmetic operators. Note, that the action blocks receive
@@ -326,19 +413,77 @@ input:
 ```java
 // negation is a prefix operator
 builder.group()
-  .prefix(of('-').trim(), (List<Double> values) -> -values.get(1));
+  .
+
+prefix(of('-').
+
+trim(), (
+List<Double> values)->-values.
+
+get(1));
 
 // power is right-associative
-builder.group()
-  .right(of('^').trim(), (List<Double> values) -> Math.pow(values.get(0), values.get(2)));
+    builder.
+
+group()
+  .
+
+right(of('^').
+
+trim(), (
+List<Double> values)->Math.
+
+pow(values.get(0),values.
+
+get(2)));
 
 // multiplication and addition are left-associative
-builder.group()
-  .left(of('*').trim(), (List<Double> values) -> values.get(0) * values.get(2))
-  .left(of('/').trim(), (List<Double> values) -> values.get(0) / values.get(2));
-builder.group()
-  .left(of('+').trim(), (List<Double> values) -> values.get(0) + values.get(2))
-  .left(of('-').trim(), (List<Double> values) -> values.get(0) - values.get(2));
+    builder.
+
+group()
+  .
+
+left(of('*').
+
+trim(), (
+List<Double> values)->values.
+
+get(0) *values.
+
+get(2))
+    .
+
+left(of('/').
+
+trim(), (
+List<Double> values)->values.
+
+get(0) /values.
+
+get(2));
+    builder.
+
+group()
+  .
+
+left(of('+').
+
+trim(), (
+List<Double> values)->values.
+
+get(0) +values.
+
+get(2))
+    .
+
+left(of('-').
+
+trim(), (
+List<Double> values)->values.
+
+get(0) -values.
+
+get(2));
 ```
 
 Finally we can build the parser:
@@ -352,10 +497,18 @@ evaluates expressions like:
 
 ```java
 parser.parse("-8");      // -8
-parser.parse("1+2*3");   // 7
-parser.parse("1*2+3");   // 5
-parser.parse("8/4/2");   // 1
-parser.parse("2^2^3");   // 256
+parser.
+
+parse("1+2*3");   // 7
+parser.
+
+parse("1*2+3");   // 5
+parser.
+
+parse("8/4/2");   // 1
+parser.
+
+parse("2^2^3");   // 256
 ```
 
 You can find this example as test case
