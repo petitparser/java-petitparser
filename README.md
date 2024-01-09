@@ -83,7 +83,9 @@ bazel test ...:all
 ### Maven Central (deprecated)
 
 > [!WARNING]
-> Version 2.4.2 is the last version of these packages on Maven Central. 
+> Version 2.4.0 is the last version of this package on Maven Central.
+> Maintaining the Maven Central package is too much of a hassle, please
+> migrate to one of the other options described above.
 
 To depend on the core library, add the following dependency to your `pom.xml`
 file:
@@ -92,7 +94,7 @@ file:
 <dependency>
   <groupId>com.github.petitparser</groupId>
   <artifactId>petitparser-core</artifactId>
-  <version>2.4.2</version>
+  <version>2.4.0</version>
 </dependency>
 ```
 
@@ -102,7 +104,7 @@ To also include the example grammars, use the following dependency:
 <dependency>
   <groupId>com.github.petitparser</groupId>
   <artifactId>petitparser</artifactId>
-  <version>2.4.2</version>
+  <version>2.4.0</version>
 </dependency>
 ```
 
