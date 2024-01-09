@@ -4,11 +4,15 @@ import org.petitparser.context.Failure;
 
 import java.util.function.BiFunction;
 
-/** Function definition that joins {@link Failure} instances. */
+/**
+ * Function definition that joins {@link Failure} instances.
+ */
 @FunctionalInterface
 public interface FailureJoiner extends BiFunction<Failure, Failure, Failure> {
 
-  /** Reports the first parse failure observed. */
+  /**
+   * Reports the first parse failure observed.
+   */
   class SelectFirst implements FailureJoiner {
     @Override
     public Failure apply(Failure first, Failure second) {
@@ -16,7 +20,9 @@ public interface FailureJoiner extends BiFunction<Failure, Failure, Failure> {
     }
   }
 
-  /** Reports the last parse failure observed (default). */
+  /**
+   * Reports the last parse failure observed (default).
+   */
   class SelectLast implements FailureJoiner {
     @Override
     public Failure apply(Failure first, Failure second) {
