@@ -29,33 +29,6 @@ Installation
 To include the latest release in your Java project follow the instructions
 below.
 
-### Maven Central
-
-To depend on the core library, add the following dependency to your `pom.xml`
-file:
-
-```xml
-<dependency>
-  <groupId>com.github.petitparser</groupId>
-  <artifactId>petitparser-core</artifactId>
-  <version>2.4.1</version>
-</dependency>
-```
-
-To also include the example grammars, use the following dependency:
-
-```xml
-<dependency>
-  <groupId>com.github.petitparser</groupId>
-  <artifactId>petitparser</artifactId>
-  <version>2.4.1</version>
-</dependency>
-```
-
-Instructions for alternative build systems you can find
-on [Maven Central](https://search.maven.org/artifact/com.github.petitparser/petitparser-core)
-.
-
 ### Maven JitPack
 
 JitPack requires you to first append the repository to your `pom.xml` file:
@@ -73,7 +46,7 @@ To depend on the core library, add the following dependency:
 <dependency>
   <groupId>com.github.petitparser.java-petitparser</groupId>
   <artifactId>petitparser-core</artifactId>
-  <version>2.4.1</version>
+  <version>2.4.2</version>
 </dependency>
 ```
 
@@ -83,7 +56,7 @@ To also include the example grammars, use the following dependency:
 <dependency>
   <groupId>com.github.petitparser</groupId>
   <artifactId>java-petitparser</artifactId>
-  <version>2.4.1</version>
+  <version>2.4.2</version>
 </dependency>
 ```
 
@@ -106,6 +79,35 @@ Then build with [Bazel](http://bazel.io/):
 bazel build ...:all
 bazel test ...:all
 ```
+
+### Maven Central (deprecated)
+
+> [!WARNING]
+> Version 2.4.2 is the last version of these packages on Maven Central. 
+
+To depend on the core library, add the following dependency to your `pom.xml`
+file:
+
+```xml
+<dependency>
+  <groupId>com.github.petitparser</groupId>
+  <artifactId>petitparser-core</artifactId>
+  <version>2.4.2</version>
+</dependency>
+```
+
+To also include the example grammars, use the following dependency:
+
+```xml
+<dependency>
+  <groupId>com.github.petitparser</groupId>
+  <artifactId>petitparser</artifactId>
+  <version>2.4.2</version>
+</dependency>
+```
+
+Instructions for alternative build systems you can find
+on [Maven Central](https://search.maven.org/artifact/com.github.petitparser/petitparser-core)
 
 Tutorial
 --------

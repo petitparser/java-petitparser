@@ -13,7 +13,7 @@
 
     <groupId>com.github.petitparser</groupId>
     <artifactId>petitparser</artifactId>
-    <version>2.4.1</version>
+    <version>2.4.2</version>
     <packaging>pom</packaging>
 
     <name>PetitParser</name>
@@ -139,7 +139,7 @@
     </build>
 
     <!-- Instructions: https://central.sonatype.org/pages/ossrh-guide.html -->
-    <!-- 1. Create PGP key -->
+    <!-- 1. Create PGP key (double the dashes in this section) -->
     <!--    $ gpg -gen-key -->
     <!--    $ gpg -list-keys -->
     <!--    $ gpg -keyserver hkp://keyserver.ubuntu.com -send-keys XXX -->
