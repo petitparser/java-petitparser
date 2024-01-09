@@ -38,7 +38,7 @@ file:
 <dependency>
   <groupId>com.github.petitparser</groupId>
   <artifactId>petitparser-core</artifactId>
-  <version>2.4.0</version>
+  <version>2.4.1</version>
 </dependency>
 ```
 
@@ -48,7 +48,7 @@ To also include the example grammars, use the following dependency:
 <dependency>
   <groupId>com.github.petitparser</groupId>
   <artifactId>petitparser</artifactId>
-  <version>2.4.0</version>
+  <version>2.4.1</version>
 </dependency>
 ```
 
@@ -73,7 +73,7 @@ To depend on the core library, add the following dependency:
 <dependency>
   <groupId>com.github.petitparser.java-petitparser</groupId>
   <artifactId>petitparser-core</artifactId>
-  <version>2.4.0</version>
+  <version>2.4.1</version>
 </dependency>
 ```
 
@@ -83,7 +83,7 @@ To also include the example grammars, use the following dependency:
 <dependency>
   <groupId>com.github.petitparser</groupId>
   <artifactId>java-petitparser</artifactId>
-  <version>2.4.0</version>
+  <version>2.4.1</version>
 </dependency>
 ```
 
