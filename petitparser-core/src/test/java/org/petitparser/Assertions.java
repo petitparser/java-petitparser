@@ -6,12 +6,25 @@ import org.petitparser.parser.Parser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class Assertions {
+
+  public static void assertAccept(Parser parser, String input) {
+    assertAccept(parser, input, input.length());
+  }
+
+  public static void assertAccept(Parser parser, String input, int position) {
+    Result result = parser.parse(input);
+    String resultToString = result.toString();
+    assertTrue("Expected parse success, but got " + resultToString, result.isSuccess());
+    assertEquals("Position", position, result.getPosition());
+    assertNull("No message expected", result.getMessage());
+    assertEquals("Fast parse", position, parser.fastParseOn(input, 0));
+    assertTrue("Accept", parser.accept(input));
+  }
 
   public static <T> void assertSuccess(Parser parser, String input, T result) {
     assertSuccess(parser, input, result, input.length());
@@ -20,9 +33,8 @@ public class Assertions {
   public static <T> void assertSuccess(
       Parser parser, String input, T expected, int position) {
     Result result = parser.parse(input);
-    assertNotNull(result.toString());
-    assertTrue("Expected parse success", result.isSuccess());
-    assertFalse("Expected parse success", result.isFailure());
+    String resultToString = result.toString();
+    assertTrue("Expected parse success, but got " + resultToString, result.isSuccess());
     assertEquals("Position", position, result.getPosition());
     assertEquals("Result", expected, result.get());
     assertNull("No message expected", result.getMessage());
@@ -47,9 +59,8 @@ public class Assertions {
   public static <T> void assertFailure(
       Parser parser, String input, int position, String message) {
     Result result = parser.parse(input);
-    assertNotNull(result.toString());
-    assertFalse("Expected parse failure", result.isSuccess());
-    assertTrue("Expected parse failure", result.isFailure());
+    String resultToString = result.toString();
+    assertTrue("Expected parse failure, but got " + resultToString, result.isFailure());
     assertEquals("Position", position, result.getPosition());
     if (message != null) {
       assertEquals("Message expected", message, result.getMessage());
