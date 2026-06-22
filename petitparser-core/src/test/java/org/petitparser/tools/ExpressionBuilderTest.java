@@ -2,12 +2,15 @@ package org.petitparser.tools;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.petitparser.parser.primitive.CharacterParser.digit;
 import static org.petitparser.parser.primitive.CharacterParser.of;
 import static org.petitparser.parser.primitive.StringParser.of;
@@ -312,5 +315,13 @@ public class ExpressionBuilderTest {
     assertEvaluation("-1", -1);
     assertEvaluation("--1", 1);
     assertEvaluation("---1", -1);
+  }
+
+  @Test
+  public void testBuildWithoutGroupsFails() {
+    Parser parser = new ExpressionBuilder().build();
+    assertNotNull(parser);
+    Result result = parser.parse("");
+    assertTrue(result.isFailure());
   }
 }
