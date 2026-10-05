@@ -3,6 +3,7 @@ package org.petitparser.parser.primitive;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
+import org.petitparser.parser.repeating.RepeatingCharacterParser;
 
 import java.util.Objects;
 

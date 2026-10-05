@@ -234,7 +234,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ## Phase 6: ExpressionBuilder Modernization
 
-- [ ] **Task 6.1: ExpressionBuilder Enhancements**
+- [x] **Task 6.1: ExpressionBuilder Enhancements**
   - Introduce generic typing `ExpressionBuilder<T>` and `ExpressionGroup<T>`.
   - Add `primitive(Parser parser)` directly on `ExpressionBuilder`.
   - Add `loopback` getter on `ExpressionBuilder`.
@@ -242,7 +242,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Refactor binary left/right operator builders to use `plusSeparated` and `SeparatedList.foldLeft` / `foldRight`.
   - Add typed functional callbacks (e.g. ternary `(left, op, right) -> result` via `Function3`) while preserving existing `List<Object>` callbacks for compatibility.
 
-- [ ] **Task 6.2: Phase 6 Parallel Unit Tests**
+- [x] **Task 6.2: Phase 6 Parallel Unit Tests**
   - Augment `org.petitparser.tools.ExpressionBuilderTest` to test:
     - Builder-level primitives.
     - Optional expression groups.
