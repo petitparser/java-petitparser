@@ -153,9 +153,7 @@ parse result using `Success#get()`:
 
 ```java
 System.out.println(id1.get());  // ['y', ['e', 'a', 'h']]
-    System.out.
-
-println(id2.get());  // ['f', ['1', '2']]
+System.out.println(id2.get());  // ['f', ['1', '2']]
 ```
 
 While it seems odd to get these nested arrays with characters as a return value,
@@ -167,13 +165,9 @@ answer and we can retrieve a descriptive error message
 using `Failure#getMessage()`:
 
 ```java
-Result id3 = id.parse('123');
-System.out.
-
-println(id3.getMessage());  // "letter expected"
-    System.out.
-
-println(id3.getPosition());  // 0
+Result id3 = id.parse("123");
+System.out.println(id3.getMessage());  // "letter expected"
+System.out.println(id3.getPosition());  // 0
 ```
 
 Trying to retrieve the parse result by calling `Failure#get()` would throw the
@@ -185,9 +179,7 @@ helper method `Parser#accept(String)`:
 
 ```java
 System.out.println(id.accept("foo"));  // true
-    System.out.
-
-println(id.accept("123"));  // false
+System.out.println(id.accept("123"));  // false
 ```
 
 ### Different Kinds of Parsers
@@ -215,9 +207,12 @@ Parser id = letter().seq(word().star());
 The next set of parsers are used to combine other parsers together:
 
 - `p1.seq(p2)` parses `p1` followed by `p2` (sequence).
+- `p1.then(p2)` parses `p1` followed by `p2`, preserving types in a strongly-typed sequence (`SequenceParser2` to `SequenceParser9`).
 - `p1.or(p2)` parses `p1`, if that doesn't work parses `p2` (ordered choice).
 - `p.star()` parses `p` zero or more times.
 - `p.plus()` parses `p` one or more times.
+- `p.starSeparated(s)` parses `p` separated by `s` zero or more times, returning a `SeparatedList`.
+- `p.skip(before, after)` parses `before`, then `p`, then `after`, returning `p`.
 - `p.optional()` parses `p`, if possible.
 - `p.and()` parses `p`, but does not consume its input.
 - `p.not()` parses `p` and succeed when p fails, but does not consume its input.
@@ -227,6 +222,7 @@ To attach an action or transformation to a parser we can use the following
 methods:
 
 - `p.map(value -> ...)` performs the transformation given the function.
+- `p.then(...).map((a, b) -> ...)` performs strongly-typed multi-argument mapping without tuple unwrapping.
 - `p.pick(n)` returns the `n`-th element of the list `p` returns.
 - `p.flatten()` creates a string from the result of `p`.
 - `p.token()` creates a token from the result of `p`.
@@ -239,13 +235,11 @@ Parser id = letter().seq(word().star()).flatten();
 ```
 
 To conveniently find all matches in a given input string you can
-use `Parser#matchesSkipping(String)`:
+use `Parser#matchesSkipping(String)` or lazily stream them via `Parser#matchesAsStream(String)`:
 
 ```java
 List<Object> matches = id.matchesSkipping("foo 123 bar4");
-    System.out.
-
-println(matches);  // ["foo", "bar4"]
+System.out.println(matches);  // ["foo", "bar4"]
 ```
 
 These are the basic elements to build parsers. There are a few more well
@@ -272,59 +266,19 @@ SettableParser term = SettableParser.undefined();
 SettableParser prod = SettableParser.undefined();
 SettableParser prim = SettableParser.undefined();
 
-term.
-
-set(prod.seq(of('+').
-
-trim()).
-
-seq(term).
-
-map((List<Integer> values) ->{
-    return values.
-
-get(0) +values.
-
-get(2);
-}).
-
-or(prod));
-    prod.
-
-set(prim.seq(of('*').
-
-trim()).
-
-seq(prod).
-
-map((List<Integer> values) ->{
-    return values.
-
-get(0) *values.
-
-get(2);
-}).
-
-or(prim));
-    prim.
-
-set((of('(').
-
-trim().
-
-seq(term).
-
-seq(of(')').
-
-trim())).
-
-map((List<Integer> values) ->{
-    return values.
-
-get(1);
-}).
-
-or(number));
+term.set(prod.seq(of('+').trim())
+    .seq(term)
+    .map((List<Integer> values) -> values.get(0) + values.get(2))
+    .or(prod));
+prod.set(prim.seq(of('*').trim())
+    .seq(prod)
+    .map((List<Integer> values) -> values.get(0) * values.get(2))
+    .or(prim));
+prim.set(of('(').trim()
+    .seq(term)
+    .seq(of(')').trim())
+    .map((List<Integer> values) -> values.get(1))
+    .or(number));
 ```
 
 To make sure that our parser consumes all input we wrap it with the `end()`
@@ -337,14 +291,8 @@ Parser start = term.end();
 That's it, now we can test our parser and evaluator:
 
 ```java
-System.out.println(start.parse("1 + 2 * 3").
-
-get());  // 7
-    System.out.
-
-println(start.parse("(1 + 2) * 3").
-
-get());  // 9
+System.out.println(start.parse("1 + 2 * 3").get());  // 7
+System.out.println(start.parse("(1 + 2) * 3").get());  // 9
 ```
 
 As an exercise we could extend the parser to also accept negative numbers and
@@ -362,7 +310,7 @@ and prefix, postfix, left- and right-associative operators.
 The following code creates the empty expression builder:
 
 ```java
-ExpressionBuilder builder = new ExpressionBuilder();
+ExpressionBuilder<Double> builder = new ExpressionBuilder<>();
 ```
 
 Then we define the operator-groups in descending precedence. The highest
@@ -371,119 +319,38 @@ point numbers, not just integers. In the same group we add support for
 parenthesis:
 
 ```java
+ExpressionBuilder<Double> builder = new ExpressionBuilder<>();
+
 builder.group()
-  .
-
-primitive(digit().
-
-plus().
-
-seq(of('.')
-      .
-
-seq(digit().
-
-plus()).
-
-optional())
-    .
-
-flatten().
-
-trim().
-
-map(Double::parseDouble))
-    .
-
-wrapper(of('(').
-
-trim(),of(')').
-
-trim(),
-      (
-List<Double> values)->values.
-
-get(1));
+  .primitive(digit().plus()
+    .seq(of('.').seq(digit().plus()).optional())
+    .flatten()
+    .trim()
+    .map(Double::parseDouble))
+  .wrapper(of('(').trim(), of(')').trim(), (left, value, right) -> value);
 ```
 
-Then come the normal arithmetic operators. Note, that the action blocks receive
-both, the terms and the parsed operator in the order they appear in the parsed
-input:
+Then come the normal arithmetic operators. With the modern strongly-typed
+`ExpressionBuilder<T>`, operators accept typed lambda callbacks directly:
 
 ```java
 // negation is a prefix operator
 builder.group()
-  .
-
-prefix(of('-').
-
-trim(), (
-List<Double> values)->-values.
-
-get(1));
+  .prefix(of('-').trim(), (op, value) -> -value);
 
 // power is right-associative
-    builder.
+builder.group()
+  .right(of('^').trim(), (left, op, right) -> Math.pow(left, right));
 
-group()
-  .
+// multiplication and division are left-associative
+builder.group()
+  .left(of('*').trim(), (left, op, right) -> left * right)
+  .left(of('/').trim(), (left, op, right) -> left / right);
 
-right(of('^').
-
-trim(), (
-List<Double> values)->Math.
-
-pow(values.get(0),values.
-
-get(2)));
-
-// multiplication and addition are left-associative
-    builder.
-
-group()
-  .
-
-left(of('*').
-
-trim(), (
-List<Double> values)->values.
-
-get(0) *values.
-
-get(2))
-    .
-
-left(of('/').
-
-trim(), (
-List<Double> values)->values.
-
-get(0) /values.
-
-get(2));
-    builder.
-
-group()
-  .
-
-left(of('+').
-
-trim(), (
-List<Double> values)->values.
-
-get(0) +values.
-
-get(2))
-    .
-
-left(of('-').
-
-trim(), (
-List<Double> values)->values.
-
-get(0) -values.
-
-get(2));
+// addition and subtraction are left-associative
+builder.group()
+  .left(of('+').trim(), (left, op, right) -> left + right)
+  .left(of('-').trim(), (left, op, right) -> left - right);
 ```
 
 Finally we can build the parser:
@@ -496,19 +363,11 @@ After executing the above code we get an efficient parser that correctly
 evaluates expressions like:
 
 ```java
-parser.parse("-8");      // -8
-parser.
-
-parse("1+2*3");   // 7
-parser.
-
-parse("1*2+3");   // 5
-parser.
-
-parse("8/4/2");   // 1
-parser.
-
-parse("2^2^3");   // 256
+parser.parse("-8");     // -8
+parser.parse("1+2*3");  // 7
+parser.parse("1*2+3");  // 5
+parser.parse("8/4/2");  // 1
+parser.parse("2^2^3");  // 256
 ```
 
 You can find this example as test case

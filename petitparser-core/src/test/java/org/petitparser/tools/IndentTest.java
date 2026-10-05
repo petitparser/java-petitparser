@@ -4,9 +4,9 @@ import org.junit.Test;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.parser.primitive.StringParser;
-import org.petitparser.parser.repeating.Tuple2;
-import org.petitparser.parser.repeating.Tuple3;
-import org.petitparser.parser.repeating.Tuple4;
+import org.petitparser.utils.tuples.Tuple2;
+import org.petitparser.utils.tuples.Tuple3;
+import org.petitparser.utils.tuples.Tuple4;
 
 import java.util.Arrays;
 import java.util.Collections;

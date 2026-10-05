@@ -1,35 +1,29 @@
-package org.petitparser.parser.repeating;
+package org.petitparser.utils.tuples;
 
 import java.util.AbstractList;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * An immutable 6-element tuple extending {@link AbstractList}.
+ * An immutable 4-element tuple extending {@link AbstractList}.
  *
  * @param <T1> the type of the first element
  * @param <T2> the type of the second element
  * @param <T3> the type of the third element
  * @param <T4> the type of the fourth element
- * @param <T5> the type of the fifth element
- * @param <T6> the type of the sixth element
  */
-public class Tuple6<T1, T2, T3, T4, T5, T6> extends AbstractList<Object> implements Tuple {
+public class Tuple4<T1, T2, T3, T4> extends AbstractList<Object> implements Tuple {
 
   protected final T1 first;
   protected final T2 second;
   protected final T3 third;
   protected final T4 fourth;
-  protected final T5 fifth;
-  protected final T6 sixth;
 
-  public Tuple6(T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth) {
+  public Tuple4(T1 first, T2 second, T3 third, T4 fourth) {
     this.first = first;
     this.second = second;
     this.third = third;
     this.fourth = fourth;
-    this.fifth = fifth;
-    this.sixth = sixth;
   }
 
   public T1 first() {
@@ -48,14 +42,6 @@ public class Tuple6<T1, T2, T3, T4, T5, T6> extends AbstractList<Object> impleme
     return fourth;
   }
 
-  public T5 fifth() {
-    return fifth;
-  }
-
-  public T6 sixth() {
-    return sixth;
-  }
-
   @Override
   public Object get(int index) {
     switch (index) {
@@ -67,18 +53,14 @@ public class Tuple6<T1, T2, T3, T4, T5, T6> extends AbstractList<Object> impleme
         return third;
       case 3:
         return fourth;
-      case 4:
-        return fifth;
-      case 5:
-        return sixth;
       default:
-        throw new IndexOutOfBoundsException("Index: " + index + ", Size: 6");
+        throw new IndexOutOfBoundsException("Index: " + index + ", Size: 4");
     }
   }
 
   @Override
   public int size() {
-    return 6;
+    return 4;
   }
 
   @Override
@@ -86,26 +68,22 @@ public class Tuple6<T1, T2, T3, T4, T5, T6> extends AbstractList<Object> impleme
     if (this == other) {
       return true;
     }
-    if (other instanceof Tuple6) {
-      Tuple6<?, ?, ?, ?, ?, ?> that = (Tuple6<?, ?, ?, ?, ?, ?>) other;
+    if (other instanceof Tuple4) {
+      Tuple4<?, ?, ?, ?> that = (Tuple4<?, ?, ?, ?>) other;
       return Objects.equals(first, that.first) &&
           Objects.equals(second, that.second) &&
           Objects.equals(third, that.third) &&
-          Objects.equals(fourth, that.fourth) &&
-          Objects.equals(fifth, that.fifth) &&
-          Objects.equals(sixth, that.sixth);
+          Objects.equals(fourth, that.fourth);
     }
     if (!(other instanceof List)) {
       return false;
     }
     List<?> that = (List<?>) other;
-    return that.size() == 6 &&
+    return that.size() == 4 &&
         Objects.equals(first, that.get(0)) &&
         Objects.equals(second, that.get(1)) &&
         Objects.equals(third, that.get(2)) &&
-        Objects.equals(fourth, that.get(3)) &&
-        Objects.equals(fifth, that.get(4)) &&
-        Objects.equals(sixth, that.get(5));
+        Objects.equals(fourth, that.get(3));
   }
 
   @Override
@@ -115,13 +93,11 @@ public class Tuple6<T1, T2, T3, T4, T5, T6> extends AbstractList<Object> impleme
     result = 31 * result + (second == null ? 0 : second.hashCode());
     result = 31 * result + (third == null ? 0 : third.hashCode());
     result = 31 * result + (fourth == null ? 0 : fourth.hashCode());
-    result = 31 * result + (fifth == null ? 0 : fifth.hashCode());
-    result = 31 * result + (sixth == null ? 0 : sixth.hashCode());
     return result;
   }
 
   @Override
   public String toString() {
-    return "[" + first + ", " + second + ", " + third + ", " + fourth + ", " + fifth + ", " + sixth + "]";
+    return "[" + first + ", " + second + ", " + third + ", " + fourth + "]";
   }
 }

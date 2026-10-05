@@ -3,7 +3,7 @@ package org.petitparser.parser.combinators;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.repeating.Tuple2;
+import org.petitparser.utils.tuples.Tuple2;
 
 import java.util.Objects;
 import java.util.function.BiFunction;

@@ -228,4 +228,18 @@ public class TokenTest {
       // expected
     }
   }
+
+  @Test
+  public void testToPositionString() {
+    Token token = new Token("foo\nbar", 4, 7, "bar");
+    assertEquals("2:1", token.toPositionString());
+    assertEquals(Token.positionString("foo\nbar", 4), token.toPositionString());
+  }
+
+  @Test
+  public void testTokenParserFastParse() {
+    Parser tokenParser = any().token();
+    assertEquals(1, tokenParser.fastParseOn("a", 0));
+    assertEquals(-1, tokenParser.fastParseOn("", 0));
+  }
 }

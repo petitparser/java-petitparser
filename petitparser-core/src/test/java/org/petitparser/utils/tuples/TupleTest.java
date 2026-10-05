@@ -1,4 +1,4 @@
-package org.petitparser.parser.repeating;
+package org.petitparser.utils.tuples;
 
 import org.junit.Test;
 
@@ -32,11 +32,13 @@ public class TupleTest {
     assertEquals(expected.hashCode(), t.hashCode());
     assertEquals("[a, 1]", t.toString());
 
+    assertEquals(t, t);
     assertEquals(t, new Tuple2<>("a", 1));
     assertNotEquals(t, new Tuple2<>("b", 1));
     assertNotEquals(t, new Tuple2<>("a", 2));
     assertNotEquals(t, Arrays.asList("a", 2));
     assertNotEquals(t, Arrays.asList("a"));
+    assertNotEquals(t, Arrays.asList("a", 1, "extra"));
     assertNotEquals(t, "not a list");
     assertNotEquals(t, null);
 
@@ -78,12 +80,16 @@ public class TupleTest {
     assertEquals(expected.hashCode(), t.hashCode());
     assertEquals("[a, 1, 2.5]", t.toString());
 
+    assertEquals(t, t);
     assertEquals(t, new Tuple3<>("a", 1, 2.5));
     assertNotEquals(t, new Tuple3<>("b", 1, 2.5));
     assertNotEquals(t, new Tuple3<>("a", 2, 2.5));
     assertNotEquals(t, new Tuple3<>("a", 1, 3.5));
+    assertNotEquals(t, Arrays.asList("b", 1, 2.5));
+    assertNotEquals(t, Arrays.asList("a", 2, 2.5));
     assertNotEquals(t, Arrays.asList("a", 1, 3.5));
     assertNotEquals(t, Arrays.asList("a", 1));
+    assertNotEquals(t, Arrays.asList("a", 1, 2.5, "extra"));
     assertNotEquals(t, "str");
     assertNotEquals(t, null);
 
@@ -114,13 +120,17 @@ public class TupleTest {
     assertEquals(expected.hashCode(), t.hashCode());
     assertEquals("[a, 1, 2.5, true]", t.toString());
 
+    assertEquals(t, t);
     assertEquals(t, new Tuple4<>("a", 1, 2.5, true));
     assertNotEquals(t, new Tuple4<>("x", 1, 2.5, true));
     assertNotEquals(t, new Tuple4<>("a", 2, 2.5, true));
     assertNotEquals(t, new Tuple4<>("a", 1, 3.5, true));
     assertNotEquals(t, new Tuple4<>("a", 1, 2.5, false));
+    assertNotEquals(t, Arrays.asList("x", 1, 2.5, true));
     assertNotEquals(t, Arrays.asList("a", 1, 2.5, false));
     assertNotEquals(t, Arrays.asList("a", 1, 2.5));
+    assertNotEquals(t, Arrays.asList("a", 1, 2.5, true, "extra"));
+    assertNotEquals(t, "not a list");
     assertNotEquals(t, null);
   }
 
@@ -147,15 +157,19 @@ public class TupleTest {
     assertEquals(expected.hashCode(), t.hashCode());
     assertEquals("[1, 2, 3, 4, 5]", t.toString());
 
+    assertEquals(t, t);
     assertEquals(t, new Tuple5<>(1, 2, 3, 4, 5));
     assertNotEquals(t, new Tuple5<>(0, 2, 3, 4, 5));
     assertNotEquals(t, new Tuple5<>(1, 0, 3, 4, 5));
     assertNotEquals(t, new Tuple5<>(1, 2, 0, 4, 5));
     assertNotEquals(t, new Tuple5<>(1, 2, 3, 0, 5));
     assertNotEquals(t, new Tuple5<>(1, 2, 3, 4, 0));
+    assertNotEquals(t, Arrays.asList(0, 2, 3, 4, 5));
     assertNotEquals(t, Arrays.asList(1, 2, 3, 4, 0));
     assertNotEquals(t, Arrays.asList(1, 2, 3, 4));
+    assertNotEquals(t, Arrays.asList(1, 2, 3, 4, 5, 6));
     assertNotEquals(t, "string");
+    assertNotEquals(t, null);
   }
 
   @Test(expected = IndexOutOfBoundsException.class)
@@ -182,6 +196,7 @@ public class TupleTest {
     assertEquals(expected.hashCode(), t.hashCode());
     assertEquals("[1, 2, 3, 4, 5, 6]", t.toString());
 
+    assertEquals(t, t);
     assertEquals(t, new Tuple6<>(1, 2, 3, 4, 5, 6));
     assertNotEquals(t, new Tuple6<>(0, 2, 3, 4, 5, 6));
     assertNotEquals(t, new Tuple6<>(1, 0, 3, 4, 5, 6));
@@ -189,8 +204,11 @@ public class TupleTest {
     assertNotEquals(t, new Tuple6<>(1, 2, 3, 0, 5, 6));
     assertNotEquals(t, new Tuple6<>(1, 2, 3, 4, 0, 6));
     assertNotEquals(t, new Tuple6<>(1, 2, 3, 4, 5, 0));
+    assertNotEquals(t, Arrays.asList(0, 2, 3, 4, 5, 6));
     assertNotEquals(t, Arrays.asList(1, 2, 3, 4, 5, 0));
     assertNotEquals(t, Arrays.asList(1, 2, 3, 4, 5));
+    assertNotEquals(t, Arrays.asList(1, 2, 3, 4, 5, 6, 7));
+    assertNotEquals(t, "not a list");
     assertNotEquals(t, null);
   }
 
@@ -220,6 +238,7 @@ public class TupleTest {
     assertEquals(expected.hashCode(), t.hashCode());
     assertEquals("[1, 2, 3, 4, 5, 6, 7]", t.toString());
 
+    assertEquals(t, t);
     assertEquals(t, new Tuple7<>(1, 2, 3, 4, 5, 6, 7));
     assertNotEquals(t, new Tuple7<>(0, 2, 3, 4, 5, 6, 7));
     assertNotEquals(t, new Tuple7<>(1, 0, 3, 4, 5, 6, 7));
@@ -228,9 +247,12 @@ public class TupleTest {
     assertNotEquals(t, new Tuple7<>(1, 2, 3, 4, 0, 6, 7));
     assertNotEquals(t, new Tuple7<>(1, 2, 3, 4, 5, 0, 7));
     assertNotEquals(t, new Tuple7<>(1, 2, 3, 4, 5, 6, 0));
+    assertNotEquals(t, Arrays.asList(0, 2, 3, 4, 5, 6, 7));
     assertNotEquals(t, Arrays.asList(1, 2, 3, 4, 5, 6, 0));
     assertNotEquals(t, Arrays.asList(1, 2, 3, 4, 5, 6));
+    assertNotEquals(t, Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));
     assertNotEquals(t, 42);
+    assertNotEquals(t, null);
   }
 
   @Test(expected = IndexOutOfBoundsException.class)
@@ -260,6 +282,7 @@ public class TupleTest {
     assertEquals(expected.hashCode(), t.hashCode());
     assertEquals("[1, 2, 3, 4, 5, 6, 7, 8]", t.toString());
 
+    assertEquals(t, t);
     assertEquals(t, new Tuple8<>(1, 2, 3, 4, 5, 6, 7, 8));
     assertNotEquals(t, new Tuple8<>(0, 2, 3, 4, 5, 6, 7, 8));
     assertNotEquals(t, new Tuple8<>(1, 0, 3, 4, 5, 6, 7, 8));
@@ -269,8 +292,11 @@ public class TupleTest {
     assertNotEquals(t, new Tuple8<>(1, 2, 3, 4, 5, 0, 7, 8));
     assertNotEquals(t, new Tuple8<>(1, 2, 3, 4, 5, 6, 0, 8));
     assertNotEquals(t, new Tuple8<>(1, 2, 3, 4, 5, 6, 7, 0));
+    assertNotEquals(t, Arrays.asList(0, 2, 3, 4, 5, 6, 7, 8));
     assertNotEquals(t, Arrays.asList(1, 2, 3, 4, 5, 6, 7, 0));
     assertNotEquals(t, Arrays.asList(1, 2, 3, 4, 5, 6, 7));
+    assertNotEquals(t, Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9));
+    assertNotEquals(t, "not a list");
     assertNotEquals(t, null);
   }
 
@@ -302,6 +328,7 @@ public class TupleTest {
     assertEquals(expected.hashCode(), t.hashCode());
     assertEquals("[1, 2, 3, 4, 5, 6, 7, 8, 9]", t.toString());
 
+    assertEquals(t, t);
     assertEquals(t, new Tuple9<>(1, 2, 3, 4, 5, 6, 7, 8, 9));
     assertNotEquals(t, new Tuple9<>(0, 2, 3, 4, 5, 6, 7, 8, 9));
     assertNotEquals(t, new Tuple9<>(1, 0, 3, 4, 5, 6, 7, 8, 9));
@@ -312,9 +339,13 @@ public class TupleTest {
     assertNotEquals(t, new Tuple9<>(1, 2, 3, 4, 5, 6, 0, 8, 9));
     assertNotEquals(t, new Tuple9<>(1, 2, 3, 4, 5, 6, 7, 0, 9));
     assertNotEquals(t, new Tuple9<>(1, 2, 3, 4, 5, 6, 7, 8, 0));
+    assertNotEquals(t, Arrays.asList(0, 2, 3, 4, 5, 6, 7, 8, 9));
     assertNotEquals(t, Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 0));
     assertNotEquals(t, Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));
+    assertNotEquals(t, Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+    assertNotEquals(t, "not a list");
     assertNotEquals(t, false);
+    assertNotEquals(t, null);
   }
 
   @Test(expected = IndexOutOfBoundsException.class)

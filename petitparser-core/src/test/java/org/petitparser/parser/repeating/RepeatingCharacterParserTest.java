@@ -226,4 +226,72 @@ public class RepeatingCharacterParserTest {
     assertTrue(parser.getMatcher().test('5'));
     assertFalse(parser.getMatcher().test('a'));
   }
+
+  @Test
+  public void testUnicodeSurrogateStarString() {
+    // Rocket emoji: \uD83D\uDE80 (code point 0x1F680)
+    Parser parser = CharacterParser.of(0x1F680, true).starString();
+    assertTrue(parser instanceof RepeatingCharacterParser);
+    assertTrue(((RepeatingCharacterParser) parser).isUnicode());
+
+    assertSuccess(parser, "", "", 0);
+    assertSuccess(parser, "\uD83D\uDE80", "\uD83D\uDE80", 2);
+    assertSuccess(parser, "\uD83D\uDE80\uD83D\uDE80", "\uD83D\uDE80\uD83D\uDE80", 4);
+    assertSuccess(parser, "\uD83D\uDE80abc", "\uD83D\uDE80", 2);
+    assertSuccess(parser, "abc", "", 0);
+
+    // Fast-parse verification
+    assertTrue(parser.accept(""));
+    assertTrue(parser.accept("\uD83D\uDE80\uD83D\uDE80"));
+    assertEquals(4, parser.fastParseOn("\uD83D\uDE80\uD83D\uDE80xyz", 0));
+    assertEquals(0, parser.fastParseOn("xyz", 0));
+
+    // Isolated surrogate (not rocket)
+    assertSuccess(parser, "\uD83D", "", 0);
+    assertEquals(0, parser.fastParseOn("\uD83D", 0));
+  }
+
+  @Test
+  public void testUnicodeSurrogatePlusString() {
+    Parser parser = CharacterParser.of(0x1F680, true).plusString();
+    assertTrue(parser instanceof RepeatingCharacterParser);
+    assertTrue(((RepeatingCharacterParser) parser).isUnicode());
+
+    assertFailure(parser, "", 0);
+    assertFailure(parser, "abc", 0);
+    assertFailure(parser, "\uD83D", 0); // incomplete surrogate
+    assertFailure(parser, "\uD83D\uDE00", 0); // grinning face (different surrogate pair)
+
+    assertSuccess(parser, "\uD83D\uDE80", "\uD83D\uDE80", 2);
+    assertSuccess(parser, "\uD83D\uDE80\uD83D\uDE80\uD83D\uDE80", "\uD83D\uDE80\uD83D\uDE80\uD83D\uDE80", 6);
+
+    // Fast-parse verification
+    assertFalse(parser.accept(""));
+    assertFalse(parser.accept("abc"));
+    assertFalse(parser.accept("\uD83D"));
+    assertTrue(parser.accept("\uD83D\uDE80"));
+    assertEquals(2, parser.fastParseOn("\uD83D\uDE80", 0));
+    assertEquals(-1, parser.fastParseOn("xyz", 0));
+    assertEquals(-1, parser.fastParseOn("\uD83D", 0));
+  }
+
+  @Test
+  public void testUnicodeSurrogateTimesString() {
+    Parser parser = CharacterParser.of(0x1F680, true).timesString(2);
+    assertTrue(parser instanceof RepeatingCharacterParser);
+
+    assertFailure(parser, "", 0);
+    assertFailure(parser, "\uD83D\uDE80", 2);
+    assertFailure(parser, "\uD83D\uDE80\uD83D", 2); // incomplete second surrogate
+
+    assertSuccess(parser, "\uD83D\uDE80\uD83D\uDE80", "\uD83D\uDE80\uD83D\uDE80", 4);
+    assertSuccess(parser, "\uD83D\uDE80\uD83D\uDE80\uD83D\uDE80", "\uD83D\uDE80\uD83D\uDE80", 4);
+
+    // Fast parse verification
+    assertEquals(-1, parser.fastParseOn("", 0));
+    assertEquals(-1, parser.fastParseOn("\uD83D\uDE80", 0));
+    assertEquals(-1, parser.fastParseOn("\uD83D\uDE80\uD83D", 0));
+    assertEquals(4, parser.fastParseOn("\uD83D\uDE80\uD83D\uDE80", 0));
+    assertEquals(4, parser.fastParseOn("\uD83D\uDE80\uD83D\uDE80\uD83D\uDE80", 0));
+  }
 }

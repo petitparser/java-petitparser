@@ -696,4 +696,30 @@ public class ParsersTest {
     assertFalse(parser.accept("1"));
     assertFalse(parser.accept("a"));
   }
+
+  @Test
+  public void testDefaultFastParseOn() {
+    Parser parser = new Parser() {
+      @Override
+      public Result parseOn(Context context) {
+        if (context.getPosition() < context.getBuffer().length()
+            && context.getBuffer().charAt(context.getPosition()) == 'a') {
+          return context.success('a', context.getPosition() + 1);
+        }
+        return context.failure("a expected");
+      }
+
+      @Override
+      public Parser copy() {
+        return this;
+      }
+    };
+
+    assertEquals(1, parser.fastParseOn("a", 0));
+    assertEquals(2, parser.fastParseOn("ba", 1));
+    assertEquals(-1, parser.fastParseOn("b", 0));
+    assertEquals(-1, parser.fastParseOn("", 0));
+    assertTrue(parser.accept("a"));
+    assertFalse(parser.accept("b"));
+  }
 }

@@ -35,7 +35,9 @@ public class StringParserTest {
 
   @Test
   public void testStringParserCustomMessage() {
-    Parser parser = StringParser.of("petit", "expected petit");
+    StringParser parser = StringParser.of("petit", "expected petit");
+    assertEquals("petit", parser.getValue());
+    assertEquals("expected petit", parser.getMessage());
     Result result = parser.parse("large");
     assertTrue(result.isFailure());
     assertEquals("expected petit", result.getMessage());

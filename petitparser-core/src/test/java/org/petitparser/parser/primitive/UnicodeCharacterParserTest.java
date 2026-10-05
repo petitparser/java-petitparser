@@ -188,6 +188,38 @@ public class UnicodeCharacterParserTest {
   }
 
   @Test
+  public void testPatternUnicodeIgnoreCaseEdgeCases() {
+    // Eszett 'ß' upper-cases to "SS" (length > 1 code point)
+    Parser parser = CharacterParser.pattern("ß", null, true, true);
+    assertTrue(parser.parse("ß").isSuccess());
+    assertFalse(parser.parse("S").isSuccess());
+
+    // Full Unicode range triggers the continue in expandCase
+    String fullRangeUnicode = "\u0000-" + new String(Character.toChars(0x10ffff));
+    Parser parserFull = CharacterParser.pattern(fullRangeUnicode, null, true, true);
+    assertTrue(parserFull.parse("a").isSuccess());
+    assertTrue(parserFull.parse(ROCKET).isSuccess());
+
+    // Full BMP range triggers continue in non-unicode expandCase
+    Parser parserBmp = CharacterParser.pattern("\u0000-\uffff", null, true, false);
+    assertTrue(parserBmp.parse("a").isSuccess());
+  }
+
+  @Test
+  public void testPatternAndRangeOverloads() {
+    Parser p1 = CharacterParser.pattern("a-z", "custom msg", true);
+    assertTrue(p1.parse("a").isSuccess());
+    assertEquals("custom msg", p1.parse("1").getMessage());
+
+    Parser r1 = CharacterParser.range('a', 'z', true);
+    assertTrue(r1.parse("m").isSuccess());
+
+    Parser r2 = CharacterParser.range('a', 'z', "range msg", true);
+    assertTrue(r2.parse("m").isSuccess());
+    assertEquals("range msg", r2.parse("1").getMessage());
+  }
+
+  @Test
   public void testSurrogateEdgeCases() {
     Parser parser = CharacterParser.any(true);
 
@@ -222,5 +254,10 @@ public class UnicodeCharacterParserTest {
     assertTrue(neg instanceof UnicodeCharacterParser);
     assertTrue(neg.parse(SMILEY).isSuccess());
     assertFalse(neg.parse(ROCKET).isSuccess());
+
+    Parser negDefault = p1.neg();
+    assertTrue(negDefault instanceof UnicodeCharacterParser);
+    assertTrue(negDefault.parse(SMILEY).isSuccess());
+    assertFalse(negDefault.parse(ROCKET).isSuccess());
   }
 }

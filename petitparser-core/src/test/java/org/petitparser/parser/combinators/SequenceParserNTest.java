@@ -3,14 +3,14 @@ package org.petitparser.parser.combinators;
 import org.junit.Test;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.repeating.Tuple2;
-import org.petitparser.parser.repeating.Tuple3;
-import org.petitparser.parser.repeating.Tuple4;
-import org.petitparser.parser.repeating.Tuple5;
-import org.petitparser.parser.repeating.Tuple6;
-import org.petitparser.parser.repeating.Tuple7;
-import org.petitparser.parser.repeating.Tuple8;
-import org.petitparser.parser.repeating.Tuple9;
+import org.petitparser.utils.tuples.Tuple2;
+import org.petitparser.utils.tuples.Tuple3;
+import org.petitparser.utils.tuples.Tuple4;
+import org.petitparser.utils.tuples.Tuple5;
+import org.petitparser.utils.tuples.Tuple6;
+import org.petitparser.utils.tuples.Tuple7;
+import org.petitparser.utils.tuples.Tuple8;
+import org.petitparser.utils.tuples.Tuple9;
 
 import java.util.Arrays;
 
@@ -40,6 +40,10 @@ public class SequenceParserNTest {
     assertFalse(parser.accept("xb"));
     assertFalse(parser.accept("ax"));
     assertFalse(parser.accept(""));
+
+    assertFalse(parser.parse("xb").isSuccess());
+    assertFalse(parser.parse("ax").isSuccess());
+    assertFalse(parser.parse("").isSuccess());
 
     assertEquals(2, parser.fastParseOn("abc", 0));
     assertEquals(-1, parser.fastParseOn("xbc", 0));
@@ -73,6 +77,11 @@ public class SequenceParserNTest {
     assertFalse(parser.accept("xbc"));
     assertFalse(parser.accept("axc"));
     assertFalse(parser.accept("abx"));
+
+    assertFalse(parser.parse("xbc").isSuccess());
+    assertFalse(parser.parse("axc").isSuccess());
+    assertFalse(parser.parse("abx").isSuccess());
+    assertFalse(parser.parse("").isSuccess());
 
     assertEquals(3, parser.fastParseOn("abcd", 0));
     assertEquals(-1, parser.fastParseOn("xbcd", 0));
@@ -110,6 +119,12 @@ public class SequenceParserNTest {
     assertFalse(parser.accept("abxd"));
     assertFalse(parser.accept("abcx"));
 
+    assertFalse(parser.parse("xbcd").isSuccess());
+    assertFalse(parser.parse("axcd").isSuccess());
+    assertFalse(parser.parse("abxd").isSuccess());
+    assertFalse(parser.parse("abcx").isSuccess());
+    assertFalse(parser.parse("").isSuccess());
+
     assertEquals(4, parser.fastParseOn("abcde", 0));
     assertEquals(-1, parser.fastParseOn("xbcde", 0));
     assertEquals(-1, parser.fastParseOn("axcde", 0));
@@ -141,6 +156,13 @@ public class SequenceParserNTest {
 
     assertTrue(parser.accept("abcde"));
     assertFalse(parser.accept("abcdx"));
+
+    assertFalse(parser.parse("xbcde").isSuccess());
+    assertFalse(parser.parse("axcde").isSuccess());
+    assertFalse(parser.parse("abxde").isSuccess());
+    assertFalse(parser.parse("abcxe").isSuccess());
+    assertFalse(parser.parse("abcdx").isSuccess());
+    assertFalse(parser.parse("").isSuccess());
 
     assertEquals(5, parser.fastParseOn("abcdef", 0));
     assertEquals(-1, parser.fastParseOn("xbcdef", 0));
@@ -174,6 +196,14 @@ public class SequenceParserNTest {
 
     assertTrue(parser.accept("abcdef"));
     assertFalse(parser.accept("abcdex"));
+
+    assertFalse(parser.parse("xbcdef").isSuccess());
+    assertFalse(parser.parse("axcdef").isSuccess());
+    assertFalse(parser.parse("abxdef").isSuccess());
+    assertFalse(parser.parse("abcxef").isSuccess());
+    assertFalse(parser.parse("abcdxf").isSuccess());
+    assertFalse(parser.parse("abcdex").isSuccess());
+    assertFalse(parser.parse("").isSuccess());
 
     assertEquals(6, parser.fastParseOn("abcdefg", 0));
     assertEquals(-1, parser.fastParseOn("xbcdefg", 0));
@@ -209,6 +239,15 @@ public class SequenceParserNTest {
     assertTrue(parser.accept("abcdefg"));
     assertFalse(parser.accept("abcdefx"));
 
+    assertFalse(parser.parse("xbcdefg").isSuccess());
+    assertFalse(parser.parse("axcdefg").isSuccess());
+    assertFalse(parser.parse("abxdefg").isSuccess());
+    assertFalse(parser.parse("abcxefg").isSuccess());
+    assertFalse(parser.parse("abcdxfg").isSuccess());
+    assertFalse(parser.parse("abcdexg").isSuccess());
+    assertFalse(parser.parse("abcdefx").isSuccess());
+    assertFalse(parser.parse("").isSuccess());
+
     assertEquals(7, parser.fastParseOn("abcdefgh", 0));
     assertEquals(-1, parser.fastParseOn("xbcdefgh", 0));
     assertEquals(-1, parser.fastParseOn("axcdefgh", 0));
@@ -243,6 +282,16 @@ public class SequenceParserNTest {
 
     assertTrue(parser.accept("abcdefgh"));
     assertFalse(parser.accept("abcdefgx"));
+
+    assertFalse(parser.parse("xbcdefgh").isSuccess());
+    assertFalse(parser.parse("axcdefgh").isSuccess());
+    assertFalse(parser.parse("abxdefgh").isSuccess());
+    assertFalse(parser.parse("abcxefgh").isSuccess());
+    assertFalse(parser.parse("abcdxfgh").isSuccess());
+    assertFalse(parser.parse("abcdexgh").isSuccess());
+    assertFalse(parser.parse("abcdefxh").isSuccess());
+    assertFalse(parser.parse("abcdefgx").isSuccess());
+    assertFalse(parser.parse("").isSuccess());
 
     assertEquals(8, parser.fastParseOn("abcdefghi", 0));
     assertEquals(-1, parser.fastParseOn("xbcdefghi", 0));
@@ -281,6 +330,17 @@ public class SequenceParserNTest {
 
     assertTrue(parser.accept("abcdefghi"));
     assertFalse(parser.accept("abcdefghx"));
+
+    assertFalse(parser.parse("xbcdefghi").isSuccess());
+    assertFalse(parser.parse("axcdefghi").isSuccess());
+    assertFalse(parser.parse("abxdefghi").isSuccess());
+    assertFalse(parser.parse("abcxefghi").isSuccess());
+    assertFalse(parser.parse("abcdxfghi").isSuccess());
+    assertFalse(parser.parse("abcdexghi").isSuccess());
+    assertFalse(parser.parse("abcdefxhi").isSuccess());
+    assertFalse(parser.parse("abcdefgxi").isSuccess());
+    assertFalse(parser.parse("abcdefghx").isSuccess());
+    assertFalse(parser.parse("").isSuccess());
 
     assertEquals(9, parser.fastParseOn("abcdefghij", 0));
     assertEquals(-1, parser.fastParseOn("xbcdefghij", 0));

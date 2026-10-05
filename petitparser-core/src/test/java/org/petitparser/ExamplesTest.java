@@ -1,12 +1,19 @@
 package org.petitparser;
 
 import org.junit.Test;
+import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.SettableParser;
+import org.petitparser.parser.repeating.SeparatedList;
 import org.petitparser.tools.ExpressionBuilder;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
@@ -249,5 +256,69 @@ public class ExamplesTest {
     assertSuccess(intCalculator, "1*2+3", 5);
     assertSuccess(intCalculator, "8/4/2", 1);
     assertSuccess(intCalculator, "2^2^3", 256);
+  }
+
+  @Test
+  public void testModernExpressionBuilder() {
+    ExpressionBuilder<Double> builder = new ExpressionBuilder<>();
+    builder.group()
+        .primitive(DOUBLE)
+        .wrapper(of('(').trim(), of(')').trim(), (left, value, right) -> value);
+
+    // negation is a prefix operator
+    builder.group()
+        .prefix(of('-').trim(), (op, value) -> -value);
+
+    // power is right-associative
+    builder.group()
+        .right(of('^').trim(), (left, op, right) -> Math.pow(left, right));
+
+    // multiplication and division are left-associative
+    builder.group()
+        .left(of('*').trim(), (left, op, right) -> left * right)
+        .left(of('/').trim(), (left, op, right) -> left / right);
+
+    // addition and subtraction are left-associative
+    builder.group()
+        .left(of('+').trim(), (left, op, right) -> left + right)
+        .left(of('-').trim(), (left, op, right) -> left - right);
+
+    Parser parser = builder.build().end();
+    assertCalculatorExample(parser);
+  }
+
+  @Test
+  public void testTypedSequences() {
+    Parser parser = letter().then(digit().plusString())
+        .map((ch, num) -> ch + ":" + num);
+    assertSuccess(parser, "a123", "a:123");
+  }
+
+  @Test
+  public void testSkip() {
+    Parser parser = DOUBLE.skip(of('(').trim(), of(')').trim());
+    assertSuccess(parser, "( 42.5 )", 42.5);
+  }
+
+  @Test
+  public void testStarSeparated() {
+    Parser parser = DOUBLE.starSeparated(of(',').trim());
+    Result result = parser.parse("1.5, 2.5, 3.5");
+    assertTrue(result.isSuccess());
+    SeparatedList<Double, Character> list = result.get();
+    assertEquals(Arrays.asList(1.5, 2.5, 3.5), list.getElements());
+  }
+
+  @Test
+  public void testMatchesAsStream() {
+    List<String> allMatches = letter().plusString()
+        .<String>matchesAsStream("one 123 two")
+        .collect(Collectors.toList());
+    assertEquals(Arrays.asList("one", "ne", "e", "two", "wo", "o"), allMatches);
+
+    List<String> nonOverlapping = letter().plusString()
+        .<String>matchesSkippingAsStream("one 123 two 456 three")
+        .collect(Collectors.toList());
+    assertEquals(Arrays.asList("one", "two", "three"), nonOverlapping);
   }
 }

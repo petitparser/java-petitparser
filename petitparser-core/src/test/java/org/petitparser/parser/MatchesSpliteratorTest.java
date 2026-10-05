@@ -51,6 +51,23 @@ public class MatchesSpliteratorTest {
   }
 
   @Test
+  public void testNonOverlappingTryAdvance() {
+    Parser parser = digit().seq(digit()).flatten();
+    MatchesSpliterator<String> spliterator =
+        new MatchesSpliterator<>(parser, "1234", 0, false);
+
+    List<String> results = new ArrayList<>();
+    assertEquals(0, spliterator.getCurrent());
+    assertTrue(spliterator.tryAdvance(results::add));
+    assertEquals(2, spliterator.getCurrent());
+    assertTrue(spliterator.tryAdvance(results::add));
+    assertEquals(4, spliterator.getCurrent());
+    assertEquals(Arrays.asList("12", "34"), results);
+    assertFalse(spliterator.tryAdvance(results::add));
+    assertEquals(5, spliterator.getCurrent());
+  }
+
+  @Test
   public void testNonOverlappingForEachRemaining() {
     Parser parser = digit().seq(digit()).flatten();
     MatchesSpliterator<String> spliterator =

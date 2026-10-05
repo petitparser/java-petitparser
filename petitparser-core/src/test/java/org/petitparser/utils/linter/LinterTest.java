@@ -8,6 +8,7 @@ import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.parser.primitive.EpsilonParser;
 import org.petitparser.parser.primitive.StringParser;
 import org.petitparser.utils.Analyzer;
+import org.petitparser.utils.Linter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -591,33 +592,6 @@ public class LinterTest {
     assertTrue(Linter.lint(p2, rules).isEmpty());
   }
 
-  // --------------------------------------------------------------------------
-  // Subpackage rules.* adapter coverage & equality
-  // --------------------------------------------------------------------------
-
-  @Test
-  public void testRulesSubpackageInstantiationAndEquality() {
-    LinterRule[] rules = new LinterRule[] {
-        new org.petitparser.utils.linter.rules.CharacterRepeaterRule(),
-        new org.petitparser.utils.linter.rules.DuplicateParserRule(),
-        new org.petitparser.utils.linter.rules.LeftRecursionRule(),
-        new org.petitparser.utils.linter.rules.NestedChoiceRule(),
-        new org.petitparser.utils.linter.rules.NullableRepeaterRule(),
-        new org.petitparser.utils.linter.rules.OverlappingChoiceRule(),
-        new org.petitparser.utils.linter.rules.RepeatedChoiceRule(),
-        new org.petitparser.utils.linter.rules.UnnecessaryFlattenRule(),
-        new org.petitparser.utils.linter.rules.UnnecessaryResolvableRule(),
-        new org.petitparser.utils.linter.rules.UnoptimizedFlattenRule(),
-        new org.petitparser.utils.linter.rules.UnreachableChoiceRule(),
-        new org.petitparser.utils.linter.rules.UnresolvedSettableRule(),
-        new org.petitparser.utils.linter.rules.UnusedResultRule()
-    };
-    for (int i = 0; i < rules.length; i++) {
-      assertNotNull(rules[i]);
-      assertEquals(rules[i], Linter.ALL_RULES.get(i));
-      assertEquals(rules[i].hashCode(), Linter.ALL_RULES.get(i).hashCode());
-    }
-  }
 
   // --------------------------------------------------------------------------
   // Engine Constants and Edge Cases

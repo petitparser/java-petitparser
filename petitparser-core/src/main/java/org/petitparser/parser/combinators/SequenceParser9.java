@@ -3,7 +3,7 @@ package org.petitparser.parser.combinators;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.repeating.Tuple9;
+import org.petitparser.utils.tuples.Tuple9;
 import org.petitparser.utils.functions.Function9;
 
 import java.util.Arrays;

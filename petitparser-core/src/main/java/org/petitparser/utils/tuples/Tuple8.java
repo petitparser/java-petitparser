@@ -1,32 +1,43 @@
-package org.petitparser.parser.repeating;
+package org.petitparser.utils.tuples;
 
 import java.util.AbstractList;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * An immutable 5-element tuple extending {@link AbstractList}.
+ * An immutable 8-element tuple extending {@link AbstractList}.
  *
  * @param <T1> the type of the first element
  * @param <T2> the type of the second element
  * @param <T3> the type of the third element
  * @param <T4> the type of the fourth element
  * @param <T5> the type of the fifth element
+ * @param <T6> the type of the sixth element
+ * @param <T7> the type of the seventh element
+ * @param <T8> the type of the eighth element
  */
-public class Tuple5<T1, T2, T3, T4, T5> extends AbstractList<Object> implements Tuple {
+public class Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> extends AbstractList<Object> implements Tuple {
 
   protected final T1 first;
   protected final T2 second;
   protected final T3 third;
   protected final T4 fourth;
   protected final T5 fifth;
+  protected final T6 sixth;
+  protected final T7 seventh;
+  protected final T8 eighth;
 
-  public Tuple5(T1 first, T2 second, T3 third, T4 fourth, T5 fifth) {
+  public Tuple8(
+      T1 first, T2 second, T3 third, T4 fourth,
+      T5 fifth, T6 sixth, T7 seventh, T8 eighth) {
     this.first = first;
     this.second = second;
     this.third = third;
     this.fourth = fourth;
     this.fifth = fifth;
+    this.sixth = sixth;
+    this.seventh = seventh;
+    this.eighth = eighth;
   }
 
   public T1 first() {
@@ -49,6 +60,18 @@ public class Tuple5<T1, T2, T3, T4, T5> extends AbstractList<Object> implements 
     return fifth;
   }
 
+  public T6 sixth() {
+    return sixth;
+  }
+
+  public T7 seventh() {
+    return seventh;
+  }
+
+  public T8 eighth() {
+    return eighth;
+  }
+
   @Override
   public Object get(int index) {
     switch (index) {
@@ -62,14 +85,20 @@ public class Tuple5<T1, T2, T3, T4, T5> extends AbstractList<Object> implements 
         return fourth;
       case 4:
         return fifth;
+      case 5:
+        return sixth;
+      case 6:
+        return seventh;
+      case 7:
+        return eighth;
       default:
-        throw new IndexOutOfBoundsException("Index: " + index + ", Size: 5");
+        throw new IndexOutOfBoundsException("Index: " + index + ", Size: 8");
     }
   }
 
   @Override
   public int size() {
-    return 5;
+    return 8;
   }
 
   @Override
@@ -77,24 +106,30 @@ public class Tuple5<T1, T2, T3, T4, T5> extends AbstractList<Object> implements 
     if (this == other) {
       return true;
     }
-    if (other instanceof Tuple5) {
-      Tuple5<?, ?, ?, ?, ?> that = (Tuple5<?, ?, ?, ?, ?>) other;
+    if (other instanceof Tuple8) {
+      Tuple8<?, ?, ?, ?, ?, ?, ?, ?> that = (Tuple8<?, ?, ?, ?, ?, ?, ?, ?>) other;
       return Objects.equals(first, that.first) &&
           Objects.equals(second, that.second) &&
           Objects.equals(third, that.third) &&
           Objects.equals(fourth, that.fourth) &&
-          Objects.equals(fifth, that.fifth);
+          Objects.equals(fifth, that.fifth) &&
+          Objects.equals(sixth, that.sixth) &&
+          Objects.equals(seventh, that.seventh) &&
+          Objects.equals(eighth, that.eighth);
     }
     if (!(other instanceof List)) {
       return false;
     }
     List<?> that = (List<?>) other;
-    return that.size() == 5 &&
+    return that.size() == 8 &&
         Objects.equals(first, that.get(0)) &&
         Objects.equals(second, that.get(1)) &&
         Objects.equals(third, that.get(2)) &&
         Objects.equals(fourth, that.get(3)) &&
-        Objects.equals(fifth, that.get(4));
+        Objects.equals(fifth, that.get(4)) &&
+        Objects.equals(sixth, that.get(5)) &&
+        Objects.equals(seventh, that.get(6)) &&
+        Objects.equals(eighth, that.get(7));
   }
 
   @Override
@@ -105,11 +140,15 @@ public class Tuple5<T1, T2, T3, T4, T5> extends AbstractList<Object> implements 
     result = 31 * result + (third == null ? 0 : third.hashCode());
     result = 31 * result + (fourth == null ? 0 : fourth.hashCode());
     result = 31 * result + (fifth == null ? 0 : fifth.hashCode());
+    result = 31 * result + (sixth == null ? 0 : sixth.hashCode());
+    result = 31 * result + (seventh == null ? 0 : seventh.hashCode());
+    result = 31 * result + (eighth == null ? 0 : eighth.hashCode());
     return result;
   }
 
   @Override
   public String toString() {
-    return "[" + first + ", " + second + ", " + third + ", " + fourth + ", " + fifth + "]";
+    return "[" + first + ", " + second + ", " + third + ", " + fourth + ", " +
+        fifth + ", " + sixth + ", " + seventh + ", " + eighth + "]";
   }
 }

@@ -27,6 +27,7 @@ public class MatchesIteratorTest {
     assertEquals(parser, iterator.getParser());
     assertEquals("x_x", iterator.getInput());
     assertEquals(0, iterator.getStart());
+    assertEquals(0, iterator.getCurrent());
     assertFalse(iterator.isOverlapping());
     assertTrue(iterator.toString().contains("MatchesIterator"));
 
@@ -36,6 +37,7 @@ public class MatchesIteratorTest {
     }
     assertEquals(Arrays.asList('x', 'x'), list);
     assertFalse(iterator.hasNext());
+    assertTrue(iterator.getCurrent() > 0);
   }
 
   @Test(expected = NoSuchElementException.class)
@@ -59,6 +61,32 @@ public class MatchesIteratorTest {
       list.add(iterator.next());
     }
     assertEquals(Arrays.asList("12", "23"), list);
+  }
+
+  @Test
+  public void testNonOverlappingIteration() {
+    Parser parser = digit().seq(digit()).flatten();
+    MatchesIterator<String> iterator =
+        new MatchesIterator<>(parser, "1234", 0, false);
+
+    List<String> list = new ArrayList<>();
+    while (iterator.hasNext()) {
+      list.add(iterator.next());
+    }
+    assertEquals(Arrays.asList("12", "34"), list);
+  }
+
+  @Test
+  public void testZeroLengthMatchProgresses() {
+    Parser parser = digit().star().flatten();
+    MatchesIterator<String> iterator =
+        new MatchesIterator<>(parser, "a12b", 0, false);
+
+    List<String> list = new ArrayList<>();
+    while (iterator.hasNext()) {
+      list.add(iterator.next());
+    }
+    assertEquals(Arrays.asList("", "12", "", ""), list);
   }
 
   @Test(expected = IndexOutOfBoundsException.class)

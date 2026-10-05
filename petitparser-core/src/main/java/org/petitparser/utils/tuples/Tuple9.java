@@ -1,11 +1,11 @@
-package org.petitparser.parser.repeating;
+package org.petitparser.utils.tuples;
 
 import java.util.AbstractList;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * An immutable 7-element tuple extending {@link AbstractList}.
+ * An immutable 9-element tuple extending {@link AbstractList}.
  *
  * @param <T1> the type of the first element
  * @param <T2> the type of the second element
@@ -14,8 +14,10 @@ import java.util.Objects;
  * @param <T5> the type of the fifth element
  * @param <T6> the type of the sixth element
  * @param <T7> the type of the seventh element
+ * @param <T8> the type of the eighth element
+ * @param <T9> the type of the ninth element
  */
-public class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends AbstractList<Object> implements Tuple {
+public class Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> extends AbstractList<Object> implements Tuple {
 
   protected final T1 first;
   protected final T2 second;
@@ -24,9 +26,12 @@ public class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends AbstractList<Object> imp
   protected final T5 fifth;
   protected final T6 sixth;
   protected final T7 seventh;
+  protected final T8 eighth;
+  protected final T9 ninth;
 
-  public Tuple7(
-      T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh) {
+  public Tuple9(
+      T1 first, T2 second, T3 third, T4 fourth, T5 fifth,
+      T6 sixth, T7 seventh, T8 eighth, T9 ninth) {
     this.first = first;
     this.second = second;
     this.third = third;
@@ -34,6 +39,8 @@ public class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends AbstractList<Object> imp
     this.fifth = fifth;
     this.sixth = sixth;
     this.seventh = seventh;
+    this.eighth = eighth;
+    this.ninth = ninth;
   }
 
   public T1 first() {
@@ -64,6 +71,14 @@ public class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends AbstractList<Object> imp
     return seventh;
   }
 
+  public T8 eighth() {
+    return eighth;
+  }
+
+  public T9 ninth() {
+    return ninth;
+  }
+
   @Override
   public Object get(int index) {
     switch (index) {
@@ -81,14 +96,18 @@ public class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends AbstractList<Object> imp
         return sixth;
       case 6:
         return seventh;
+      case 7:
+        return eighth;
+      case 8:
+        return ninth;
       default:
-        throw new IndexOutOfBoundsException("Index: " + index + ", Size: 7");
+        throw new IndexOutOfBoundsException("Index: " + index + ", Size: 9");
     }
   }
 
   @Override
   public int size() {
-    return 7;
+    return 9;
   }
 
   @Override
@@ -96,28 +115,32 @@ public class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends AbstractList<Object> imp
     if (this == other) {
       return true;
     }
-    if (other instanceof Tuple7) {
-      Tuple7<?, ?, ?, ?, ?, ?, ?> that = (Tuple7<?, ?, ?, ?, ?, ?, ?>) other;
+    if (other instanceof Tuple9) {
+      Tuple9<?, ?, ?, ?, ?, ?, ?, ?, ?> that = (Tuple9<?, ?, ?, ?, ?, ?, ?, ?, ?>) other;
       return Objects.equals(first, that.first) &&
           Objects.equals(second, that.second) &&
           Objects.equals(third, that.third) &&
           Objects.equals(fourth, that.fourth) &&
           Objects.equals(fifth, that.fifth) &&
           Objects.equals(sixth, that.sixth) &&
-          Objects.equals(seventh, that.seventh);
+          Objects.equals(seventh, that.seventh) &&
+          Objects.equals(eighth, that.eighth) &&
+          Objects.equals(ninth, that.ninth);
     }
     if (!(other instanceof List)) {
       return false;
     }
     List<?> that = (List<?>) other;
-    return that.size() == 7 &&
+    return that.size() == 9 &&
         Objects.equals(first, that.get(0)) &&
         Objects.equals(second, that.get(1)) &&
         Objects.equals(third, that.get(2)) &&
         Objects.equals(fourth, that.get(3)) &&
         Objects.equals(fifth, that.get(4)) &&
         Objects.equals(sixth, that.get(5)) &&
-        Objects.equals(seventh, that.get(6));
+        Objects.equals(seventh, that.get(6)) &&
+        Objects.equals(eighth, that.get(7)) &&
+        Objects.equals(ninth, that.get(8));
   }
 
   @Override
@@ -130,11 +153,14 @@ public class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends AbstractList<Object> imp
     result = 31 * result + (fifth == null ? 0 : fifth.hashCode());
     result = 31 * result + (sixth == null ? 0 : sixth.hashCode());
     result = 31 * result + (seventh == null ? 0 : seventh.hashCode());
+    result = 31 * result + (eighth == null ? 0 : eighth.hashCode());
+    result = 31 * result + (ninth == null ? 0 : ninth.hashCode());
     return result;
   }
 
   @Override
   public String toString() {
-    return "[" + first + ", " + second + ", " + third + ", " + fourth + ", " + fifth + ", " + sixth + ", " + seventh + "]";
+    return "[" + first + ", " + second + ", " + third + ", " + fourth + ", " +
+        fifth + ", " + sixth + ", " + seventh + ", " + eighth + ", " + ninth + "]";
   }
 }

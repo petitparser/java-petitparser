@@ -1,4 +1,4 @@
-package org.petitparser.parser.repeating;
+package org.petitparser.utils.tuples;
 
 import java.util.AbstractList;
 import java.util.List;

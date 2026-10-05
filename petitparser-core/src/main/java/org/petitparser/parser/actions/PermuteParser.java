@@ -4,7 +4,7 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.DelegateParser;
-import org.petitparser.parser.repeating.Tuple;
+import org.petitparser.utils.tuples.Tuple;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,8 +26,21 @@ public class PermuteParser extends DelegateParser {
     this.indexes = Objects.requireNonNull(indexes, "Undefined indexes").clone();
   }
 
-  public int[] getIndexes() {
+  /**
+   * Returns a copy of the permutation indices.
+   */
+  public int[] getIndices() {
     return indexes.clone();
+  }
+
+  /**
+   * Returns a copy of the permutation indices.
+   *
+   * @deprecated Use {@link #getIndices()} instead.
+   */
+  @Deprecated(since = "2.5.0")
+  public int[] getIndexes() {
+    return getIndices();
   }
 
   @Override

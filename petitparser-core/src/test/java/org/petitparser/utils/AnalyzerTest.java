@@ -2,6 +2,7 @@ package org.petitparser.utils;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
+import org.petitparser.parser.combinators.ResolvableParser;
 import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.parser.primitive.CharacterParser;
 
@@ -683,6 +684,96 @@ public class AnalyzerTest {
     assertSame(root, resolved);
     assertEquals(Arrays.asList(first, inner), resolved.getChildren());
     assertEquals(3, analyzer.parsers().size());
+  }
+
+  @Test
+  public void testIsNullableTrimmingParser() {
+    Parser a = CharacterParser.of('a');
+    Parser ws = CharacterParser.whitespace();
+
+    Parser nonNullableTrim = a.trim(ws, ws);
+    assertFalse(Analyzer.of(nonNullableTrim).isNullable(nonNullableTrim));
+
+    Parser nullableTrim = a.optional().trim(ws, ws);
+    assertTrue(Analyzer.of(nullableTrim).isNullable(nullableTrim));
+  }
+
+  @Test
+  public void testFirstSetTrimmingParser() {
+    Parser del = CharacterParser.of('a');
+    Parser left = CharacterParser.of('[');
+    Parser right = CharacterParser.of(']');
+
+    Parser trimNonNullable = del.trim(left, right);
+    Analyzer a1 = Analyzer.of(trimNonNullable);
+    // When del is not nullable, firstSet is {left, del}
+    assertEquals(Set.of(left, del), a1.firstSet(trimNonNullable));
+
+    Parser trimNullable = del.optional().trim(left, right);
+    Analyzer a2 = Analyzer.of(trimNullable);
+    // When del is nullable, firstSet includes right as well: {left, del, right}
+    assertEquals(Set.of(left, del, right), a2.firstSet(trimNullable));
+  }
+
+  @Test
+  public void testFollowSetTrimmingParser() {
+    Parser del = CharacterParser.of('a');
+    Parser left = CharacterParser.of('[');
+    Parser right = CharacterParser.of(']');
+    Parser end = CharacterParser.of('$');
+
+    // Case 1: del is not nullable
+    Parser trimNonNullable = del.trim(left, right).seq(end);
+    Analyzer a1 = Analyzer.of(trimNonNullable);
+    assertEquals(Set.of(left, del), a1.followSet(left));
+    assertEquals(Set.of(right, end), a1.followSet(del));
+    assertEquals(Set.of(right, end), a1.followSet(right));
+
+    // Case 2: del is nullable
+    Parser trimNullable = del.optional().trim(left, right).seq(end);
+    Analyzer a2 = Analyzer.of(trimNullable);
+    // When del is nullable, followSet(left) gets firstSet(right) and followSet(p) = {end}
+    assertTrue(a2.followSet(left).contains(right));
+    assertTrue(a2.followSet(left).contains(end));
+    assertTrue(a2.followSet(del).contains(right));
+    assertTrue(a2.followSet(del).contains(end));
+    assertTrue(a2.followSet(right).contains(right));
+    assertTrue(a2.followSet(right).contains(end));
+  }
+
+  @Test
+  public void testFollowSetSeparatedRepeatingNullableDelegate() {
+    Parser del = CharacterParser.of('a').optional();
+    Parser sep = CharacterParser.of(',');
+    Parser end = CharacterParser.of('$');
+    Parser separated = del.starSeparated(sep).seq(end);
+    Analyzer a = Analyzer.of(separated);
+
+    assertTrue(a.followSet(sep).contains(sep));
+    assertTrue(a.followSet(sep).contains(end));
+  }
+
+  @Test
+  public void testResolveUnreachableTargetSubtree() {
+    CharacterParser leaf = CharacterParser.of('z');
+    Parser outside = leaf.seq(CharacterParser.of('!'));
+    class TestResolvable extends org.petitparser.parser.combinators.DelegateParser implements ResolvableParser {
+      TestResolvable() {
+        super(CharacterParser.of('x'));
+      }
+
+      @Override
+      public Parser resolve() {
+        return outside;
+      }
+    }
+
+    SettableParser root = undefined();
+    root.set(new TestResolvable());
+
+    Parser resolved = Analyzer.resolve(root);
+    assertSame(outside, resolved);
+    assertFalse(Analyzer.of(resolved).findPathTo(leaf).isEmpty());
   }
 }
 

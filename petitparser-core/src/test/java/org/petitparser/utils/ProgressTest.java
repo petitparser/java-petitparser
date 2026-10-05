@@ -324,4 +324,17 @@ public class ProgressTest {
     assertFalse(outerFrames.stream().anyMatch(Progress.ProgressFrame::isBacktracking));
     assertFalse(innerFrames.stream().anyMatch(Progress.ProgressFrame::isBacktracking));
   }
+
+  @Test
+  public void testDirectInnerInvocationFallback() {
+    List<Progress.ProgressFrame> frames = new ArrayList<>();
+    Parser root = digit();
+    Parser instrumented = Progress.on(root, p -> true, frames::add);
+    // The instrumented parser wraps the transformed parser
+    Parser inner = instrumented.getChildren().get(0);
+    Result result = inner.parseOn(new Context("1", 0));
+    assertTrue(result.isSuccess());
+    assertEquals(1, frames.size());
+    assertEquals(0, frames.get(0).getPosition());
+  }
 }

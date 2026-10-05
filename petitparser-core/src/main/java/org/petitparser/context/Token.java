@@ -107,6 +107,13 @@ public class Token {
     return lineAndColumnOf(buffer, start)[1];
   }
 
+  /**
+   * Returns a string representation of the starting position in the format "line:column".
+   */
+  public String toPositionString() {
+    return positionString(buffer, start);
+  }
+
   @Override
   public String toString() {
     return "Token[" + positionString(buffer, start) + "]: " + value;

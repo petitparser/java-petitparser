@@ -285,7 +285,10 @@ public interface CharacterPredicate {
 
   /**
    * Backward compatibility alias for {@link NotCharPredicate}.
+   *
+   * @deprecated Use {@link NotCharPredicate} or {@link CharacterPredicate#not()} instead.
    */
+  @Deprecated(since = "2.5.0")
   class NotCharacterPredicate extends NotCharPredicate {
     public NotCharacterPredicate(CharacterPredicate predicate) {
       super(predicate);
