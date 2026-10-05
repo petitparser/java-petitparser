@@ -42,6 +42,20 @@ public abstract class RepeatingParser extends DelegateParser {
     return super.toString() + "[" + getRange() + "]";
   }
 
+  /**
+   * Returns the minimum number of repetitions.
+   */
+  public int getMin() {
+    return min;
+  }
+
+  /**
+   * Returns the maximum number of repetitions, or {@link #UNBOUNDED}.
+   */
+  public int getMax() {
+    return max;
+  }
+
   private String getRange() {
     return min + ".." + (max == UNBOUNDED ? "*" : max);
   }

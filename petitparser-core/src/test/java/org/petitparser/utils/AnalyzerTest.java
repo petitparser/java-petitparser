@@ -211,4 +211,166 @@ public class AnalyzerTest {
     assertEquals(Arrays.asList(c1, c2, c1), cycleAnalyzer.findCycle(c1));
     assertEquals(Arrays.asList(c2, c1, c2), cycleAnalyzer.findCycle(c2));
   }
+
+  @Test
+  public void testCycleSetAndIsCyclic() {
+    Parser acyclic = letter().seq(digit());
+    Analyzer analyzer = Analyzer.of(acyclic);
+    assertFalse(analyzer.isCyclic());
+    assertFalse(analyzer.isCyclic(acyclic));
+    assertTrue(analyzer.cycleSet(acyclic).isEmpty());
+    assertTrue(analyzer.cycles().isEmpty());
+
+    SettableParser knot = undefined();
+    knot.set(knot);
+    Analyzer knotAnalyzer = Analyzer.of(knot);
+    assertTrue(knotAnalyzer.isCyclic());
+    assertTrue(knotAnalyzer.isCyclic(knot));
+    assertEquals(Set.of(knot), knotAnalyzer.cycleSet(knot));
+    assertEquals(Set.of(knot), knotAnalyzer.cycles());
+
+    SettableParser c1 = undefined();
+    SettableParser c2 = undefined();
+    c1.set(c2);
+    c2.set(c1);
+    Analyzer cycleAnalyzer = Analyzer.of(c1);
+    assertTrue(cycleAnalyzer.isCyclic(c1));
+    assertTrue(cycleAnalyzer.isCyclic(c2));
+    assertEquals(Set.of(c1, c2), cycleAnalyzer.cycleSet(c1));
+    assertEquals(Set.of(c1, c2), cycleAnalyzer.cycleSet(c2));
+
+    Parser root = letter().seq(c1);
+    Analyzer rootAnalyzer = Analyzer.of(root);
+    assertTrue(rootAnalyzer.isCyclic());
+    assertFalse(rootAnalyzer.isCyclic(root));
+    assertTrue(rootAnalyzer.cycleSet(root).isEmpty());
+    assertTrue(rootAnalyzer.isCyclic(c1));
+    assertEquals(Set.of(c1, c2), rootAnalyzer.cycles());
+  }
+
+  @Test
+  public void testIsNullableTerminalsAndCombinators() {
+    Parser letter = letter();
+    Parser eps = org.petitparser.parser.primitive.EpsilonParser.INSTANCE;
+    Parser pos = org.petitparser.parser.primitive.PositionParser.INSTANCE;
+    Parser fail = org.petitparser.parser.primitive.FailureParser.withMessage("err");
+
+    Parser root = letter.seq(eps).seq(pos).seq(fail);
+    Analyzer analyzer = Analyzer.of(root);
+
+    assertFalse(analyzer.isNullable(letter));
+    assertTrue(analyzer.isNullable(eps));
+    assertTrue(analyzer.isNullable(pos));
+    assertFalse(analyzer.isNullable(fail));
+
+    assertTrue(analyzer.isNullable(letter.optional()));
+    assertTrue(analyzer.isNullable(letter.star()));
+    assertFalse(analyzer.isNullable(letter.plus()));
+    assertTrue(analyzer.isNullable(letter.repeat(0, 3)));
+    assertFalse(analyzer.isNullable(letter.repeat(1, 3)));
+
+    assertTrue(analyzer.isNullable(letter.repeatSeparated(digit(), 0, 3)));
+    assertFalse(analyzer.isNullable(letter.repeatSeparated(digit(), 1, 3)));
+    assertTrue(analyzer.isNullable(letter.starSeparated(digit())));
+    assertFalse(analyzer.isNullable(letter.plusSeparated(digit())));
+
+    // Sequences
+    assertTrue(analyzer.isNullable(eps.seq(letter.star())));
+    assertFalse(analyzer.isNullable(eps.seq(letter)));
+
+    // Choices
+    assertTrue(analyzer.isNullable(letter.or(eps)));
+    assertFalse(analyzer.isNullable(letter.or(digit())));
+
+    // Trimming
+    assertFalse(analyzer.isNullable(letter.trim()));
+    assertTrue(analyzer.isNullable(letter.optional().trim()));
+
+    // Not & And
+    assertTrue(analyzer.isNullable(letter.not()));
+    assertFalse(analyzer.isNullable(eps.not()));
+    assertFalse(analyzer.isNullable(letter.and()));
+    assertTrue(analyzer.isNullable(eps.and()));
+  }
+
+  @Test
+  public void testIsNullableRecursive() {
+    SettableParser p = undefined();
+    p.set(p.or(org.petitparser.parser.primitive.EpsilonParser.INSTANCE));
+    Analyzer analyzer = Analyzer.of(p);
+    assertTrue(analyzer.isNullable(p));
+
+    SettableParser nonNull = undefined();
+    nonNull.set(nonNull.seq(digit()).or(letter()));
+    Analyzer nonNullAnalyzer = Analyzer.of(nonNull);
+    assertFalse(nonNullAnalyzer.isNullable(nonNull));
+  }
+
+  @Test
+  public void testFirstSet() {
+    Parser a = CharacterParser.of('a');
+    Parser b = CharacterParser.of('b');
+    Parser c = CharacterParser.of('c');
+
+    Analyzer aAnalyzer = Analyzer.of(a);
+    assertEquals(Set.of(a), aAnalyzer.firstSet(a));
+
+    Parser seq = a.seq(b);
+    Analyzer seqAnalyzer = Analyzer.of(seq);
+    assertEquals(Set.of(a), seqAnalyzer.firstSet(seq));
+
+    Parser nullableSeq = a.optional().seq(b);
+    Analyzer nullableSeqAnalyzer = Analyzer.of(nullableSeq);
+    assertEquals(Set.of(a, b), nullableSeqAnalyzer.firstSet(nullableSeq));
+
+    Parser allNullableSeq = a.optional().seq(b.optional()).seq(c);
+    Analyzer allNullableSeqAnalyzer = Analyzer.of(allNullableSeq);
+    assertEquals(Set.of(a, b, c), allNullableSeqAnalyzer.firstSet(allNullableSeq));
+
+    Parser choice = a.or(b);
+    Analyzer choiceAnalyzer = Analyzer.of(choice);
+    assertEquals(Set.of(a, b), choiceAnalyzer.firstSet(choice));
+
+    Parser sep = a.separatedBy(b);
+    Analyzer sepAnalyzer = Analyzer.of(sep);
+    assertEquals(Set.of(a), sepAnalyzer.firstSet(sep));
+  }
+
+  @Test
+  public void testFirstSetLeftRecursive() {
+    SettableParser expr = undefined();
+    Parser plus = CharacterParser.of('+');
+    Parser num = digit();
+    expr.set(expr.seq(plus).seq(num).or(num));
+    Analyzer analyzer = Analyzer.of(expr);
+
+    assertEquals(Set.of(num), analyzer.firstSet(expr));
+  }
+
+  @Test
+  public void testFollowSet() {
+    Parser a = CharacterParser.of('a');
+    Parser b = CharacterParser.of('b');
+    Parser c = CharacterParser.of('c');
+
+    Parser seq = a.seq(b);
+    Analyzer seqAnalyzer = Analyzer.of(seq);
+    assertEquals(Set.of(b), seqAnalyzer.followSet(a));
+    assertTrue(seqAnalyzer.followSet(b).isEmpty());
+
+    Parser nullableIntermediate = a.seq(b.optional()).seq(c);
+    Analyzer nullableAnalyzer = Analyzer.of(nullableIntermediate);
+    assertEquals(Set.of(b, c), nullableAnalyzer.followSet(a));
+    assertEquals(Set.of(c), nullableAnalyzer.followSet(b));
+
+    Parser loop = a.seq(b).star();
+    Analyzer loopAnalyzer = Analyzer.of(loop);
+    assertEquals(Set.of(a), loopAnalyzer.followSet(b));
+
+    Parser sepList = a.separatedBy(b);
+    Analyzer sepAnalyzer = Analyzer.of(sepList);
+    assertEquals(Set.of(b), sepAnalyzer.followSet(a));
+    assertEquals(Set.of(a), sepAnalyzer.followSet(b));
+  }
 }
+
