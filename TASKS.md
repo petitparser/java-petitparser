@@ -78,7 +78,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Add `Token.join(Iterable<Token> tokens)` combining adjacent tokens from the same buffer.
   - Add `Context.toPositionString()` returning `"line:column"`.
 
-- [ ] **Task 1.9: Phase 1 Parallel Unit Tests**
+- [x] **Task 1.9: Phase 1 Parallel Unit Tests**
   - Create test classes under `src/test/java/org/petitparser/`:
     - `org.petitparser.parser.actions.WhereParserTest`
     - `org.petitparser.parser.combinators.SkipParserTest`
