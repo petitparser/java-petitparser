@@ -304,15 +304,15 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ## Phase 9: Extended Optimizer
 
-- [ ] **Task 9.1: Extensible OptimizeRule Framework**
+- [x] **Task 9.1: Extensible OptimizeRule Framework**
   - Define `OptimizeRule` interface and refactor `Optimizer` to use modular rules.
   - Keep `RemoveDelegate` and `RemoveDuplicate` rules.
 
-- [ ] **Task 9.2: New Optimizer Rules**
+- [x] **Task 9.2: New Optimizer Rules**
   - Implement `FlattenChoiceRule`: Flattens nested choices `[a, [b, c]]` into `[a, b, c]`.
   - Implement `CharacterRepeaterRule`: Transforms `FlattenParser(PossessiveRepeatingParser(CharacterParser))` into `RepeatingCharacterParser`.
 
-- [ ] **Task 9.3: Phase 9 Parallel Unit Tests**
+- [x] **Task 9.3: Phase 9 Parallel Unit Tests**
   - Augment `org.petitparser.utils.OptimizerTest` to cover choice flattening and character repeater rewrites.
 
 ---

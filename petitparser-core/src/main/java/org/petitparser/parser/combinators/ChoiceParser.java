@@ -66,6 +66,19 @@ public class ChoiceParser extends ListParser {
     return new ChoiceParser(failureJoiner, array);
   }
 
+  /**
+   * Returns the failure joiner used by this choice parser.
+   */
+  public FailureJoiner getFailureJoiner() {
+    return failureJoiner;
+  }
+
+  @Override
+  protected boolean hasEqualProperties(Parser other) {
+    return super.hasEqualProperties(other) &&
+        java.util.Objects.equals(failureJoiner, ((ChoiceParser) other).failureJoiner);
+  }
+
   @Override
   public ChoiceParser copy() {
     return new ChoiceParser(failureJoiner, Arrays.copyOf(parsers,

@@ -18,6 +18,16 @@ public interface FailureJoiner extends BiFunction<Failure, Failure, Failure> {
     public Failure apply(Failure first, Failure second) {
       return first;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+      return obj instanceof SelectFirst;
+    }
+
+    @Override
+    public int hashCode() {
+      return SelectFirst.class.hashCode();
+    }
   }
 
   /**
@@ -27,6 +37,16 @@ public interface FailureJoiner extends BiFunction<Failure, Failure, Failure> {
     @Override
     public Failure apply(Failure first, Failure second) {
       return second;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      return obj instanceof SelectLast;
+    }
+
+    @Override
+    public int hashCode() {
+      return SelectLast.class.hashCode();
     }
   }
 
@@ -38,6 +58,16 @@ public interface FailureJoiner extends BiFunction<Failure, Failure, Failure> {
     @Override
     public Failure apply(Failure first, Failure second) {
       return first.getPosition() <= second.getPosition() ? second : first;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      return obj instanceof SelectFarthest;
+    }
+
+    @Override
+    public int hashCode() {
+      return SelectFarthest.class.hashCode();
     }
   }
 
@@ -64,6 +94,23 @@ public interface FailureJoiner extends BiFunction<Failure, Failure, Failure> {
           ? second
           :
           first.failure(first.getMessage() + messageJoiner + second.getMessage());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) {
+        return true;
+      }
+      if (!(obj instanceof SelectFarthestJoined)) {
+        return false;
+      }
+      SelectFarthestJoined other = (SelectFarthestJoined) obj;
+      return java.util.Objects.equals(messageJoiner, other.messageJoiner);
+    }
+
+    @Override
+    public int hashCode() {
+      return java.util.Objects.hash(SelectFarthestJoined.class, messageJoiner);
     }
   }
 }

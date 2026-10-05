@@ -1,13 +1,17 @@
 package org.petitparser.utils;
 
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.combinators.DelegateParser;
-import org.petitparser.parser.combinators.SettableParser;
+import org.petitparser.utils.optimizer.CharacterRepeaterRule;
+import org.petitparser.utils.optimizer.FlattenChoiceRule;
+import org.petitparser.utils.optimizer.OptimizeRule;
+import org.petitparser.utils.optimizer.RemoveDelegateRule;
+import org.petitparser.utils.optimizer.RemoveDuplicateRule;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -16,44 +20,105 @@ import java.util.function.Function;
  */
 public class Optimizer {
 
-  private final List<Function<Parser, Parser>> transformers = new ArrayList<>();
+  private final List<OptimizeRule> rules = new ArrayList<>();
 
   /**
-   * Adds a generic transformer.
+   * Returns an unmodifiable list of the optimization rules configured on this optimizer.
    */
-  public Optimizer add(Function<Parser, Parser> transformer) {
-    transformers.add(transformer);
+  public List<OptimizeRule> getRules() {
+    return Collections.unmodifiableList(rules);
+  }
+
+  /**
+   * Adds an optimization rule.
+   */
+  public Optimizer add(OptimizeRule rule) {
+    rules.add(Objects.requireNonNull(rule, "Undefined rule"));
     return this;
   }
 
   /**
-   * Adds a transformer that removes unnecessary delegates.
+   * Adds a generic transformer function.
    */
-  public Optimizer removeDelegates() {
-    return add(parser -> {
-      while (DelegateParser.class.equals(parser.getClass()) ||
-          SettableParser.class.equals(parser.getClass())) {
-        parser = parser.getChildren().get(0);
-      }
-      return parser;
-    });
+  public Optimizer add(Function<Parser, Parser> transformer) {
+    rules.add(OptimizeRule.of(transformer));
+    return this;
   }
 
   /**
-   * Adds a transformer that collapses unnecessary copies of parsers.
+   * Adds multiple optimization rules.
+   */
+  public Optimizer add(OptimizeRule... rules) {
+    return addAll(Arrays.asList(rules));
+  }
+
+  /**
+   * Adds all specified optimization rules.
+   */
+  public Optimizer addAll(Iterable<? extends OptimizeRule> rules) {
+    for (OptimizeRule rule : rules) {
+      add(rule);
+    }
+    return this;
+  }
+
+  /**
+   * Adds a rule that removes unnecessary delegates (such as SettableParser or direct DelegateParser).
+   */
+  public Optimizer removeDelegates() {
+    return add(new RemoveDelegateRule());
+  }
+
+  /**
+   * Adds a rule that collapses duplicate structurally-equal parser instances.
    */
   public Optimizer removeDuplicates() {
-    Set<Parser> uniques = new HashSet<>();
-    return add(parser -> {
-      Optional<Parser> target = uniques.stream()
-          .filter(each -> parser != each && parser.isEqualTo(each)).findFirst();
-      if (target.isPresent()) {
-        return target.get();
-      } else {
-        uniques.add(parser);
-        return parser;
-      }
-    });
+    return add(new RemoveDuplicateRule());
+  }
+
+  /**
+   * Adds a rule that collapses duplicate structurally-equal parser instances with a specific set of seen parsers.
+   */
+  public Optimizer removeDuplicates(Set<Parser> uniques) {
+    return add(new RemoveDuplicateRule(uniques));
+  }
+
+  /**
+   * Adds a rule that flattens nested choices {@code [a, [b, c]]} into {@code [a, b, c]}.
+   */
+  public Optimizer flattenChoices() {
+    return add(new FlattenChoiceRule());
+  }
+
+  /**
+   * Adds a rule that transforms {@code FlattenParser(PossessiveRepeatingParser(CharacterParser))} into {@code RepeatingCharacterParser}.
+   */
+  public Optimizer characterRepeaters() {
+    return add(new CharacterRepeaterRule());
+  }
+
+  /**
+   * Alias for {@link #characterRepeaters()}.
+   */
+  public Optimizer optimizeCharacterRepeaters() {
+    return characterRepeaters();
+  }
+
+  /**
+   * Configures all standard optimization rules (remove delegates, flatten choices, character repeaters, remove duplicates).
+   */
+  public Optimizer all() {
+    return removeDelegates()
+        .flattenChoices()
+        .characterRepeaters()
+        .removeDuplicates();
+  }
+
+  /**
+   * Optimizes the provided parser using all standard optimization rules.
+   */
+  public static Parser optimize(Parser parser) {
+    return new Optimizer().all().transform(parser);
   }
 
   /**
@@ -61,7 +126,7 @@ public class Optimizer {
    */
   public Parser transform(Parser parser) {
     Function<Parser, Parser> transformer =
-        transformers.stream().reduce(Function::andThen)
+        rules.stream().map(r -> (Function<Parser, Parser>) r).reduce(Function::andThen)
             .orElse(Function.identity());
     return Mirror.of(parser).transform(transformer);
   }
