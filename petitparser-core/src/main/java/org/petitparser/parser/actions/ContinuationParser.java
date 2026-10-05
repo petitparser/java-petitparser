@@ -32,6 +32,12 @@ public class ContinuationParser extends DelegateParser {
   }
 
   @Override
+  public int fastParseOn(String buffer, int position) {
+    Result result = parseOn(new Context(buffer, position));
+    return result.isSuccess() ? result.getPosition() : -1;
+  }
+
+  @Override
   protected boolean hasEqualProperties(Parser other) {
     return super.hasEqualProperties(other) &&
         Objects.equals(handler, ((ContinuationParser) other).handler);

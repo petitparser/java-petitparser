@@ -43,7 +43,7 @@ public class BenchmarkSuiteTest {
     assertEquals(input.length(), flattenParser.fastParseOn(input, 0));
 
     // Allocation comparison
-    List<BenchmarkResult> results = BenchmarkSuite.benchmarkRepeatingCharacterVsStarFlatten(500, 2000);
+    List<BenchmarkResult> results = BenchmarkSuite.benchmarkRepeatingCharacterVsStarFlatten(2000, 5000);
     assertEquals(4, results.size());
 
     BenchmarkResult rRepeating = results.get(0);

@@ -45,6 +45,18 @@ public class RawTypeCompatibilityTest {
     Parser pick = a.seq(b).pick(0);
     Parser permute = a.seq(b).permute(1, 0);
 
+    Parser repeat = a.repeat(1, 3);
+    Parser starSeparated = a.starSeparated(b);
+    Parser plusSeparated = a.plusSeparated(b);
+    Parser times = a.times(2);
+    Parser negate = a.neg("not a");
+    Parser end = a.end();
+    Parser mapped = a.map(val -> "val=" + val);
+    Parser sideEffects = a.mapWithSideEffects(val -> val);
+    Parser where = a.where(val -> true);
+    Parser callCC = a.callCC((cont, ctx) -> cont.apply(ctx));
+    Parser orWiden = a.orWiden(StringParser.of("hello"));
+
     assertNotNull(seq);
     assertNotNull(or);
     assertNotNull(star);
@@ -62,6 +74,41 @@ public class RawTypeCompatibilityTest {
     assertNotNull(cast);
     assertNotNull(pick);
     assertNotNull(permute);
+    assertNotNull(repeat);
+    assertNotNull(starSeparated);
+    assertNotNull(plusSeparated);
+    assertNotNull(times);
+    assertNotNull(negate);
+    assertNotNull(end);
+    assertNotNull(mapped);
+    assertNotNull(sideEffects);
+    assertNotNull(where);
+    assertNotNull(callCC);
+    assertNotNull(orWiden);
+  }
+
+  @Test
+  public void testRawSettableParser() {
+    org.petitparser.parser.combinators.SettableParser settable =
+        org.petitparser.parser.combinators.SettableParser.undefined();
+    Parser parser = settable.plus();
+    settable.set(CharacterParser.digit());
+
+    Result result = parser.parse("123");
+    assertTrue(result.isSuccess());
+    assertEquals(3, ((List) result.get()).size());
+  }
+
+  @Test
+  public void testRawMatchingMethods() {
+    Parser parser = CharacterParser.digit().plus().flatten();
+    List matches = parser.matches("a123b456c");
+    assertEquals(6, matches.size());
+
+    List skippingMatches = parser.matchesSkipping("a123b456c");
+    assertEquals(2, skippingMatches.size());
+    assertEquals("123", skippingMatches.get(0));
+    assertEquals("456", skippingMatches.get(1));
   }
 
   @Test

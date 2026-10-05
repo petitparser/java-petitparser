@@ -683,6 +683,8 @@ public class ParsersTest {
         .callCC((continuation, context) -> context.success("Always succeed"));
     assertTrue(parser.parse("1").isSuccess());
     assertTrue(parser.parse("a").isSuccess());
+    assertTrue(parser.accept("1"));
+    assertTrue(parser.accept("a"));
   }
 
   @Test
@@ -691,5 +693,7 @@ public class ParsersTest {
         .callCC((continuation, context) -> context.failure("Always fail"));
     assertFalse(parser.parse("1").isSuccess());
     assertFalse(parser.parse("a").isSuccess());
+    assertFalse(parser.accept("1"));
+    assertFalse(parser.accept("a"));
   }
 }
