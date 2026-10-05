@@ -8,6 +8,7 @@ import org.petitparser.parser.actions.ContinuationParser;
 import org.petitparser.parser.actions.FlattenParser;
 import org.petitparser.parser.actions.TokenParser;
 import org.petitparser.parser.actions.TrimmingParser;
+import org.petitparser.parser.actions.WhereParser;
 import org.petitparser.parser.combinators.AndParser;
 import org.petitparser.parser.combinators.ChoiceParser;
 import org.petitparser.parser.combinators.EndOfInputParser;
@@ -29,7 +30,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static org.petitparser.parser.primitive.CharacterParser.any;
 
@@ -407,6 +410,46 @@ public abstract class Parser {
    */
   public <A, B> Parser mapWithSideEffects(Function<A, B> function) {
     return new ActionParser<>(this, function, true);
+  }
+
+  /**
+   * Returns a parser that evaluates the {@code predicate} on the successful
+   * parse result of the receiver.
+   *
+   * @param predicate the predicate to evaluate.
+   * @param <T> the type of the result to filter.
+   * @return a filtered parser.
+   */
+  public <T> Parser where(Predicate<T> predicate) {
+    return where(predicate, (String) null);
+  }
+
+  /**
+   * Returns a parser that evaluates the {@code predicate} on the successful
+   * parse result of the receiver.
+   *
+   * @param predicate the predicate to evaluate.
+   * @param message the failure message if the predicate fails.
+   * @param <T> the type of the result to filter.
+   * @return a filtered parser.
+   */
+  public <T> Parser where(Predicate<T> predicate, String message) {
+    return new WhereParser<>(this, predicate, message);
+  }
+
+  /**
+   * Returns a parser that evaluates the {@code predicate} on the successful
+   * parse result of the receiver.
+   *
+   * @param predicate the predicate to evaluate.
+   * @param failureFactory the failure factory producing a result if the predicate fails.
+   * @param <T> the type of the result to filter.
+   * @return a filtered parser.
+   */
+  public <T> Parser where(
+      Predicate<T> predicate,
+      BiFunction<Context, Result, Result> failureFactory) {
+    return new WhereParser<>(this, predicate, failureFactory);
   }
 
   /**

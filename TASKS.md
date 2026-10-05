@@ -40,7 +40,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Create `org.petitparser.parser.combinators.ResolvableParser` with `Parser resolve()`.
   - Implement `ResolvableParser` on `SettableParser`.
 
-- [ ] **Task 1.2: WhereParser & Filtering**
+- [x] **Task 1.2: WhereParser & Filtering**
   - Implement `org.petitparser.parser.actions.WhereParser<T>` with `java.util.function.Predicate<T>` and custom error message / failure factory `BiFunction<Context, Result, Result>`.
   - Add `where(Predicate<T>)`, `where(Predicate<T>, String)`, and `where(Predicate<T>, BiFunction<Context, Result, Result>)` to `Parser`.
   - Implement zero-allocation fast-parse, copy, and equality methods.

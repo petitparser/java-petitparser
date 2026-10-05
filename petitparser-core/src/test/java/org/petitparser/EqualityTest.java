@@ -10,7 +10,9 @@ import org.petitparser.parser.primitive.StringParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -227,5 +229,16 @@ public class EqualityTest {
   public void trim() {
     verify(CharacterParser.digit()
         .trim(CharacterParser.of('a'), CharacterParser.of('b')));
+  }
+
+  @Test
+  public void where() {
+    verify(CharacterParser.digit().where((Character c) -> Character.isDigit(c)));
+  }
+
+  @Test
+  public void whereWithMessage() {
+    verify(CharacterParser.digit()
+        .where((Character c) -> Character.isDigit(c), "digit expected"));
   }
 }
