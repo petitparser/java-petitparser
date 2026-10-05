@@ -178,14 +178,14 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ## Phase 4: Indentation-Sensitive Parsing
 
-- [ ] **Task 4.1: Indent Engine**
+- [x] **Task 4.1: Indent Engine**
   - Implement `org.petitparser.tools.Indent` class managing an indentation stack and current indent string.
   - Implement `same()` matching current indentation level.
   - Implement `increase()` requiring deeper indentation and pushing to stack.
   - Implement `decrease()` popping indentation from stack.
   - Implement `during(Parser inner)` with transactional rollback on parse failure and choice backtracking.
 
-- [ ] **Task 4.2: Phase 4 Parallel Unit Tests**
+- [x] **Task 4.2: Phase 4 Parallel Unit Tests**
   - Create `org.petitparser.tools.IndentTest`:
     - Success restoring outer indentation.
     - Failure rolling back indentation stack.
