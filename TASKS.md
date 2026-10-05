@@ -126,7 +126,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ## Phase 3: Strongly Typed Sequences, Tuples & Action Combinators
 
-- [ ] **Task 3.1: Dual-Nature Tuple Hierarchy (`Tuple2` to `Tuple9`)**
+- [x] **Task 3.1: Dual-Nature Tuple Hierarchy (`Tuple2` to `Tuple9`)**
   - Implement immutable `org.petitparser.parser.repeating.Tuple2<T1, T2>` through `Tuple9` extending `java.util.AbstractList<Object>`.
   - Provide strongly-typed accessors: `tuple.first()`, `tuple.second()`, `tuple.third()`, etc.
   - Implement `AbstractList` contract (`size()`, `get(int index)`), allowing tuples to be treated directly as `List<Object>` for 100% backward compatibility with legacy tests and downstream consumers (`tuple.equals(Arrays.asList(...)) == true`).
