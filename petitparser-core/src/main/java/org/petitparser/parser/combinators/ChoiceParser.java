@@ -68,6 +68,8 @@ public class ChoiceParser extends ListParser {
 
   /**
    * Returns the failure joiner used by this choice parser.
+   *
+   * @return the failure joiner
    */
   public FailureJoiner getFailureJoiner() {
     return failureJoiner;

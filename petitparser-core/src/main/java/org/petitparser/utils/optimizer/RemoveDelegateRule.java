@@ -28,7 +28,11 @@ public class RemoveDelegateRule implements OptimizeRule {
       if (!seen.add(parser)) {
         break;
       }
-      parser = parser.getChildren().get(0);
+      Parser next = parser.getChildren().get(0);
+      if (next == null) {
+        break;
+      }
+      parser = next;
     }
     return parser;
   }

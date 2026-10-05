@@ -12,13 +12,19 @@ import java.util.Set;
 public class RemoveDuplicateRule implements OptimizeRule {
 
   private final Set<Parser> uniques;
+  private final boolean clearOnReset;
 
   public RemoveDuplicateRule() {
-    this(new HashSet<>());
+    this(new HashSet<>(), true);
   }
 
   public RemoveDuplicateRule(Set<Parser> uniques) {
+    this(uniques, false);
+  }
+
+  private RemoveDuplicateRule(Set<Parser> uniques, boolean clearOnReset) {
     this.uniques = Objects.requireNonNull(uniques, "Undefined uniques");
+    this.clearOnReset = clearOnReset;
   }
 
   public Set<Parser> getUniques() {
@@ -27,6 +33,13 @@ public class RemoveDuplicateRule implements OptimizeRule {
 
   public void clear() {
     uniques.clear();
+  }
+
+  @Override
+  public void reset() {
+    if (clearOnReset) {
+      clear();
+    }
   }
 
   @Override

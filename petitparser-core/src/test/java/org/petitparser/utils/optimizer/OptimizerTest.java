@@ -305,4 +305,86 @@ public class OptimizerTest {
     assertNotNull(r3);
     assertNotNull(r4);
   }
+
+  @Test
+  public void testFlattenChoiceDifferentFailureJoinerDirect() {
+    FlattenChoiceRule rule = new FlattenChoiceRule();
+    FailureJoiner joinerFirst = new FailureJoiner.SelectFirst();
+    FailureJoiner joinerLast = new FailureJoiner.SelectLast();
+
+    ChoiceParser inner = new ChoiceParser(joinerFirst, of('b'), of('c'));
+    ChoiceParser outer = new ChoiceParser(joinerLast, of('a'), inner);
+
+    Parser result = rule.apply(outer);
+    assertSame(outer, result);
+    assertEquals(2, ((ChoiceParser) result).getChildren().size());
+  }
+
+  @Test
+  public void testFlattenChoiceAllCyclesReturnsSame() {
+    FlattenChoiceRule rule = new FlattenChoiceRule();
+    ChoiceParser c1 = new ChoiceParser(of('a'), of('b'));
+    c1.replace(of('a'), c1);
+    c1.replace(of('b'), c1);
+
+    Parser result = rule.apply(c1);
+    assertSame(c1, result);
+  }
+
+  @Test
+  public void testCharacterRepeaterUnwrapsDelegates() {
+    CharacterRepeaterRule rule = new CharacterRepeaterRule();
+    SettableParser s = SettableParser.with(of('a').star());
+    Parser flatten = s.flatten();
+
+    Parser rewritten = rule.apply(flatten);
+    assertTrue(rewritten instanceof RepeatingCharacterParser);
+    assertEquals("aaa", rewritten.parse("aaa").get());
+  }
+
+  @Test
+  public void testCustomFlattenSubclassPreserved() {
+    CharacterRepeaterRule rule = new CharacterRepeaterRule();
+    Parser custom = new org.petitparser.parser.actions.FlattenParser(of('a').star()) {};
+    Parser rewritten = rule.apply(custom);
+    assertSame(custom, rewritten);
+  }
+
+  @Test
+  public void testCustomChoiceSubclassPreserved() {
+    FlattenChoiceRule rule = new FlattenChoiceRule();
+    ChoiceParser custom = new ChoiceParser(of('a'), of('b')) {};
+    ChoiceParser outer = new ChoiceParser(of('c'), custom);
+
+    Parser result = rule.apply(outer);
+    assertSame(outer, result);
+  }
+
+  @Test
+  public void testRemoveDuplicateResetClearsDefaultPreservesCustom() {
+    RemoveDuplicateRule defaultRule = new RemoveDuplicateRule();
+    defaultRule.apply(of('a'));
+    assertEquals(1, defaultRule.getUniques().size());
+    defaultRule.reset();
+    assertEquals(0, defaultRule.getUniques().size());
+
+    Set<Parser> customSet = new HashSet<>();
+    customSet.add(of('a'));
+    RemoveDuplicateRule customRule = new RemoveDuplicateRule(customSet);
+    assertEquals(1, customRule.getUniques().size());
+    customRule.reset();
+    assertEquals(1, customRule.getUniques().size());
+  }
+
+  @Test
+  public void testOptimizerSubclassConstructors() {
+    Optimizer opt1 = new Optimizer(new RemoveDelegateRule(), new FlattenChoiceRule());
+    assertEquals(2, opt1.getRules().size());
+
+    Optimizer opt2 = new Optimizer(List.of(new CharacterRepeaterRule()));
+    assertEquals(1, opt2.getRules().size());
+
+    Optimizer opt3 = new Optimizer((Iterable<OptimizeRule>) null);
+    assertEquals(0, opt3.getRules().size());
+  }
 }

@@ -21,6 +21,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.petitparser.parser.primitive.CharacterParser.digit;
@@ -279,5 +280,116 @@ public class OptimizerTest {
     Optimizer optimizer2 = new Optimizer();
     optimizer2.addAll(List.of(new CharacterRepeaterRule(), new RemoveDuplicateRule()));
     assertEquals(2, optimizer2.getRules().size());
+  }
+
+  @Test
+  public void testFlattenChoiceDifferentFailureJoinerNotFlattened() {
+    FailureJoiner joinerLast = new FailureJoiner.SelectLast();
+    FailureJoiner joinerFirst = new FailureJoiner.SelectFirst();
+
+    Parser a = of('a');
+    Parser b = of('b');
+    Parser c = of('c');
+
+    ChoiceParser inner = new ChoiceParser(joinerFirst, b, c);
+    ChoiceParser outer = new ChoiceParser(joinerLast, a, inner);
+
+    // Parsing "x" on unoptimized:
+    // a fails at 0, inner joins b and c with SelectFirst -> b fails at 0 -> returns b.
+    // outer joins a and b with SelectLast -> returns b failure.
+    Result unoptResult = outer.parse("x");
+    assertEquals("'b' expected", unoptResult.getMessage());
+
+    Parser optimized = new Optimizer().flattenChoices().transform(outer);
+
+    // Should NOT flatten inner because joiners differ
+    assertTrue(optimized instanceof ChoiceParser);
+    assertEquals(2, optimized.getChildren().size());
+    assertTrue(optimized.getChildren().get(1) instanceof ChoiceParser);
+    assertSame(joinerFirst, ((ChoiceParser) optimized.getChildren().get(1)).getFailureJoiner());
+
+    Result optResult = optimized.parse("x");
+    assertEquals("'b' expected", optResult.getMessage());
+  }
+
+  @Test
+  public void testFlattenChoiceCycleSafe() {
+    ChoiceParser c1 = new ChoiceParser(of('a'), of('b'));
+    c1.replace(of('a'), c1);
+    c1.replace(of('b'), c1);
+
+    FlattenChoiceRule rule = new FlattenChoiceRule();
+    Parser result = rule.apply(c1);
+    assertSame(c1, result);
+  }
+
+  @Test
+  public void testCharacterRepeaterWithSettableDelegate() {
+    SettableParser settable = SettableParser.with(of('a').star());
+    Parser input = settable.flatten();
+
+    Parser output = new Optimizer().characterRepeaters().transform(input);
+    assertTrue(output instanceof RepeatingCharacterParser);
+    assertEquals("aaa", output.parse("aaa").get());
+  }
+
+  @Test
+  public void testRemoveDuplicatesResetAcrossRuns() {
+    Optimizer optimizer = new Optimizer().removeDuplicates();
+
+    Parser p1 = of('a').seq(of('a'));
+    Parser o1 = optimizer.transform(p1);
+    assertSame(o1.getChildren().get(0), o1.getChildren().get(1));
+
+    Parser p2 = of('a').seq(of('b'));
+    Parser o2 = optimizer.transform(p2);
+    // Node in o2 should NOT be contaminated with node from o1
+    assertNotSame(o1.getChildren().get(0), o2.getChildren().get(0));
+  }
+
+  @Test
+  public void testOptimizerConstructors() {
+    Optimizer o1 = new Optimizer(new RemoveDelegateRule(), new FlattenChoiceRule());
+    assertEquals(2, o1.getRules().size());
+
+    Optimizer o2 = new Optimizer(List.of(new CharacterRepeaterRule()));
+    assertEquals(1, o2.getRules().size());
+
+    Optimizer o3 = new Optimizer((Iterable<OptimizeRule>) null);
+    assertEquals(0, o3.getRules().size());
+  }
+
+  @Test
+  public void testAllRulesConstant() {
+    assertEquals(4, Optimizer.ALL_RULES.size());
+    assertTrue(Optimizer.ALL_RULES.get(0) instanceof RemoveDelegateRule);
+    assertTrue(Optimizer.ALL_RULES.get(1) instanceof FlattenChoiceRule);
+    assertTrue(Optimizer.ALL_RULES.get(2) instanceof CharacterRepeaterRule);
+    assertTrue(Optimizer.ALL_RULES.get(3) instanceof RemoveDuplicateRule);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testStaticOptimizeNull() {
+    Optimizer.optimize(null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testTransformNull() {
+    new Optimizer().transform(null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testAddNullRule() {
+    new Optimizer().add((OptimizeRule) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testOptimizeRuleOfNull() {
+    OptimizeRule.of(null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testRemoveDuplicateRuleNullUniques() {
+    new RemoveDuplicateRule(null);
   }
 }

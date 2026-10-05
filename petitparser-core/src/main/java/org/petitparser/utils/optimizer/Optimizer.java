@@ -14,15 +14,18 @@ public class Optimizer extends org.petitparser.utils.Optimizer {
   /**
    * All standard optimizer rules in recommended application order.
    */
-  public static final List<OptimizeRule> ALL_RULES = List.of(
-      new RemoveDelegateRule(),
-      new FlattenChoiceRule(),
-      new CharacterRepeaterRule(),
-      new RemoveDuplicateRule()
-  );
+  public static final List<OptimizeRule> ALL_RULES = org.petitparser.utils.Optimizer.ALL_RULES;
 
   public Optimizer() {
     super();
+  }
+
+  public Optimizer(OptimizeRule... rules) {
+    super(rules);
+  }
+
+  public Optimizer(Iterable<? extends OptimizeRule> rules) {
+    super(rules);
   }
 
   @Override

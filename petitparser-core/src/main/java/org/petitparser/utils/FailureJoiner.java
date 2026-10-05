@@ -21,7 +21,7 @@ public interface FailureJoiner extends BiFunction<Failure, Failure, Failure> {
 
     @Override
     public boolean equals(Object obj) {
-      return obj instanceof SelectFirst;
+      return obj != null && getClass() == obj.getClass();
     }
 
     @Override
@@ -41,7 +41,7 @@ public interface FailureJoiner extends BiFunction<Failure, Failure, Failure> {
 
     @Override
     public boolean equals(Object obj) {
-      return obj instanceof SelectLast;
+      return obj != null && getClass() == obj.getClass();
     }
 
     @Override
@@ -62,7 +62,7 @@ public interface FailureJoiner extends BiFunction<Failure, Failure, Failure> {
 
     @Override
     public boolean equals(Object obj) {
-      return obj instanceof SelectFarthest;
+      return obj != null && getClass() == obj.getClass();
     }
 
     @Override
@@ -101,7 +101,7 @@ public interface FailureJoiner extends BiFunction<Failure, Failure, Failure> {
       if (this == obj) {
         return true;
       }
-      if (!(obj instanceof SelectFarthestJoined)) {
+      if (obj == null || getClass() != obj.getClass()) {
         return false;
       }
       SelectFarthestJoined other = (SelectFarthestJoined) obj;

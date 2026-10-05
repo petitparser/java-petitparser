@@ -42,6 +42,11 @@ public interface OptimizeRule extends Function<Parser, Parser> {
   }
 
   /**
+   * Resets any state accumulated by this rule across transformation runs.
+   */
+  default void reset() {}
+
+  /**
    * Adapts a {@link Function} to an {@link OptimizeRule}.
    *
    * @param function the function to wrap

@@ -20,7 +20,29 @@ import java.util.function.Function;
  */
 public class Optimizer {
 
+  /**
+   * All standard optimizer rules in recommended application order.
+   */
+  public static final List<OptimizeRule> ALL_RULES = List.of(
+      new RemoveDelegateRule(),
+      new FlattenChoiceRule(),
+      new CharacterRepeaterRule(),
+      new RemoveDuplicateRule()
+  );
+
   private final List<OptimizeRule> rules = new ArrayList<>();
+
+  public Optimizer() {}
+
+  public Optimizer(OptimizeRule... rules) {
+    this(Arrays.asList(rules));
+  }
+
+  public Optimizer(Iterable<? extends OptimizeRule> rules) {
+    if (rules != null) {
+      addAll(rules);
+    }
+  }
 
   /**
    * Returns an unmodifiable list of the optimization rules configured on this optimizer.
@@ -118,6 +140,7 @@ public class Optimizer {
    * Optimizes the provided parser using all standard optimization rules.
    */
   public static Parser optimize(Parser parser) {
+    Objects.requireNonNull(parser, "Undefined parser");
     return new Optimizer().all().transform(parser);
   }
 
@@ -125,6 +148,8 @@ public class Optimizer {
    * Transforms the provided parsers using the selected optimizations.
    */
   public Parser transform(Parser parser) {
+    Objects.requireNonNull(parser, "Undefined parser");
+    rules.forEach(OptimizeRule::reset);
     Function<Parser, Parser> transformer =
         rules.stream().map(r -> (Function<Parser, Parser>) r).reduce(Function::andThen)
             .orElse(Function.identity());
