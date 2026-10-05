@@ -141,6 +141,11 @@ public class EqualityTest {
   }
 
   @Test
+  public void newline() {
+    verify(Parser.newline());
+  }
+
+  @Test
   public void not() {
     verify(CharacterParser.digit().not());
   }

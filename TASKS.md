@@ -61,7 +61,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Add static factory `Parser.position()`.
   - Implement zero-allocation fast-parse returning position unchanged.
 
-- [ ] **Task 1.6: NewlineParser**
+- [x] **Task 1.6: NewlineParser**
   - Implement `org.petitparser.parser.primitive.NewlineParser` matching `\n`, `\r\n`, and `\r`.
   - Add static factories `Parser.newline()` and `Parser.newline(String message)`.
   - Implement branch-optimized zero-allocation `fastParseOn`.
