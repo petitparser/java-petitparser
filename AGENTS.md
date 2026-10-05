@@ -21,8 +21,23 @@
   - Fluent method chaining on `Parser` and builders.
   - Standard functional interfaces (`java.util.function.Function`, `Predicate`, `BiFunction`, `Supplier`, `Consumer`).
   - Java `Stream` and lazy `Iterable`/`Iterator` for streaming matching and graph traversals.
-  - Immutability for core state (`Context`, `Result`, `Token`, `SeparatedList`) using defensive copies and `Collections.unmodifiableList`.
+  - Immutability for core state (`Context`, `Result`, `Token`, `SeparatedList`, `Tuple`) using defensive copies and unmodifiable collections.
   - Null-safety checks using `Objects.requireNonNull(arg, "message")`.
+
+### Type System & Generics Guidelines
+- **Dual-Nature Tuples**: Java 11 lacks language-level tuples/records. Implement `Tuple2<T1, T2>` through `Tuple9` extending `AbstractList<Object>`.
+  - Enables strongly-typed accessors (`tuple.first()`, `tuple.second()`, etc.) without losing compatibility with APIs expecting `List<Object>`.
+  - Seamlessly passes equality against standard lists (`tuple.equals(Arrays.asList(...)) == true`).
+- **Direct-Mapped Sequences**: Provide fluent `.then()` sequence chaining returning `SequenceParser2` through `SequenceParser9`, offering direct multi-argument mapping (`.map((a, b) -> ...)` via `BiFunction`, `Function3`, etc.) so users rarely need to inspect the underlying `Tuple`.
+- **PECS (Producer Extends, Consumer Super)**:
+  - Input callbacks consume: `Function<? super R, ? extends S>`, `Predicate<? super R>`, `BiFunction<? super T1, ? super T2, ? extends S>`.
+  - Child parser acceptance produces: `Parser<? extends R>`.
+- **Local Type Inference (`var`) Preservation**:
+  - Keep return types specific rather than introducing unnecessary wildcard returns that cause `var` to degrade to `Parser<Object>`.
+  - Provide `or(Parser<? extends R> other)` to retain exact type `R`, and `orWiden(Parser<? extends O> other)` for explicit widening across differing types.
+- **Production Keys vs. Method References**:
+  - Unlike Dart, Java method references (`this::rule`) do NOT preserve object identity or equality (`this::foo != this::foo`).
+  - Provide type-safe `Production<T>` keys (`Production<Expr> EXPR = production("expr")`) in `GrammarDefinition` alongside `SettableParser<T>` fields to deliver 100% type safety and IDE refactoring without synthetic lambda reflection.
 
 ---
 

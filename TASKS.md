@@ -124,16 +124,68 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ---
 
-## Phase 3: Indentation-Sensitive Parsing
+## Phase 3: Strongly Typed Sequences, Tuples & Action Combinators
 
-- [ ] **Task 3.1: Indent Engine**
+- [ ] **Task 3.1: Dual-Nature Tuple Hierarchy (`Tuple2` to `Tuple9`)**
+  - Implement immutable `org.petitparser.parser.repeating.Tuple2<T1, T2>` through `Tuple9` extending `java.util.AbstractList<Object>`.
+  - Provide strongly-typed accessors: `tuple.first()`, `tuple.second()`, `tuple.third()`, etc.
+  - Implement `AbstractList` contract (`size()`, `get(int index)`), allowing tuples to be treated directly as `List<Object>` for 100% backward compatibility with legacy tests and downstream consumers (`tuple.equals(Arrays.asList(...)) == true`).
+  - Implement zero-allocation accessors and structural equality (`equals`, `hashCode`, `toString`).
+
+- [ ] **Task 3.2: Multi-Arity Functional Interfaces**
+  - Create standard functional interfaces in `org.petitparser.utils.functions`:
+    - `Function3<T1, T2, T3, R>`, `Function4<T1, T2, T3, T4, R>`, ... `Function9<...>`.
+  - Ensure compatibility with Java 11 `BiFunction` for arity-2 sequences.
+
+- [ ] **Task 3.3: Typed Sequence Combinators (`SequenceParser2` to `SequenceParser9`)**
+  - Implement `SequenceParser2<T1, T2>` through `SequenceParser9<...>` implementing `SequentialParser`.
+  - Add fluent `.then(Parser<TN> next)` on `Parser` and sequence parsers, automatically flattening into `SequenceParser3`, `SequenceParser4`, etc. up to 9 elements.
+  - Add strongly-typed `.map(BiFunction<? super T1, ? super T2, ? extends R> function)` on `SequenceParser2`.
+  - Add strongly-typed `.map(Function3<...>)` through `.map(Function9<...>)` on `SequenceParser3` through `SequenceParser9`, eliminating the need for users to manually unpack tuple or list elements.
+  - Implement zero-allocation `fastParseOn`, `copy`, and equality methods.
+
+- [ ] **Task 3.4: Static Sequence Factories**
+  - Add static factories `Parser.seq(Parser<T1> p1, Parser<T2> p2)` returning `SequenceParser2<T1, T2>`.
+  - Add static factories `Parser.seq(p1, p2, p3)` through `Parser.seq(p1, ..., p9)` returning corresponding typed sequence parsers.
+  - Retain existing `Parser.seq(Parser... parsers)` and instance method `seq(Parser other)` returning `SequenceParser` (`Parser<List<Object>>`) for backward compatibility.
+
+- [ ] **Task 3.5: Type Extraction, Casting & Permutation**
+  - Implement `org.petitparser.parser.actions.CastParser<R, S>` with `cast()` and `cast(Class<S> clazz)` on `Parser`.
+  - Implement `castList(Class<S> clazz)` on `Parser<List<?>>`.
+  - Implement `pick(int index)` with negative indexing support, specialized on `RepeatingParser<E>` to return `Parser<E>`.
+  - Implement `permute(int... indices)` returning reordered `Tuple` or `List`.
+
+- [ ] **Task 3.6: Variance-Friendly Alternatives (`or` & `orWiden`)**
+  - Add `or(Parser<? extends R> other)` to `Parser<R>` to preserve precise local type inference when using Java `var`.
+  - Add `<O> Parser<O> orWiden(Parser<? extends O> other)` and static `Parser.or(Parser<? extends T>... parsers)` for explicit widening across differing types (e.g. `Integer` and `Double` into `Number`).
+
+- [ ] **Task 3.7: Strongly-Typed Grammar Definitions**
+  - Introduce `org.petitparser.tools.Production<T>` typed token key:
+    - Factory `Production.of(String name)` / `GrammarDefinition.production(String name)`.
+  - Add typed `def(Production<T> production, Parser<? extends T> parser)`.
+  - Add typed `ref(Production<T> production)` returning `Parser<T>`.
+  - Retain string-based `def(String, Parser)` and enhance `ref(String)` with `<T> Parser<T> ref(String name)` for seamless existing code compatibility.
+
+- [ ] **Task 3.8: Phase 3 Parallel Unit Tests**
+  - Create test classes:
+    - `org.petitparser.parser.repeating.TupleTest` (verifying typed access and `List<Object>` contract)
+    - `org.petitparser.parser.combinators.SequenceParserNTest` (verifying `then()`, `map()`, arity 2-9, fast-parse)
+    - `org.petitparser.parser.actions.CastParserTest`
+    - `org.petitparser.parser.actions.PickParserTest`
+    - `org.petitparser.tools.TypedGrammarDefinitionTest`
+
+---
+
+## Phase 4: Indentation-Sensitive Parsing
+
+- [ ] **Task 4.1: Indent Engine**
   - Implement `org.petitparser.tools.Indent` class managing an indentation stack and current indent string.
   - Implement `same()` matching current indentation level.
   - Implement `increase()` requiring deeper indentation and pushing to stack.
   - Implement `decrease()` popping indentation from stack.
   - Implement `during(Parser inner)` with transactional rollback on parse failure and choice backtracking.
 
-- [ ] **Task 3.2: Phase 3 Parallel Unit Tests**
+- [ ] **Task 4.2: Phase 4 Parallel Unit Tests**
   - Create `org.petitparser.tools.IndentTest`:
     - Success restoring outer indentation.
     - Failure rolling back indentation stack.
@@ -143,9 +195,11 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ---
 
-## Phase 4: Character Predicate AST & Unicode Code Points
+---
 
-- [ ] **Task 4.1: Hybrid CharacterPredicate Hierarchy**
+## Phase 5: Character Predicate AST & Unicode Code Points
+
+- [ ] **Task 5.1: Hybrid CharacterPredicate Hierarchy**
   - Preserve `@FunctionalInterface CharacterPredicate` interface (`test(char)`) for backward compatibility with user lambdas.
   - Introduce concrete AST classes implementing `CharacterPredicate` and `isEqualTo`:
     - `SingleCharPredicate`, `RangeCharPredicate`, `RangesCharPredicate` (binary search on primitive arrays).
@@ -154,23 +208,23 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
     - Reusable singleton constants: `DigitCharPredicate`, `LetterCharPredicate`, `LowercaseCharPredicate`, `UppercaseCharPredicate`, `WhitespaceCharPredicate`, `WordCharPredicate`, `ConstantCharPredicate.any`, `ConstantCharPredicate.none`.
   - Update `CharacterParser` factories (`digit()`, `letter()`, etc.) to use AST singletons so `p.isEqualTo(p)` succeeds across separate calls.
 
-- [ ] **Task 4.2: Range Merging & Character Optimization**
+- [ ] **Task 5.2: Range Merging & Character Optimization**
   - Implement `optimizedRanges(List<RangeCharPredicate> ranges)`:
     - Sort ranges by start and stop.
     - Merge adjacent and overlapping ranges to minimize runtime branch tests.
     - Choose optimal predicate ($O(1)$ Lookup table, Single, Range, or Ranges with binary search).
   - Implement `optimizedString(String string, boolean ignoreCase)`.
 
-- [ ] **Task 4.3: StringParser SIMD & Equality Fix**
+- [ ] **Task 5.3: StringParser SIMD & Equality Fix**
   - Refactor `StringParser.ofIgnoringCase` to avoid non-comparable method reference lambdas (`value::equalsIgnoreCase`).
   - Implement `StringIgnoreCaseParser` storing the literal string and comparing literals in `hasEqualProperties`.
   - Use `String.regionMatches` and `String.startsWith` for HotSpot-intrinsic performance.
 
-- [ ] **Task 4.4: Unicode Code Points**
+- [ ] **Task 5.4: Unicode Code Points**
   - Implement `UnicodeCharacterParser` decoding UTF-16 surrogate pairs into 21-bit code points ($0 \dots \text{0x10FFFF}$).
   - Add `unicode` parameter / flag to character primitives (`any`, `char`, `pattern`, `anyOf`, `noneOf`).
 
-- [ ] **Task 4.5: Phase 4 Parallel Unit Tests**
+- [ ] **Task 5.5: Phase 5 Parallel Unit Tests**
   - Create tests:
     - `org.petitparser.parser.primitive.CharacterPredicateAstTest`
     - `org.petitparser.parser.primitive.UnicodeCharacterParserTest`
@@ -178,17 +232,17 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ---
 
-## Phase 5: ExpressionBuilder Modernization
+## Phase 6: ExpressionBuilder Modernization
 
-- [ ] **Task 5.1: ExpressionBuilder Enhancements**
+- [ ] **Task 6.1: ExpressionBuilder Enhancements**
   - Introduce generic typing `ExpressionBuilder<T>` and `ExpressionGroup<T>`.
   - Add `primitive(Parser parser)` directly on `ExpressionBuilder`.
   - Add `loopback` getter on `ExpressionBuilder`.
   - Add `optional(Object value)` on `ExpressionGroup`.
   - Refactor binary left/right operator builders to use `plusSeparated` and `SeparatedList.foldLeft` / `foldRight`.
-  - Add typed functional callbacks (e.g. ternary `(left, op, right) -> result`) while preserving existing `List<Object>` callbacks for compatibility.
+  - Add typed functional callbacks (e.g. ternary `(left, op, right) -> result` via `Function3`) while preserving existing `List<Object>` callbacks for compatibility.
 
-- [ ] **Task 5.2: Phase 5 Parallel Unit Tests**
+- [ ] **Task 6.2: Phase 6 Parallel Unit Tests**
   - Augment `org.petitparser.tools.ExpressionBuilderTest` to test:
     - Builder-level primitives.
     - Optional expression groups.
@@ -196,24 +250,24 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ---
 
-## Phase 6: Grammar Reflection & Analyzer
+## Phase 7: Grammar Reflection & Analyzer
 
-- [ ] **Task 6.1: Grammar Graph Traversal & Analyzer Base**
+- [ ] **Task 7.1: Grammar Graph Traversal & Analyzer Base**
   - Implement `org.petitparser.utils.Analyzer` leveraging standard Java collections and `Stream`:
     - Reachable parsers discovery (`parsers`).
     - Deep children set cache (`allChildren(parser)`).
     - Graph path search (`findPath`, `findPathTo`, `findAllPaths`, `findAllPathsTo`).
 
-- [ ] **Task 6.2: Grammar Property Computation**
+- [ ] **Task 7.2: Grammar Property Computation**
   - Implement nullability fixed-point analysis (`isNullable(parser)`).
   - Implement FIRST-set calculation (`firstSet(parser)`): terminal parsers that can appear first, taking `SequentialParser` into account.
   - Implement FOLLOW-set calculation (`followSet(parser)`): terminal parsers that can immediately succeed `parser`.
   - Implement cycle detection (`cycleSet(parser)`).
 
-- [ ] **Task 6.3: Grammar Reference Inlining**
+- [ ] **Task 7.3: Grammar Reference Inlining**
   - Implement `resolve(Parser parser)` resolving all `ResolvableParser` references into direct cycles/graphs without delegate overhead.
 
-- [ ] **Task 6.4: Phase 6 Parallel Unit Tests**
+- [ ] **Task 7.4: Phase 7 Parallel Unit Tests**
   - Create `org.petitparser.utils.AnalyzerTest`:
     - First-set and follow-set validation on LL/LR grammar definitions.
     - Nullable chain detection.
@@ -222,13 +276,13 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ---
 
-## Phase 7: Grammar Linter
+## Phase 8: Grammar Linter
 
-- [ ] **Task 7.1: Linter Engine Architecture**
+- [ ] **Task 8.1: Linter Engine Architecture**
   - Implement `org.petitparser.utils.linter.LinterRule`, `LinterIssue`, `LinterType` (info, warning, error).
   - Implement `linter(Parser root, ...)` executing active rules using `Analyzer`.
 
-- [ ] **Task 7.2: 13 Linter Rules Implementation**
+- [ ] **Task 8.2: 13 Linter Rules Implementation**
   - [ ] `CharacterRepeaterRule`: Identifies `.star().flatten()` on character parsers and suggests `starString()`.
   - [ ] `DuplicateParserRule`: Identifies duplicate structurally equal parser instances in grammar graph.
   - [ ] `LeftRecursionRule`: Identifies left-recursive loops that lead to infinite recursion.
@@ -243,49 +297,50 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - [ ] `UnresolvedSettableRule`: Identifies `SettableParser` left in undefined state.
   - [ ] `UnusedResultRule`: Identifies complex sub-parses whose results are discarded.
 
-- [ ] **Task 7.3: Phase 7 Parallel Unit Tests**
+- [ ] **Task 8.3: Phase 8 Parallel Unit Tests**
   - Create `org.petitparser.utils.linter.LinterTest` verifying positive and negative triggers for each of the 13 rules.
 
 ---
 
-## Phase 8: Extended Optimizer
+## Phase 9: Extended Optimizer
 
-- [ ] **Task 8.1: Extensible OptimizeRule Framework**
+- [ ] **Task 9.1: Extensible OptimizeRule Framework**
   - Define `OptimizeRule` interface and refactor `Optimizer` to use modular rules.
   - Keep `RemoveDelegate` and `RemoveDuplicate` rules.
 
-- [ ] **Task 8.2: New Optimizer Rules**
+- [ ] **Task 9.2: New Optimizer Rules**
   - Implement `FlattenChoiceRule`: Flattens nested choices `[a, [b, c]]` into `[a, b, c]`.
   - Implement `CharacterRepeaterRule`: Transforms `FlattenParser(PossessiveRepeatingParser(CharacterParser))` into `RepeatingCharacterParser`.
 
-- [ ] **Task 8.3: Phase 8 Parallel Unit Tests**
+- [ ] **Task 9.3: Phase 9 Parallel Unit Tests**
   - Augment `org.petitparser.utils.OptimizerTest` to cover choice flattening and character repeater rewrites.
 
 ---
 
-## Phase 9: Debugger & Matcher Enhancements
+## Phase 10: Debugger & Matcher Enhancements
 
-- [ ] **Task 9.1: Progress Stepper**
+- [ ] **Task 10.1: Progress Stepper**
   - Implement `org.petitparser.utils.Progress`:
     - `progress(Parser root, Consumer<ProgressFrame> observer)` visual execution debugger.
     - `ProgressFrame` capturing parser, context, position, and backtracking events.
 
-- [ ] **Task 9.2: Matcher Offset & Lazy Streams**
+- [ ] **Task 10.2: Matcher Offset & Lazy Streams**
   - Enhance `accept(String input, int start)` with start offset.
   - Add lazy `matchesAsStream(String input, int start)` returning `java.util.stream.Stream<T>` backed by a custom `Spliterator`.
   - Add lazy `matches(String input, int start)` returning `Iterable<T>`.
 
-- [ ] **Task 9.3: Phase 9 Parallel Unit Tests**
+- [ ] **Task 10.3: Phase 10 Parallel Unit Tests**
   - Create `org.petitparser.utils.ProgressTest` and `org.petitparser.MatcherTest`.
 
 ---
 
-## Phase 10: Generics & Full Type Safety (Additive / Non-Breaking)
+## Phase 11: End-to-End Verification & Backward Compatibility
 
-- [ ] **Task 10.1: Type Propagation Across Core**
-  - Parameterize `Parser<R>`, `Result<R>`, `Success<R>`, `Failure<R>`, `Token<R>`.
-  - Ensure raw-type usage compiles cleanly without errors or breaking changes for existing code.
-  - Update all combinators to maintain typed signatures (`map`, `pick`, `seq`, `or`).
-
-- [ ] **Task 10.2: Downstream Module Compatibility Verification**
+- [ ] **Task 11.1: Downstream Module Compatibility Verification**
   - Verify `petitparser-json`, `petitparser-xml`, and `petitparser-smalltalk` compile and pass tests without modifications.
+  - Ensure raw-type usage compiles cleanly without errors or breaking changes for existing code.
+
+- [ ] **Task 11.2: JMH Benchmark Suite**
+  - Measure throughput and allocation rate of `RepeatingCharacterParser` vs `.star().flatten()`.
+  - Measure $O(1)$ Lookup table predicates vs chained range predicates.
+  - Measure `fastParseOn` zero-allocation performance against Dart baseline.
