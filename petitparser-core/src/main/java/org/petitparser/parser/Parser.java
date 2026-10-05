@@ -67,6 +67,8 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static org.petitparser.parser.primitive.CharacterParser.any;
 
@@ -110,14 +112,36 @@ public abstract class Parser {
    * Returns the parse result of the {@code input}.
    */
   public Result parse(String input) {
-    return parseOn(new Context(input, 0));
+    return parse(input, 0);
+  }
+
+  /**
+   * Returns the parse result of the {@code input} starting at {@code start}.
+   */
+  public Result parse(String input, int start) {
+    Objects.requireNonNull(input, "input must not be null");
+    if (start < 0 || start > input.length()) {
+      return new Context(input, Math.max(0, Math.min(start, input.length())))
+          .failure("Index out of bounds: " + start);
+    }
+    return parseOn(new Context(input, start));
   }
 
   /**
    * Tests if the {@code input} can be successfully parsed.
    */
   public boolean accept(String input) {
-    return fastParseOn(input, 0) >= 0;
+    return accept(input, 0);
+  }
+
+  /**
+   * Tests if the {@code input} can be successfully parsed starting at {@code start}.
+   */
+  public boolean accept(String input, int start) {
+    if (input == null || start < 0 || start > input.length()) {
+      return false;
+    }
+    return fastParseOn(input, start) >= 0;
   }
 
   /**
@@ -132,6 +156,22 @@ public abstract class Parser {
   }
 
   /**
+   * Returns a lazy iterable of all successful overlapping parses of the {@code input}
+   * starting at {@code start}.
+   */
+  public <T> Iterable<T> matches(String input, int start) {
+    return matches(input, start, true);
+  }
+
+  /**
+   * Returns a lazy iterable of all successful parses of the {@code input}
+   * starting at {@code start}, optionally overlapping.
+   */
+  public <T> Iterable<T> matches(String input, int start, boolean overlapping) {
+    return new MatchesIterable<>(this, input, start, overlapping);
+  }
+
+  /**
    * Returns a list of all successful non-overlapping parses of the {@code
    * input}.
    */
@@ -140,6 +180,52 @@ public abstract class Parser {
     List<Object> list = new ArrayList<>();
     mapWithSideEffects(list::add).or(any()).star().fastParseOn(input, 0);
     return (List<T>) list;
+  }
+
+  /**
+   * Returns a lazy iterable of all successful non-overlapping parses of the {@code input}
+   * starting at {@code start}.
+   */
+  public <T> Iterable<T> matchesSkipping(String input, int start) {
+    return matches(input, start, false);
+  }
+
+  /**
+   * Returns a lazy stream of all successful overlapping parses of the {@code input}.
+   */
+  public <T> Stream<T> matchesAsStream(String input) {
+    return matchesAsStream(input, 0);
+  }
+
+  /**
+   * Returns a lazy stream of all successful overlapping parses of the {@code input}
+   * starting at {@code start}.
+   */
+  public <T> Stream<T> matchesAsStream(String input, int start) {
+    return matchesAsStream(input, start, true);
+  }
+
+  /**
+   * Returns a lazy stream of all successful parses of the {@code input}
+   * starting at {@code start}, optionally overlapping.
+   */
+  public <T> Stream<T> matchesAsStream(String input, int start, boolean overlapping) {
+    return StreamSupport.stream(new MatchesSpliterator<>(this, input, start, overlapping), false);
+  }
+
+  /**
+   * Returns a lazy stream of all successful non-overlapping parses of the {@code input}.
+   */
+  public <T> Stream<T> matchesSkippingAsStream(String input) {
+    return matchesSkippingAsStream(input, 0);
+  }
+
+  /**
+   * Returns a lazy stream of all successful non-overlapping parses of the {@code input}
+   * starting at {@code start}.
+   */
+  public <T> Stream<T> matchesSkippingAsStream(String input, int start) {
+    return matchesAsStream(input, start, false);
   }
 
   /**

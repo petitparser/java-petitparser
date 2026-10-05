@@ -319,17 +319,17 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ## Phase 10: Debugger & Matcher Enhancements
 
-- [ ] **Task 10.1: Progress Stepper**
+- [x] **Task 10.1: Progress Stepper**
   - Implement `org.petitparser.utils.Progress`:
     - `progress(Parser root, Consumer<ProgressFrame> observer)` visual execution debugger.
     - `ProgressFrame` capturing parser, context, position, and backtracking events.
 
-- [ ] **Task 10.2: Matcher Offset & Lazy Streams**
+- [x] **Task 10.2: Matcher Offset & Lazy Streams**
   - Enhance `accept(String input, int start)` with start offset.
   - Add lazy `matchesAsStream(String input, int start)` returning `java.util.stream.Stream<T>` backed by a custom `Spliterator`.
   - Add lazy `matches(String input, int start)` returning `Iterable<T>`.
 
-- [ ] **Task 10.3: Phase 10 Parallel Unit Tests**
+- [x] **Task 10.3: Phase 10 Parallel Unit Tests**
   - Create `org.petitparser.utils.ProgressTest` and `org.petitparser.MatcherTest`.
 
 ---
