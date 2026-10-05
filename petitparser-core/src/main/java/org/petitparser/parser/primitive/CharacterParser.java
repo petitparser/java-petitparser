@@ -86,7 +86,7 @@ public class CharacterParser extends Parser {
   }
 
   public static CharacterParser digit(String message) {
-    return new CharacterParser(Character::isDigit, message);
+    return of(DigitCharPredicate.INSTANCE, message);
   }
 
   /**
@@ -97,7 +97,7 @@ public class CharacterParser extends Parser {
   }
 
   public static CharacterParser letter(String message) {
-    return of(Character::isLetter, message);
+    return of(LetterCharPredicate.INSTANCE, message);
   }
 
   /**
@@ -108,7 +108,7 @@ public class CharacterParser extends Parser {
   }
 
   public static CharacterParser lowerCase(String message) {
-    return of(Character::isLowerCase, message);
+    return of(LowercaseCharPredicate.INSTANCE, message);
   }
 
   /**
@@ -146,7 +146,7 @@ public class CharacterParser extends Parser {
   }
 
   public static CharacterParser upperCase(String message) {
-    return of(Character::isUpperCase, message);
+    return of(UppercaseCharPredicate.INSTANCE, message);
   }
 
   /**
@@ -157,7 +157,7 @@ public class CharacterParser extends Parser {
   }
 
   public static CharacterParser whitespace(String message) {
-    return of(Character::isWhitespace, message);
+    return of(WhitespaceCharPredicate.INSTANCE, message);
   }
 
   /**
@@ -168,13 +168,13 @@ public class CharacterParser extends Parser {
   }
 
   public static CharacterParser word(String message) {
-    return of(Character::isLetterOrDigit, message);
+    return of(WordCharPredicate.INSTANCE, message);
   }
 
   private final CharacterPredicate matcher;
   private final String message;
 
-  private CharacterParser(CharacterPredicate matcher, String message) {
+  protected CharacterParser(CharacterPredicate matcher, String message) {
     this.matcher = Objects.requireNonNull(matcher, "Undefined matcher");
     this.message = Objects.requireNonNull(message, "Undefined message");
   }
@@ -255,9 +255,10 @@ public class CharacterParser extends Parser {
 
   @Override
   protected boolean hasEqualProperties(Parser other) {
+    CharacterParser that = (CharacterParser) other;
     return super.hasEqualProperties(other) &&
-        Objects.equals(matcher, ((CharacterParser) other).matcher) &&
-        Objects.equals(message, ((CharacterParser) other).message);
+        (matcher == that.matcher || matcher.isEqualTo(that.matcher)) &&
+        Objects.equals(message, that.message);
   }
 
   @Override

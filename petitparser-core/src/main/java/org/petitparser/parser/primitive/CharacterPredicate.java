@@ -2,7 +2,6 @@ package org.petitparser.parser.primitive;
 
 import org.petitparser.parser.Parser;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,7 +15,7 @@ public interface CharacterPredicate {
    * Returns a character predicate that matches any character.
    */
   static CharacterPredicate any() {
-    return value -> true;
+    return ConstantCharPredicate.any();
   }
 
   /**
@@ -34,7 +33,7 @@ public interface CharacterPredicate {
    * Returns a character predicate that matches no character.
    */
   static CharacterPredicate none() {
-    return value -> false;
+    return ConstantCharPredicate.none();
   }
 
   /**
@@ -42,17 +41,14 @@ public interface CharacterPredicate {
    * string}.
    */
   static CharacterPredicate noneOf(String string) {
-    List<CharacterRange> ranges = string.chars()
-        .mapToObj(value -> new CharacterRange((char) value, (char) value))
-        .collect(Collectors.toList());
-    return CharacterRange.toCharacterPredicate(ranges).not();
+    return anyOf(string).not();
   }
 
   /**
    * Returns a character predicate that matches the given {@code character}.
    */
   static CharacterPredicate of(char character) {
-    return value -> value == character;
+    return new SingleCharPredicate(character);
   }
 
   /**
@@ -60,7 +56,7 @@ public interface CharacterPredicate {
    * start} and {@code stop}.
    */
   static CharacterPredicate range(char start, char stop) {
-    return value -> start <= value && value <= stop;
+    return new RangeCharPredicate(start, stop);
   }
 
   /**
@@ -68,22 +64,7 @@ public interface CharacterPredicate {
    * starts} and {@code stops}.
    */
   static CharacterPredicate ranges(char[] starts, char[] stops) {
-    if (starts.length != stops.length) {
-      throw new IllegalArgumentException("Invalid range sizes.");
-    }
-    for (int i = 0; i < starts.length; i++) {
-      if (starts[i] > stops[i]) {
-        throw new IllegalArgumentException(
-            "Invalid range: " + starts[i] + "-" + stops[i]);
-      }
-      if (i + 1 < starts.length && starts[i + 1] <= stops[i]) {
-        throw new IllegalArgumentException("Invalid sequence.");
-      }
-    }
-    return value -> {
-      int index = Arrays.binarySearch(starts, value);
-      return index >= 0 || index < -1 && value <= stops[-index - 2];
-    };
+    return new RangesCharPredicate(starts, stops);
   }
 
   /**
@@ -118,31 +99,32 @@ public interface CharacterPredicate {
   boolean test(char value);
 
   /**
-   * Negates this character predicate.
+   * Tests if the character predicate is satisfied for a Unicode code point.
    */
-  default CharacterPredicate not() {
-    return new NotCharacterPredicate(this);
+  default boolean test(int value) {
+    return value >= 0 && value <= Character.MAX_VALUE && test((char) value);
   }
 
   /**
-   * The negated character predicate.
+   * Negates this character predicate.
    */
-  class NotCharacterPredicate implements CharacterPredicate {
+  default CharacterPredicate not() {
+    return new NotCharPredicate(this);
+  }
 
-    private final CharacterPredicate predicate;
+  /**
+   * Tests for structural equality of two character predicates.
+   */
+  default boolean isEqualTo(CharacterPredicate other) {
+    return equals(other);
+  }
 
+  /**
+   * Backward compatibility alias for {@link NotCharPredicate}.
+   */
+  class NotCharacterPredicate extends NotCharPredicate {
     public NotCharacterPredicate(CharacterPredicate predicate) {
-      this.predicate = predicate;
-    }
-
-    @Override
-    public boolean test(char value) {
-      return !predicate.test(value);
-    }
-
-    @Override
-    public CharacterPredicate not() {
-      return predicate;
+      super(predicate);
     }
   }
 }

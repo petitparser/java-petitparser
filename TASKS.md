@@ -199,7 +199,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ## Phase 5: Character Predicate AST & Unicode Code Points
 
-- [ ] **Task 5.1: Hybrid CharacterPredicate Hierarchy**
+- [x] **Task 5.1: Hybrid CharacterPredicate Hierarchy**
   - Preserve `@FunctionalInterface CharacterPredicate` interface (`test(char)`) for backward compatibility with user lambdas.
   - Introduce concrete AST classes implementing `CharacterPredicate` and `isEqualTo`:
     - `SingleCharPredicate`, `RangeCharPredicate`, `RangesCharPredicate` (binary search on primitive arrays).
