@@ -131,6 +131,11 @@ public class EqualityTest {
   }
 
   @Test
+  public void labeled() {
+    verify(CharacterParser.digit().labeled("digit"));
+  }
+
+  @Test
   public void map() {
     verify(CharacterParser.digit().map(Function.identity()));
   }

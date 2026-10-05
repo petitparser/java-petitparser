@@ -50,7 +50,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Add `skip(Parser before, Parser after)` to `Parser`.
   - Implement zero-allocation fast-parse, copy, child replacement, and equality methods.
 
-- [ ] **Task 1.4: LabelParser & Debugging**
+- [x] **Task 1.4: LabelParser & Debugging**
   - Implement `org.petitparser.parser.combinators.LabelParser` wrapping a delegate with a string label.
   - Add `labeled(String label)` to `Parser`.
   - Override `toString()` to display `delegate.toString() + "[" + label + "]"`.

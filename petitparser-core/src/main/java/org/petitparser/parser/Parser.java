@@ -12,6 +12,7 @@ import org.petitparser.parser.actions.WhereParser;
 import org.petitparser.parser.combinators.AndParser;
 import org.petitparser.parser.combinators.ChoiceParser;
 import org.petitparser.parser.combinators.EndOfInputParser;
+import org.petitparser.parser.combinators.LabelParser;
 import org.petitparser.parser.combinators.NotParser;
 import org.petitparser.parser.combinators.OptionalParser;
 import org.petitparser.parser.combinators.SequenceParser;
@@ -404,6 +405,17 @@ public abstract class Parser {
    */
   public SettableParser settable() {
     return SettableParser.with(this);
+  }
+
+  /**
+   * Returns a parser that simply defers to its delegate, but that has a {@code label}
+   * for debugging purposes.
+   *
+   * @param label the label of the parser.
+   * @return a labeled parser.
+   */
+  public Parser labeled(String label) {
+    return new LabelParser(this, label);
   }
 
   /**
