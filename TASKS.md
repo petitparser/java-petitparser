@@ -55,7 +55,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Add `labeled(String label)` to `Parser`.
   - Override `toString()` to display `delegate.toString() + "[" + label + "]"`.
 
-- [ ] **Task 1.5: PositionParser**
+- [x] **Task 1.5: PositionParser**
   - Implement `org.petitparser.parser.primitive.PositionParser` returning `context.getPosition()`.
   - Provide a reusable static singleton `PositionParser.INSTANCE`.
   - Add static factory `Parser.position()`.

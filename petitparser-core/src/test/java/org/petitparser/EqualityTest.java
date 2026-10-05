@@ -171,6 +171,11 @@ public class EqualityTest {
   }
 
   @Test
+  public void position() {
+    verify(Parser.position());
+  }
+
+  @Test
   public void repeat() {
     verify(CharacterParser.digit().repeat(2, 3));
   }

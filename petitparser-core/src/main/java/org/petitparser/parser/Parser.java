@@ -19,6 +19,7 @@ import org.petitparser.parser.combinators.SequenceParser;
 import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.parser.combinators.SkipParser;
 import org.petitparser.parser.primitive.CharacterParser;
+import org.petitparser.parser.primitive.PositionParser;
 import org.petitparser.parser.repeating.GreedyRepeatingParser;
 import org.petitparser.parser.repeating.LazyRepeatingParser;
 import org.petitparser.parser.repeating.PossessiveRepeatingParser;
@@ -108,6 +109,13 @@ public abstract class Parser {
     List<Object> list = new ArrayList<>();
     mapWithSideEffects(list::add).or(any()).star().fastParseOn(input, 0);
     return (List<T>) list;
+  }
+
+  /**
+   * Returns a parser that reports the current input position.
+   */
+  public static Parser position() {
+    return PositionParser.INSTANCE;
   }
 
   /**
