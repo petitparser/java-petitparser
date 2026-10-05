@@ -340,7 +340,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Verify `petitparser-json`, `petitparser-xml`, and `petitparser-smalltalk` compile and pass tests without modifications.
   - Ensure raw-type usage compiles cleanly without errors or breaking changes for existing code.
 
-- [ ] **Task 11.2: JMH Benchmark Suite**
+- [x] **Task 11.2: JMH Benchmark Suite**
   - Measure throughput and allocation rate of `RepeatingCharacterParser` vs `.star().flatten()`.
   - Measure $O(1)$ Lookup table predicates vs chained range predicates.
   - Measure `fastParseOn` zero-allocation performance against Dart baseline.

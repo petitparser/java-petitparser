@@ -52,8 +52,11 @@ public class ActionParser<T, R> extends DelegateParser {
   @Override
   public int fastParseOn(String buffer, int position) {
     // If we know to have side-effects, we have to fall back to the slow mode.
-    return hasSideEffects ? super.fastParseOn(buffer, position) :
-        delegate.fastParseOn(buffer, position);
+    if (hasSideEffects) {
+      Result result = parseOn(new Context(buffer, position));
+      return result.isSuccess() ? result.getPosition() : -1;
+    }
+    return delegate.fastParseOn(buffer, position);
   }
 
   @Override
