@@ -215,7 +215,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
     - Choose optimal predicate ($O(1)$ Lookup table, Single, Range, or Ranges with binary search).
   - Implement `optimizedString(String string, boolean ignoreCase)`.
 
-- [ ] **Task 5.3: StringParser SIMD & Equality Fix**
+- [x] **Task 5.3: StringParser SIMD & Equality Fix**
   - Refactor `StringParser.ofIgnoringCase` to avoid non-comparable method reference lambdas (`value::equalsIgnoreCase`).
   - Implement `StringIgnoreCaseParser` storing the literal string and comparing literals in `hasEqualProperties`.
   - Use `String.regionMatches` and `String.startsWith` for HotSpot-intrinsic performance.
