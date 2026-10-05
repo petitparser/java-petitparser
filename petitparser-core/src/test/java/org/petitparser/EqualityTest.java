@@ -232,6 +232,12 @@ public class EqualityTest {
   }
 
   @Test
+  public void skip() {
+    verify(CharacterParser.digit()
+        .skip(CharacterParser.of('['), CharacterParser.of(']')));
+  }
+
+  @Test
   public void where() {
     verify(CharacterParser.digit().where((Character c) -> Character.isDigit(c)));
   }

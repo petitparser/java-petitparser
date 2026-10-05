@@ -45,7 +45,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Add `where(Predicate<T>)`, `where(Predicate<T>, String)`, and `where(Predicate<T>, BiFunction<Context, Result, Result>)` to `Parser`.
   - Implement zero-allocation fast-parse, copy, and equality methods.
 
-- [ ] **Task 1.3: SkipParser & Delimiters**
+- [x] **Task 1.3: SkipParser & Delimiters**
   - Implement `org.petitparser.parser.combinators.SkipParser` implementing `SequentialParser`.
   - Add `skip(Parser before, Parser after)` to `Parser`.
   - Implement zero-allocation fast-parse, copy, child replacement, and equality methods.

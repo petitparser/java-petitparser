@@ -16,6 +16,7 @@ import org.petitparser.parser.combinators.NotParser;
 import org.petitparser.parser.combinators.OptionalParser;
 import org.petitparser.parser.combinators.SequenceParser;
 import org.petitparser.parser.combinators.SettableParser;
+import org.petitparser.parser.combinators.SkipParser;
 import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.parser.repeating.GreedyRepeatingParser;
 import org.petitparser.parser.repeating.LazyRepeatingParser;
@@ -366,6 +367,19 @@ public abstract class Parser {
    */
   public Parser trim(Parser before, Parser after) {
     return new TrimmingParser(this, before, after);
+  }
+
+  /**
+   * Returns a parser that consumes input {@code before} and {@code after} the
+   * receiver, but discards the parse results of {@code before} and {@code after}
+   * and only returns the result of the receiver.
+   *
+   * @param before the parser to consume before the receiver (or {@code null} for epsilon).
+   * @param after the parser to consume after the receiver (or {@code null} for epsilon).
+   * @return a parser that skips input before and after.
+   */
+  public Parser skip(Parser before, Parser after) {
+    return new SkipParser(this, before, after);
   }
 
   /**
