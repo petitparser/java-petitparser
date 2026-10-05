@@ -4,6 +4,7 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.DelegateParser;
+import org.petitparser.parser.combinators.SequentialParser;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.Objects;
 /**
  * A parser that silently consumes a before and after the delegate parser.
  */
-public class TrimmingParser extends DelegateParser {
+public class TrimmingParser extends DelegateParser implements SequentialParser {
 
   private Parser left;
   private Parser right;

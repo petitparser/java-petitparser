@@ -6,7 +6,7 @@ import org.petitparser.parser.primitive.FailureParser;
 /**
  * A parser that can be set to behave like another parser.
  */
-public class SettableParser extends DelegateParser {
+public class SettableParser extends DelegateParser implements ResolvableParser {
 
   /**
    * Constructs a {@link SettableParser} that currently refers to an {@link
@@ -45,6 +45,11 @@ public class SettableParser extends DelegateParser {
    * Return the current referred parser.
    */
   public Parser get() {
+    return delegate;
+  }
+
+  @Override
+  public Parser resolve() {
     return delegate;
   }
 

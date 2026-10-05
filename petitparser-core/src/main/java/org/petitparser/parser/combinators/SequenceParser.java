@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * A parser that parses a sequence of parsers.
  */
-public class SequenceParser extends ListParser {
+public class SequenceParser extends ListParser implements SequentialParser {
 
   public SequenceParser(Parser... parsers) {
     super(parsers);

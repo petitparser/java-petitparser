@@ -34,7 +34,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ## Phase 1: Core Action, Primitive & Combinator Parsers
 
-- [ ] **Task 1.1: Marker & Lifecycle Interfaces**
+- [x] **Task 1.1: Marker & Lifecycle Interfaces**
   - Create `org.petitparser.parser.combinators.SequentialParser` marker interface.
   - Implement `SequentialParser` on `SequenceParser` and `TrimmingParser`.
   - Create `org.petitparser.parser.combinators.ResolvableParser` with `Parser resolve()`.
