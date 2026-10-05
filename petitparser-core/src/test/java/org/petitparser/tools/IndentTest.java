@@ -469,4 +469,95 @@ public class IndentTest {
       assertEquals("Undefined inner parser", e.getMessage());
     }
   }
+
+  @Test(expected = UnsupportedOperationException.class)
+  public void testStackUnmodifiable() {
+    Indent indent = new Indent();
+    indent.getStack().add("corrupt");
+  }
+
+  @Test
+  public void testNestedCustomIndentationString() {
+    Indent indent2 = new Indent(StringParser.of("  "), "two spaces expected");
+    Parser level3 = indent2.during(indent2.same().seq(CharacterParser.of('c')));
+    Parser level2 = indent2.during(indent2.same().seq(CharacterParser.of('b')).seq(level3));
+    Parser level1 = indent2.during(indent2.same().seq(CharacterParser.of('a')).seq(level2));
+
+    assertSuccess(level1, "  a    b      c", Arrays.asList("  ", 'a', Arrays.asList("    ", 'b', Arrays.asList("      ", 'c'))));
+    assertEquals("", indent2.getCurrent());
+    assertTrue(indent2.getStack().isEmpty());
+
+    // Fails when level 3 has only 5 spaces instead of 6 (cannot increase from 4 to 6)
+    assertFailure(level1, "  a    b     c", 8);
+    assertEquals("", indent2.getCurrent());
+    assertTrue(indent2.getStack().isEmpty());
+  }
+
+  @Test
+  public void testNestedChoiceRollbackDeep() {
+    Indent indent = new Indent();
+    Parser deepInner = indent.during(indent.same().seq(CharacterParser.of('1')));
+    Parser branch1 = indent.during(indent.same().seq(CharacterParser.of('a')).seq(deepInner));
+    Parser branch2 = indent.during(indent.same().seq(CharacterParser.of('a')).seq(CharacterParser.of('2')));
+    Parser parser = branch1.or(branch2);
+
+    // branch1 deepInner fails on '2' where '1' is expected; choice backtracks and branch2 succeeds
+    assertSuccess(parser, " a2", Arrays.asList(" ", 'a', '2'));
+    assertEquals("", indent.getCurrent());
+    assertTrue(indent.getStack().isEmpty());
+  }
+
+  @Test
+  public void testFastParseOnNestedScopes() {
+    Indent indent = new Indent();
+    Parser inner = indent.during(indent.same().seq(CharacterParser.of('b')));
+    Parser outer = indent.during(indent.same().seq(CharacterParser.of('a')).seq(inner));
+
+    assertTrue(outer.accept("  a   b"));
+    assertEquals("", indent.getCurrent());
+    assertTrue(indent.getStack().isEmpty());
+
+    assertFalse(outer.accept("  a   c"));
+    assertEquals("", indent.getCurrent());
+    assertTrue(indent.getStack().isEmpty());
+  }
+
+  @Test
+  public void testMixedIndentationMismatch() {
+    Indent indent = new Indent();
+    Parser inner = indent.same().seq(CharacterParser.of('x'));
+    Parser block = indent.during(inner);
+
+    // Parent level is 2 spaces
+    indent.stack.add("");
+    indent.current = "  ";
+
+    // Attempting deeper level with tab prefix fails because "\t" does not start with "  "
+    assertFailure(block, "\tx", 0);
+    assertEquals("  ", indent.getCurrent());
+    assertEquals(Collections.singletonList(""), indent.getStack());
+
+    indent.reset();
+  }
+
+  @Test
+  public void testMultipleParsesWithSameIndentInstance() {
+    Indent indent = new Indent();
+    Parser block = indent.during(indent.same().seq(CharacterParser.of('x')));
+
+    // Run 1: success
+    assertSuccess(block, "  x", Arrays.asList("  ", 'x'));
+    assertEquals("", indent.getCurrent());
+    assertTrue(indent.getStack().isEmpty());
+
+    // Run 2: failure
+    assertFailure(block, "  y", 2, "'x' expected");
+    assertEquals("", indent.getCurrent());
+    assertTrue(indent.getStack().isEmpty());
+
+    // Run 3: success again
+    assertSuccess(block, "   x", Arrays.asList("   ", 'x'));
+    assertEquals("", indent.getCurrent());
+    assertTrue(indent.getStack().isEmpty());
+  }
 }

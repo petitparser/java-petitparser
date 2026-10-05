@@ -6,9 +6,9 @@ import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.utils.FailureJoiner;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
 
 /**
  * Stateful set of parsers to handle indentation-based grammars.
@@ -71,7 +71,7 @@ public class Indent {
 
     this.increaseParser = this.parser
         .plusString(this.message)
-        .where((Predicate<String>) value -> {
+        .where((String value) -> {
           if (value.startsWith(current) && value.length() > current.length()) {
             stack.add(current);
             current = value;
@@ -84,9 +84,9 @@ public class Indent {
 
     this.sameParser = this.parser
         .starString(this.message)
-        .where((Predicate<String>) value -> Objects.equals(value, current));
+        .where((String value) -> Objects.equals(value, current));
 
-    this.decreaseParser = Parser.epsilon().where((Predicate<Object>) ignored -> {
+    this.decreaseParser = Parser.epsilon().where(ignored -> {
       if (!stack.isEmpty()) {
         current = stack.remove(stack.size() - 1);
         return true;
@@ -111,10 +111,10 @@ public class Indent {
   }
 
   /**
-   * Returns the stack of parent indentations.
+   * Returns an unmodifiable view of the stack of parent indentations.
    */
   public List<String> getStack() {
-    return stack;
+    return Collections.unmodifiableList(stack);
   }
 
   /**
