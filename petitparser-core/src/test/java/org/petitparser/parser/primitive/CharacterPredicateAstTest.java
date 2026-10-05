@@ -271,10 +271,20 @@ public class CharacterPredicateAstTest {
     assertTrue(CharacterParser.none().isEqualTo(CharacterParser.none()));
     assertTrue(CharacterParser.of('a').isEqualTo(CharacterParser.of('a')));
     assertTrue(CharacterParser.range('a', 'z').isEqualTo(CharacterParser.range('a', 'z')));
+    assertTrue(CharacterParser.anyOf("abc").isEqualTo(CharacterParser.anyOf("abc")));
+    assertTrue(CharacterParser.noneOf("abc").isEqualTo(CharacterParser.noneOf("abc")));
+    assertTrue(CharacterParser.pattern("a-z").isEqualTo(CharacterParser.pattern("a-z")));
+    assertTrue(CharacterParser.any(true).isEqualTo(CharacterParser.any(true)));
+    assertTrue(CharacterParser.of(0x1F680, true).isEqualTo(CharacterParser.of(0x1F680, true)));
+    assertTrue(CharacterParser.pattern("a-c", true).isEqualTo(CharacterParser.pattern("a-c", true)));
 
     assertFalse(CharacterParser.digit().isEqualTo(CharacterParser.letter()));
     assertFalse(CharacterParser.of('a').isEqualTo(CharacterParser.of('b')));
     assertFalse(CharacterParser.range('a', 'z').isEqualTo(CharacterParser.range('a', 'y')));
+    assertFalse(CharacterParser.any(false).isEqualTo(CharacterParser.any(true)));
+    assertFalse(CharacterParser.anyOf("abc").isEqualTo(CharacterParser.anyOf("abd")));
+    assertFalse(CharacterParser.noneOf("abc").isEqualTo(CharacterParser.noneOf("abd")));
+    assertFalse(CharacterParser.pattern("a-z").isEqualTo(CharacterParser.pattern("0-9")));
   }
 
   @Test

@@ -220,11 +220,11 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Implement `StringIgnoreCaseParser` storing the literal string and comparing literals in `hasEqualProperties`.
   - Use `String.regionMatches` and `String.startsWith` for HotSpot-intrinsic performance.
 
-- [ ] **Task 5.4: Unicode Code Points**
+- [x] **Task 5.4: Unicode Code Points**
   - Implement `UnicodeCharacterParser` decoding UTF-16 surrogate pairs into 21-bit code points ($0 \dots \text{0x10FFFF}$).
   - Add `unicode` parameter / flag to character primitives (`any`, `char`, `pattern`, `anyOf`, `noneOf`).
 
-- [ ] **Task 5.5: Phase 5 Parallel Unit Tests**
+- [x] **Task 5.5: Phase 5 Parallel Unit Tests**
   - Create tests:
     - `org.petitparser.parser.primitive.CharacterPredicateAstTest`
     - `org.petitparser.parser.primitive.UnicodeCharacterParserTest`
