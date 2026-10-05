@@ -2,15 +2,6 @@ package org.petitparser.parser.actions;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
-import org.petitparser.utils.tuples.Tuple2;
-import org.petitparser.utils.tuples.Tuple3;
-import org.petitparser.utils.tuples.Tuple4;
-import org.petitparser.utils.tuples.Tuple5;
-import org.petitparser.utils.tuples.Tuple6;
-import org.petitparser.utils.tuples.Tuple7;
-import org.petitparser.utils.tuples.Tuple8;
-import org.petitparser.utils.tuples.Tuple9;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

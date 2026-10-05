@@ -44,18 +44,13 @@ public class Tuple4<T1, T2, T3, T4> extends AbstractList<Object> implements Tupl
 
   @Override
   public Object get(int index) {
-    switch (index) {
-      case 0:
-        return first;
-      case 1:
-        return second;
-      case 2:
-        return third;
-      case 3:
-        return fourth;
-      default:
-        throw new IndexOutOfBoundsException("Index: " + index + ", Size: 4");
-    }
+    return switch (index) {
+      case 0 -> first;
+      case 1 -> second;
+      case 2 -> third;
+      case 3 -> fourth;
+      default -> throw new IndexOutOfBoundsException("Index: " + index + ", Size: 4");
+    };
   }
 
   @Override
@@ -68,17 +63,15 @@ public class Tuple4<T1, T2, T3, T4> extends AbstractList<Object> implements Tupl
     if (this == other) {
       return true;
     }
-    if (other instanceof Tuple4) {
-      Tuple4<?, ?, ?, ?> that = (Tuple4<?, ?, ?, ?>) other;
+    if (other instanceof Tuple4<?, ?, ?, ?> that) {
       return Objects.equals(first, that.first) &&
           Objects.equals(second, that.second) &&
           Objects.equals(third, that.third) &&
           Objects.equals(fourth, that.fourth);
     }
-    if (!(other instanceof List)) {
+    if (!(other instanceof List<?> that)) {
       return false;
     }
-    List<?> that = (List<?>) other;
     return that.size() == 4 &&
         Objects.equals(first, that.get(0)) &&
         Objects.equals(second, that.get(1)) &&

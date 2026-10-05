@@ -577,7 +577,7 @@ public class OptimizerTest {
   }
 
   @Test
-  @SuppressWarnings({ "EqualsBetweenInconvertibleTypes", "unlikely-arg-type" })
+  @SuppressWarnings({ "EqualsBetweenInconvertibleTypes" })
   public void testFailureJoinerEdgeCases() {
     FailureJoiner.SelectFirst sf = new FailureJoiner.SelectFirst();
     assertTrue(sf.equals(sf));

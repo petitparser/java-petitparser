@@ -77,16 +77,16 @@ public class LookupCharPredicate implements CharacterPredicate {
 
   @Override
   public boolean isEqualTo(CharacterPredicate other) {
-    return other instanceof LookupCharPredicate &&
-        start == ((LookupCharPredicate) other).start &&
-        stop == ((LookupCharPredicate) other).stop &&
-        Arrays.equals(bits, ((LookupCharPredicate) other).bits);
+    return other instanceof LookupCharPredicate that &&
+        start == that.start &&
+        stop == that.stop &&
+        Arrays.equals(bits, that.bits);
   }
 
   @Override
   public boolean equals(Object other) {
-    return other instanceof CharacterPredicate &&
-        isEqualTo((CharacterPredicate) other);
+    return other instanceof CharacterPredicate that &&
+        isEqualTo(that);
   }
 
   @Override

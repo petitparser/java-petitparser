@@ -21,13 +21,12 @@ public class CharacterRepeaterRule implements OptimizeRule {
     if (parser != null && FlattenParser.class.equals(parser.getClass())) {
       FlattenParser flatten = (FlattenParser) parser;
       if (!flatten.getChildren().isEmpty()) {
-        Parser delegate = unwrap(flatten.getChildren().get(0));
+        Parser delegate = unwrap(flatten.getChildren().getFirst());
         if (delegate != null && PossessiveRepeatingParser.class.equals(delegate.getClass())) {
           PossessiveRepeatingParser repeating = (PossessiveRepeatingParser) delegate;
           if (!repeating.getChildren().isEmpty()) {
-            Parser repeatingDelegate = unwrap(repeating.getChildren().get(0));
-            if (repeatingDelegate instanceof CharacterParser) {
-              CharacterParser character = (CharacterParser) repeatingDelegate;
+            Parser repeatingDelegate = unwrap(repeating.getChildren().getFirst());
+            if (repeatingDelegate instanceof CharacterParser character) {
               return character.repeatString(
                   repeating.getMin(), repeating.getMax(), flatten.getMessage());
             }
@@ -50,7 +49,7 @@ public class CharacterRepeaterRule implements OptimizeRule {
       if (!seen.add(parser)) {
         break;
       }
-      Parser next = parser.getChildren().get(0);
+      Parser next = parser.getChildren().getFirst();
       if (next == null) {
         break;
       }

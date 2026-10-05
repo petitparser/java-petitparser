@@ -19,7 +19,7 @@ public class NullableRepeaterRule extends LinterRule {
   @Override
   public void run(Analyzer analyzer, Parser parser, Consumer<LinterIssue> callback) {
     if (parser instanceof RepeatingParser) {
-      Parser delegate = parser.getChildren().get(0);
+      Parser delegate = parser.getChildren().getFirst();
       if (analyzer.isNullable(delegate)) {
         if (parser instanceof SeparatedRepeatingParser) {
           Parser separator = parser.getChildren().get(1);

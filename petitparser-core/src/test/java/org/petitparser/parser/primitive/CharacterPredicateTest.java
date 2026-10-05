@@ -305,18 +305,6 @@ public class CharacterPredicateTest {
   }
 
   @Test
-  @SuppressWarnings("deprecation")
-  public void testDeprecatedNotCharacterPredicate() {
-    CharacterPredicate inner = CharacterPredicate.of('a');
-    CharacterPredicate.NotCharacterPredicate notPred =
-        new CharacterPredicate.NotCharacterPredicate(inner);
-    assertFalse(notPred.test('a'));
-    assertTrue(notPred.test('b'));
-    assertEquals(inner, notPred.not());
-    assertTrue(notPred.isEqualTo(inner.not()));
-  }
-
-  @Test
   public void testSingletonPredicatesHashCode() {
     assertTrue(CharacterPredicate.any().hashCode() != 0);
     assertTrue(CharacterPredicate.none().hashCode() != 0);

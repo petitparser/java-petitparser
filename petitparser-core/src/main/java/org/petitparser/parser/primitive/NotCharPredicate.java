@@ -34,14 +34,14 @@ public class NotCharPredicate implements CharacterPredicate {
 
   @Override
   public boolean isEqualTo(CharacterPredicate other) {
-    return other instanceof NotCharPredicate &&
-        predicate.isEqualTo(((NotCharPredicate) other).predicate);
+    return other instanceof NotCharPredicate that &&
+        predicate.isEqualTo(that.predicate);
   }
 
   @Override
   public boolean equals(Object other) {
-    return other instanceof CharacterPredicate &&
-        isEqualTo((CharacterPredicate) other);
+    return other instanceof CharacterPredicate that &&
+        isEqualTo(that);
   }
 
   @Override

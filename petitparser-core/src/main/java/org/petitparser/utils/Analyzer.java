@@ -285,7 +285,7 @@ public class Analyzer {
       }
     }
     visited.remove(current);
-    currentPath.remove(currentPath.size() - 1);
+    currentPath.removeLast();
   }
 
   /**
@@ -412,27 +412,25 @@ public class Analyzer {
           nowNullable = true;
         } else if (p instanceof StringParser && ((StringParser) p).getValue().isEmpty()) {
           nowNullable = true;
-        } else if (p instanceof RepeatingCharacterParser) {
-          nowNullable = ((RepeatingCharacterParser) p).getMin() == 0;
-        } else if (p instanceof SeparatedRepeatingParser) {
-          SeparatedRepeatingParser srp = (SeparatedRepeatingParser) p;
+        } else if (p instanceof RepeatingCharacterParser rcp) {
+          nowNullable = rcp.getMin() == 0;
+        } else if (p instanceof SeparatedRepeatingParser srp) {
           if (srp.getMin() == 0) {
             nowNullable = true;
           } else if (srp.getMin() == 1) {
-            nowNullable = Boolean.TRUE.equals(nullable.get(srp.getChildren().get(0)));
+            nowNullable = Boolean.TRUE.equals(nullable.get(srp.getChildren().getFirst()));
           } else {
-            nowNullable = Boolean.TRUE.equals(nullable.get(srp.getChildren().get(0))) &&
+            nowNullable = Boolean.TRUE.equals(nullable.get(srp.getChildren().getFirst())) &&
                 Boolean.TRUE.equals(nullable.get(srp.getChildren().get(1)));
           }
-        } else if (p instanceof RepeatingParser) {
-          RepeatingParser rp = (RepeatingParser) p;
+        } else if (p instanceof RepeatingParser rp) {
           if (rp.getMin() == 0) {
             nowNullable = true;
           } else {
-            nowNullable = Boolean.TRUE.equals(nullable.get(rp.getChildren().get(0)));
+            nowNullable = Boolean.TRUE.equals(nullable.get(rp.getChildren().getFirst()));
           }
         } else if (p instanceof TrimmingParser) {
-          Parser del = p.getChildren().get(0);
+          Parser del = p.getChildren().getFirst();
           nowNullable = Boolean.TRUE.equals(nullable.get(del));
         } else if (p instanceof SequentialParser) {
           nowNullable = p.getChildren().stream()
@@ -441,10 +439,10 @@ public class Analyzer {
           nowNullable = p.getChildren().stream()
               .anyMatch(c -> Boolean.TRUE.equals(nullable.get(c)));
         } else if (p instanceof NotParser) {
-          Parser child = p.getChildren().get(0);
+          Parser child = p.getChildren().getFirst();
           nowNullable = !Boolean.TRUE.equals(nullable.get(child));
         } else if (p instanceof AndParser) {
-          Parser child = p.getChildren().get(0);
+          Parser child = p.getChildren().getFirst();
           nowNullable = Boolean.TRUE.equals(nullable.get(child));
         } else if (!p.getChildren().isEmpty()) {
           nowNullable = p.getChildren().stream()
@@ -508,7 +506,7 @@ public class Analyzer {
         int beforeSize = currentSet.size();
 
         if (p instanceof TrimmingParser) {
-          Parser del = p.getChildren().get(0);
+          Parser del = p.getChildren().getFirst();
           Parser left = p.getChildren().get(1);
           Parser right = p.getChildren().get(2);
           currentSet.addAll(firstSets.get(left));
@@ -517,7 +515,7 @@ public class Analyzer {
             currentSet.addAll(firstSets.get(right));
           }
         } else if (p instanceof SeparatedRepeatingParser) {
-          Parser del = p.getChildren().get(0);
+          Parser del = p.getChildren().getFirst();
           Parser sep = p.getChildren().get(1);
           currentSet.addAll(firstSets.get(del));
           if (isNullable(del)) {
@@ -579,7 +577,7 @@ public class Analyzer {
       changed = false;
       for (Parser p : all) {
         if (p instanceof TrimmingParser) {
-          Parser del = p.getChildren().get(0);
+          Parser del = p.getChildren().getFirst();
           Parser left = p.getChildren().get(1);
           Parser right = p.getChildren().get(2);
           if (followSets.get(left).addAll(firstSet(left))) changed = true;
@@ -593,7 +591,7 @@ public class Analyzer {
           if (followSets.get(right).addAll(firstSet(right))) changed = true;
           if (followSets.get(right).addAll(followSets.get(p))) changed = true;
         } else if (p instanceof SeparatedRepeatingParser) {
-          Parser del = p.getChildren().get(0);
+          Parser del = p.getChildren().getFirst();
           Parser sep = p.getChildren().get(1);
           if (followSets.get(del).addAll(firstSet(sep))) changed = true;
           if (followSets.get(del).addAll(followSets.get(p))) changed = true;
@@ -606,7 +604,7 @@ public class Analyzer {
             if (followSets.get(sep).addAll(followSets.get(p))) changed = true;
           }
         } else if (p instanceof RepeatingParser) {
-          Parser child = p.getChildren().get(0);
+          Parser child = p.getChildren().getFirst();
           if (followSets.get(child).addAll(firstSet(child))) changed = true;
           if (followSets.get(child).addAll(followSets.get(p))) changed = true;
         } else if (p instanceof SequentialParser) {

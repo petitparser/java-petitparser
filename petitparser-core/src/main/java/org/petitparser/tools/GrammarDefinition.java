@@ -152,10 +152,10 @@ public class GrammarDefinition {
     todo.add(dereference(mapping, reference));
     Set<Parser> seen = new HashSet<>(todo);
     while (!todo.isEmpty()) {
-      Parser parent = todo.remove(todo.size() - 1);
+      Parser parent = todo.removeLast();
       for (Parser child : parent.getChildren()) {
-        if (child instanceof Reference) {
-          Parser referenced = dereference(mapping, (Reference) child);
+        if (child instanceof Reference ref) {
+          Parser referenced = dereference(mapping, ref);
           parent.replace(child, referenced);
           child = referenced;
         }
@@ -175,8 +175,7 @@ public class GrammarDefinition {
       List<Reference> references = new ArrayList<>();
       references.add(reference);
       parser = reference.resolve();
-      while (parser instanceof Reference) {
-        Reference otherReference = (Reference) parser;
+      while (parser instanceof Reference otherReference) {
         if (references.contains(otherReference)) {
           throw new IllegalStateException("Recursive references detected: " +
               String.join(", ", references.stream().map(ref -> ref.name)

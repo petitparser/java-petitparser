@@ -5,7 +5,7 @@
 - Deliver code, tests, and documentation directly with zero introductory fluff or pleasantries.
 - Strictly adhere to 2 spaces for indentation.
 - Preserve zero external runtime dependencies for `petitparser-core` (rely exclusively on the Java standard library).
-- Target Java 11 bytecode compatibility (`<maven.compiler.release>11</maven.compiler.release>`).
+- Target Java 21 bytecode compatibility (`<maven.compiler.release>21</maven.compiler.release>`).
 
 ---
 
@@ -28,7 +28,7 @@
 
 ### Type System & Generics Guidelines
 
-- **Dual-Nature Tuples**: Java 11 lacks language-level tuples/records. Implement `Tuple2<T1, T2>` through `Tuple9` extending `AbstractList<Object>`.
+- **Dual-Nature Tuples**: Implement `Tuple2<T1, T2>` through `Tuple9` extending `AbstractList<Object>`.
   - Enables strongly-typed accessors (`tuple.first()`, `tuple.second()`, etc.) without losing compatibility with APIs expecting `List<Object>`.
   - Seamlessly passes equality against standard lists (`tuple.equals(Arrays.asList(...)) == true`).
 - **Direct-Mapped Sequences**: Provide fluent `.then()` sequence chaining returning `SequenceParser2` through `SequenceParser9`, offering direct multi-argument mapping (`.map((a, b) -> ...)` via `BiFunction`, `Function3`, etc.) so users rarely need to inspect the underlying `Tuple`.

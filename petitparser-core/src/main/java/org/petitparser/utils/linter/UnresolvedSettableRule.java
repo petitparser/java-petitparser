@@ -19,7 +19,7 @@ public class UnresolvedSettableRule extends LinterRule {
   @Override
   public void run(Analyzer analyzer, Parser parser, Consumer<LinterIssue> callback) {
     if (parser instanceof SettableParser) {
-      Parser delegate = parser.getChildren().get(0);
+      Parser delegate = parser.getChildren().getFirst();
       if (delegate instanceof FailureParser) {
         callback.accept(new LinterIssue(
             this,

@@ -4,8 +4,6 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.DelegateParser;
-import org.petitparser.utils.tuples.Tuple;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

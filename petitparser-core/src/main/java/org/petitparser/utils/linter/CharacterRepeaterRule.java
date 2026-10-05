@@ -20,9 +20,9 @@ public class CharacterRepeaterRule extends LinterRule {
   @Override
   public void run(Analyzer analyzer, Parser parser, Consumer<LinterIssue> callback) {
     if (parser instanceof FlattenParser) {
-      Parser repeating = parser.getChildren().get(0);
+      Parser repeating = parser.getChildren().getFirst();
       if (repeating instanceof PossessiveRepeatingParser) {
-        Parser character = repeating.getChildren().get(0);
+        Parser character = repeating.getChildren().getFirst();
         if (character instanceof CharacterParser) {
           callback.accept(new LinterIssue(
               this,

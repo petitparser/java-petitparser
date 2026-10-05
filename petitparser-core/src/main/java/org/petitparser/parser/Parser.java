@@ -883,9 +883,8 @@ public abstract class Parser {
   public <T1, T2, R> Parser map(BiFunction<? super T1, ? super T2, ? extends R> function) {
     Objects.requireNonNull(function, "Undefined map function");
     return map(input -> {
-      if (input instanceof Tuple2) {
-        Tuple2<T1, T2> tuple = (Tuple2<T1, T2>) input;
-        return function.apply(tuple.first(), tuple.second());
+      if (input instanceof Tuple2<?, ?> tuple) {
+        return function.apply((T1) tuple.first(), (T2) tuple.second());
       }
       List<?> list = (List<?>) input;
       return function.apply((T1) list.get(0), (T2) list.get(1));
@@ -899,9 +898,9 @@ public abstract class Parser {
   public <T1, T2, T3, R> Parser map(Function3<? super T1, ? super T2, ? super T3, ? extends R> function) {
     Objects.requireNonNull(function, "Undefined map function");
     return map(input -> {
-      if (input instanceof Tuple3) {
-        Tuple3<T1, T2, T3> tuple = (Tuple3<T1, T2, T3>) input;
-        return function.apply(tuple.first(), tuple.second(), tuple.third());
+      if (input instanceof Tuple3<?, ?, ?> tuple) {
+        return function.apply(
+            (T1) tuple.first(), (T2) tuple.second(), (T3) tuple.third());
       }
       List<?> list = (List<?>) input;
       return function.apply((T1) list.get(0), (T2) list.get(1), (T3) list.get(2));
@@ -916,9 +915,9 @@ public abstract class Parser {
       Function4<? super T1, ? super T2, ? super T3, ? super T4, ? extends R> function) {
     Objects.requireNonNull(function, "Undefined map function");
     return map(input -> {
-      if (input instanceof Tuple4) {
-        Tuple4<T1, T2, T3, T4> tuple = (Tuple4<T1, T2, T3, T4>) input;
-        return function.apply(tuple.first(), tuple.second(), tuple.third(), tuple.fourth());
+      if (input instanceof Tuple4<?, ?, ?, ?> tuple) {
+        return function.apply(
+            (T1) tuple.first(), (T2) tuple.second(), (T3) tuple.third(), (T4) tuple.fourth());
       }
       List<?> list = (List<?>) input;
       return function.apply((T1) list.get(0), (T2) list.get(1), (T3) list.get(2), (T4) list.get(3));
@@ -933,10 +932,10 @@ public abstract class Parser {
       Function5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? extends R> function) {
     Objects.requireNonNull(function, "Undefined map function");
     return map(input -> {
-      if (input instanceof Tuple5) {
-        Tuple5<T1, T2, T3, T4, T5> tuple = (Tuple5<T1, T2, T3, T4, T5>) input;
+      if (input instanceof Tuple5<?, ?, ?, ?, ?> tuple) {
         return function.apply(
-            tuple.first(), tuple.second(), tuple.third(), tuple.fourth(), tuple.fifth());
+            (T1) tuple.first(), (T2) tuple.second(), (T3) tuple.third(), (T4) tuple.fourth(),
+            (T5) tuple.fifth());
       }
       List<?> list = (List<?>) input;
       return function.apply(
@@ -953,11 +952,10 @@ public abstract class Parser {
       Function6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? extends R> function) {
     Objects.requireNonNull(function, "Undefined map function");
     return map(input -> {
-      if (input instanceof Tuple6) {
-        Tuple6<T1, T2, T3, T4, T5, T6> tuple = (Tuple6<T1, T2, T3, T4, T5, T6>) input;
+      if (input instanceof Tuple6<?, ?, ?, ?, ?, ?> tuple) {
         return function.apply(
-            tuple.first(), tuple.second(), tuple.third(), tuple.fourth(), tuple.fifth(),
-            tuple.sixth());
+            (T1) tuple.first(), (T2) tuple.second(), (T3) tuple.third(), (T4) tuple.fourth(),
+            (T5) tuple.fifth(), (T6) tuple.sixth());
       }
       List<?> list = (List<?>) input;
       return function.apply(
@@ -974,11 +972,10 @@ public abstract class Parser {
       Function7<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? extends R> function) {
     Objects.requireNonNull(function, "Undefined map function");
     return map(input -> {
-      if (input instanceof Tuple7) {
-        Tuple7<T1, T2, T3, T4, T5, T6, T7> tuple = (Tuple7<T1, T2, T3, T4, T5, T6, T7>) input;
+      if (input instanceof Tuple7<?, ?, ?, ?, ?, ?, ?> tuple) {
         return function.apply(
-            tuple.first(), tuple.second(), tuple.third(), tuple.fourth(), tuple.fifth(),
-            tuple.sixth(), tuple.seventh());
+            (T1) tuple.first(), (T2) tuple.second(), (T3) tuple.third(), (T4) tuple.fourth(),
+            (T5) tuple.fifth(), (T6) tuple.sixth(), (T7) tuple.seventh());
       }
       List<?> list = (List<?>) input;
       return function.apply(
@@ -995,11 +992,10 @@ public abstract class Parser {
       Function8<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? extends R> function) {
     Objects.requireNonNull(function, "Undefined map function");
     return map(input -> {
-      if (input instanceof Tuple8) {
-        Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> tuple = (Tuple8<T1, T2, T3, T4, T5, T6, T7, T8>) input;
+      if (input instanceof Tuple8<?, ?, ?, ?, ?, ?, ?, ?> tuple) {
         return function.apply(
-            tuple.first(), tuple.second(), tuple.third(), tuple.fourth(), tuple.fifth(),
-            tuple.sixth(), tuple.seventh(), tuple.eighth());
+            (T1) tuple.first(), (T2) tuple.second(), (T3) tuple.third(), (T4) tuple.fourth(),
+            (T5) tuple.fifth(), (T6) tuple.sixth(), (T7) tuple.seventh(), (T8) tuple.eighth());
       }
       List<?> list = (List<?>) input;
       return function.apply(
@@ -1016,12 +1012,11 @@ public abstract class Parser {
       Function9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9, ? extends R> function) {
     Objects.requireNonNull(function, "Undefined map function");
     return map(input -> {
-      if (input instanceof Tuple9) {
-        Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> tuple =
-            (Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9>) input;
+      if (input instanceof Tuple9<?, ?, ?, ?, ?, ?, ?, ?, ?> tuple) {
         return function.apply(
-            tuple.first(), tuple.second(), tuple.third(), tuple.fourth(), tuple.fifth(),
-            tuple.sixth(), tuple.seventh(), tuple.eighth(), tuple.ninth());
+            (T1) tuple.first(), (T2) tuple.second(), (T3) tuple.third(), (T4) tuple.fourth(),
+            (T5) tuple.fifth(), (T6) tuple.sixth(), (T7) tuple.seventh(), (T8) tuple.eighth(),
+            (T9) tuple.ninth());
       }
       List<?> list = (List<?>) input;
       return function.apply(

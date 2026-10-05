@@ -51,20 +51,14 @@ public class Tuple5<T1, T2, T3, T4, T5> extends AbstractList<Object> implements 
 
   @Override
   public Object get(int index) {
-    switch (index) {
-      case 0:
-        return first;
-      case 1:
-        return second;
-      case 2:
-        return third;
-      case 3:
-        return fourth;
-      case 4:
-        return fifth;
-      default:
-        throw new IndexOutOfBoundsException("Index: " + index + ", Size: 5");
-    }
+    return switch (index) {
+      case 0 -> first;
+      case 1 -> second;
+      case 2 -> third;
+      case 3 -> fourth;
+      case 4 -> fifth;
+      default -> throw new IndexOutOfBoundsException("Index: " + index + ", Size: 5");
+    };
   }
 
   @Override
@@ -77,18 +71,16 @@ public class Tuple5<T1, T2, T3, T4, T5> extends AbstractList<Object> implements 
     if (this == other) {
       return true;
     }
-    if (other instanceof Tuple5) {
-      Tuple5<?, ?, ?, ?, ?> that = (Tuple5<?, ?, ?, ?, ?>) other;
+    if (other instanceof Tuple5<?, ?, ?, ?, ?> that) {
       return Objects.equals(first, that.first) &&
           Objects.equals(second, that.second) &&
           Objects.equals(third, that.third) &&
           Objects.equals(fourth, that.fourth) &&
           Objects.equals(fifth, that.fifth);
     }
-    if (!(other instanceof List)) {
+    if (!(other instanceof List<?> that)) {
       return false;
     }
-    List<?> that = (List<?>) other;
     return that.size() == 5 &&
         Objects.equals(first, that.get(0)) &&
         Objects.equals(second, that.get(1)) &&

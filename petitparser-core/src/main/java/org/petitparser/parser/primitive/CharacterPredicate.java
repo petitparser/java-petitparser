@@ -202,7 +202,7 @@ public interface CharacterPredicate {
       if (mergedRanges.isEmpty()) {
         mergedRanges.add(thisRange);
       } else {
-        RangeCharPredicate lastRange = mergedRanges.get(mergedRanges.size() - 1);
+        RangeCharPredicate lastRange = mergedRanges.getLast();
         if ((long) lastRange.getStop() + 1 >= thisRange.getStart()) {
           RangeCharPredicate merged = new RangeCharPredicate(
               lastRange.getStart(),
@@ -218,7 +218,7 @@ public interface CharacterPredicate {
     if (mergedRanges.isEmpty()) {
       return ConstantCharPredicate.none();
     } else if (mergedRanges.size() == 1) {
-      RangeCharPredicate range = mergedRanges.get(0);
+      RangeCharPredicate range = mergedRanges.getFirst();
       if (range.getStart() <= 0 &&
           range.getStop() >= (unicode ? 0x10ffff : 0xffff)) {
         return ConstantCharPredicate.any();
@@ -228,8 +228,8 @@ public interface CharacterPredicate {
         return range;
       }
     } else {
-      int lookupBytes = (mergedRanges.get(mergedRanges.size() - 1).getStop()
-          - mergedRanges.get(0).getStart() + 32) >> 3;
+      int lookupBytes = (mergedRanges.getLast().getStop()
+          - mergedRanges.getFirst().getStart() + 32) >> 3;
       int rangesBytes = mergedRanges.size() * 8;
       if (lookupBytes > 1024 && rangesBytes < (lookupBytes >> 3)) {
         return RangesCharPredicate.fromRanges(mergedRanges);
@@ -281,18 +281,5 @@ public interface CharacterPredicate {
    */
   default boolean isEqualTo(CharacterPredicate other) {
     return equals(other);
-  }
-
-  /**
-   * Backward compatibility alias for {@link NotCharPredicate}.
-   *
-   * @deprecated Use {@link NotCharPredicate} or {@link CharacterPredicate#not()} instead.
-   */
-  @Deprecated(since = "2.5.0")
-  class NotCharacterPredicate extends NotCharPredicate {
-    @Deprecated(since = "2.5.0")
-    public NotCharacterPredicate(CharacterPredicate predicate) {
-      super(predicate);
-    }
   }
 }

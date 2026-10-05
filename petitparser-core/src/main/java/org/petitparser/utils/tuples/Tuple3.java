@@ -37,16 +37,12 @@ public class Tuple3<T1, T2, T3> extends AbstractList<Object> implements Tuple {
 
   @Override
   public Object get(int index) {
-    switch (index) {
-      case 0:
-        return first;
-      case 1:
-        return second;
-      case 2:
-        return third;
-      default:
-        throw new IndexOutOfBoundsException("Index: " + index + ", Size: 3");
-    }
+    return switch (index) {
+      case 0 -> first;
+      case 1 -> second;
+      case 2 -> third;
+      default -> throw new IndexOutOfBoundsException("Index: " + index + ", Size: 3");
+    };
   }
 
   @Override
@@ -59,16 +55,14 @@ public class Tuple3<T1, T2, T3> extends AbstractList<Object> implements Tuple {
     if (this == other) {
       return true;
     }
-    if (other instanceof Tuple3) {
-      Tuple3<?, ?, ?> that = (Tuple3<?, ?, ?>) other;
+    if (other instanceof Tuple3<?, ?, ?> that) {
       return Objects.equals(first, that.first) &&
           Objects.equals(second, that.second) &&
           Objects.equals(third, that.third);
     }
-    if (!(other instanceof List)) {
+    if (!(other instanceof List<?> that)) {
       return false;
     }
-    List<?> that = (List<?>) other;
     return that.size() == 3 &&
         Objects.equals(first, that.get(0)) &&
         Objects.equals(second, that.get(1)) &&

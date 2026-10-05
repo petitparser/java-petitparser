@@ -79,15 +79,15 @@ public class RangesCharPredicate implements CharacterPredicate {
 
   @Override
   public boolean isEqualTo(CharacterPredicate other) {
-    return other instanceof RangesCharPredicate &&
-        Arrays.equals(starts, ((RangesCharPredicate) other).starts) &&
-        Arrays.equals(stops, ((RangesCharPredicate) other).stops);
+    return other instanceof RangesCharPredicate that &&
+        Arrays.equals(starts, that.starts) &&
+        Arrays.equals(stops, that.stops);
   }
 
   @Override
   public boolean equals(Object other) {
-    return other instanceof CharacterPredicate &&
-        isEqualTo((CharacterPredicate) other);
+    return other instanceof CharacterPredicate that &&
+        isEqualTo(that);
   }
 
   @Override

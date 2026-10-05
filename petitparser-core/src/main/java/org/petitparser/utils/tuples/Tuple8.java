@@ -74,26 +74,17 @@ public class Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> extends AbstractList<Object>
 
   @Override
   public Object get(int index) {
-    switch (index) {
-      case 0:
-        return first;
-      case 1:
-        return second;
-      case 2:
-        return third;
-      case 3:
-        return fourth;
-      case 4:
-        return fifth;
-      case 5:
-        return sixth;
-      case 6:
-        return seventh;
-      case 7:
-        return eighth;
-      default:
-        throw new IndexOutOfBoundsException("Index: " + index + ", Size: 8");
-    }
+    return switch (index) {
+      case 0 -> first;
+      case 1 -> second;
+      case 2 -> third;
+      case 3 -> fourth;
+      case 4 -> fifth;
+      case 5 -> sixth;
+      case 6 -> seventh;
+      case 7 -> eighth;
+      default -> throw new IndexOutOfBoundsException("Index: " + index + ", Size: 8");
+    };
   }
 
   @Override
@@ -106,8 +97,7 @@ public class Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> extends AbstractList<Object>
     if (this == other) {
       return true;
     }
-    if (other instanceof Tuple8) {
-      Tuple8<?, ?, ?, ?, ?, ?, ?, ?> that = (Tuple8<?, ?, ?, ?, ?, ?, ?, ?>) other;
+    if (other instanceof Tuple8<?, ?, ?, ?, ?, ?, ?, ?> that) {
       return Objects.equals(first, that.first) &&
           Objects.equals(second, that.second) &&
           Objects.equals(third, that.third) &&
@@ -117,10 +107,9 @@ public class Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> extends AbstractList<Object>
           Objects.equals(seventh, that.seventh) &&
           Objects.equals(eighth, that.eighth);
     }
-    if (!(other instanceof List)) {
+    if (!(other instanceof List<?> that)) {
       return false;
     }
-    List<?> that = (List<?>) other;
     return that.size() == 8 &&
         Objects.equals(first, that.get(0)) &&
         Objects.equals(second, that.get(1)) &&

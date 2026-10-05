@@ -66,24 +66,16 @@ public class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends AbstractList<Object> imp
 
   @Override
   public Object get(int index) {
-    switch (index) {
-      case 0:
-        return first;
-      case 1:
-        return second;
-      case 2:
-        return third;
-      case 3:
-        return fourth;
-      case 4:
-        return fifth;
-      case 5:
-        return sixth;
-      case 6:
-        return seventh;
-      default:
-        throw new IndexOutOfBoundsException("Index: " + index + ", Size: 7");
-    }
+    return switch (index) {
+      case 0 -> first;
+      case 1 -> second;
+      case 2 -> third;
+      case 3 -> fourth;
+      case 4 -> fifth;
+      case 5 -> sixth;
+      case 6 -> seventh;
+      default -> throw new IndexOutOfBoundsException("Index: " + index + ", Size: 7");
+    };
   }
 
   @Override
@@ -96,8 +88,7 @@ public class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends AbstractList<Object> imp
     if (this == other) {
       return true;
     }
-    if (other instanceof Tuple7) {
-      Tuple7<?, ?, ?, ?, ?, ?, ?> that = (Tuple7<?, ?, ?, ?, ?, ?, ?>) other;
+    if (other instanceof Tuple7<?, ?, ?, ?, ?, ?, ?> that) {
       return Objects.equals(first, that.first) &&
           Objects.equals(second, that.second) &&
           Objects.equals(third, that.third) &&
@@ -106,10 +97,9 @@ public class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends AbstractList<Object> imp
           Objects.equals(sixth, that.sixth) &&
           Objects.equals(seventh, that.seventh);
     }
-    if (!(other instanceof List)) {
+    if (!(other instanceof List<?> that)) {
       return false;
     }
-    List<?> that = (List<?>) other;
     return that.size() == 7 &&
         Objects.equals(first, that.get(0)) &&
         Objects.equals(second, that.get(1)) &&
