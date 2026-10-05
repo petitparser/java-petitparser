@@ -107,7 +107,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Implement functional folding: `foldLeft(FoldFunction<R, S> callback)` and `foldRight(FoldFunction<R, S> callback)`.
   - Implement `equals`, `hashCode`, `toString`, and `Iterable<Object>`.
 
-- [ ] **Task 2.3: SeparatedRepeatingParser**
+- [x] **Task 2.3: SeparatedRepeatingParser**
   - Implement `org.petitparser.parser.repeating.SeparatedRepeatingParser` implementing `SequentialParser`.
   - Add `starSeparated(Parser separator)` to `Parser`.
   - Add `plusSeparated(Parser separator)` to `Parser`.

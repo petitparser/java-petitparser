@@ -27,6 +27,7 @@ import org.petitparser.parser.repeating.GreedyRepeatingParser;
 import org.petitparser.parser.repeating.LazyRepeatingParser;
 import org.petitparser.parser.repeating.PossessiveRepeatingParser;
 import org.petitparser.parser.repeating.RepeatingParser;
+import org.petitparser.parser.repeating.SeparatedRepeatingParser;
 import org.petitparser.utils.FailureJoiner;
 import org.petitparser.utils.Functions;
 
@@ -629,6 +630,53 @@ public abstract class Parser {
    */
   public <T> Parser constant(T value) {
     return map(Functions.constant(value));
+  }
+
+  /**
+   * Returns a parser that parses the receiver zero or more times, separated by {@code separator}.
+   * The resulting parser returns a {@link org.petitparser.parser.repeating.SeparatedList}.
+   *
+   * @param separator the separator parser.
+   * @return a separated repeating parser.
+   */
+  public Parser starSeparated(Parser separator) {
+    return repeatSeparated(separator, 0, RepeatingParser.UNBOUNDED);
+  }
+
+  /**
+   * Returns a parser that parses the receiver one or more times, separated by {@code separator}.
+   * The resulting parser returns a {@link org.petitparser.parser.repeating.SeparatedList}.
+   *
+   * @param separator the separator parser.
+   * @return a separated repeating parser.
+   */
+  public Parser plusSeparated(Parser separator) {
+    return repeatSeparated(separator, 1, RepeatingParser.UNBOUNDED);
+  }
+
+  /**
+   * Returns a parser that parses the receiver exactly {@code count} times, separated by {@code separator}.
+   * The resulting parser returns a {@link org.petitparser.parser.repeating.SeparatedList}.
+   *
+   * @param separator the separator parser.
+   * @param count the number of repetitions.
+   * @return a separated repeating parser.
+   */
+  public Parser timesSeparated(Parser separator, int count) {
+    return repeatSeparated(separator, count, count);
+  }
+
+  /**
+   * Returns a parser that parses the receiver between {@code min} and {@code max} times,
+   * separated by {@code separator}. The resulting parser returns a {@link org.petitparser.parser.repeating.SeparatedList}.
+   *
+   * @param separator the separator parser.
+   * @param min the minimum number of repetitions.
+   * @param max the maximum number of repetitions, or {@link RepeatingParser#UNBOUNDED}.
+   * @return a separated repeating parser.
+   */
+  public Parser repeatSeparated(Parser separator, int min, int max) {
+    return new SeparatedRepeatingParser(this, separator, min, max);
   }
 
   /**
