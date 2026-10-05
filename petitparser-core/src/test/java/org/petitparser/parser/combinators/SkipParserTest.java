@@ -34,8 +34,8 @@ public class SkipParserTest {
   @Test
   public void testNone() {
     SkipParser parser = new SkipParser(inner);
-    assertTrue(parser.getBefore() instanceof EpsilonParser);
-    assertTrue(parser.getAfter() instanceof EpsilonParser);
+    assertSame(EpsilonParser.INSTANCE, parser.getBefore());
+    assertSame(EpsilonParser.INSTANCE, parser.getAfter());
     assertSame(inner, parser.getChildren().get(1));
 
     assertSuccess(parser, "1", '1');
@@ -47,7 +47,7 @@ public class SkipParserTest {
   public void testBefore() {
     SkipParser parser = (SkipParser) inner.skip(before, null);
     assertSame(before, parser.getBefore());
-    assertTrue(parser.getAfter() instanceof EpsilonParser);
+    assertSame(EpsilonParser.INSTANCE, parser.getAfter());
 
     assertSuccess(parser, "<1", '1');
     assertSuccess(parser, "<2", '2');
@@ -60,7 +60,7 @@ public class SkipParserTest {
   @Test
   public void testAfter() {
     SkipParser parser = (SkipParser) inner.skip(null, after);
-    assertTrue(parser.getBefore() instanceof EpsilonParser);
+    assertSame(EpsilonParser.INSTANCE, parser.getBefore());
     assertSame(after, parser.getAfter());
 
     assertSuccess(parser, "1>", '1');

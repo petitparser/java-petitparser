@@ -34,8 +34,8 @@ public class SkipParser extends DelegateParser implements SequentialParser {
    */
   public SkipParser(Parser delegate, Parser before, Parser after) {
     super(delegate);
-    this.before = before != null ? before : new EpsilonParser();
-    this.after = after != null ? after : new EpsilonParser();
+    this.before = before != null ? before : EpsilonParser.INSTANCE;
+    this.after = after != null ? after : EpsilonParser.INSTANCE;
   }
 
   /**

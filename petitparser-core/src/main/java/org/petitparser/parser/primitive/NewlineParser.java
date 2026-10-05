@@ -11,6 +11,11 @@ import java.util.Objects;
  */
 public class NewlineParser extends Parser {
 
+  /**
+   * Reusable singleton instance of {@link NewlineParser} with default message.
+   */
+  public static final NewlineParser INSTANCE = new NewlineParser();
+
   protected final String message;
 
   /**

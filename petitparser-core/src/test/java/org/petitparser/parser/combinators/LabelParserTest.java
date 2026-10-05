@@ -34,6 +34,7 @@ public class LabelParserTest {
   public void testFastParse() {
     Parser parser = digit().labeled("number");
     assertEquals(1, parser.fastParseOn("1", 0));
+    assertEquals(2, parser.fastParseOn("a1", 1));
     assertEquals(-1, parser.fastParseOn("a", 0));
   }
 

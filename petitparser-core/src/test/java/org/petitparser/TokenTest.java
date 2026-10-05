@@ -161,6 +161,15 @@ public class TokenTest {
     assertEquals(0, single.getStart());
     assertEquals(1, single.getStop());
     assertEquals(Collections.singletonList('a'), single.getValue());
+
+    Token varargs = Token.join(t1, t2);
+    assertEquals(joined, varargs);
+
+    Token customValue = Token.join(Arrays.asList(t1, t2), "ab");
+    assertEquals("abc", customValue.getBuffer());
+    assertEquals(0, customValue.getStart());
+    assertEquals(2, customValue.getStop());
+    assertEquals("ab", customValue.getValue());
   }
 
   @Test
@@ -173,9 +182,47 @@ public class TokenTest {
     }
 
     try {
+      Token.join(Collections.emptyList(), "value");
+      fail("Expected IllegalArgumentException");
+    } catch (IllegalArgumentException expected) {
+      // expected
+    }
+
+    try {
+      Token.join((Iterable<Token>) null);
+      fail("Expected NullPointerException");
+    } catch (NullPointerException expected) {
+      // expected
+    }
+
+    try {
+      Token.join((Token[]) null);
+      fail("Expected NullPointerException");
+    } catch (NullPointerException expected) {
+      // expected
+    }
+
+    try {
+      Token t1 = new Token("abc", 0, 1, 'a');
+      Token.join(Arrays.asList(t1, null));
+      fail("Expected NullPointerException");
+    } catch (NullPointerException expected) {
+      // expected
+    }
+
+    try {
       Token t1 = new Token("abc", 0, 1, 'a');
       Token t2 = new Token("xyz", 0, 1, 'x');
       Token.join(Arrays.asList(t1, t2));
+      fail("Expected IllegalArgumentException");
+    } catch (IllegalArgumentException expected) {
+      // expected
+    }
+
+    try {
+      Token t1 = new Token("abc", 0, 1, 'a');
+      Token t2 = new Token("xyz", 0, 1, 'x');
+      Token.join(Arrays.asList(t1, t2), "value");
       fail("Expected IllegalArgumentException");
     } catch (IllegalArgumentException expected) {
       // expected

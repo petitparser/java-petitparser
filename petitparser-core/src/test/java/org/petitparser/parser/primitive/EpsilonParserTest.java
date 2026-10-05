@@ -72,6 +72,17 @@ public class EpsilonParserTest {
     assertEquals("custom failure", ((FailureParser) custom).getMessage());
     assertFailure(custom, "", 0, "custom failure");
     assertFailure(custom, "a", 0, "custom failure");
+
+    Parser copy = custom.copy();
+    assertNotSame(custom, copy);
+    assertTrue(custom.isEqualTo(copy));
+    assertTrue(copy.isEqualTo(custom));
+    assertFalse(parser.isEqualTo(custom));
+
+    Parser withMessage = FailureParser.withMessage("custom failure");
+    assertTrue(custom.isEqualTo(withMessage));
+
+    assertEquals(-1, parser.fastParseOn("abc", 0));
   }
 
   @Test

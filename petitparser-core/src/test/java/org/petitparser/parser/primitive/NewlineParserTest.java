@@ -6,6 +6,7 @@ import org.petitparser.parser.Parser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.petitparser.Assertions.assertFailure;
@@ -19,6 +20,7 @@ public class NewlineParserTest {
   @Test
   public void testDefault() {
     NewlineParser parser = (NewlineParser) Parser.newline();
+    assertSame(NewlineParser.INSTANCE, parser);
     assertEquals("newline expected", parser.getMessage());
     assertTrue(parser.toString().contains("newline expected"));
 

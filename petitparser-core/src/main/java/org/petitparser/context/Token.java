@@ -3,6 +3,7 @@ package org.petitparser.context;
 import org.petitparser.parser.Parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -179,19 +180,30 @@ public class Token {
    * @return a single combined token.
    * @throws IllegalArgumentException if tokens is empty or tokens do not share the same buffer.
    */
+  public static Token join(Token... tokens) {
+    return join(Arrays.asList(Objects.requireNonNull(tokens, "Undefined tokens")));
+  }
+
+  /**
+   * Combines multiple tokens into a single token with the list of their values.
+   *
+   * @param tokens the tokens to combine.
+   * @return a single combined token.
+   * @throws IllegalArgumentException if tokens is empty or tokens do not share the same buffer.
+   */
   public static Token join(Iterable<Token> tokens) {
     Iterator<Token> iterator = Objects.requireNonNull(tokens, "Undefined tokens").iterator();
     if (!iterator.hasNext()) {
       throw new IllegalArgumentException("Require at least one token");
     }
-    Token first = iterator.next();
+    Token first = Objects.requireNonNull(iterator.next(), "Undefined token");
     List<Object> values = new ArrayList<>();
     values.add(first.getValue());
     String buffer = first.getBuffer();
     int start = first.getStart();
     int stop = first.getStop();
     while (iterator.hasNext()) {
-      Token current = iterator.next();
+      Token current = Objects.requireNonNull(iterator.next(), "Undefined token");
       if (!Objects.equals(buffer, current.getBuffer())) {
         throw new IllegalArgumentException("Tokens do not use the same buffer");
       }
@@ -200,5 +212,33 @@ public class Token {
       stop = Math.max(stop, current.getStop());
     }
     return new Token(buffer, start, stop, values);
+  }
+
+  /**
+   * Combines multiple tokens into a single token with a custom value.
+   *
+   * @param tokens the tokens to combine.
+   * @param value the custom value of the resulting token.
+   * @return a single combined token.
+   * @throws IllegalArgumentException if tokens is empty or tokens do not share the same buffer.
+   */
+  public static Token join(Iterable<Token> tokens, Object value) {
+    Iterator<Token> iterator = Objects.requireNonNull(tokens, "Undefined tokens").iterator();
+    if (!iterator.hasNext()) {
+      throw new IllegalArgumentException("Require at least one token");
+    }
+    Token first = Objects.requireNonNull(iterator.next(), "Undefined token");
+    String buffer = first.getBuffer();
+    int start = first.getStart();
+    int stop = first.getStop();
+    while (iterator.hasNext()) {
+      Token current = Objects.requireNonNull(iterator.next(), "Undefined token");
+      if (!Objects.equals(buffer, current.getBuffer())) {
+        throw new IllegalArgumentException("Tokens do not use the same buffer");
+      }
+      start = Math.min(start, current.getStart());
+      stop = Math.max(stop, current.getStop());
+    }
+    return new Token(buffer, start, stop, value);
   }
 }

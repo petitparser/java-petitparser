@@ -119,6 +119,11 @@ public class WhereParser<T> extends DelegateParser {
   }
 
   @Override
+  public String toString() {
+    return super.toString() + (message != null ? "[" + message + "]" : "");
+  }
+
+  @Override
   public WhereParser<T> copy() {
     return new WhereParser<>(delegate, predicate, message, failureFactory);
   }

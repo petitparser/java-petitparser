@@ -141,5 +141,25 @@ public class WhereParserTest {
 
     Parser withFactoryCopy = withFactory.copy();
     assertTrue(withFactory.isEqualTo(withFactoryCopy));
+
+    BiFunction<Context, Result, Result> otherFactory = (ctx, res) -> ctx.failure("other");
+    Parser withOtherFactory = any().where(predicate, otherFactory);
+    assertFalse(withFactory.isEqualTo(withOtherFactory));
+  }
+
+  @Test
+  public void testToString() {
+    Parser defaultParser = any().where(Objects::nonNull);
+    assertEquals("WhereParser", defaultParser.toString());
+
+    Parser messageParser = any().where(Objects::nonNull, "custom");
+    assertEquals("WhereParser[custom]", messageParser.toString());
+  }
+
+  @Test
+  public void testFastParseNonZeroOffset() {
+    Parser parser = of('a').where(c -> Objects.equals(c, 'a'));
+    assertEquals(2, parser.fastParseOn("ba", 1));
+    assertEquals(-1, parser.fastParseOn("bb", 1));
   }
 }

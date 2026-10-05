@@ -125,7 +125,7 @@ public abstract class Parser {
    * Returns a parser that detects newlines platform independently.
    */
   public static Parser newline() {
-    return new NewlineParser();
+    return NewlineParser.INSTANCE;
   }
 
   /**
