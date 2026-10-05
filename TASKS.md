@@ -101,7 +101,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Add `repeatString(int min, int max)`, `repeatString(int min, int max, String message)` to `Parser`.
   - Auto-specialize when called on `CharacterParser` to instantiate `RepeatingCharacterParser`.
 
-- [ ] **Task 2.2: SeparatedList Data Structure**
+- [x] **Task 2.2: SeparatedList Data Structure**
   - Implement immutable `org.petitparser.parser.repeating.SeparatedList<R, S>` holding `elements` and `separators`.
   - Implement `getSequential()` returning alternating interleaved elements and separators.
   - Implement functional folding: `foldLeft(FoldFunction<R, S> callback)` and `foldRight(FoldFunction<R, S> callback)`.
