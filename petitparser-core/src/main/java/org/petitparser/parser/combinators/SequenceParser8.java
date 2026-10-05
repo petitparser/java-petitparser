@@ -101,19 +101,13 @@ public class SequenceParser8<T1, T2, T3, T4, T5, T6, T7, T8> extends ListParser 
   }
 
 
-  /**
-   * Maps the results of this sequence using an 8-argument function.
-   */
+
+  @Override
   @SuppressWarnings("unchecked")
-  public <R> Parser map(
-      Function8<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? extends R> function) {
-    Objects.requireNonNull(function, "Undefined map function");
-    return super.map(tuple -> {
-      Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> t = (Tuple8<T1, T2, T3, T4, T5, T6, T7, T8>) tuple;
-      return function.apply(
-          t.first(), t.second(), t.third(), t.fourth(),
-          t.fifth(), t.sixth(), t.seventh(), t.eighth());
-    });
+  public <S extends Parser> S then(Parser next) {
+    return (S) new SequenceParser9<>(
+        parsers[0], parsers[1], parsers[2], parsers[3],
+        parsers[4], parsers[5], parsers[6], parsers[7], next);
   }
 
   @Override

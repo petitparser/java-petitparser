@@ -43,16 +43,11 @@ public class SequenceParser2<T1, T2> extends ListParser implements SequentialPar
   }
 
 
-  /**
-   * Maps the results of this sequence using a binary function.
-   */
+
+  @Override
   @SuppressWarnings("unchecked")
-  public <R> Parser map(BiFunction<? super T1, ? super T2, ? extends R> function) {
-    Objects.requireNonNull(function, "Undefined map function");
-    return super.map(tuple -> {
-      Tuple2<T1, T2> t = (Tuple2<T1, T2>) tuple;
-      return function.apply(t.first(), t.second());
-    });
+  public <S extends Parser> S then(Parser next) {
+    return (S) new SequenceParser3<>(parsers[0], parsers[1], next);
   }
 
   @Override

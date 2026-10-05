@@ -52,16 +52,11 @@ public class SequenceParser3<T1, T2, T3> extends ListParser implements Sequentia
   }
 
 
-  /**
-   * Maps the results of this sequence using a ternary function.
-   */
+
+  @Override
   @SuppressWarnings("unchecked")
-  public <R> Parser map(Function3<? super T1, ? super T2, ? super T3, ? extends R> function) {
-    Objects.requireNonNull(function, "Undefined map function");
-    return super.map(tuple -> {
-      Tuple3<T1, T2, T3> t = (Tuple3<T1, T2, T3>) tuple;
-      return function.apply(t.first(), t.second(), t.third());
-    });
+  public <S extends Parser> S then(Parser next) {
+    return (S) new SequenceParser4<>(parsers[0], parsers[1], parsers[2], next);
   }
 
   @Override

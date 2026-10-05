@@ -325,4 +325,111 @@ public class SequenceParserNTest {
     assertEquals(Arrays.asList('a'), new SequenceParser(of('a')).parse("a").get());
     assertEquals(Arrays.asList('a', 'b'), of('a').seq(of('b')).parse("ab").get());
   }
+
+  @Test
+  public void testDirectFluentChainingAndMapping() {
+    Parser p2 = of('a').then(of('b')).map((c1, c2) -> "" + c1 + c2);
+    assertEquals("ab", p2.parse("ab").get());
+
+    Parser p3 = of('a').then(of('b')).then(of('c'))
+        .map((c1, c2, c3) -> "" + c1 + c2 + c3);
+    assertEquals("abc", p3.parse("abc").get());
+
+    Parser p4 = of('a').then(of('b')).then(of('c')).then(of('d'))
+        .map((c1, c2, c3, c4) -> "" + c1 + c2 + c3 + c4);
+    assertEquals("abcd", p4.parse("abcd").get());
+
+    Parser p5 = of('a').then(of('b')).then(of('c')).then(of('d')).then(of('e'))
+        .map((c1, c2, c3, c4, c5) -> "" + c1 + c2 + c3 + c4 + c5);
+    assertEquals("abcde", p5.parse("abcde").get());
+
+    Parser p6 = of('a').then(of('b')).then(of('c')).then(of('d')).then(of('e')).then(of('f'))
+        .map((c1, c2, c3, c4, c5, c6) -> "" + c1 + c2 + c3 + c4 + c5 + c6);
+    assertEquals("abcdef", p6.parse("abcdef").get());
+
+    Parser p7 = of('a').then(of('b')).then(of('c')).then(of('d')).then(of('e')).then(of('f')).then(of('g'))
+        .map((c1, c2, c3, c4, c5, c6, c7) -> "" + c1 + c2 + c3 + c4 + c5 + c6 + c7);
+    assertEquals("abcdefg", p7.parse("abcdefg").get());
+
+    Parser p8 = of('a').then(of('b')).then(of('c')).then(of('d')).then(of('e')).then(of('f')).then(of('g')).then(of('h'))
+        .map((c1, c2, c3, c4, c5, c6, c7, c8) -> "" + c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8);
+    assertEquals("abcdefgh", p8.parse("abcdefgh").get());
+
+    Parser p9 = of('a').then(of('b')).then(of('c')).then(of('d')).then(of('e')).then(of('f')).then(of('g')).then(of('h')).then(of('i'))
+        .map((c1, c2, c3, c4, c5, c6, c7, c8, c9) -> "" + c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8 + c9);
+    assertEquals("abcdefghi", p9.parse("abcdefghi").get());
+  }
+
+  @Test
+  public void testUntypedSequenceParserMultiArityMap() {
+    Parser p2 = new SequenceParser(of('a'), of('b')).map((c1, c2) -> "" + c1 + c2);
+    assertEquals("ab", p2.parse("ab").get());
+
+    Parser p3 = new SequenceParser(of('a'), of('b'), of('c')).map((c1, c2, c3) -> "" + c1 + c2 + c3);
+    assertEquals("abc", p3.parse("abc").get());
+
+    Parser p4 = new SequenceParser(of('a'), of('b'), of('c'), of('d'))
+        .map((c1, c2, c3, c4) -> "" + c1 + c2 + c3 + c4);
+    assertEquals("abcd", p4.parse("abcd").get());
+
+    Parser p5 = new SequenceParser(of('a'), of('b'), of('c'), of('d'), of('e'))
+        .map((c1, c2, c3, c4, c5) -> "" + c1 + c2 + c3 + c4 + c5);
+    assertEquals("abcde", p5.parse("abcde").get());
+
+    Parser p6 = new SequenceParser(of('a'), of('b'), of('c'), of('d'), of('e'), of('f'))
+        .map((c1, c2, c3, c4, c5, c6) -> "" + c1 + c2 + c3 + c4 + c5 + c6);
+    assertEquals("abcdef", p6.parse("abcdef").get());
+
+    Parser p7 = new SequenceParser(of('a'), of('b'), of('c'), of('d'), of('e'), of('f'), of('g'))
+        .map((c1, c2, c3, c4, c5, c6, c7) -> "" + c1 + c2 + c3 + c4 + c5 + c6 + c7);
+    assertEquals("abcdefg", p7.parse("abcdefg").get());
+
+    Parser p8 = new SequenceParser(of('a'), of('b'), of('c'), of('d'), of('e'), of('f'), of('g'), of('h'))
+        .map((c1, c2, c3, c4, c5, c6, c7, c8) -> "" + c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8);
+    assertEquals("abcdefgh", p8.parse("abcdefgh").get());
+
+    Parser p9 = new SequenceParser(of('a'), of('b'), of('c'), of('d'), of('e'), of('f'), of('g'), of('h'), of('i'))
+        .map((c1, c2, c3, c4, c5, c6, c7, c8, c9) -> "" + c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8 + c9);
+    assertEquals("abcdefghi", p9.parse("abcdefghi").get());
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testNullBiFunctionMap() {
+    of('a').map((java.util.function.BiFunction) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testNullFunction4Map() {
+    of('a').map((org.petitparser.utils.functions.Function4) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testNullFunction5Map() {
+    of('a').map((org.petitparser.utils.functions.Function5) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testNullFunction6Map() {
+    of('a').map((org.petitparser.utils.functions.Function6) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testNullFunction7Map() {
+    of('a').map((org.petitparser.utils.functions.Function7) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testNullFunction3Map() {
+    of('a').map((org.petitparser.utils.functions.Function3) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testNullFunction8Map() {
+    of('a').map((org.petitparser.utils.functions.Function8) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testNullFunction9Map() {
+    of('a').map((org.petitparser.utils.functions.Function9) null);
+  }
 }

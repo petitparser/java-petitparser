@@ -53,7 +53,7 @@ public class GrammarDefinition {
   /**
    * Returns a reference to the given typed {@code production}.
    */
-  protected final Parser ref(Production<?> production) {
+  protected final <T> Parser ref(Production<T> production) {
     return new Reference(production.getName());
   }
 
@@ -70,7 +70,7 @@ public class GrammarDefinition {
   /**
    * Defines a typed production with a {@code production} key and a {@code parser}.
    */
-  protected final void def(Production<?> production, Parser parser) {
+  protected final <T> void def(Production<T> production, Parser parser) {
     def(production.getName(), parser);
   }
 
@@ -88,7 +88,7 @@ public class GrammarDefinition {
   /**
    * Redefines an existing typed production with a {@code production} key and a new {@code parser}.
    */
-  protected final void redef(Production<?> production, Parser parser) {
+  protected final <T> void redef(Production<T> production, Parser parser) {
     redef(production.getName(), parser);
   }
 
@@ -106,7 +106,7 @@ public class GrammarDefinition {
   /**
    * Redefines an existing typed production with a {@code production} key and a {@code function}.
    */
-  protected final void redef(Production<?> production, Function<Parser, Parser> function) {
+  protected final <T> void redef(Production<T> production, Function<Parser, Parser> function) {
     redef(production.getName(), function);
   }
 
@@ -121,7 +121,7 @@ public class GrammarDefinition {
   /**
    * Attaches an action {@code function} to an existing typed production {@code production}.
    */
-  protected final <S, T> void action(Production<?> production, Function<S, T> function) {
+  protected final <S, T> void action(Production<T> production, Function<S, T> function) {
     action(production.getName(), function);
   }
 
@@ -142,7 +142,7 @@ public class GrammarDefinition {
   /**
    * Builds a parser starting from the provided typed {@code production}.
    */
-  public Parser build(Production<?> production) {
+  public <T> Parser build(Production<T> production) {
     return build(production.getName());
   }
 

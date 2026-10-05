@@ -61,16 +61,11 @@ public class SequenceParser4<T1, T2, T3, T4> extends ListParser implements Seque
   }
 
 
-  /**
-   * Maps the results of this sequence using a 4-argument function.
-   */
+
+  @Override
   @SuppressWarnings("unchecked")
-  public <R> Parser map(Function4<? super T1, ? super T2, ? super T3, ? super T4, ? extends R> function) {
-    Objects.requireNonNull(function, "Undefined map function");
-    return super.map(tuple -> {
-      Tuple4<T1, T2, T3, T4> t = (Tuple4<T1, T2, T3, T4>) tuple;
-      return function.apply(t.first(), t.second(), t.third(), t.fourth());
-    });
+  public <S extends Parser> S then(Parser next) {
+    return (S) new SequenceParser5<>(parsers[0], parsers[1], parsers[2], parsers[3], next);
   }
 
   @Override

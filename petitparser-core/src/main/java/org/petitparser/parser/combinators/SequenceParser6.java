@@ -81,16 +81,12 @@ public class SequenceParser6<T1, T2, T3, T4, T5, T6> extends ListParser implemen
   }
 
 
-  /**
-   * Maps the results of this sequence using a 6-argument function.
-   */
+
+  @Override
   @SuppressWarnings("unchecked")
-  public <R> Parser map(Function6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? extends R> function) {
-    Objects.requireNonNull(function, "Undefined map function");
-    return super.map(tuple -> {
-      Tuple6<T1, T2, T3, T4, T5, T6> t = (Tuple6<T1, T2, T3, T4, T5, T6>) tuple;
-      return function.apply(t.first(), t.second(), t.third(), t.fourth(), t.fifth(), t.sixth());
-    });
+  public <S extends Parser> S then(Parser next) {
+    return (S) new SequenceParser7<>(
+        parsers[0], parsers[1], parsers[2], parsers[3], parsers[4], parsers[5], next);
   }
 
   @Override

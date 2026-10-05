@@ -90,16 +90,13 @@ public class SequenceParser7<T1, T2, T3, T4, T5, T6, T7> extends ListParser impl
   }
 
 
-  /**
-   * Maps the results of this sequence using a 7-argument function.
-   */
+
+  @Override
   @SuppressWarnings("unchecked")
-  public <R> Parser map(Function7<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? extends R> function) {
-    Objects.requireNonNull(function, "Undefined map function");
-    return super.map(tuple -> {
-      Tuple7<T1, T2, T3, T4, T5, T6, T7> t = (Tuple7<T1, T2, T3, T4, T5, T6, T7>) tuple;
-      return function.apply(t.first(), t.second(), t.third(), t.fourth(), t.fifth(), t.sixth(), t.seventh());
-    });
+  public <S extends Parser> S then(Parser next) {
+    return (S) new SequenceParser8<>(
+        parsers[0], parsers[1], parsers[2], parsers[3], parsers[4], parsers[5],
+        parsers[6], next);
   }
 
   @Override

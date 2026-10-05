@@ -70,16 +70,12 @@ public class SequenceParser5<T1, T2, T3, T4, T5> extends ListParser implements S
   }
 
 
-  /**
-   * Maps the results of this sequence using a 5-argument function.
-   */
+
+  @Override
   @SuppressWarnings("unchecked")
-  public <R> Parser map(Function5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? extends R> function) {
-    Objects.requireNonNull(function, "Undefined map function");
-    return super.map(tuple -> {
-      Tuple5<T1, T2, T3, T4, T5> t = (Tuple5<T1, T2, T3, T4, T5>) tuple;
-      return function.apply(t.first(), t.second(), t.third(), t.fourth(), t.fifth());
-    });
+  public <S extends Parser> S then(Parser next) {
+    return (S) new SequenceParser6<>(
+        parsers[0], parsers[1], parsers[2], parsers[3], parsers[4], next);
   }
 
   @Override

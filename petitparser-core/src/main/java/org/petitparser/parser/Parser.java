@@ -40,8 +40,23 @@ import org.petitparser.parser.repeating.LazyRepeatingParser;
 import org.petitparser.parser.repeating.PossessiveRepeatingParser;
 import org.petitparser.parser.repeating.RepeatingParser;
 import org.petitparser.parser.repeating.SeparatedRepeatingParser;
+import org.petitparser.parser.repeating.Tuple2;
+import org.petitparser.parser.repeating.Tuple3;
+import org.petitparser.parser.repeating.Tuple4;
+import org.petitparser.parser.repeating.Tuple5;
+import org.petitparser.parser.repeating.Tuple6;
+import org.petitparser.parser.repeating.Tuple7;
+import org.petitparser.parser.repeating.Tuple8;
+import org.petitparser.parser.repeating.Tuple9;
 import org.petitparser.utils.FailureJoiner;
 import org.petitparser.utils.Functions;
+import org.petitparser.utils.functions.Function3;
+import org.petitparser.utils.functions.Function4;
+import org.petitparser.utils.functions.Function5;
+import org.petitparser.utils.functions.Function6;
+import org.petitparser.utils.functions.Function7;
+import org.petitparser.utils.functions.Function8;
+import org.petitparser.utils.functions.Function9;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -462,61 +477,6 @@ public abstract class Parser {
    */
   @SuppressWarnings("unchecked")
   public <S extends Parser> S then(Parser next) {
-    if (this instanceof SequenceParser8) {
-      SequenceParser8<?, ?, ?, ?, ?, ?, ?, ?> s = (SequenceParser8<?, ?, ?, ?, ?, ?, ?, ?>) this;
-      List<Parser> c = s.getChildren();
-      return (S) new SequenceParser9<>(
-          c.get(0), c.get(1), c.get(2), c.get(3),
-          c.get(4), c.get(5), c.get(6), c.get(7), next);
-    }
-    if (this instanceof SequenceParser7) {
-      SequenceParser7<?, ?, ?, ?, ?, ?, ?> s = (SequenceParser7<?, ?, ?, ?, ?, ?, ?>) this;
-      List<Parser> c = s.getChildren();
-      return (S) new SequenceParser8<>(
-          c.get(0), c.get(1), c.get(2), c.get(3),
-          c.get(4), c.get(5), c.get(6), next);
-    }
-    if (this instanceof SequenceParser6) {
-      SequenceParser6<?, ?, ?, ?, ?, ?> s = (SequenceParser6<?, ?, ?, ?, ?, ?>) this;
-      List<Parser> c = s.getChildren();
-      return (S) new SequenceParser7<>(
-          c.get(0), c.get(1), c.get(2), c.get(3),
-          c.get(4), c.get(5), next);
-    }
-    if (this instanceof SequenceParser5) {
-      SequenceParser5<?, ?, ?, ?, ?> s = (SequenceParser5<?, ?, ?, ?, ?>) this;
-      List<Parser> c = s.getChildren();
-      return (S) new SequenceParser6<>(
-          c.get(0), c.get(1), c.get(2), c.get(3),
-          c.get(4), next);
-    }
-    if (this instanceof SequenceParser4) {
-      SequenceParser4<?, ?, ?, ?> s = (SequenceParser4<?, ?, ?, ?>) this;
-      List<Parser> c = s.getChildren();
-      return (S) new SequenceParser5<>(
-          c.get(0), c.get(1), c.get(2), c.get(3), next);
-    }
-    if (this instanceof SequenceParser3) {
-      SequenceParser3<?, ?, ?> s = (SequenceParser3<?, ?, ?>) this;
-      List<Parser> c = s.getChildren();
-      return (S) new SequenceParser4<>(
-          c.get(0), c.get(1), c.get(2), next);
-    }
-    if (this instanceof SequenceParser2) {
-      SequenceParser2<?, ?> s = (SequenceParser2<?, ?>) this;
-      List<Parser> c = s.getChildren();
-      return (S) new SequenceParser3<>(c.get(0), c.get(1), next);
-    }
-    if (this instanceof SequenceParser9) {
-      SequenceParser9<?, ?, ?, ?, ?, ?, ?, ?, ?> s = (SequenceParser9<?, ?, ?, ?, ?, ?, ?, ?, ?>) this;
-      List<Parser> c = s.getChildren();
-      Parser[] array = new Parser[c.size() + 1];
-      for (int i = 0; i < c.size(); i++) {
-        array[i] = c.get(i);
-      }
-      array[c.size()] = next;
-      return (S) new SequenceParser(array);
-    }
     return (S) new SequenceParser2<>(this, next);
   }
 
@@ -829,6 +789,161 @@ public abstract class Parser {
    */
   public <A, B> Parser map(Function<A, B> function) {
     return new ActionParser<>(this, function);
+  }
+
+  /**
+   * Returns a parser that evaluates a binary {@code function} on success of the receiver.
+   */
+  @SuppressWarnings("unchecked")
+  public <T1, T2, R> Parser map(BiFunction<? super T1, ? super T2, ? extends R> function) {
+    Objects.requireNonNull(function, "Undefined map function");
+    return map(input -> {
+      if (input instanceof Tuple2) {
+        Tuple2<T1, T2> tuple = (Tuple2<T1, T2>) input;
+        return function.apply(tuple.first(), tuple.second());
+      }
+      List<?> list = (List<?>) input;
+      return function.apply((T1) list.get(0), (T2) list.get(1));
+    });
+  }
+
+  /**
+   * Returns a parser that evaluates a 3-argument {@code function} on success of the receiver.
+   */
+  @SuppressWarnings("unchecked")
+  public <T1, T2, T3, R> Parser map(Function3<? super T1, ? super T2, ? super T3, ? extends R> function) {
+    Objects.requireNonNull(function, "Undefined map function");
+    return map(input -> {
+      if (input instanceof Tuple3) {
+        Tuple3<T1, T2, T3> tuple = (Tuple3<T1, T2, T3>) input;
+        return function.apply(tuple.first(), tuple.second(), tuple.third());
+      }
+      List<?> list = (List<?>) input;
+      return function.apply((T1) list.get(0), (T2) list.get(1), (T3) list.get(2));
+    });
+  }
+
+  /**
+   * Returns a parser that evaluates a 4-argument {@code function} on success of the receiver.
+   */
+  @SuppressWarnings("unchecked")
+  public <T1, T2, T3, T4, R> Parser map(
+      Function4<? super T1, ? super T2, ? super T3, ? super T4, ? extends R> function) {
+    Objects.requireNonNull(function, "Undefined map function");
+    return map(input -> {
+      if (input instanceof Tuple4) {
+        Tuple4<T1, T2, T3, T4> tuple = (Tuple4<T1, T2, T3, T4>) input;
+        return function.apply(tuple.first(), tuple.second(), tuple.third(), tuple.fourth());
+      }
+      List<?> list = (List<?>) input;
+      return function.apply((T1) list.get(0), (T2) list.get(1), (T3) list.get(2), (T4) list.get(3));
+    });
+  }
+
+  /**
+   * Returns a parser that evaluates a 5-argument {@code function} on success of the receiver.
+   */
+  @SuppressWarnings("unchecked")
+  public <T1, T2, T3, T4, T5, R> Parser map(
+      Function5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? extends R> function) {
+    Objects.requireNonNull(function, "Undefined map function");
+    return map(input -> {
+      if (input instanceof Tuple5) {
+        Tuple5<T1, T2, T3, T4, T5> tuple = (Tuple5<T1, T2, T3, T4, T5>) input;
+        return function.apply(
+            tuple.first(), tuple.second(), tuple.third(), tuple.fourth(), tuple.fifth());
+      }
+      List<?> list = (List<?>) input;
+      return function.apply(
+          (T1) list.get(0), (T2) list.get(1), (T3) list.get(2), (T4) list.get(3),
+          (T5) list.get(4));
+    });
+  }
+
+  /**
+   * Returns a parser that evaluates a 6-argument {@code function} on success of the receiver.
+   */
+  @SuppressWarnings("unchecked")
+  public <T1, T2, T3, T4, T5, T6, R> Parser map(
+      Function6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? extends R> function) {
+    Objects.requireNonNull(function, "Undefined map function");
+    return map(input -> {
+      if (input instanceof Tuple6) {
+        Tuple6<T1, T2, T3, T4, T5, T6> tuple = (Tuple6<T1, T2, T3, T4, T5, T6>) input;
+        return function.apply(
+            tuple.first(), tuple.second(), tuple.third(), tuple.fourth(), tuple.fifth(),
+            tuple.sixth());
+      }
+      List<?> list = (List<?>) input;
+      return function.apply(
+          (T1) list.get(0), (T2) list.get(1), (T3) list.get(2), (T4) list.get(3),
+          (T5) list.get(4), (T6) list.get(5));
+    });
+  }
+
+  /**
+   * Returns a parser that evaluates a 7-argument {@code function} on success of the receiver.
+   */
+  @SuppressWarnings("unchecked")
+  public <T1, T2, T3, T4, T5, T6, T7, R> Parser map(
+      Function7<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? extends R> function) {
+    Objects.requireNonNull(function, "Undefined map function");
+    return map(input -> {
+      if (input instanceof Tuple7) {
+        Tuple7<T1, T2, T3, T4, T5, T6, T7> tuple = (Tuple7<T1, T2, T3, T4, T5, T6, T7>) input;
+        return function.apply(
+            tuple.first(), tuple.second(), tuple.third(), tuple.fourth(), tuple.fifth(),
+            tuple.sixth(), tuple.seventh());
+      }
+      List<?> list = (List<?>) input;
+      return function.apply(
+          (T1) list.get(0), (T2) list.get(1), (T3) list.get(2), (T4) list.get(3),
+          (T5) list.get(4), (T6) list.get(5), (T7) list.get(6));
+    });
+  }
+
+  /**
+   * Returns a parser that evaluates a 8-argument {@code function} on success of the receiver.
+   */
+  @SuppressWarnings("unchecked")
+  public <T1, T2, T3, T4, T5, T6, T7, T8, R> Parser map(
+      Function8<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? extends R> function) {
+    Objects.requireNonNull(function, "Undefined map function");
+    return map(input -> {
+      if (input instanceof Tuple8) {
+        Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> tuple = (Tuple8<T1, T2, T3, T4, T5, T6, T7, T8>) input;
+        return function.apply(
+            tuple.first(), tuple.second(), tuple.third(), tuple.fourth(), tuple.fifth(),
+            tuple.sixth(), tuple.seventh(), tuple.eighth());
+      }
+      List<?> list = (List<?>) input;
+      return function.apply(
+          (T1) list.get(0), (T2) list.get(1), (T3) list.get(2), (T4) list.get(3),
+          (T5) list.get(4), (T6) list.get(5), (T7) list.get(6), (T8) list.get(7));
+    });
+  }
+
+  /**
+   * Returns a parser that evaluates a 9-argument {@code function} on success of the receiver.
+   */
+  @SuppressWarnings("unchecked")
+  public <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> Parser map(
+      Function9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9, ? extends R> function) {
+    Objects.requireNonNull(function, "Undefined map function");
+    return map(input -> {
+      if (input instanceof Tuple9) {
+        Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> tuple =
+            (Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9>) input;
+        return function.apply(
+            tuple.first(), tuple.second(), tuple.third(), tuple.fourth(), tuple.fifth(),
+            tuple.sixth(), tuple.seventh(), tuple.eighth(), tuple.ninth());
+      }
+      List<?> list = (List<?>) input;
+      return function.apply(
+          (T1) list.get(0), (T2) list.get(1), (T3) list.get(2), (T4) list.get(3),
+          (T5) list.get(4), (T6) list.get(5), (T7) list.get(6), (T8) list.get(7),
+          (T9) list.get(8));
+    });
   }
 
   /**

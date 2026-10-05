@@ -321,4 +321,56 @@ public class TupleTest {
   public void testTuple9GetOutOfBounds() {
     Tuple.of(1, 2, 3, 4, 5, 6, 7, 8, 9).get(9);
   }
+
+  @Test
+  public void testTuplesWithNulls() {
+    assertEquals(new Tuple4<>(null, null, null, null), Arrays.asList(null, null, null, null));
+    assertEquals(new Tuple5<>(null, null, null, null, null), Arrays.asList(null, null, null, null, null));
+    assertEquals(new Tuple6<>(null, null, null, null, null, null), Arrays.asList(null, null, null, null, null, null));
+    assertEquals(new Tuple7<>(null, null, null, null, null, null, null), Arrays.asList(null, null, null, null, null, null, null));
+    assertEquals(new Tuple8<>(null, null, null, null, null, null, null, null), Arrays.asList(null, null, null, null, null, null, null, null));
+    assertEquals(new Tuple9<>(null, null, null, null, null, null, null, null, null), Arrays.asList(null, null, null, null, null, null, null, null, null));
+
+    assertEquals(new Tuple4<>(null, null, null, null).hashCode(), Arrays.asList(null, null, null, null).hashCode());
+    assertEquals(new Tuple5<>(null, null, null, null, null).hashCode(), Arrays.asList(null, null, null, null, null).hashCode());
+    assertEquals(new Tuple6<>(null, null, null, null, null, null).hashCode(), Arrays.asList(null, null, null, null, null, null).hashCode());
+    assertEquals(new Tuple7<>(null, null, null, null, null, null, null).hashCode(), Arrays.asList(null, null, null, null, null, null, null).hashCode());
+    assertEquals(new Tuple8<>(null, null, null, null, null, null, null, null).hashCode(), Arrays.asList(null, null, null, null, null, null, null, null).hashCode());
+    assertEquals(new Tuple9<>(null, null, null, null, null, null, null, null, null).hashCode(), Arrays.asList(null, null, null, null, null, null, null, null, null).hashCode());
+  }
+
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void testTuple3NegativeIndex() {
+    Tuple.of(1, 2, 3).get(-1);
+  }
+
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void testTuple4NegativeIndex() {
+    Tuple.of(1, 2, 3, 4).get(-1);
+  }
+
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void testTuple5NegativeIndex() {
+    Tuple.of(1, 2, 3, 4, 5).get(-1);
+  }
+
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void testTuple6NegativeIndex() {
+    Tuple.of(1, 2, 3, 4, 5, 6).get(-1);
+  }
+
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void testTuple7NegativeIndex() {
+    Tuple.of(1, 2, 3, 4, 5, 6, 7).get(-1);
+  }
+
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void testTuple8NegativeIndex() {
+    Tuple.of(1, 2, 3, 4, 5, 6, 7, 8).get(-1);
+  }
+
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void testTuple9NegativeIndex() {
+    Tuple.of(1, 2, 3, 4, 5, 6, 7, 8, 9).get(-1);
+  }
 }

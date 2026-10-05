@@ -112,19 +112,14 @@ public class SequenceParser9<T1, T2, T3, T4, T5, T6, T7, T8, T9> extends ListPar
 
 
 
-  /**
-   * Maps the results of this sequence using a 9-argument function.
-   */
+
+  @Override
   @SuppressWarnings("unchecked")
-  public <R> Parser map(
-      Function9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9, ? extends R> function) {
-    Objects.requireNonNull(function, "Undefined map function");
-    return super.map(tuple -> {
-      Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> t = (Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9>) tuple;
-      return function.apply(
-          t.first(), t.second(), t.third(), t.fourth(),
-          t.fifth(), t.sixth(), t.seventh(), t.eighth(), t.ninth());
-    });
+  public <S extends Parser> S then(Parser next) {
+    Parser[] array = new Parser[parsers.length + 1];
+    System.arraycopy(parsers, 0, array, 0, parsers.length);
+    array[parsers.length] = next;
+    return (S) new SequenceParser(array);
   }
 
   @Override
