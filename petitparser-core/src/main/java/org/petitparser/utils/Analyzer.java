@@ -4,6 +4,7 @@ import org.petitparser.parser.Parser;
 import org.petitparser.parser.actions.TrimmingParser;
 import org.petitparser.parser.combinators.AndParser;
 import org.petitparser.parser.combinators.ChoiceParser;
+import org.petitparser.parser.combinators.EndOfInputParser;
 import org.petitparser.parser.combinators.NotParser;
 import org.petitparser.parser.combinators.OptionalParser;
 import org.petitparser.parser.combinators.ResolvableParser;
@@ -11,6 +12,8 @@ import org.petitparser.parser.combinators.SequentialParser;
 import org.petitparser.parser.primitive.EpsilonParser;
 import org.petitparser.parser.primitive.FailureParser;
 import org.petitparser.parser.primitive.PositionParser;
+import org.petitparser.parser.primitive.StringParser;
+import org.petitparser.parser.repeating.RepeatingCharacterParser;
 import org.petitparser.parser.repeating.RepeatingParser;
 import org.petitparser.parser.repeating.SeparatedRepeatingParser;
 
@@ -275,11 +278,10 @@ public class Analyzer {
     visited.add(current);
     if (predicate.test(current)) {
       result.add(List.copyOf(currentPath));
-    } else {
-      for (Parser child : current.getChildren()) {
-        if (!visited.contains(child)) {
-          findAllPathsHelper(child, predicate, visited, currentPath, result);
-        }
+    }
+    for (Parser child : current.getChildren()) {
+      if (!visited.contains(child)) {
+        findAllPathsHelper(child, predicate, visited, currentPath, result);
       }
     }
     visited.remove(current);
@@ -294,16 +296,19 @@ public class Analyzer {
    */
   public List<Parser> findCycle(Parser parser) {
     Objects.requireNonNull(parser, "Undefined parser");
+    List<Parser> shortestCycle = Collections.emptyList();
     for (Parser child : parser.getChildren()) {
       List<Parser> path = findPath(child, parser);
       if (!path.isEmpty()) {
-        List<Parser> cycle = new ArrayList<>();
-        cycle.add(parser);
-        cycle.addAll(path);
-        return Collections.unmodifiableList(cycle);
+        if (shortestCycle.isEmpty() || path.size() + 1 < shortestCycle.size()) {
+          List<Parser> cycle = new ArrayList<>();
+          cycle.add(parser);
+          cycle.addAll(path);
+          shortestCycle = Collections.unmodifiableList(cycle);
+        }
       }
     }
-    return Collections.emptyList();
+    return shortestCycle;
   }
 
   /**
@@ -380,7 +385,12 @@ public class Analyzer {
     Map<Parser, Boolean> nullable = new HashMap<>();
     List<Parser> all = parsers();
     for (Parser p : all) {
-      if (p instanceof EpsilonParser || p instanceof PositionParser || p instanceof OptionalParser) {
+      if (p instanceof EpsilonParser || p instanceof PositionParser ||
+          p instanceof OptionalParser || p instanceof EndOfInputParser) {
+        nullable.put(p, true);
+      } else if (p instanceof StringParser && ((StringParser) p).getValue().isEmpty()) {
+        nullable.put(p, true);
+      } else if (p instanceof RepeatingCharacterParser && ((RepeatingCharacterParser) p).getMin() == 0) {
         nullable.put(p, true);
       } else if (p instanceof RepeatingParser && ((RepeatingParser) p).getMin() == 0) {
         nullable.put(p, true);
@@ -391,30 +401,28 @@ public class Analyzer {
 
     boolean changed = true;
     int iterations = 0;
-    int maxIterations = all.size() * 2 + 1;
+    int maxIterations = all.size() * 2 + 2;
     while (changed && iterations++ < maxIterations) {
       changed = false;
       for (Parser p : all) {
-        if (Boolean.TRUE.equals(nullable.get(p))) {
-          continue;
-        }
-        boolean nowNullable = false;
-        if (p instanceof TrimmingParser) {
-          Parser del = p.getChildren().get(0);
-          nowNullable = Boolean.TRUE.equals(nullable.get(del));
-        } else if (p instanceof SequentialParser) {
-          nowNullable = p.getChildren().stream()
-              .allMatch(c -> Boolean.TRUE.equals(nullable.get(c)));
-        } else if (p instanceof ChoiceParser) {
-          nowNullable = p.getChildren().stream()
-              .anyMatch(c -> Boolean.TRUE.equals(nullable.get(c)));
+        boolean wasNullable = Boolean.TRUE.equals(nullable.get(p));
+        boolean nowNullable = wasNullable;
+        if (p instanceof EpsilonParser || p instanceof PositionParser ||
+            p instanceof OptionalParser || p instanceof EndOfInputParser) {
+          nowNullable = true;
+        } else if (p instanceof StringParser && ((StringParser) p).getValue().isEmpty()) {
+          nowNullable = true;
+        } else if (p instanceof RepeatingCharacterParser) {
+          nowNullable = ((RepeatingCharacterParser) p).getMin() == 0;
         } else if (p instanceof SeparatedRepeatingParser) {
           SeparatedRepeatingParser srp = (SeparatedRepeatingParser) p;
           if (srp.getMin() == 0) {
             nowNullable = true;
+          } else if (srp.getMin() == 1) {
+            nowNullable = Boolean.TRUE.equals(nullable.get(srp.getChildren().get(0)));
           } else {
-            nowNullable = Boolean.TRUE.equals(nullable.get(p.getChildren().get(0))) &&
-                Boolean.TRUE.equals(nullable.get(p.getChildren().get(1)));
+            nowNullable = Boolean.TRUE.equals(nullable.get(srp.getChildren().get(0))) &&
+                Boolean.TRUE.equals(nullable.get(srp.getChildren().get(1)));
           }
         } else if (p instanceof RepeatingParser) {
           RepeatingParser rp = (RepeatingParser) p;
@@ -423,6 +431,15 @@ public class Analyzer {
           } else {
             nowNullable = Boolean.TRUE.equals(nullable.get(rp.getChildren().get(0)));
           }
+        } else if (p instanceof TrimmingParser) {
+          Parser del = p.getChildren().get(0);
+          nowNullable = Boolean.TRUE.equals(nullable.get(del));
+        } else if (p instanceof SequentialParser) {
+          nowNullable = p.getChildren().stream()
+              .allMatch(c -> Boolean.TRUE.equals(nullable.get(c)));
+        } else if (p instanceof ChoiceParser) {
+          nowNullable = p.getChildren().stream()
+              .anyMatch(c -> Boolean.TRUE.equals(nullable.get(c)));
         } else if (p instanceof NotParser) {
           Parser child = p.getChildren().get(0);
           nowNullable = !Boolean.TRUE.equals(nullable.get(child));
@@ -433,8 +450,8 @@ public class Analyzer {
           nowNullable = p.getChildren().stream()
               .allMatch(c -> Boolean.TRUE.equals(nullable.get(c)));
         }
-        if (nowNullable) {
-          nullable.put(p, true);
+        if (wasNullable != nowNullable) {
+          nullable.put(p, nowNullable);
           changed = true;
         }
       }
@@ -499,6 +516,13 @@ public class Analyzer {
           if (isNullable(del)) {
             currentSet.addAll(firstSets.get(right));
           }
+        } else if (p instanceof SeparatedRepeatingParser) {
+          Parser del = p.getChildren().get(0);
+          Parser sep = p.getChildren().get(1);
+          currentSet.addAll(firstSets.get(del));
+          if (isNullable(del)) {
+            currentSet.addAll(firstSets.get(sep));
+          }
         } else if (p instanceof SequentialParser) {
           for (Parser child : p.getChildren()) {
             currentSet.addAll(firstSets.get(child));
@@ -506,11 +530,10 @@ public class Analyzer {
               break;
             }
           }
+        } else if (p instanceof NotParser) {
+          // Lookahead negation consumes no terminals and never starts with its delegate.
         } else {
           for (Parser child : p.getChildren()) {
-            if (p instanceof SeparatedRepeatingParser && child == p.getChildren().get(1)) {
-              continue;
-            }
             currentSet.addAll(firstSets.get(child));
           }
         }
@@ -539,16 +562,7 @@ public class Analyzer {
     if (followSetsCache == null) {
       followSetsCache = computeFollowSets();
     }
-    Set<Parser> cached = followSetsCache.get(parser);
-    if (cached != null) {
-      return cached;
-    }
-    return Analyzer.of(root).computeFollowSetFor(parser);
-  }
-
-  private Set<Parser> computeFollowSetFor(Parser parser) {
-    // If not in root cache, return empty
-    return Collections.emptySet();
+    return followSetsCache.getOrDefault(parser, Collections.emptySet());
   }
 
   private Map<Parser, Set<Parser>> computeFollowSets() {
@@ -570,10 +584,31 @@ public class Analyzer {
           Parser right = p.getChildren().get(2);
           if (followSets.get(left).addAll(firstSet(left))) changed = true;
           if (followSets.get(left).addAll(firstSet(del))) changed = true;
+          if (isNullable(del)) {
+            if (followSets.get(left).addAll(firstSet(right))) changed = true;
+            if (followSets.get(left).addAll(followSets.get(p))) changed = true;
+          }
           if (followSets.get(del).addAll(firstSet(right))) changed = true;
           if (followSets.get(del).addAll(followSets.get(p))) changed = true;
           if (followSets.get(right).addAll(firstSet(right))) changed = true;
           if (followSets.get(right).addAll(followSets.get(p))) changed = true;
+        } else if (p instanceof SeparatedRepeatingParser) {
+          Parser del = p.getChildren().get(0);
+          Parser sep = p.getChildren().get(1);
+          if (followSets.get(del).addAll(firstSet(sep))) changed = true;
+          if (followSets.get(del).addAll(followSets.get(p))) changed = true;
+          if (isNullable(sep)) {
+            if (followSets.get(del).addAll(firstSet(del))) changed = true;
+          }
+          if (followSets.get(sep).addAll(firstSet(del))) changed = true;
+          if (isNullable(del)) {
+            if (followSets.get(sep).addAll(firstSet(sep))) changed = true;
+            if (followSets.get(sep).addAll(followSets.get(p))) changed = true;
+          }
+        } else if (p instanceof RepeatingParser) {
+          Parser child = p.getChildren().get(0);
+          if (followSets.get(child).addAll(firstSet(child))) changed = true;
+          if (followSets.get(child).addAll(followSets.get(p))) changed = true;
         } else if (p instanceof SequentialParser) {
           List<Parser> children = p.getChildren();
           for (int i = 0; i < children.size(); i++) {
@@ -595,19 +630,6 @@ public class Analyzer {
               }
             }
           }
-        } else if (p instanceof SeparatedRepeatingParser) {
-          Parser del = p.getChildren().get(0);
-          Parser sep = p.getChildren().get(1);
-          if (followSets.get(del).addAll(firstSet(sep))) changed = true;
-          if (followSets.get(del).addAll(followSets.get(p))) changed = true;
-          if (followSets.get(sep).addAll(firstSet(del))) changed = true;
-          if (isNullable(sep)) {
-            if (followSets.get(del).addAll(firstSet(del))) changed = true;
-          }
-        } else if (p instanceof RepeatingParser) {
-          Parser child = p.getChildren().get(0);
-          if (followSets.get(child).addAll(firstSet(child))) changed = true;
-          if (followSets.get(child).addAll(followSets.get(p))) changed = true;
         } else {
           for (Parser child : p.getChildren()) {
             if (followSets.get(child).addAll(followSets.get(p))) {
@@ -679,8 +701,11 @@ public class Analyzer {
     }
 
     for (Parser p : seen) {
-      for (Map.Entry<ResolvableParser, Parser> entry : mapping.entrySet()) {
-        p.replace((Parser) entry.getKey(), entry.getValue());
+      for (Parser child : p.getChildren()) {
+        Parser replacement = mapping.get(child);
+        if (replacement != null) {
+          p.replace(child, replacement);
+        }
       }
     }
 
@@ -696,7 +721,13 @@ public class Analyzer {
    * @return the resolved root parser
    */
   public Parser resolve() {
-    return resolve(root);
+    Parser resolved = resolve(root);
+    reachableParsers = null;
+    allChildrenCache.clear();
+    nullableCache = null;
+    firstSetsCache = null;
+    followSetsCache = null;
+    return resolved;
   }
 
   @Override

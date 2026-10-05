@@ -552,5 +552,137 @@ public class AnalyzerTest {
     assertEquals(Set.of(unrelated), analyzer.firstSet(unrelated));
     assertTrue(analyzer.followSet(unrelated).isEmpty());
   }
+
+  @Test
+  public void testIsNullableSettableNot() {
+    SettableParser s = undefined();
+    s.set(org.petitparser.parser.primitive.EpsilonParser.INSTANCE);
+    Parser notS = s.not();
+    assertFalse(Analyzer.of(notS).isNullable(notS));
+  }
+
+  @Test
+  public void testIsNullableSeparatedRepeating() {
+    Parser nullableDelegate = CharacterParser.of('a').optional();
+    Parser nonNullableSep = CharacterParser.of(',');
+    Parser srp = nullableDelegate.plusSeparated(nonNullableSep);
+    assertTrue(Analyzer.of(srp).isNullable(srp));
+
+    Parser srp2 = nullableDelegate.repeatSeparated(nonNullableSep, 2, 5);
+    assertFalse(Analyzer.of(srp2).isNullable(srp2));
+
+    Parser srp2Nullable = nullableDelegate.repeatSeparated(nonNullableSep.optional(), 2, 5);
+    assertTrue(Analyzer.of(srp2Nullable).isNullable(srp2Nullable));
+  }
+
+  @Test
+  public void testIsNullableSpecialParsers() {
+    Parser starString = digit().starString();
+    assertTrue(Analyzer.of(starString).isNullable(starString));
+
+    Parser plusString = digit().plusString();
+    assertFalse(Analyzer.of(plusString).isNullable(plusString));
+
+    Parser eoi = new org.petitparser.parser.combinators.EndOfInputParser("end");
+    assertTrue(Analyzer.of(eoi).isNullable(eoi));
+
+    Parser emptyStr = org.petitparser.parser.primitive.StringParser.of("");
+    assertTrue(Analyzer.of(emptyStr).isNullable(emptyStr));
+
+    Parser nonEmptyStr = org.petitparser.parser.primitive.StringParser.of("foo");
+    assertFalse(Analyzer.of(nonEmptyStr).isNullable(nonEmptyStr));
+  }
+
+  @Test
+  public void testFirstSetNotParser() {
+    Parser a = CharacterParser.of('a');
+    Parser b = CharacterParser.of('b');
+
+    assertEquals(Collections.emptySet(), Analyzer.of(a.not()).firstSet(a.not()));
+
+    Parser seq = a.not().seq(b);
+    assertEquals(Set.of(b), Analyzer.of(seq).firstSet(seq));
+  }
+
+  @Test
+  public void testFirstSetSeparatedRepeating() {
+    Parser a = CharacterParser.of('a');
+    Parser b = CharacterParser.of('b');
+
+    Parser srp = a.plusSeparated(b);
+    assertEquals(Set.of(a), Analyzer.of(srp).firstSet(srp));
+
+    Parser nullableSrp = a.optional().plusSeparated(b);
+    assertEquals(Set.of(a, b), Analyzer.of(nullableSrp).firstSet(nullableSrp));
+  }
+
+  @Test
+  public void testFollowSetSeparatedRepeating() {
+    Parser a = CharacterParser.of('a');
+    Parser b = CharacterParser.of('b');
+    Parser c = CharacterParser.of('c');
+
+    Parser srp = a.plusSeparated(b);
+    Analyzer srpAnalyzer = Analyzer.of(srp);
+    assertEquals(Set.of(a), srpAnalyzer.followSet(b));
+    assertEquals(Set.of(b), srpAnalyzer.followSet(a));
+
+    Parser seq = srp.seq(c);
+    Analyzer seqAnalyzer = Analyzer.of(seq);
+    assertEquals(Set.of(b, c), seqAnalyzer.followSet(a));
+    assertEquals(Set.of(a), seqAnalyzer.followSet(b));
+
+    Parser nullableSep = a.plusSeparated(b.optional());
+    Analyzer nullableSepAnalyzer = Analyzer.of(nullableSep);
+    assertEquals(Set.of(a, b), nullableSepAnalyzer.followSet(a));
+  }
+
+  @Test
+  public void testFindAllPathsNestedMatchingPredicate() {
+    Parser a = digit();
+    Parser b = letter();
+    Parser c = lowerCase();
+    Parser innerSeq = b.seq(c);
+    Parser outerSeq = a.seq(innerSeq);
+    Analyzer analyzer = Analyzer.of(outerSeq);
+
+    List<List<Parser>> paths = analyzer.findAllPathsTo(p -> p instanceof org.petitparser.parser.combinators.SequenceParser);
+    assertEquals(2, paths.size());
+    assertTrue(paths.contains(Collections.singletonList(outerSeq)));
+    assertTrue(paths.contains(Arrays.asList(outerSeq, innerSeq)));
+  }
+
+  @Test
+  public void testFindCycleShortest() {
+    SettableParser root = undefined();
+    SettableParser longCycle = undefined();
+    SettableParser shortCycle = undefined();
+
+    root.set(longCycle.or(shortCycle));
+    longCycle.set(digit().seq(root));
+    shortCycle.set(root);
+
+    Analyzer analyzer = Analyzer.of(root);
+    List<Parser> cycle = analyzer.findCycle(root);
+    // Shortest cycle path is root -> choice -> shortCycle -> root
+    assertEquals(Arrays.asList(root, root.getChildren().get(0), shortCycle, root), cycle);
+  }
+
+  @Test
+  public void testResolveInvalidatesAnalyzerCaches() {
+    SettableParser s = undefined();
+    Parser inner = digit();
+    Parser first = letter();
+    Parser root = first.seq(s);
+    s.set(inner);
+
+    Analyzer analyzer = Analyzer.of(root);
+    assertEquals(4, analyzer.parsers().size());
+
+    Parser resolved = analyzer.resolve();
+    assertSame(root, resolved);
+    assertEquals(Arrays.asList(first, inner), resolved.getChildren());
+    assertEquals(3, analyzer.parsers().size());
+  }
 }
 
