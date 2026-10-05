@@ -1,5 +1,4 @@
-PetitParser for Java
-====================
+# PetitParser for Java
 
 [![Release Status](https://jitpack.io/v/petitparser/java-petitparser.svg)](https://jitpack.io/#petitparser/java-petitparser)
 [![Java CI](https://github.com/petitparser/java-petitparser/actions/workflows/maven.yml/badge.svg)](https://github.com/petitparser/java-petitparser/actions/workflows/maven.yml)
@@ -22,9 +21,7 @@ on [GitHub](https://github.com/petitparser/java-petitparser). Feel free to
 report issues or create a pull-request there. General questions are best asked
 on [StackOverflow](http://stackoverflow.com/questions/tagged/petitparser+java).
 
-
-Installation
-------------
+## Installation
 
 To include the latest release in your Java project follow the instructions
 below.
@@ -111,8 +108,7 @@ To also include the example grammars, use the following dependency:
 Instructions for alternative build systems you can find
 on [Maven Central](https://search.maven.org/artifact/com.github.petitparser/petitparser-core)
 
-Tutorial
---------
+## Tutorial
 
 ### Writing a Simple Grammar
 
@@ -135,12 +131,12 @@ If you look at the object `id` in the debugger, you'll notice that the code
 above builds a tree of parser objects:
 
 - `SequenceParser`: This parser accepts a sequence of parsers.
-    - `CharacterParser`: This parser accepts a single letter.
-    - `PossessiveRepeatingParser`: This parser accepts zero or more times
+  - `CharacterParser`: This parser accepts a single letter.
+  - `PossessiveRepeatingParser`: This parser accepts zero or more times
       another parser.
-        - `ChoiceParser`: This parser accepts a single word character.
-            - `CharacterParser`: This parser accepts a single letter.
-            - `CharacterParser`: This parser accepts a single digit.
+    - `ChoiceParser`: This parser accepts a single word character.
+      - `CharacterParser`: This parser accepts a single letter.
+      - `CharacterParser`: This parser accepts a single digit.
 
 ### Parsing Some Input
 
@@ -518,8 +514,7 @@ parse("2^2^3");   // 256
 You can find this example as test case
 here: [ExamplesTest.java](petitparser-core/src/test/java/org/petitparser/ExamplesTest.java)
 
-Misc
-----
+## Misc
 
 ### Examples
 
@@ -551,6 +546,4 @@ implementations adopt best practises of the target language.
 
 ### License
 
-The MIT License,
-see [LICENSE](https://raw.githubusercontent.com/petitparser/java-petitparser/master/LICENSE)
-.
+The MIT License, see [LICENSE](https://raw.githubusercontent.com/petitparser/java-petitparser/master/LICENSE).
