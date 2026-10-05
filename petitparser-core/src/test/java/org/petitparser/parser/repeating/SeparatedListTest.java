@@ -180,6 +180,43 @@ public class SeparatedListTest {
     assertNotEquals(list1, "other");
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testInconsistentElementsAndSeparatorsTooFew() {
+    new SeparatedList<>(Arrays.asList(1, 2), Collections.emptyList());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testInconsistentElementsAndSeparatorsTooMany() {
+    new SeparatedList<>(Collections.singletonList(1), Collections.singletonList("+"));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testInconsistentEmptyWithSeparators() {
+    new SeparatedList<>(Collections.emptyList(), Collections.singletonList("+"));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testSingleArgConstructorWithMultipleElementsThrows() {
+    new SeparatedList<>(Arrays.asList(1, 2));
+  }
+
+  @Test(expected = NoSuchElementException.class)
+  public void testIteratorExhaustedOnNonEmptyList() {
+    SeparatedList<Integer, String> list = new SeparatedList<>(Collections.singletonList(1));
+    Iterator<Object> iterator = list.iterator();
+    assertEquals(1, iterator.next());
+    iterator.next();
+  }
+
+  @Test
+  public void testExplicitFoldFunction() {
+    FoldFunction<Integer, String> add = (left, sep, right) -> left + right;
+    SeparatedList<Integer, String> list = new SeparatedList<>(
+        Arrays.asList(1, 2, 3), Arrays.asList("+", "+"));
+    assertEquals(Integer.valueOf(6), list.foldLeft(add));
+    assertEquals(Integer.valueOf(6), list.foldRight(add));
+  }
+
   @Test
   public void testToString() {
     assertEquals("SeparatedList()", new SeparatedList<>().toString());

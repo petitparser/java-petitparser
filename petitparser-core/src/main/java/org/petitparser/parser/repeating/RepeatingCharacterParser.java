@@ -60,17 +60,18 @@ public class RepeatingCharacterParser extends Parser {
   public Result parseOn(Context context) {
     String buffer = context.getBuffer();
     int position = context.getPosition();
+    int end = buffer.length();
     int current = position;
     int count = 0;
     while (count < min) {
-      if (current >= buffer.length() || !predicate.test(buffer.charAt(current))) {
+      if (current >= end || !predicate.test(buffer.charAt(current))) {
         return context.failure(message, current);
       }
       current++;
       count++;
     }
     while (max == RepeatingParser.UNBOUNDED || count < max) {
-      if (current >= buffer.length() || !predicate.test(buffer.charAt(current))) {
+      if (current >= end || !predicate.test(buffer.charAt(current))) {
         break;
       }
       current++;
@@ -81,17 +82,18 @@ public class RepeatingCharacterParser extends Parser {
 
   @Override
   public int fastParseOn(String buffer, int position) {
+    int end = buffer.length();
     int current = position;
     int count = 0;
     while (count < min) {
-      if (current >= buffer.length() || !predicate.test(buffer.charAt(current))) {
+      if (current >= end || !predicate.test(buffer.charAt(current))) {
         return -1;
       }
       current++;
       count++;
     }
     while (max == RepeatingParser.UNBOUNDED || count < max) {
-      if (current >= buffer.length() || !predicate.test(buffer.charAt(current))) {
+      if (current >= end || !predicate.test(buffer.charAt(current))) {
         break;
       }
       current++;
@@ -106,7 +108,7 @@ public class RepeatingCharacterParser extends Parser {
   }
 
   @Override
-  public boolean hasEqualProperties(Parser other) {
+  protected boolean hasEqualProperties(Parser other) {
     return super.hasEqualProperties(other) &&
         Objects.equals(predicate, ((RepeatingCharacterParser) other).predicate) &&
         Objects.equals(message, ((RepeatingCharacterParser) other).message) &&

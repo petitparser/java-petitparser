@@ -639,7 +639,7 @@ public abstract class Parser {
    * @param separator the separator parser.
    * @return a separated repeating parser.
    */
-  public Parser starSeparated(Parser separator) {
+  public SeparatedRepeatingParser starSeparated(Parser separator) {
     return repeatSeparated(separator, 0, RepeatingParser.UNBOUNDED);
   }
 
@@ -650,7 +650,7 @@ public abstract class Parser {
    * @param separator the separator parser.
    * @return a separated repeating parser.
    */
-  public Parser plusSeparated(Parser separator) {
+  public SeparatedRepeatingParser plusSeparated(Parser separator) {
     return repeatSeparated(separator, 1, RepeatingParser.UNBOUNDED);
   }
 
@@ -662,7 +662,7 @@ public abstract class Parser {
    * @param count the number of repetitions.
    * @return a separated repeating parser.
    */
-  public Parser timesSeparated(Parser separator, int count) {
+  public SeparatedRepeatingParser timesSeparated(Parser separator, int count) {
     return repeatSeparated(separator, count, count);
   }
 
@@ -675,7 +675,7 @@ public abstract class Parser {
    * @param max the maximum number of repetitions, or {@link RepeatingParser#UNBOUNDED}.
    * @return a separated repeating parser.
    */
-  public Parser repeatSeparated(Parser separator, int min, int max) {
+  public SeparatedRepeatingParser repeatSeparated(Parser separator, int min, int max) {
     return new SeparatedRepeatingParser(this, separator, min, max);
   }
 

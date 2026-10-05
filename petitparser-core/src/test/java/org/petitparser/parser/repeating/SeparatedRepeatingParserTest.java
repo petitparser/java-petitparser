@@ -105,8 +105,36 @@ public class SeparatedRepeatingParserTest {
   }
 
   @Test
+  public void testFastParseOffset() {
+    Parser parser = element.plusSeparated(separator);
+    assertEquals(-1, parser.fastParseOn("xxa,a", 0));
+    assertEquals(5, parser.fastParseOn("xxa,a", 2));
+    assertEquals(5, parser.fastParseOn("xxa,a,b", 2));
+  }
+
+  @Test
+  public void testParseOnOffset() {
+    Parser parser = element.plusSeparated(separator);
+    org.petitparser.context.Result result = parser.parseOn(
+        new org.petitparser.context.Context("xxa,a", 2));
+    assertTrue(result.isSuccess());
+    assertEquals(5, result.getPosition());
+    assertEquals(new SeparatedList<Character, Character>(
+        Arrays.asList('a', 'a'), Collections.singletonList(',')), result.get());
+  }
+
+  @Test
+  public void testToString() {
+    SeparatedRepeatingParser parser = element.plusSeparated(separator);
+    assertEquals("SeparatedRepeatingParser[1..*]", parser.toString());
+
+    SeparatedRepeatingParser bounded = element.repeatSeparated(separator, 2, 4);
+    assertEquals("SeparatedRepeatingParser[2..4]", bounded.toString());
+  }
+
+  @Test
   public void testChildrenAndReplace() {
-    SeparatedRepeatingParser parser = (SeparatedRepeatingParser) element.plusSeparated(separator);
+    SeparatedRepeatingParser parser = element.plusSeparated(separator);
     assertEquals(Arrays.asList(element, separator), parser.getChildren());
 
     Parser newElement = CharacterParser.of('b');
@@ -124,7 +152,7 @@ public class SeparatedRepeatingParserTest {
 
   @Test
   public void testCopyAndEquality() {
-    SeparatedRepeatingParser parser = (SeparatedRepeatingParser) element.plusSeparated(separator);
+    SeparatedRepeatingParser parser = element.plusSeparated(separator);
     SeparatedRepeatingParser copy = parser.copy();
 
     assertNotSame(parser, copy);
@@ -137,14 +165,29 @@ public class SeparatedRepeatingParserTest {
   }
 
   @Test(expected = NullPointerException.class)
+  public void testNullDelegate() {
+    new SeparatedRepeatingParser(null, separator, 1, 2);
+  }
+
+  @Test(expected = NullPointerException.class)
   public void testNullSeparator() {
     new SeparatedRepeatingParser(element, null, 1, 2);
   }
 
   @Test(expected = NullPointerException.class)
   public void testSetNullSeparator() {
-    SeparatedRepeatingParser parser = (SeparatedRepeatingParser) element.plusSeparated(separator);
+    SeparatedRepeatingParser parser = element.plusSeparated(separator);
     parser.setSeparator(null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testNegativeMin() {
+    new SeparatedRepeatingParser(element, separator, -1, 2);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testMinGreaterThanMax() {
+    new SeparatedRepeatingParser(element, separator, 5, 2);
   }
 
   @Test

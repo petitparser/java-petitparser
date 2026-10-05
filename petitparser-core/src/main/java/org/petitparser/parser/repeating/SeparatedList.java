@@ -15,9 +15,6 @@ import java.util.Objects;
  */
 public class SeparatedList<R, S> implements Iterable<Object> {
 
-  @FunctionalInterface
-  public interface FoldFunction<R, S> extends org.petitparser.parser.repeating.FoldFunction<R, S> {}
-
   private final List<R> elements;
   private final List<S> separators;
 
@@ -32,6 +29,7 @@ public class SeparatedList<R, S> implements Iterable<Object> {
    * Constructs a separated list with elements and no separators.
    *
    * @param elements the parsed elements.
+   * @throws IllegalArgumentException if {@code elements} contains more than one element.
    */
   public SeparatedList(List<R> elements) {
     this(elements, Collections.emptyList());
@@ -42,12 +40,18 @@ public class SeparatedList<R, S> implements Iterable<Object> {
    *
    * @param elements the parsed elements.
    * @param separators the parsed separators.
+   * @throws IllegalArgumentException if the number of separators is inconsistent with the number of elements.
    */
   public SeparatedList(List<R> elements, List<S> separators) {
     this.elements = Collections.unmodifiableList(
         new ArrayList<>(Objects.requireNonNull(elements, "Undefined elements")));
     this.separators = Collections.unmodifiableList(
         new ArrayList<>(Objects.requireNonNull(separators, "Undefined separators")));
+    if (Math.max(0, this.elements.size() - 1) != this.separators.size()) {
+      throw new IllegalArgumentException(
+          "Inconsistent number of elements (" + this.elements.size() +
+          ") and separators (" + this.separators.size() + ")");
+    }
   }
 
   /**
@@ -76,8 +80,11 @@ public class SeparatedList<R, S> implements Iterable<Object> {
    */
   public List<Object> getSequentialList() {
     List<Object> result = new ArrayList<>(elements.size() + separators.size());
-    for (Object item : this) {
-      result.add(item);
+    for (int i = 0; i < elements.size(); i++) {
+      result.add(elements.get(i));
+      if (i < separators.size()) {
+        result.add(separators.get(i));
+      }
     }
     return Collections.unmodifiableList(result);
   }
@@ -90,7 +97,7 @@ public class SeparatedList<R, S> implements Iterable<Object> {
    * @return the folded result.
    * @throws NoSuchElementException if the separated list has no elements.
    */
-  public R foldLeft(org.petitparser.parser.repeating.FoldFunction<R, S> callback) {
+  public R foldLeft(FoldFunction<R, S> callback) {
     Objects.requireNonNull(callback, "Undefined callback");
     if (elements.isEmpty()) {
       throw new NoSuchElementException("Cannot fold an empty SeparatedList");
@@ -110,7 +117,7 @@ public class SeparatedList<R, S> implements Iterable<Object> {
    * @return the folded result.
    * @throws NoSuchElementException if the separated list has no elements.
    */
-  public R foldRight(org.petitparser.parser.repeating.FoldFunction<R, S> callback) {
+  public R foldRight(FoldFunction<R, S> callback) {
     Objects.requireNonNull(callback, "Undefined callback");
     if (elements.isEmpty()) {
       throw new NoSuchElementException("Cannot fold an empty SeparatedList");

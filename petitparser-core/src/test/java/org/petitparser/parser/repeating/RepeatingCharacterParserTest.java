@@ -153,8 +153,27 @@ public class RepeatingCharacterParserTest {
   }
 
   @Test
+  public void testParseOnOffset() {
+    Parser parser = CharacterParser.digit().repeatString(2, 4);
+    org.petitparser.context.Result r1 = parser.parseOn(new org.petitparser.context.Context("a12b", 1));
+    assertTrue(r1.isSuccess());
+    assertEquals("12", r1.get());
+    assertEquals(3, r1.getPosition());
+
+    org.petitparser.context.Result r2 = parser.parseOn(new org.petitparser.context.Context("a12345b", 1));
+    assertTrue(r2.isSuccess());
+    assertEquals("1234", r2.get());
+    assertEquals(5, r2.getPosition());
+
+    org.petitparser.context.Result r3 = parser.parseOn(new org.petitparser.context.Context("a1b", 1));
+    assertTrue(r3.isFailure());
+    assertEquals(2, r3.getPosition());
+    assertEquals("digit expected", r3.getMessage());
+  }
+
+  @Test
   public void testCopyAndEquality() {
-    RepeatingCharacterParser parser = (RepeatingCharacterParser) CharacterParser.digit().plusString();
+    RepeatingCharacterParser parser = CharacterParser.digit().plusString();
     RepeatingCharacterParser copy = parser.copy();
 
     assertNotSame(parser, copy);

@@ -207,12 +207,42 @@ public class CharacterParser extends Parser {
   }
 
   @Override
-  public Parser repeatString(int min, int max) {
+  public RepeatingCharacterParser starString() {
+    return repeatString(0, org.petitparser.parser.repeating.RepeatingParser.UNBOUNDED);
+  }
+
+  @Override
+  public RepeatingCharacterParser starString(String message) {
+    return repeatString(0, org.petitparser.parser.repeating.RepeatingParser.UNBOUNDED, message);
+  }
+
+  @Override
+  public RepeatingCharacterParser plusString() {
+    return repeatString(1, org.petitparser.parser.repeating.RepeatingParser.UNBOUNDED);
+  }
+
+  @Override
+  public RepeatingCharacterParser plusString(String message) {
+    return repeatString(1, org.petitparser.parser.repeating.RepeatingParser.UNBOUNDED, message);
+  }
+
+  @Override
+  public RepeatingCharacterParser timesString(int count) {
+    return repeatString(count, count);
+  }
+
+  @Override
+  public RepeatingCharacterParser timesString(int count, String message) {
+    return repeatString(count, count, message);
+  }
+
+  @Override
+  public RepeatingCharacterParser repeatString(int min, int max) {
     return repeatString(min, max, null);
   }
 
   @Override
-  public Parser repeatString(int min, int max, String message) {
+  public RepeatingCharacterParser repeatString(int min, int max, String message) {
     return new RepeatingCharacterParser(
         matcher, message != null ? message : this.message, min, max);
   }
