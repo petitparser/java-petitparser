@@ -288,4 +288,46 @@ public class MatcherTest {
         new MatchesSpliterator<>(of('a'), "abc", 0, false);
     spliterator.forEachRemaining(null);
   }
+
+  @Test
+  public void testSideEffectsExecutedExactlyOnce() {
+    AtomicInteger sideEffectCounter = new AtomicInteger(0);
+    Parser parser = digit().mapWithSideEffects(d -> {
+      sideEffectCounter.incrementAndGet();
+      return d;
+    });
+
+    List<Character> list = parser.<Character>matchesAsStream("a1b2c3")
+        .collect(Collectors.toList());
+    assertEquals(Arrays.asList('1', '2', '3'), list);
+    assertEquals(3, sideEffectCounter.get());
+
+    sideEffectCounter.set(0);
+    List<Character> iterList = new ArrayList<>();
+    parser.<Character>matches("a1b2c3", 0).forEach(iterList::add);
+    assertEquals(Arrays.asList('1', '2', '3'), iterList);
+    assertEquals(3, sideEffectCounter.get());
+  }
+
+  @Test
+  public void testMatchesIteratorLazyConstruction() {
+    AtomicInteger executionCount = new AtomicInteger(0);
+    Parser parser = digit().mapWithSideEffects(d -> {
+      executionCount.incrementAndGet();
+      return d;
+    });
+
+    MatchesIterator<Character> iterator = new MatchesIterator<>(parser, "123", 0, false);
+    // Construction must be lazy; no parsing or side-effects on creation
+    assertEquals(0, executionCount.get());
+
+    assertTrue(iterator.hasNext());
+    assertEquals(1, executionCount.get());
+
+    assertEquals(Character.valueOf('1'), iterator.next());
+    assertEquals(1, executionCount.get());
+
+    assertTrue(iterator.hasNext());
+    assertEquals(2, executionCount.get());
+  }
 }

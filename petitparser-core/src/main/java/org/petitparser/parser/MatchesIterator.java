@@ -1,6 +1,7 @@
 package org.petitparser.parser;
 
 import org.petitparser.context.Context;
+import org.petitparser.context.Result;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -18,6 +19,7 @@ public class MatchesIterator<T> implements Iterator<T> {
   private int current;
   private T next;
   private boolean hasNext;
+  private boolean advanced;
 
   /**
    * Constructs an {@link Iterator} producing matches of {@code parser} on {@code input}.
@@ -36,42 +38,47 @@ public class MatchesIterator<T> implements Iterator<T> {
     this.start = start;
     this.current = start;
     this.overlapping = overlapping;
-    advance();
   }
 
   @SuppressWarnings("unchecked")
   private void advance() {
     while (current <= input.length()) {
-      int end = parser.fastParseOn(input, current);
-      if (end < 0) {
+      Result result = parser.parseOn(new Context(input, current));
+      if (result.isFailure()) {
         current++;
       } else {
-        next = (T) parser.parseOn(new Context(input, current)).get();
+        next = result.get();
         hasNext = true;
-        if (overlapping || current == end) {
+        if (overlapping || current == result.getPosition()) {
           current++;
         } else {
-          current = end;
+          current = result.getPosition();
         }
+        advanced = true;
         return;
       }
     }
     next = null;
     hasNext = false;
+    advanced = true;
   }
 
   @Override
   public boolean hasNext() {
+    if (!advanced) {
+      advance();
+    }
     return hasNext;
   }
 
   @Override
   public T next() {
-    if (!hasNext) {
+    if (!hasNext()) {
       throw new NoSuchElementException();
     }
     T result = next;
-    advance();
+    next = null;
+    advanced = false;
     return result;
   }
 

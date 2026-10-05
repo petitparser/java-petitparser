@@ -39,7 +39,7 @@ public class ProgressTest {
     // Frame 0: FlattenParser at position 0
     assertEquals(0, frames.get(0).getPosition());
     assertEquals(-1, frames.get(0).getPreviousPosition());
-    assertEquals(-1, frames.get(0).getMaxPosition());
+    assertEquals(0, frames.get(0).getMaxPosition());
     assertFalse(frames.get(0).isBacktracking());
     assertFalse(frames.get(0).isBacktracked());
     assertTrue(frames.get(0).toString().startsWith("* FlattenParser"));
@@ -61,7 +61,7 @@ public class ProgressTest {
     // Frame 3: Sequence child 1 (repeating) at position 1
     assertEquals(1, frames.get(3).getPosition());
     assertEquals(0, frames.get(3).getPreviousPosition());
-    assertEquals(0, frames.get(3).getMaxPosition());
+    assertEquals(1, frames.get(3).getMaxPosition());
     assertFalse(frames.get(3).isBacktracking());
     assertTrue(frames.get(3).toString().startsWith("** PossessiveRepeatingParser"));
 
@@ -75,22 +75,25 @@ public class ProgressTest {
     // Frame 5: repeating child at position 2 ('1')
     assertEquals(2, frames.get(5).getPosition());
     assertEquals(1, frames.get(5).getPreviousPosition());
-    assertEquals(1, frames.get(5).getMaxPosition());
+    assertEquals(2, frames.get(5).getMaxPosition());
     assertFalse(frames.get(5).isBacktracking());
     assertTrue(frames.get(5).toString().startsWith("*** CharacterParser"));
 
     // Frame 6: repeating child at position 3 ('2')
     assertEquals(3, frames.get(6).getPosition());
+    assertEquals(3, frames.get(6).getMaxPosition());
     assertFalse(frames.get(6).isBacktracking());
     assertTrue(frames.get(6).toString().startsWith("**** CharacterParser"));
 
     // Frame 7: repeating child at position 4 ('3')
     assertEquals(4, frames.get(7).getPosition());
+    assertEquals(4, frames.get(7).getMaxPosition());
     assertFalse(frames.get(7).isBacktracking());
     assertTrue(frames.get(7).toString().startsWith("***** CharacterParser"));
 
     // Frame 8: repeating child at position 5 (end of input)
     assertEquals(5, frames.get(8).getPosition());
+    assertEquals(5, frames.get(8).getMaxPosition());
     assertFalse(frames.get(8).isBacktracking());
     assertTrue(frames.get(8).toString().startsWith("****** CharacterParser"));
   }
@@ -253,5 +256,72 @@ public class ProgressTest {
   @Test(expected = NullPointerException.class)
   public void testNullObserverThrows() {
     Progress.on(letter(), (Consumer<Progress.ProgressFrame>) null);
+  }
+
+  @Test
+  public void testConcurrentProgressParsing() throws InterruptedException {
+    int threadCount = 8;
+    int iterationsPerThread = 50;
+    Parser choice = letter().seq(digit()).or(letter().seq(letter()));
+    // Shared progress parser across threads
+    ThreadLocal<List<Progress.ProgressFrame>> threadFrames = ThreadLocal.withInitial(ArrayList::new);
+    Parser instrumented = Progress.progress(choice, frame -> threadFrames.get().add(frame));
+
+    Thread[] threads = new Thread[threadCount];
+    boolean[] failures = new boolean[threadCount];
+    for (int i = 0; i < threadCount; i++) {
+      final int threadIndex = i;
+      threads[i] = new Thread(() -> {
+        try {
+          for (int iter = 0; iter < iterationsPerThread; iter++) {
+            threadFrames.get().clear();
+            Result res = instrumented.parse("ab");
+            if (!res.isSuccess()) {
+              failures[threadIndex] = true;
+              return;
+            }
+            List<Progress.ProgressFrame> frames = threadFrames.get();
+            // Verify backtracking detection is accurate and not clobbered
+            long btCount = frames.stream().filter(Progress.ProgressFrame::isBacktracking).count();
+            if (btCount != 1) {
+              failures[threadIndex] = true;
+              return;
+            }
+          }
+        } catch (Throwable t) {
+          failures[threadIndex] = true;
+        }
+      });
+    }
+
+    for (Thread t : threads) {
+      t.start();
+    }
+    for (Thread t : threads) {
+      t.join();
+    }
+
+    for (int i = 0; i < threadCount; i++) {
+      assertFalse("Thread " + i + " experienced concurrency failure", failures[i]);
+    }
+  }
+
+  @Test
+  public void testReentrantProgressParsing() {
+    List<Progress.ProgressFrame> outerFrames = new ArrayList<>();
+    List<Progress.ProgressFrame> innerFrames = new ArrayList<>();
+
+    Parser innerParser = Progress.progress(digit().plus(), innerFrames::add);
+    // Outer parser maps a letter and executes the inner parser within an action
+    Parser outerParser = letter().map(ch -> innerParser.parse("123").get());
+    Parser instrumentedOuter = Progress.progress(outerParser, outerFrames::add);
+
+    Result result = instrumentedOuter.parse("a");
+    assertTrue(result.isSuccess());
+    assertFalse(outerFrames.isEmpty());
+    assertFalse(innerFrames.isEmpty());
+    // Ensure both ran cleanly and outer state wasn't nullified prematurely
+    assertFalse(outerFrames.stream().anyMatch(Progress.ProgressFrame::isBacktracking));
+    assertFalse(innerFrames.stream().anyMatch(Progress.ProgressFrame::isBacktracking));
   }
 }

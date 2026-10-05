@@ -3,6 +3,8 @@ package org.petitparser.utils;
 import org.petitparser.context.Context;
 import org.petitparser.parser.Parser;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -81,13 +83,15 @@ public final class Progress {
     Objects.requireNonNull(predicate, "predicate must not be null");
     Objects.requireNonNull(observer, "observer must not be null");
 
-    ProgressState[] state = new ProgressState[1];
+    ThreadLocal<Deque<ProgressState>> stateHolder = ThreadLocal.withInitial(ArrayDeque::new);
     Parser transformed = Mirror.of(root).transform(parser -> {
       if (predicate.test(parser)) {
         return parser.callCC((continuation, context) -> {
-          ProgressState current = state[0];
+          Deque<ProgressState> stack = stateHolder.get();
+          ProgressState current = stack.peek();
           if (current == null) {
             current = new ProgressState();
+            stack.push(current);
           }
           ProgressFrame frame = current.step(parser, context);
           observer.accept(frame);
@@ -99,11 +103,15 @@ public final class Progress {
     });
 
     return transformed.callCC((continuation, context) -> {
-      state[0] = new ProgressState();
+      Deque<ProgressState> stack = stateHolder.get();
+      stack.push(new ProgressState());
       try {
         return continuation.apply(context);
       } finally {
-        state[0] = null;
+        stack.pop();
+        if (stack.isEmpty()) {
+          stateHolder.remove();
+        }
       }
     });
   }
@@ -119,10 +127,10 @@ public final class Progress {
       int position = context.getPosition();
       boolean isBacktracking = previousPosition >= 0 && position < previousPosition;
       int prev = previousPosition;
-      int max = maxPosition;
       if (position > maxPosition) {
         maxPosition = position;
       }
+      int max = maxPosition;
       previousPosition = position;
       return new ProgressFrame(parser, context, position, prev, max, isBacktracking);
     }
@@ -154,7 +162,7 @@ public final class Progress {
     public final int previousPosition;
 
     /**
-     * The highest position reached prior to this frame, or -1 if this is the first frame.
+     * The highest position reached so far (at or before this frame).
      */
     public final int maxPosition;
 

@@ -1,6 +1,7 @@
 package org.petitparser.parser;
 
 import org.petitparser.context.Context;
+import org.petitparser.context.Result;
 
 import java.util.Objects;
 import java.util.Spliterator;
@@ -41,11 +42,12 @@ public class MatchesSpliterator<T> implements Spliterator<T> {
   public boolean tryAdvance(Consumer<? super T> action) {
     Objects.requireNonNull(action, "action must not be null");
     while (current <= input.length()) {
-      int end = parser.fastParseOn(input, current);
-      if (end < 0) {
+      Result result = parser.parseOn(new Context(input, current));
+      if (result.isFailure()) {
         current++;
       } else {
-        T value = (T) parser.parseOn(new Context(input, current)).get();
+        int end = result.getPosition();
+        T value = result.get();
         if (overlapping || current == end) {
           current++;
         } else {
@@ -63,11 +65,12 @@ public class MatchesSpliterator<T> implements Spliterator<T> {
   public void forEachRemaining(Consumer<? super T> action) {
     Objects.requireNonNull(action, "action must not be null");
     while (current <= input.length()) {
-      int end = parser.fastParseOn(input, current);
-      if (end < 0) {
+      Result result = parser.parseOn(new Context(input, current));
+      if (result.isFailure()) {
         current++;
       } else {
-        T value = (T) parser.parseOn(new Context(input, current)).get();
+        int end = result.getPosition();
+        T value = result.get();
         if (overlapping || current == end) {
           current++;
         } else {
