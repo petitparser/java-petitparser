@@ -19,6 +19,8 @@ import org.petitparser.parser.combinators.SequenceParser;
 import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.parser.combinators.SkipParser;
 import org.petitparser.parser.primitive.CharacterParser;
+import org.petitparser.parser.primitive.EpsilonParser;
+import org.petitparser.parser.primitive.FailureParser;
 import org.petitparser.parser.primitive.NewlineParser;
 import org.petitparser.parser.primitive.PositionParser;
 import org.petitparser.parser.repeating.GreedyRepeatingParser;
@@ -133,6 +135,38 @@ public abstract class Parser {
    */
   public static Parser newline(String message) {
     return new NewlineParser(message);
+  }
+
+  /**
+   * Returns a parser that consumes nothing and succeeds with {@code null}.
+   */
+  public static Parser epsilon() {
+    return EpsilonParser.INSTANCE;
+  }
+
+  /**
+   * Returns a parser that consumes nothing and succeeds with {@code value}.
+   *
+   * @param value the result value.
+   */
+  public static Parser epsilon(Object value) {
+    return new EpsilonParser(value);
+  }
+
+  /**
+   * Returns a parser that consumes nothing and fails with a default error message.
+   */
+  public static Parser failure() {
+    return new FailureParser();
+  }
+
+  /**
+   * Returns a parser that consumes nothing and fails with the specified error {@code message}.
+   *
+   * @param message the failure message.
+   */
+  public static Parser failure(String message) {
+    return FailureParser.withMessage(message);
   }
 
   /**
@@ -519,6 +553,18 @@ public abstract class Parser {
    */
   public Parser permute(int... indexes) {
     return this.map(Functions.permutationOfList(indexes));
+  }
+
+  /**
+   * Returns a parser that transforms a successful parse result by returning the
+   * given constant {@code value}.
+   *
+   * @param value the constant value to return.
+   * @param <T> the type of the constant value.
+   * @return a parser producing the constant value.
+   */
+  public <T> Parser constant(T value) {
+    return map(Functions.constant(value));
   }
 
   /**

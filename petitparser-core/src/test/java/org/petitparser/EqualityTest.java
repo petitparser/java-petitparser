@@ -116,6 +116,11 @@ public class EqualityTest {
   }
 
   @Test
+  public void epsilonWithValue() {
+    verify(new EpsilonParser(42));
+  }
+
+  @Test
   public void failure() {
     verify(FailureParser.withMessage("failure"));
   }

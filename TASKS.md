@@ -66,7 +66,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Add static factories `Parser.newline()` and `Parser.newline(String message)`.
   - Implement branch-optimized zero-allocation `fastParseOn`.
 
-- [ ] **Task 1.7: Epsilon Value Support & Primitives**
+- [x] **Task 1.7: Epsilon Value Support & Primitives**
   - Extend `EpsilonParser` to store an optional result value `value` (defaulting to `null`).
   - Provide a reusable static singleton `EpsilonParser.INSTANCE` for `null`.
   - Add static factories `Parser.epsilon()` and `Parser.epsilon(Object value)`.
