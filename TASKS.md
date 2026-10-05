@@ -115,7 +115,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Add `repeatSeparated(Parser separator, int min, int max)` to `Parser`.
   - Retain existing `separatedBy` and `delimitedBy` returning `List<Object>` for full backward compatibility.
 
-- [ ] **Task 2.4: Phase 2 Parallel Unit Tests**
+- [x] **Task 2.4: Phase 2 Parallel Unit Tests**
   - Create test classes:
     - `org.petitparser.parser.repeating.RepeatingCharacterParserTest`
     - `org.petitparser.parser.repeating.SeparatedListTest`

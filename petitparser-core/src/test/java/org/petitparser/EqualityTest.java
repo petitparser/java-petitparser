@@ -267,4 +267,29 @@ public class EqualityTest {
     verify(CharacterParser.digit()
         .where((Character c) -> Character.isDigit(c), "digit expected"));
   }
+
+  @Test
+  public void repeatingCharacter() {
+    verify(CharacterParser.digit().plusString());
+  }
+
+  @Test
+  public void starSeparated() {
+    verify(CharacterParser.digit().starSeparated(CharacterParser.of(',')));
+  }
+
+  @Test
+  public void plusSeparated() {
+    verify(CharacterParser.digit().plusSeparated(CharacterParser.of(',')));
+  }
+
+  @Test
+  public void timesSeparated() {
+    verify(CharacterParser.digit().timesSeparated(CharacterParser.of(','), 3));
+  }
+
+  @Test
+  public void repeatSeparated() {
+    verify(CharacterParser.digit().repeatSeparated(CharacterParser.of(','), 2, 4));
+  }
 }
