@@ -149,24 +149,24 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Add static factories `Parser.seq(p1, p2, p3)` through `Parser.seq(p1, ..., p9)` returning corresponding typed sequence parsers.
   - Retain existing `Parser.seq(Parser... parsers)` and instance method `seq(Parser other)` returning `SequenceParser` (`Parser<List<Object>>`) for backward compatibility.
 
-- [ ] **Task 3.5: Type Extraction, Casting & Permutation**
+- [x] **Task 3.5: Type Extraction, Casting & Permutation**
   - Implement `org.petitparser.parser.actions.CastParser<R, S>` with `cast()` and `cast(Class<S> clazz)` on `Parser`.
   - Implement `castList(Class<S> clazz)` on `Parser<List<?>>`.
   - Implement `pick(int index)` with negative indexing support, specialized on `RepeatingParser<E>` to return `Parser<E>`.
   - Implement `permute(int... indices)` returning reordered `Tuple` or `List`.
 
-- [ ] **Task 3.6: Variance-Friendly Alternatives (`or` & `orWiden`)**
+- [x] **Task 3.6: Variance-Friendly Alternatives (`or` & `orWiden`)**
   - Add `or(Parser<? extends R> other)` to `Parser<R>` to preserve precise local type inference when using Java `var`.
   - Add `<O> Parser<O> orWiden(Parser<? extends O> other)` and static `Parser.or(Parser<? extends T>... parsers)` for explicit widening across differing types (e.g. `Integer` and `Double` into `Number`).
 
-- [ ] **Task 3.7: Strongly-Typed Grammar Definitions**
+- [x] **Task 3.7: Strongly-Typed Grammar Definitions**
   - Introduce `org.petitparser.tools.Production<T>` typed token key:
     - Factory `Production.of(String name)` / `GrammarDefinition.production(String name)`.
   - Add typed `def(Production<T> production, Parser<? extends T> parser)`.
   - Add typed `ref(Production<T> production)` returning `Parser<T>`.
   - Retain string-based `def(String, Parser)` and enhance `ref(String)` with `<T> Parser<T> ref(String name)` for seamless existing code compatibility.
 
-- [ ] **Task 3.8: Phase 3 Parallel Unit Tests**
+- [x] **Task 3.8: Phase 3 Parallel Unit Tests**
   - Create test classes:
     - `org.petitparser.parser.repeating.TupleTest` (verifying typed access and `List<Object>` contract)
     - `org.petitparser.parser.combinators.SequenceParserNTest` (verifying `then()`, `map()`, arity 2-9, fast-parse)

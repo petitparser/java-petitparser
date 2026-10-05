@@ -4,8 +4,12 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.context.Token;
 import org.petitparser.parser.actions.ActionParser;
+import org.petitparser.parser.actions.CastListParser;
+import org.petitparser.parser.actions.CastParser;
 import org.petitparser.parser.actions.ContinuationParser;
 import org.petitparser.parser.actions.FlattenParser;
+import org.petitparser.parser.actions.PermuteParser;
+import org.petitparser.parser.actions.PickParser;
 import org.petitparser.parser.actions.TokenParser;
 import org.petitparser.parser.actions.TrimmingParser;
 import org.petitparser.parser.actions.WhereParser;
@@ -517,6 +521,13 @@ public abstract class Parser {
   }
 
   /**
+   * Returns a parser that accepts the receiver or {@code other}.
+   */
+  public ChoiceParser or(Parser other) {
+    return or(new FailureJoiner.SelectLast(), other);
+  }
+
+  /**
    * Returns a parser that accepts the receiver or {@code others}. The resulting
    * parser returns the parse result of first succeeding parser (exclusive
    * ordered choice). If all parsers fail, the last parse error is returned.
@@ -536,6 +547,133 @@ public abstract class Parser {
     parsers[0] = this;
     System.arraycopy(others, 0, parsers, 1, others.length);
     return new ChoiceParser(failureJoiner, parsers);
+  }
+
+  /**
+   * Returns a parser that accepts the receiver or {@code others}, allowing explicit type widening.
+   */
+  public ChoiceParser orWiden(Parser... others) {
+    return or(others);
+  }
+
+  /**
+   * Returns a parser that accepts the receiver or {@code others} using the provided
+   * {@code failureJoiner}, allowing explicit type widening.
+   */
+  public ChoiceParser orWiden(FailureJoiner failureJoiner, Parser... others) {
+    return or(failureJoiner, others);
+  }
+
+  /**
+   * Creates a choice parser of 2 parsers.
+   */
+  public static ChoiceParser or(Parser p1, Parser p2) {
+    return new ChoiceParser(p1, p2);
+  }
+
+  /**
+   * Creates a choice parser of 3 parsers.
+   */
+  public static ChoiceParser or(Parser p1, Parser p2, Parser p3) {
+    return new ChoiceParser(p1, p2, p3);
+  }
+
+  /**
+   * Creates a choice parser of 4 parsers.
+   */
+  public static ChoiceParser or(Parser p1, Parser p2, Parser p3, Parser p4) {
+    return new ChoiceParser(p1, p2, p3, p4);
+  }
+
+  /**
+   * Creates a choice parser of 5 parsers.
+   */
+  public static ChoiceParser or(Parser p1, Parser p2, Parser p3, Parser p4, Parser p5) {
+    return new ChoiceParser(p1, p2, p3, p4, p5);
+  }
+
+  /**
+   * Creates a choice parser of 6 parsers.
+   */
+  public static ChoiceParser or(Parser p1, Parser p2, Parser p3, Parser p4, Parser p5, Parser p6) {
+    return new ChoiceParser(p1, p2, p3, p4, p5, p6);
+  }
+
+  /**
+   * Creates a choice parser of 7 parsers.
+   */
+  public static ChoiceParser or(Parser p1, Parser p2, Parser p3, Parser p4, Parser p5, Parser p6, Parser p7) {
+    return new ChoiceParser(p1, p2, p3, p4, p5, p6, p7);
+  }
+
+  /**
+   * Creates a choice parser of 8 parsers.
+   */
+  public static ChoiceParser or(Parser p1, Parser p2, Parser p3, Parser p4, Parser p5, Parser p6, Parser p7, Parser p8) {
+    return new ChoiceParser(p1, p2, p3, p4, p5, p6, p7, p8);
+  }
+
+  /**
+   * Creates a choice parser of 9 parsers.
+   */
+  public static ChoiceParser or(Parser p1, Parser p2, Parser p3, Parser p4, Parser p5, Parser p6, Parser p7, Parser p8, Parser p9) {
+    return new ChoiceParser(p1, p2, p3, p4, p5, p6, p7, p8, p9);
+  }
+
+  /**
+   * Creates a choice parser of 2 parsers using {@code failureJoiner}.
+   */
+  public static ChoiceParser or(FailureJoiner failureJoiner, Parser p1, Parser p2) {
+    return new ChoiceParser(failureJoiner, p1, p2);
+  }
+
+  /**
+   * Creates a choice parser of 3 parsers using {@code failureJoiner}.
+   */
+  public static ChoiceParser or(FailureJoiner failureJoiner, Parser p1, Parser p2, Parser p3) {
+    return new ChoiceParser(failureJoiner, p1, p2, p3);
+  }
+
+  /**
+   * Creates a choice parser of 4 parsers using {@code failureJoiner}.
+   */
+  public static ChoiceParser or(FailureJoiner failureJoiner, Parser p1, Parser p2, Parser p3, Parser p4) {
+    return new ChoiceParser(failureJoiner, p1, p2, p3, p4);
+  }
+
+  /**
+   * Creates a choice parser of 5 parsers using {@code failureJoiner}.
+   */
+  public static ChoiceParser or(FailureJoiner failureJoiner, Parser p1, Parser p2, Parser p3, Parser p4, Parser p5) {
+    return new ChoiceParser(failureJoiner, p1, p2, p3, p4, p5);
+  }
+
+  /**
+   * Creates a choice parser of 6 parsers using {@code failureJoiner}.
+   */
+  public static ChoiceParser or(FailureJoiner failureJoiner, Parser p1, Parser p2, Parser p3, Parser p4, Parser p5, Parser p6) {
+    return new ChoiceParser(failureJoiner, p1, p2, p3, p4, p5, p6);
+  }
+
+  /**
+   * Creates a choice parser of 7 parsers using {@code failureJoiner}.
+   */
+  public static ChoiceParser or(FailureJoiner failureJoiner, Parser p1, Parser p2, Parser p3, Parser p4, Parser p5, Parser p6, Parser p7) {
+    return new ChoiceParser(failureJoiner, p1, p2, p3, p4, p5, p6, p7);
+  }
+
+  /**
+   * Creates a choice parser of 8 parsers using {@code failureJoiner}.
+   */
+  public static ChoiceParser or(FailureJoiner failureJoiner, Parser p1, Parser p2, Parser p3, Parser p4, Parser p5, Parser p6, Parser p7, Parser p8) {
+    return new ChoiceParser(failureJoiner, p1, p2, p3, p4, p5, p6, p7, p8);
+  }
+
+  /**
+   * Creates a choice parser of 9 parsers using {@code failureJoiner}.
+   */
+  public static ChoiceParser or(FailureJoiner failureJoiner, Parser p1, Parser p2, Parser p3, Parser p4, Parser p5, Parser p6, Parser p7, Parser p8, Parser p9) {
+    return new ChoiceParser(failureJoiner, p1, p2, p3, p4, p5, p6, p7, p8, p9);
   }
 
   /**
@@ -744,12 +882,40 @@ public abstract class Parser {
   }
 
   /**
+   * Returns a parser that casts its result to {@code <S>}.
+   */
+  public <S> CastParser<Object, S> cast() {
+    return new CastParser<>(this);
+  }
+
+  /**
+   * Returns a parser that casts its result to {@code clazz}.
+   */
+  public <S> CastParser<Object, S> cast(Class<S> clazz) {
+    return new CastParser<>(this, clazz);
+  }
+
+  /**
+   * Returns a parser that casts its list result to {@code List<S>}.
+   */
+  public <S> CastListParser<S> castList() {
+    return new CastListParser<>(this);
+  }
+
+  /**
+   * Returns a parser that casts its list result to {@code List<S>} using {@code clazz}.
+   */
+  public <S> CastListParser<S> castList(Class<S> clazz) {
+    return new CastListParser<>(this, clazz);
+  }
+
+  /**
    * Returns a parser that transform a successful parse result by returning the
    * element at {@code index} of a list. A negative index can be used to access
    * the elements from the back of the list.
    */
-  public Parser pick(int index) {
-    return map(Functions.nthOfList(index));
+  public <T> PickParser<T> pick(int index) {
+    return new PickParser<>(this, index);
   }
 
   /**
@@ -757,8 +923,8 @@ public abstract class Parser {
    * permuted elements at {@code indexes} of a list. Negative indexes can be
    * used to access the elements from the back of the list.
    */
-  public Parser permute(int... indexes) {
-    return this.map(Functions.permutationOfList(indexes));
+  public PermuteParser permute(int... indexes) {
+    return new PermuteParser(this, indexes);
   }
 
   /**

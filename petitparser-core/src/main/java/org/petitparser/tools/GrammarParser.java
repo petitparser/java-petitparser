@@ -15,6 +15,10 @@ public class GrammarParser extends DelegateParser {
     super(definition.build(name));
   }
 
+  public GrammarParser(GrammarDefinition definition, Production<?> production) {
+    super(definition.build(production));
+  }
+
   @Override
   public int fastParseOn(String buffer, int position) {
     return delegate.fastParseOn(buffer, position);

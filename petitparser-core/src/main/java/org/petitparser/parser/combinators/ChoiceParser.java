@@ -55,6 +55,11 @@ public class ChoiceParser extends ListParser {
   }
 
   @Override
+  public ChoiceParser or(Parser other) {
+    return or(failureJoiner, other);
+  }
+
+  @Override
   public ChoiceParser or(FailureJoiner failureJoiner, Parser... others) {
     Parser[] array = Arrays.copyOf(parsers, parsers.length + others.length);
     System.arraycopy(others, 0, array, parsers.length, others.length);

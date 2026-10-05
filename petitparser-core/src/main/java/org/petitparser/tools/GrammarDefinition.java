@@ -37,10 +37,24 @@ public class GrammarDefinition {
   private final Map<String, Parser> parsers = new HashMap<>();
 
   /**
+   * Creates a typed production key with the given {@code name}.
+   */
+  public static <T> Production<T> production(String name) {
+    return Production.of(name);
+  }
+
+  /**
    * Returns a reference to the production with the given {@code name}.
    */
   protected final Parser ref(String name) {
     return new Reference(name);
+  }
+
+  /**
+   * Returns a reference to the given typed {@code production}.
+   */
+  protected final Parser ref(Production<?> production) {
+    return new Reference(production.getName());
   }
 
   /**
@@ -51,6 +65,13 @@ public class GrammarDefinition {
       throw new IllegalStateException("Duplicate production: " + name);
     }
     parsers.put(Objects.requireNonNull(name), Objects.requireNonNull(parser));
+  }
+
+  /**
+   * Defines a typed production with a {@code production} key and a {@code parser}.
+   */
+  protected final void def(Production<?> production, Parser parser) {
+    def(production.getName(), parser);
   }
 
   /**
@@ -65,6 +86,13 @@ public class GrammarDefinition {
   }
 
   /**
+   * Redefines an existing typed production with a {@code production} key and a new {@code parser}.
+   */
+  protected final void redef(Production<?> production, Parser parser) {
+    redef(production.getName(), parser);
+  }
+
+  /**
    * Redefines an existing production with a {@code name} and a {@code function}
    * producing a new parser. Only call this method during initialization.
    */
@@ -76,11 +104,25 @@ public class GrammarDefinition {
   }
 
   /**
+   * Redefines an existing typed production with a {@code production} key and a {@code function}.
+   */
+  protected final void redef(Production<?> production, Function<Parser, Parser> function) {
+    redef(production.getName(), function);
+  }
+
+  /**
    * Attaches an action {@code function} to an existing production {@code name}.
    * Only call this method during initialization.
    */
   protected final <S, T> void action(String name, Function<S, T> function) {
     redef(name, parser -> parser.map(function));
+  }
+
+  /**
+   * Attaches an action {@code function} to an existing typed production {@code production}.
+   */
+  protected final <S, T> void action(Production<?> production, Function<S, T> function) {
+    action(production.getName(), function);
   }
 
   /**
@@ -95,6 +137,13 @@ public class GrammarDefinition {
    */
   public Parser build(String name) {
     return resolve(new Reference(name));
+  }
+
+  /**
+   * Builds a parser starting from the provided typed {@code production}.
+   */
+  public Parser build(Production<?> production) {
+    return build(production.getName());
   }
 
   private Parser resolve(Reference reference) {

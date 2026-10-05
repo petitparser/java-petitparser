@@ -292,4 +292,34 @@ public class EqualityTest {
   public void repeatSeparated() {
     verify(CharacterParser.digit().repeatSeparated(CharacterParser.of(','), 2, 4));
   }
+
+  @Test
+  public void cast() {
+    verify(CharacterParser.digit().cast());
+  }
+
+  @Test
+  public void castWithClass() {
+    verify(CharacterParser.digit().cast(Character.class));
+  }
+
+  @Test
+  public void castList() {
+    verify(CharacterParser.digit().star().castList());
+  }
+
+  @Test
+  public void castListWithClass() {
+    verify(CharacterParser.digit().star().castList(Character.class));
+  }
+
+  @Test
+  public void pick() {
+    verify(CharacterParser.digit().star().pick(1));
+  }
+
+  @Test
+  public void permute() {
+    verify(CharacterParser.digit().star().permute(1, 0));
+  }
 }
