@@ -292,10 +292,10 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - [x] `RepeatedChoiceRule`: Identifies duplicate branches in a choice parser.
   - [x] `UnnecessaryFlattenRule`: Identifies `flatten()` on parsers already producing Strings.
   - [x] `UnnecessaryResolvableRule`: Identifies unresolved resolvable wrappers.
-  - [x] `UnoptimizedFlattenRule`: Identifies `flatten()` containing inner actions.
+  - [x] `UnoptimizedFlattenRule`: Identifies `flatten()` without error messages preventing switch to fast parsing mode.
   - [x] `UnreachableChoiceRule`: Identifies choices located after unconditional matchers.
   - [x] `UnresolvedSettableRule`: Identifies `SettableParser` left in undefined state.
-  - [x] `UnusedResultRule`: Identifies complex sub-parses whose results are discarded.
+  - [x] `UnusedResultRule`: Identifies complex sub-parses whose results are discarded (e.g. inner actions inside `flatten()`).
 
 - [x] **Task 8.3: Phase 8 Parallel Unit Tests**
   - Create `org.petitparser.utils.linter.LinterTest` verifying positive and negative triggers for each of the 13 rules.

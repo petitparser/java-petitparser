@@ -86,6 +86,7 @@ public abstract class LinterRule {
    * @return the formatted string
    */
   public static String formatIterable(Iterable<?> objects, Integer offset) {
+    Objects.requireNonNull(objects, "Undefined objects");
     StringBuilder buffer = new StringBuilder();
     int i = 0;
     for (Object object : objects) {
@@ -121,6 +122,8 @@ public abstract class LinterRule {
    * @return true if all elements match pairwise structurally
    */
   public static boolean isParserIterableEqual(Iterable<Parser> first, Iterable<Parser> second) {
+    Objects.requireNonNull(first, "Undefined first collection");
+    Objects.requireNonNull(second, "Undefined second collection");
     for (Parser one : first) {
       boolean found = false;
       for (Parser two : second) {
@@ -153,7 +156,7 @@ public abstract class LinterRule {
     if (this == obj) {
       return true;
     }
-    if (obj == null || getClass() != obj.getClass()) {
+    if (!(obj instanceof LinterRule)) {
       return false;
     }
     LinterRule other = (LinterRule) obj;
@@ -162,7 +165,7 @@ public abstract class LinterRule {
 
   @Override
   public int hashCode() {
-    return Objects.hash(getClass(), type, title);
+    return Objects.hash(type, title);
   }
 
   @Override

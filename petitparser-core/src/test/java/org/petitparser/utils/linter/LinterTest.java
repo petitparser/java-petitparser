@@ -592,23 +592,143 @@ public class LinterTest {
   }
 
   // --------------------------------------------------------------------------
-  // Subpackage rules.* adapter coverage
+  // Subpackage rules.* adapter coverage & equality
   // --------------------------------------------------------------------------
 
   @Test
-  public void testRulesSubpackageInstantiation() {
-    assertNotNull(new org.petitparser.utils.linter.rules.CharacterRepeaterRule());
-    assertNotNull(new org.petitparser.utils.linter.rules.DuplicateParserRule());
-    assertNotNull(new org.petitparser.utils.linter.rules.LeftRecursionRule());
-    assertNotNull(new org.petitparser.utils.linter.rules.NestedChoiceRule());
-    assertNotNull(new org.petitparser.utils.linter.rules.NullableRepeaterRule());
-    assertNotNull(new org.petitparser.utils.linter.rules.OverlappingChoiceRule());
-    assertNotNull(new org.petitparser.utils.linter.rules.RepeatedChoiceRule());
-    assertNotNull(new org.petitparser.utils.linter.rules.UnnecessaryFlattenRule());
-    assertNotNull(new org.petitparser.utils.linter.rules.UnnecessaryResolvableRule());
-    assertNotNull(new org.petitparser.utils.linter.rules.UnoptimizedFlattenRule());
-    assertNotNull(new org.petitparser.utils.linter.rules.UnreachableChoiceRule());
-    assertNotNull(new org.petitparser.utils.linter.rules.UnresolvedSettableRule());
-    assertNotNull(new org.petitparser.utils.linter.rules.UnusedResultRule());
+  public void testRulesSubpackageInstantiationAndEquality() {
+    LinterRule[] rules = new LinterRule[] {
+        new org.petitparser.utils.linter.rules.CharacterRepeaterRule(),
+        new org.petitparser.utils.linter.rules.DuplicateParserRule(),
+        new org.petitparser.utils.linter.rules.LeftRecursionRule(),
+        new org.petitparser.utils.linter.rules.NestedChoiceRule(),
+        new org.petitparser.utils.linter.rules.NullableRepeaterRule(),
+        new org.petitparser.utils.linter.rules.OverlappingChoiceRule(),
+        new org.petitparser.utils.linter.rules.RepeatedChoiceRule(),
+        new org.petitparser.utils.linter.rules.UnnecessaryFlattenRule(),
+        new org.petitparser.utils.linter.rules.UnnecessaryResolvableRule(),
+        new org.petitparser.utils.linter.rules.UnoptimizedFlattenRule(),
+        new org.petitparser.utils.linter.rules.UnreachableChoiceRule(),
+        new org.petitparser.utils.linter.rules.UnresolvedSettableRule(),
+        new org.petitparser.utils.linter.rules.UnusedResultRule()
+    };
+    for (int i = 0; i < rules.length; i++) {
+      assertNotNull(rules[i]);
+      assertEquals(rules[i], Linter.ALL_RULES.get(i));
+      assertEquals(rules[i].hashCode(), Linter.ALL_RULES.get(i).hashCode());
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // Engine Constants and Edge Cases
+  // --------------------------------------------------------------------------
+
+  @Test
+  public void testEngineConstants() {
+    assertEquals(13, Linter.ALL_RULES.size());
+    Set<String> titles = new HashSet<>();
+    for (LinterRule rule : Linter.ALL_RULES) {
+      assertNotNull(rule.getTitle());
+      assertNotNull(rule.getType());
+      assertTrue(titles.add(rule.getTitle()));
+      assertEquals(rule, rule);
+      assertNotEquals(rule, null);
+      assertNotEquals(rule, new Object());
+      assertTrue(rule.toString().contains(rule.getTitle()));
+    }
+    assertEquals(Set.of(LinterType.INFO), Linter.DEFAULT_EXCLUDED_TYPES);
+  }
+
+  @Test(expected = UnsupportedOperationException.class)
+  public void testAllRulesUnmodifiable() {
+    Linter.ALL_RULES.add(new CharacterRepeaterRule());
+  }
+
+  @Test
+  public void testLintVarargsAndCallbackMethods() {
+    Parser p = of('a').star().flatten();
+    List<LinterIssue> issues = Linter.lint(p, new CharacterRepeaterRule(), new DuplicateParserRule());
+    assertEquals(1, issues.size());
+    assertEquals("Character repeater", issues.get(0).getTitle());
+
+    List<LinterIssue> collected = new ArrayList<>();
+    issues = Linter.lint(p, collected::add);
+    assertEquals(1, issues.size());
+    assertEquals(issues, collected);
+
+    Parser pSafe = of('a');
+    collected.clear();
+    issues = Linter.lint(pSafe, collected::add);
+    assertTrue(issues.isEmpty());
+    assertTrue(collected.isEmpty());
+  }
+
+  @Test
+  public void testUnusedResultRuleWithConstantAndCastList() {
+    List<LinterRule> rules = List.of(new UnusedResultRule());
+    Parser p1 = digit().constant(42).flatten();
+    assertEquals(1, Linter.lint(p1, rules).size());
+
+    Parser p2 = digit().castList(String.class).flatten();
+    assertEquals(1, Linter.lint(p2, rules).size());
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testLintNullParser() {
+    Linter.lint(null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testQueryNullParser() {
+    Linter.query(null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testLinterRuleOfNullFunction() {
+    LinterRule.of(LinterType.INFO, "Title", null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testLinterRuleNullType() {
+    new CharacterRepeaterRule() {
+      {
+        LinterRule.of(null, "Title", (r, a, p, cb) -> {});
+      }
+    };
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testLinterRuleNullTitle() {
+    LinterRule.of(LinterType.INFO, null, (r, a, p, cb) -> {});
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testLinterIssueNullRule() {
+    new LinterIssue(null, of('a'), "Description");
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testLinterIssueNullParser() {
+    new LinterIssue(new CharacterRepeaterRule(), null, "Description");
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testLinterIssueNullDescription() {
+    new LinterIssue(new CharacterRepeaterRule(), of('a'), null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testFormatIterableNull() {
+    LinterRule.formatIterable(null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testIsParserIterableEqualNullFirst() {
+    LinterRule.isParserIterableEqual(null, List.of());
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testIsParserIterableEqualNullSecond() {
+    LinterRule.isParserIterableEqual(List.of(), null);
   }
 }
