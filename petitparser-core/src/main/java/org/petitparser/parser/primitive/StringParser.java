@@ -14,7 +14,7 @@ public class StringParser extends Parser {
   /**
    * Construct a parser that accepts the provided {@link String} {@code value}.
    */
-  public static Parser of(String value) {
+  public static StringParser of(String value) {
     return of(value, value + " expected");
   }
 
@@ -22,7 +22,7 @@ public class StringParser extends Parser {
    * Construct a parser that accepts the provided {@link String} {@code value},
    * and that fails with the provided error {@code message}.
    */
-  public static Parser of(String value, String message) {
+  public static StringParser of(String value, String message) {
     return new StringParser(value, message);
   }
 
@@ -30,7 +30,7 @@ public class StringParser extends Parser {
    * Construct a parser that accepts the provided {@link String} {@code value}
    * case insensitive.
    */
-  public static Parser ofIgnoringCase(String value) {
+  public static StringIgnoreCaseParser ofIgnoringCase(String value) {
     return StringIgnoreCaseParser.of(value);
   }
 
@@ -38,7 +38,7 @@ public class StringParser extends Parser {
    * Construct a parser that accepts the provided {@link String} {@code value}
    * case insensitive, and that fails with the provided error {@code message}.
    */
-  public static Parser ofIgnoringCase(String value, String message) {
+  public static StringIgnoreCaseParser ofIgnoringCase(String value, String message) {
     return StringIgnoreCaseParser.of(value, message);
   }
 

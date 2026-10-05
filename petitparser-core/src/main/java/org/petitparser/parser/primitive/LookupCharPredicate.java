@@ -23,6 +23,9 @@ public class LookupCharPredicate implements CharacterPredicate {
   }
 
   public LookupCharPredicate(boolean[] table) {
+    if (table.length == 0) {
+      throw new IllegalArgumentException("Table cannot be empty");
+    }
     this.start = 0;
     this.stop = table.length - 1;
     this.bits = new int[(table.length + 31) >> 5];

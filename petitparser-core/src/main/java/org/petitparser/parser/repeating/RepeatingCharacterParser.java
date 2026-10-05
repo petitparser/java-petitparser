@@ -17,6 +17,7 @@ public class RepeatingCharacterParser extends Parser {
   protected final String message;
   protected final int min;
   protected final int max;
+  protected final boolean unicode;
 
   /**
    * Constructs a repeating character parser.
@@ -28,10 +29,19 @@ public class RepeatingCharacterParser extends Parser {
    */
   public RepeatingCharacterParser(
       CharacterPredicate predicate, String message, int min, int max) {
+    this(predicate, message, min, max, false);
+  }
+
+  /**
+   * Constructs a repeating character parser with Unicode code point support.
+   */
+  public RepeatingCharacterParser(
+      CharacterPredicate predicate, String message, int min, int max, boolean unicode) {
     this.predicate = Objects.requireNonNull(predicate, "Undefined predicate");
     this.message = Objects.requireNonNull(message, "Undefined message");
     this.min = min;
     this.max = max;
+    this.unicode = unicode;
     if (min < 0) {
       throw new IllegalArgumentException("Invalid min repetitions: " + getRange());
     }
@@ -56,6 +66,10 @@ public class RepeatingCharacterParser extends Parser {
     return max;
   }
 
+  public boolean isUnicode() {
+    return unicode;
+  }
+
   @Override
   public Result parseOn(Context context) {
     String buffer = context.getBuffer();
@@ -63,21 +77,65 @@ public class RepeatingCharacterParser extends Parser {
     int end = buffer.length();
     int current = position;
     int count = 0;
-    while (count < min) {
-      if (current >= end || !predicate.test(buffer.charAt(current))) {
-        return context.failure(message, current);
+    if (unicode) {
+      while (count < min) {
+        if (current >= end) {
+          return context.failure(message, current);
+        }
+        char ch = buffer.charAt(current);
+        int next = current + 1;
+        int codePoint = ch;
+        if (Character.isHighSurrogate(ch) && next < end) {
+          char nextCh = buffer.charAt(next);
+          if (Character.isLowSurrogate(nextCh)) {
+            codePoint = Character.toCodePoint(ch, nextCh);
+            next++;
+          }
+        }
+        if (!predicate.test(codePoint)) {
+          return context.failure(message, current);
+        }
+        current = next;
+        count++;
       }
-      current++;
-      count++;
-    }
-    while (max == RepeatingParser.UNBOUNDED || count < max) {
-      if (current >= end || !predicate.test(buffer.charAt(current))) {
-        break;
+      while (max == RepeatingParser.UNBOUNDED || count < max) {
+        if (current >= end) {
+          break;
+        }
+        char ch = buffer.charAt(current);
+        int next = current + 1;
+        int codePoint = ch;
+        if (Character.isHighSurrogate(ch) && next < end) {
+          char nextCh = buffer.charAt(next);
+          if (Character.isLowSurrogate(nextCh)) {
+            codePoint = Character.toCodePoint(ch, nextCh);
+            next++;
+          }
+        }
+        if (!predicate.test(codePoint)) {
+          break;
+        }
+        current = next;
+        count++;
       }
-      current++;
-      count++;
+      return context.success(buffer.substring(position, current), current);
+    } else {
+      while (count < min) {
+        if (current >= end || !predicate.test(buffer.charAt(current))) {
+          return context.failure(message, current);
+        }
+        current++;
+        count++;
+      }
+      while (max == RepeatingParser.UNBOUNDED || count < max) {
+        if (current >= end || !predicate.test(buffer.charAt(current))) {
+          break;
+        }
+        current++;
+        count++;
+      }
+      return context.success(buffer.substring(position, current), current);
     }
-    return context.success(buffer.substring(position, current), current);
   }
 
   @Override
@@ -85,35 +143,81 @@ public class RepeatingCharacterParser extends Parser {
     int end = buffer.length();
     int current = position;
     int count = 0;
-    while (count < min) {
-      if (current >= end || !predicate.test(buffer.charAt(current))) {
-        return -1;
+    if (unicode) {
+      while (count < min) {
+        if (current >= end) {
+          return -1;
+        }
+        char ch = buffer.charAt(current);
+        int next = current + 1;
+        int codePoint = ch;
+        if (Character.isHighSurrogate(ch) && next < end) {
+          char nextCh = buffer.charAt(next);
+          if (Character.isLowSurrogate(nextCh)) {
+            codePoint = Character.toCodePoint(ch, nextCh);
+            next++;
+          }
+        }
+        if (!predicate.test(codePoint)) {
+          return -1;
+        }
+        current = next;
+        count++;
       }
-      current++;
-      count++;
-    }
-    while (max == RepeatingParser.UNBOUNDED || count < max) {
-      if (current >= end || !predicate.test(buffer.charAt(current))) {
-        break;
+      while (max == RepeatingParser.UNBOUNDED || count < max) {
+        if (current >= end) {
+          break;
+        }
+        char ch = buffer.charAt(current);
+        int next = current + 1;
+        int codePoint = ch;
+        if (Character.isHighSurrogate(ch) && next < end) {
+          char nextCh = buffer.charAt(next);
+          if (Character.isLowSurrogate(nextCh)) {
+            codePoint = Character.toCodePoint(ch, nextCh);
+            next++;
+          }
+        }
+        if (!predicate.test(codePoint)) {
+          break;
+        }
+        current = next;
+        count++;
       }
-      current++;
-      count++;
+      return current;
+    } else {
+      while (count < min) {
+        if (current >= end || !predicate.test(buffer.charAt(current))) {
+          return -1;
+        }
+        current++;
+        count++;
+      }
+      while (max == RepeatingParser.UNBOUNDED || count < max) {
+        if (current >= end || !predicate.test(buffer.charAt(current))) {
+          break;
+        }
+        current++;
+        count++;
+      }
+      return current;
     }
-    return current;
   }
 
   @Override
   public RepeatingCharacterParser copy() {
-    return new RepeatingCharacterParser(predicate, message, min, max);
+    return new RepeatingCharacterParser(predicate, message, min, max, unicode);
   }
 
   @Override
   protected boolean hasEqualProperties(Parser other) {
+    RepeatingCharacterParser that = (RepeatingCharacterParser) other;
     return super.hasEqualProperties(other) &&
-        Objects.equals(predicate, ((RepeatingCharacterParser) other).predicate) &&
-        Objects.equals(message, ((RepeatingCharacterParser) other).message) &&
-        min == ((RepeatingCharacterParser) other).min &&
-        max == ((RepeatingCharacterParser) other).max;
+        Objects.equals(predicate, that.predicate) &&
+        Objects.equals(message, that.message) &&
+        min == that.min &&
+        max == that.max &&
+        unicode == that.unicode;
   }
 
   @Override

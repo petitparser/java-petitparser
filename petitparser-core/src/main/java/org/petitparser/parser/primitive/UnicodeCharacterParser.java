@@ -59,13 +59,25 @@ public class UnicodeCharacterParser extends CharacterParser {
   }
 
   @Override
+  public RepeatingCharacterParser repeatString(int min, int max, String message) {
+    return new RepeatingCharacterParser(
+        getMatcher(), message != null ? message : getMessage(), min, max, true);
+  }
+
+  @Override
   public UnicodeCharacterParser copy() {
     return new UnicodeCharacterParser(getMatcher(), getMessage());
   }
 
   @Override
+  public UnicodeCharacterParser neg() {
+    return neg(this + " not expected");
+  }
+
+  @Override
   public UnicodeCharacterParser neg(String message) {
-    return new UnicodeCharacterParser(getMatcher().not(), message);
+    return new UnicodeCharacterParser(
+        getMatcher().not(), message != null ? message : this + " not expected");
   }
 
   @Override

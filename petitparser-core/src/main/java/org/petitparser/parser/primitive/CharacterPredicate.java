@@ -4,6 +4,7 @@ import org.petitparser.parser.Parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Character predicate.
@@ -27,6 +28,22 @@ public interface CharacterPredicate {
   }
 
   /**
+   * Returns a character predicate that matches any of the characters in {@code
+   * string} with unicode option.
+   */
+  static CharacterPredicate anyOf(String string, boolean unicode) {
+    return optimizedString(string, false, unicode);
+  }
+
+  /**
+   * Returns a character predicate that matches any of the characters in {@code
+   * string} with case-insensitivity and unicode options.
+   */
+  static CharacterPredicate anyOf(String string, boolean ignoreCase, boolean unicode) {
+    return optimizedString(string, ignoreCase, unicode);
+  }
+
+  /**
    * Returns a character predicate that matches no character.
    */
   static CharacterPredicate none() {
@@ -42,6 +59,22 @@ public interface CharacterPredicate {
   }
 
   /**
+   * Returns a character predicate that matches none of the characters in {@code
+   * string} with unicode option.
+   */
+  static CharacterPredicate noneOf(String string, boolean unicode) {
+    return anyOf(string, unicode).not();
+  }
+
+  /**
+   * Returns a character predicate that matches none of the characters in {@code
+   * string} with case-insensitivity and unicode options.
+   */
+  static CharacterPredicate noneOf(String string, boolean ignoreCase, boolean unicode) {
+    return anyOf(string, ignoreCase, unicode).not();
+  }
+
+  /**
    * Returns a character predicate that matches the given {@code character}.
    */
   static CharacterPredicate of(char character) {
@@ -49,10 +82,25 @@ public interface CharacterPredicate {
   }
 
   /**
+   * Returns a character predicate that matches the given code point.
+   */
+  static CharacterPredicate of(int codePoint) {
+    return new SingleCharPredicate(codePoint);
+  }
+
+  /**
    * Returns a character predicate that matches any character between {@code
    * start} and {@code stop}.
    */
   static CharacterPredicate range(char start, char stop) {
+    return new RangeCharPredicate(start, stop);
+  }
+
+  /**
+   * Returns a character predicate that matches any code point between {@code
+   * start} and {@code stop}.
+   */
+  static CharacterPredicate range(int start, int stop) {
     return new RangeCharPredicate(start, stop);
   }
 
@@ -65,10 +113,32 @@ public interface CharacterPredicate {
   }
 
   /**
+   * Returns a character predicate that matches code point ranges between {@code
+   * starts} and {@code stops}.
+   */
+  static CharacterPredicate ranges(int[] starts, int[] stops) {
+    return new RangesCharPredicate(starts, stops);
+  }
+
+  /**
    * Returns a character predicate that matches the provided pattern.
    */
   static CharacterPredicate pattern(String pattern) {
     return PatternParser.PATTERN.parse(pattern).get();
+  }
+
+  /**
+   * Returns a character predicate that matches the provided pattern with unicode option.
+   */
+  static CharacterPredicate pattern(String pattern, boolean unicode) {
+    return CharacterParser.pattern(pattern, unicode).getMatcher();
+  }
+
+  /**
+   * Returns a character predicate that matches the provided pattern with case-insensitivity and unicode options.
+   */
+  static CharacterPredicate pattern(String pattern, boolean ignoreCase, boolean unicode) {
+    return CharacterParser.pattern(pattern, null, ignoreCase, unicode).getMatcher();
   }
 
   /**
@@ -91,7 +161,7 @@ public interface CharacterPredicate {
   static CharacterPredicate optimizedString(
       String string, boolean ignoreCase, boolean unicode) {
     if (ignoreCase) {
-      string = string.toLowerCase() + string.toUpperCase();
+      string = string.toLowerCase(Locale.ROOT) + string.toUpperCase(Locale.ROOT);
     }
     List<RangeCharPredicate> ranges = new ArrayList<>();
     if (unicode) {
@@ -133,7 +203,7 @@ public interface CharacterPredicate {
         mergedRanges.add(thisRange);
       } else {
         RangeCharPredicate lastRange = mergedRanges.get(mergedRanges.size() - 1);
-        if (lastRange.getStop() + 1 >= thisRange.getStart()) {
+        if ((long) lastRange.getStop() + 1 >= thisRange.getStart()) {
           RangeCharPredicate merged = new RangeCharPredicate(
               lastRange.getStart(),
               Math.max(lastRange.getStop(), thisRange.getStop()));
