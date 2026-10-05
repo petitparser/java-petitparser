@@ -1,2 +1,4 @@
 jdk:
   - openjdk21
+before_install:
+  - rm -rf ~/.m2/wrapper
