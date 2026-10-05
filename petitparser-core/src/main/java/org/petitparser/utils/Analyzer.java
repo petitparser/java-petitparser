@@ -6,6 +6,7 @@ import org.petitparser.parser.combinators.AndParser;
 import org.petitparser.parser.combinators.ChoiceParser;
 import org.petitparser.parser.combinators.NotParser;
 import org.petitparser.parser.combinators.OptionalParser;
+import org.petitparser.parser.combinators.ResolvableParser;
 import org.petitparser.parser.combinators.SequentialParser;
 import org.petitparser.parser.primitive.EpsilonParser;
 import org.petitparser.parser.primitive.FailureParser;
@@ -622,6 +623,90 @@ public class Analyzer {
       unmodifiable.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue()));
     }
     return unmodifiable;
+  }
+
+  /**
+   * Resolves all {@link ResolvableParser} references in {@code parser} into direct
+   * cycles/graphs without delegate overhead.
+   *
+   * @param parser the parser to resolve
+   * @return the resolved parser
+   */
+  public static Parser resolve(Parser parser) {
+    Objects.requireNonNull(parser, "Undefined parser");
+    Set<Parser> seen = new HashSet<>();
+    Deque<Parser> todo = new ArrayDeque<>();
+    todo.push(parser);
+    seen.add(parser);
+    while (!todo.isEmpty()) {
+      Parser current = todo.pop();
+      for (Parser child : current.getChildren()) {
+        if (seen.add(child)) {
+          todo.push(child);
+        }
+      }
+    }
+
+    Map<ResolvableParser, Parser> mapping = new HashMap<>();
+    for (Parser p : seen) {
+      if (p instanceof ResolvableParser) {
+        ResolvableParser resolvable = (ResolvableParser) p;
+        Set<ResolvableParser> cycleDetection = new HashSet<>();
+        cycleDetection.add(resolvable);
+        Parser target = resolvable.resolve();
+        while (target instanceof ResolvableParser) {
+          if (!cycleDetection.add((ResolvableParser) target)) {
+            throw new IllegalStateException("Cyclic resolvable parser reference: " + target);
+          }
+          target = ((ResolvableParser) target).resolve();
+        }
+        mapping.put(resolvable, target);
+      }
+    }
+
+    for (Parser target : mapping.values()) {
+      if (seen.add(target)) {
+        todo.push(target);
+        while (!todo.isEmpty()) {
+          Parser current = todo.pop();
+          for (Parser child : current.getChildren()) {
+            if (seen.add(child)) {
+              todo.push(child);
+            }
+          }
+        }
+      }
+    }
+
+    for (Parser p : seen) {
+      for (Map.Entry<ResolvableParser, Parser> entry : mapping.entrySet()) {
+        p.replace((Parser) entry.getKey(), entry.getValue());
+      }
+    }
+
+    if (parser instanceof ResolvableParser) {
+      return mapping.getOrDefault((ResolvableParser) parser, parser);
+    }
+    return parser;
+  }
+
+  /**
+   * Resolves all {@link ResolvableParser} references in the root parser of this analyzer.
+   *
+   * @return the resolved root parser
+   */
+  public Parser resolve() {
+    return resolve(root);
+  }
+
+  /**
+   * Resolves all {@link ResolvableParser} references in {@code parser}.
+   *
+   * @param parser the parser to resolve
+   * @return the resolved parser
+   */
+  public Parser resolve(Parser parser) {
+    return Analyzer.resolve(parser);
   }
 
   @Override

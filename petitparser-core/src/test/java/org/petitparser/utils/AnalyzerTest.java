@@ -372,5 +372,75 @@ public class AnalyzerTest {
     assertEquals(Set.of(b), sepAnalyzer.followSet(a));
     assertEquals(Set.of(a), sepAnalyzer.followSet(b));
   }
+
+  @Test
+  public void testResolveNonResolvable() {
+    Parser parser = letter().star();
+    assertSame(parser, Analyzer.resolve(parser));
+    assertSame(parser, Analyzer.of(parser).resolve());
+  }
+
+  @Test
+  public void testResolveSingleSettable() {
+    CharacterParser inner = CharacterParser.of('a');
+    SettableParser settable = SettableParser.with(inner);
+    Parser resolved = Analyzer.resolve(settable);
+    assertSame(inner, resolved);
+  }
+
+  @Test
+  public void testResolveChainedSettable() {
+    CharacterParser inner = CharacterParser.of('x');
+    SettableParser s1 = undefined();
+    SettableParser s2 = undefined();
+    s1.set(s2);
+    s2.set(inner);
+    Parser resolved = Analyzer.resolve(s1);
+    assertSame(inner, resolved);
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testResolveCyclicSettableError() {
+    SettableParser s1 = undefined();
+    SettableParser s2 = undefined();
+    s1.set(s2);
+    s2.set(s1);
+    Analyzer.resolve(s1);
+  }
+
+  @Test
+  public void testResolveInTree() {
+    CharacterParser a = CharacterParser.of('a');
+    CharacterParser b = CharacterParser.of('b');
+    SettableParser s = undefined();
+    Parser seq = a.seq(s);
+    s.set(b);
+
+    Parser resolved = Analyzer.resolve(seq);
+    assertSame(seq, resolved);
+    assertEquals(Arrays.asList(a, b), resolved.getChildren());
+    org.petitparser.Assertions.assertSuccess(resolved, "ab", Arrays.asList('a', 'b'));
+  }
+
+  @Test
+  public void testResolveRecursiveGrammar() {
+    SettableParser expr = undefined();
+    Parser prim = digit().plus().flatten();
+    Parser group = CharacterParser.of('(').seq(expr).seq(CharacterParser.of(')')).pick(1);
+    expr.set(prim.or(group));
+
+    Parser resolved = Analyzer.of(expr).resolve();
+    assertFalse(resolved instanceof org.petitparser.parser.combinators.ResolvableParser);
+
+    List<Parser> all = Analyzer.of(resolved).parsers();
+    for (Parser p : all) {
+      assertFalse(p instanceof org.petitparser.parser.combinators.ResolvableParser);
+    }
+
+    org.petitparser.Assertions.assertSuccess(resolved, "42", "42");
+    org.petitparser.Assertions.assertSuccess(resolved, "(42)", "42");
+    org.petitparser.Assertions.assertSuccess(resolved, "((123))", "123");
+    org.petitparser.Assertions.assertFailure(resolved, "(42", 3, "')' expected");
+  }
 }
 
