@@ -278,26 +278,26 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ## Phase 8: Grammar Linter
 
-- [ ] **Task 8.1: Linter Engine Architecture**
+- [x] **Task 8.1: Linter Engine Architecture**
   - Implement `org.petitparser.utils.linter.LinterRule`, `LinterIssue`, `LinterType` (info, warning, error).
   - Implement `linter(Parser root, ...)` executing active rules using `Analyzer`.
 
-- [ ] **Task 8.2: 13 Linter Rules Implementation**
-  - [ ] `CharacterRepeaterRule`: Identifies `.star().flatten()` on character parsers and suggests `starString()`.
-  - [ ] `DuplicateParserRule`: Identifies duplicate structurally equal parser instances in grammar graph.
-  - [ ] `LeftRecursionRule`: Identifies left-recursive loops that lead to infinite recursion.
-  - [ ] `NestedChoiceRule`: Identifies nested choice combinators.
-  - [ ] `NullableRepeaterRule`: Identifies repeating parsers over nullable delegates that lead to infinite loops.
-  - [ ] `OverlappingChoiceRule`: Identifies choices where a prefix choice shadows a later choice.
-  - [ ] `RepeatedChoiceRule`: Identifies duplicate branches in a choice parser.
-  - [ ] `UnnecessaryFlattenRule`: Identifies `flatten()` on parsers already producing Strings.
-  - [ ] `UnnecessaryResolvableRule`: Identifies unresolved resolvable wrappers.
-  - [ ] `UnoptimizedFlattenRule`: Identifies `flatten()` containing inner actions.
-  - [ ] `UnreachableChoiceRule`: Identifies choices located after unconditional matchers.
-  - [ ] `UnresolvedSettableRule`: Identifies `SettableParser` left in undefined state.
-  - [ ] `UnusedResultRule`: Identifies complex sub-parses whose results are discarded.
+- [x] **Task 8.2: 13 Linter Rules Implementation**
+  - [x] `CharacterRepeaterRule`: Identifies `.star().flatten()` on character parsers and suggests `starString()`.
+  - [x] `DuplicateParserRule`: Identifies duplicate structurally equal parser instances in grammar graph.
+  - [x] `LeftRecursionRule`: Identifies left-recursive loops that lead to infinite recursion.
+  - [x] `NestedChoiceRule`: Identifies nested choice combinators.
+  - [x] `NullableRepeaterRule`: Identifies repeating parsers over nullable delegates that lead to infinite loops.
+  - [x] `OverlappingChoiceRule`: Identifies choices where a prefix choice shadows a later choice.
+  - [x] `RepeatedChoiceRule`: Identifies duplicate branches in a choice parser.
+  - [x] `UnnecessaryFlattenRule`: Identifies `flatten()` on parsers already producing Strings.
+  - [x] `UnnecessaryResolvableRule`: Identifies unresolved resolvable wrappers.
+  - [x] `UnoptimizedFlattenRule`: Identifies `flatten()` containing inner actions.
+  - [x] `UnreachableChoiceRule`: Identifies choices located after unconditional matchers.
+  - [x] `UnresolvedSettableRule`: Identifies `SettableParser` left in undefined state.
+  - [x] `UnusedResultRule`: Identifies complex sub-parses whose results are discarded.
 
-- [ ] **Task 8.3: Phase 8 Parallel Unit Tests**
+- [x] **Task 8.3: Phase 8 Parallel Unit Tests**
   - Create `org.petitparser.utils.linter.LinterTest` verifying positive and negative triggers for each of the 13 rules.
 
 ---

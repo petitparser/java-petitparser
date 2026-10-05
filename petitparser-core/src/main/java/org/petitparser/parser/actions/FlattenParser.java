@@ -45,6 +45,19 @@ public class FlattenParser extends DelegateParser {
     }
   }
 
+  /**
+   * Returns the failure message used for fast parsing, or null.
+   */
+  public String getMessage() {
+    return message;
+  }
+
+  @Override
+  protected boolean hasEqualProperties(Parser other) {
+    return super.hasEqualProperties(other) &&
+        java.util.Objects.equals(message, ((FlattenParser) other).message);
+  }
+
   @Override
   public FlattenParser copy() {
     return new FlattenParser(delegate, message);

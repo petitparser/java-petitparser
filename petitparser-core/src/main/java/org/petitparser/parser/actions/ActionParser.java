@@ -32,6 +32,13 @@ public class ActionParser<T, R> extends DelegateParser {
     this.hasSideEffects = hasSideEffects;
   }
 
+  /**
+   * Returns whether this action has side effects.
+   */
+  public boolean hasSideEffects() {
+    return hasSideEffects;
+  }
+
   @Override
   public Result parseOn(Context context) {
     Result result = delegate.parseOn(context);
