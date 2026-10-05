@@ -160,3 +160,21 @@ Execute the Maven wrapper from the repository root:
   ```bash
   ./mvnw clean test
   ```
+
+---
+
+## Code Formatting & Spotless
+
+Execute Spotless through the Maven wrapper:
+
+- Apply formatting across all source and test files:
+
+  ```bash
+  ./mvnw spotless:apply
+  ```
+
+- Verify formatting without modifying files (also run automatically during `verify` and CI):
+
+  ```bash
+  ./mvnw spotless:check
+  ```

@@ -2,6 +2,7 @@ package org.petitparser.parser;
 
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
+import org.petitparser.context.Token;
 import org.petitparser.parser.actions.ActionParser;
 import org.petitparser.parser.actions.CastListParser;
 import org.petitparser.parser.actions.CastParser;

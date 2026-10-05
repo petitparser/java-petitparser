@@ -5,21 +5,20 @@
 [![GitHub Issues](https://img.shields.io/github/issues/petitparser/java-petitparser.svg)](https://github.com/petitparser/java-petitparser/issues)
 [![GitHub Forks](https://img.shields.io/github/forks/petitparser/java-petitparser.svg)](https://github.com/petitparser/java-petitparser/network)
 [![GitHub Stars](https://img.shields.io/github/stars/petitparser/java-petitparser.svg)](https://github.com/petitparser/java-petitparser/stargazers)
-[![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/petitparser/java-petitparser/master/LICENSE)
+[![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/petitparser/java-petitparser/main/LICENSE)
 
 Grammars for programming languages are traditionally specified statically. They
 are hard to compose and reuse due to ambiguities that inevitably arise.
-PetitParser combines ideas
-from [scannnerless parsing](https://en.wikipedia.org/wiki/Scannerless_parsing)
-, [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator)
-, [parsing expression grammars](https://en.wikipedia.org/wiki/Parsing_expression_grammar) (
-PEG) and packrat parsers to model grammars and parsers as objects that can be
+PetitParser combines ideas from [scannerless parsing](https://en.wikipedia.org/wiki/Scannerless_parsing),
+[parser combinators](https://en.wikipedia.org/wiki/Parser_combinator),
+[parsing expression grammars](https://en.wikipedia.org/wiki/Parsing_expression_grammar) (PEG),
+and packrat parsers to model grammars and parsers as objects that can be
 reconfigured dynamically.
 
-This library is open source, stable and well tested. Development happens
+This library is open source, stable, and well tested. Development happens
 on [GitHub](https://github.com/petitparser/java-petitparser). Feel free to
 report issues or create a pull-request there. General questions are best asked
-on [StackOverflow](http://stackoverflow.com/questions/tagged/petitparser+java).
+on [StackOverflow](https://stackoverflow.com/questions/tagged/petitparser+java).
 
 ## Installation
 
@@ -67,7 +66,6 @@ Alternatively, if you'd like the latest code clone the repository:
 ```bash
 git clone https://github.com/petitparser/java-petitparser.git
 cd java-petitparser
-git checkout master
 ```
 
 Then build with [Bazel](http://bazel.io/):
@@ -405,4 +403,4 @@ implementations adopt best practises of the target language.
 
 ### License
 
-The MIT License, see [LICENSE](https://raw.githubusercontent.com/petitparser/java-petitparser/master/LICENSE).
+The MIT License, see [LICENSE](https://raw.githubusercontent.com/petitparser/java-petitparser/main/LICENSE).

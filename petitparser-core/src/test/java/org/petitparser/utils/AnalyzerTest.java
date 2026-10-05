@@ -776,4 +776,3 @@ public class AnalyzerTest {
     assertFalse(Analyzer.of(resolved).findPathTo(leaf).isEmpty());
   }
 }
-

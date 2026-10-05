@@ -55,7 +55,7 @@ public class PermuteParser extends DelegateParser {
       return result;
     }
   }
-    
+
   @Override
   public int fastParseOn(String buffer, int position) {
     return delegate.fastParseOn(buffer, position);

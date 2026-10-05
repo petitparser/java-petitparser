@@ -657,4 +657,3 @@ public class ExpressionBuilderTest {
     new ExpressionBuilder.ExpressionGroupBase(null);
   }
 }
-

@@ -101,4 +101,3 @@ public class GreedyRepeatingParser extends LimitedRepeatingParser {
     return new GreedyRepeatingParser(delegate, limit, min, max);
   }
 }
-
