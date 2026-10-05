@@ -2,6 +2,8 @@ package org.petitparser.context;
 
 import org.petitparser.parser.Parser;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -106,8 +108,7 @@ public class Token {
 
   @Override
   public String toString() {
-    int[] tuple = lineAndColumnOf(buffer, start);
-    return "Token[" + tuple[0] + ":" + tuple[1] + "]: " + value;
+    return "Token[" + positionString(buffer, start) + "]: " + value;
   }
 
   @Override
@@ -160,5 +161,44 @@ public class Token {
       offset = token.stop;
     }
     return new int[]{line, position - offset + 1};
+  }
+
+  /**
+   * Returns a human readable string representing the {@code position} index in a
+   * {@code buffer} formatted as {@code "line:column"}.
+   */
+  public static String positionString(String buffer, int position) {
+    int[] lineAndColumn = lineAndColumnOf(buffer, position);
+    return lineAndColumn[0] + ":" + lineAndColumn[1];
+  }
+
+  /**
+   * Combines multiple tokens into a single token with the list of their values.
+   *
+   * @param tokens the tokens to combine.
+   * @return a single combined token.
+   * @throws IllegalArgumentException if tokens is empty or tokens do not share the same buffer.
+   */
+  public static Token join(Iterable<Token> tokens) {
+    Iterator<Token> iterator = Objects.requireNonNull(tokens, "Undefined tokens").iterator();
+    if (!iterator.hasNext()) {
+      throw new IllegalArgumentException("Require at least one token");
+    }
+    Token first = iterator.next();
+    List<Object> values = new ArrayList<>();
+    values.add(first.getValue());
+    String buffer = first.getBuffer();
+    int start = first.getStart();
+    int stop = first.getStop();
+    while (iterator.hasNext()) {
+      Token current = iterator.next();
+      if (!Objects.equals(buffer, current.getBuffer())) {
+        throw new IllegalArgumentException("Tokens do not use the same buffer");
+      }
+      values.add(current.getValue());
+      start = Math.min(start, current.getStart());
+      stop = Math.max(stop, current.getStop());
+    }
+    return new Token(buffer, start, stop, values);
   }
 }

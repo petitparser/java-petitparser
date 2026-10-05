@@ -73,7 +73,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Add static factories `Parser.failure()` and `Parser.failure(String message)`.
   - Add `Parser.constant(Object value)` replacing results with a constant value.
 
-- [ ] **Task 1.8: Token & Context Formatting Utilities**
+- [x] **Task 1.8: Token & Context Formatting Utilities**
   - Add `Token.positionString(String buffer, int position)` returning `"line:column"`.
   - Add `Token.join(Iterable<Token> tokens)` combining adjacent tokens from the same buffer.
   - Add `Context.toPositionString()` returning `"line:column"`.

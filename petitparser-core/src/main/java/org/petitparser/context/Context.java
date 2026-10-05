@@ -78,9 +78,15 @@ public class Context {
     return new Failure(buffer, position, message);
   }
 
+  /**
+   * Returns the current line:column position in the buffer.
+   */
+  public String toPositionString() {
+    return Token.positionString(buffer, position);
+  }
+
   @Override
   public String toString() {
-    int[] tuple = Token.lineAndColumnOf(buffer, position);
-    return getClass().getSimpleName() + "[" + tuple[0] + ":" + tuple[1] + "]";
+    return getClass().getSimpleName() + "[" + toPositionString() + "]";
   }
 }

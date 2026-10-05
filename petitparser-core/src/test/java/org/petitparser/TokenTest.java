@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.petitparser.context.Token;
 import org.petitparser.parser.Parser;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -11,6 +13,7 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 import static org.petitparser.parser.primitive.CharacterParser.any;
 
 /**
@@ -133,4 +136,49 @@ public class TokenTest {
     }
   }
 
+  @Test
+  public void testPositionString() {
+    String text = "a\nb";
+    assertEquals("1:1", Token.positionString(text, 0));
+    assertEquals("1:2", Token.positionString(text, 1));
+    assertEquals("2:1", Token.positionString(text, 2));
+    assertEquals("2:2", Token.positionString(text, 3));
+  }
+
+  @Test
+  public void testJoin() {
+    Token t1 = new Token("abc", 0, 1, 'a');
+    Token t2 = new Token("abc", 1, 2, 'b');
+    Token joined = Token.join(Arrays.asList(t1, t2));
+    assertEquals("abc", joined.getBuffer());
+    assertEquals(0, joined.getStart());
+    assertEquals(2, joined.getStop());
+    assertEquals("ab", joined.getInput());
+    assertEquals(Arrays.asList('a', 'b'), joined.getValue());
+
+    Token single = Token.join(Collections.singletonList(t1));
+    assertEquals("abc", single.getBuffer());
+    assertEquals(0, single.getStart());
+    assertEquals(1, single.getStop());
+    assertEquals(Collections.singletonList('a'), single.getValue());
+  }
+
+  @Test
+  public void testJoinErrors() {
+    try {
+      Token.join(Collections.emptyList());
+      fail("Expected IllegalArgumentException");
+    } catch (IllegalArgumentException expected) {
+      // expected
+    }
+
+    try {
+      Token t1 = new Token("abc", 0, 1, 'a');
+      Token t2 = new Token("xyz", 0, 1, 'x');
+      Token.join(Arrays.asList(t1, t2));
+      fail("Expected IllegalArgumentException");
+    } catch (IllegalArgumentException expected) {
+      // expected
+    }
+  }
 }
