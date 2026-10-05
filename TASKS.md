@@ -336,7 +336,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ## Phase 11: End-to-End Verification & Backward Compatibility
 
-- [ ] **Task 11.1: Downstream Module Compatibility Verification**
+- [x] **Task 11.1: Downstream Module Compatibility Verification**
   - Verify `petitparser-json`, `petitparser-xml`, and `petitparser-smalltalk` compile and pass tests without modifications.
   - Ensure raw-type usage compiles cleanly without errors or breaking changes for existing code.
 
