@@ -7,4 +7,5 @@ module petitparser.core {
   exports org.petitparser.parser.repeating;
   exports org.petitparser.tools;
   exports org.petitparser.utils;
+  exports org.petitparser.utils.functions;
 }

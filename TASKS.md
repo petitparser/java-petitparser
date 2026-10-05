@@ -132,7 +132,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
   - Implement `AbstractList` contract (`size()`, `get(int index)`), allowing tuples to be treated directly as `List<Object>` for 100% backward compatibility with legacy tests and downstream consumers (`tuple.equals(Arrays.asList(...)) == true`).
   - Implement zero-allocation accessors and structural equality (`equals`, `hashCode`, `toString`).
 
-- [ ] **Task 3.2: Multi-Arity Functional Interfaces**
+- [x] **Task 3.2: Multi-Arity Functional Interfaces**
   - Create standard functional interfaces in `org.petitparser.utils.functions`:
     - `Function3<T1, T2, T3, R>`, `Function4<T1, T2, T3, T4, R>`, ... `Function9<...>`.
   - Ensure compatibility with Java 11 `BiFunction` for arity-2 sequences.
