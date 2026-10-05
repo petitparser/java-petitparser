@@ -442,5 +442,115 @@ public class AnalyzerTest {
     org.petitparser.Assertions.assertSuccess(resolved, "((123))", "123");
     org.petitparser.Assertions.assertFailure(resolved, "(42", 3, "')' expected");
   }
+
+  @Test
+  public void testDragonBookLL1Grammar() {
+    // E  -> T E'
+    // E' -> + T E' | epsilon
+    // T  -> F T'
+    // T' -> * F T' | epsilon
+    // F  -> ( E ) | id
+    SettableParser e = undefined();
+    SettableParser ePrime = undefined();
+    SettableParser t = undefined();
+    SettableParser tPrime = undefined();
+    SettableParser f = undefined();
+
+    Parser plus = CharacterParser.of('+');
+    Parser star = CharacterParser.of('*');
+    Parser lparen = CharacterParser.of('(');
+    Parser rparen = CharacterParser.of(')');
+    Parser id = letter();
+
+    f.set(lparen.seq(e).seq(rparen).or(id));
+    tPrime.set(star.seq(f).seq(tPrime).or(org.petitparser.parser.primitive.EpsilonParser.INSTANCE));
+    t.set(f.seq(tPrime));
+    ePrime.set(plus.seq(t).seq(ePrime).or(org.petitparser.parser.primitive.EpsilonParser.INSTANCE));
+    e.set(t.seq(ePrime));
+
+    Analyzer analyzer = Analyzer.of(e);
+
+    // Nullability
+    assertFalse(analyzer.isNullable(e));
+    assertTrue(analyzer.isNullable(ePrime));
+    assertFalse(analyzer.isNullable(t));
+    assertTrue(analyzer.isNullable(tPrime));
+    assertFalse(analyzer.isNullable(f));
+
+    // FIRST sets
+    assertEquals(Set.of(lparen, id), analyzer.firstSet(f));
+    assertEquals(Set.of(star), analyzer.firstSet(tPrime));
+    assertEquals(Set.of(lparen, id), analyzer.firstSet(t));
+    assertEquals(Set.of(plus), analyzer.firstSet(ePrime));
+    assertEquals(Set.of(lparen, id), analyzer.firstSet(e));
+
+    // FOLLOW sets
+    assertEquals(Set.of(rparen), analyzer.followSet(e));
+    assertEquals(Set.of(rparen), analyzer.followSet(ePrime));
+    assertEquals(Set.of(plus, rparen), analyzer.followSet(t));
+    assertEquals(Set.of(plus, rparen), analyzer.followSet(tPrime));
+    assertEquals(Set.of(star, plus, rparen), analyzer.followSet(f));
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testAllChildrenNull() {
+    Analyzer.of(digit()).allChildren(null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testIsNullableNull() {
+    Analyzer.of(digit()).isNullable(null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testFirstSetNull() {
+    Analyzer.of(digit()).firstSet(null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testFollowSetNull() {
+    Analyzer.of(digit()).followSet(null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testCycleSetNull() {
+    Analyzer.of(digit()).cycleSet(null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testFindPathNullSource() {
+    Analyzer.of(digit()).findPath(null, digit());
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testFindPathNullTarget() {
+    Analyzer.of(digit()).findPath(digit(), (Parser) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testFindPathNullPredicate() {
+    Analyzer.of(digit()).findPath(digit(), (java.util.function.Predicate<Parser>) null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testFindCycleNull() {
+    Analyzer.of(digit()).findCycle(null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testResolveNull() {
+    Analyzer.resolve(null);
+  }
+
+  @Test
+  public void testUnrelatedParserQueries() {
+    Parser a = CharacterParser.of('a');
+    Analyzer analyzer = Analyzer.of(a);
+
+    Parser unrelated = CharacterParser.of('z');
+    assertFalse(analyzer.isNullable(unrelated));
+    assertEquals(Set.of(unrelated), analyzer.firstSet(unrelated));
+    assertTrue(analyzer.followSet(unrelated).isEmpty());
+  }
 }
 

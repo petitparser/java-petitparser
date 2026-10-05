@@ -699,16 +699,6 @@ public class Analyzer {
     return resolve(root);
   }
 
-  /**
-   * Resolves all {@link ResolvableParser} references in {@code parser}.
-   *
-   * @param parser the parser to resolve
-   * @return the resolved parser
-   */
-  public Parser resolve(Parser parser) {
-    return Analyzer.resolve(parser);
-  }
-
   @Override
   public String toString() {
     return getClass().getSimpleName() + " of " + root;

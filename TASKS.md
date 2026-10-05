@@ -252,22 +252,22 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ## Phase 7: Grammar Reflection & Analyzer
 
-- [ ] **Task 7.1: Grammar Graph Traversal & Analyzer Base**
+- [x] **Task 7.1: Grammar Graph Traversal & Analyzer Base**
   - Implement `org.petitparser.utils.Analyzer` leveraging standard Java collections and `Stream`:
     - Reachable parsers discovery (`parsers`).
     - Deep children set cache (`allChildren(parser)`).
     - Graph path search (`findPath`, `findPathTo`, `findAllPaths`, `findAllPathsTo`).
 
-- [ ] **Task 7.2: Grammar Property Computation**
+- [x] **Task 7.2: Grammar Property Computation**
   - Implement nullability fixed-point analysis (`isNullable(parser)`).
   - Implement FIRST-set calculation (`firstSet(parser)`): terminal parsers that can appear first, taking `SequentialParser` into account.
   - Implement FOLLOW-set calculation (`followSet(parser)`): terminal parsers that can immediately succeed `parser`.
   - Implement cycle detection (`cycleSet(parser)`).
 
-- [ ] **Task 7.3: Grammar Reference Inlining**
+- [x] **Task 7.3: Grammar Reference Inlining**
   - Implement `resolve(Parser parser)` resolving all `ResolvableParser` references into direct cycles/graphs without delegate overhead.
 
-- [ ] **Task 7.4: Phase 7 Parallel Unit Tests**
+- [x] **Task 7.4: Phase 7 Parallel Unit Tests**
   - Create `org.petitparser.utils.AnalyzerTest`:
     - First-set and follow-set validation on LL/LR grammar definitions.
     - Nullable chain detection.
