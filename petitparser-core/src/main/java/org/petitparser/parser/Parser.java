@@ -295,6 +295,70 @@ public abstract class Parser {
   }
 
   /**
+   * Returns a parser that accepts the receiver zero or more times and returns a
+   * string of the consumed range.
+   */
+  public Parser starString() {
+    return repeatString(0, RepeatingParser.UNBOUNDED);
+  }
+
+  /**
+   * Returns a parser that accepts the receiver zero or more times and returns a
+   * string of the consumed range. Reports the provided {@code message} in case of an error.
+   */
+  public Parser starString(String message) {
+    return repeatString(0, RepeatingParser.UNBOUNDED, message);
+  }
+
+  /**
+   * Returns a parser that accepts the receiver one or more times and returns a
+   * string of the consumed range.
+   */
+  public Parser plusString() {
+    return repeatString(1, RepeatingParser.UNBOUNDED);
+  }
+
+  /**
+   * Returns a parser that accepts the receiver one or more times and returns a
+   * string of the consumed range. Reports the provided {@code message} in case of an error.
+   */
+  public Parser plusString(String message) {
+    return repeatString(1, RepeatingParser.UNBOUNDED, message);
+  }
+
+  /**
+   * Returns a parser that accepts the receiver exactly {@code count} times and
+   * returns a string of the consumed range.
+   */
+  public Parser timesString(int count) {
+    return repeatString(count, count);
+  }
+
+  /**
+   * Returns a parser that accepts the receiver exactly {@code count} times and
+   * returns a string of the consumed range. Reports the provided {@code message} in case of an error.
+   */
+  public Parser timesString(int count, String message) {
+    return repeatString(count, count, message);
+  }
+
+  /**
+   * Returns a parser that accepts the receiver between {@code min} and {@code
+   * max} times and returns a string of the consumed range.
+   */
+  public Parser repeatString(int min, int max) {
+    return repeatString(min, max, null);
+  }
+
+  /**
+   * Returns a parser that accepts the receiver between {@code min} and {@code
+   * max} times and returns a string of the consumed range. Reports the provided {@code message} in case of an error.
+   */
+  public Parser repeatString(int min, int max, String message) {
+    return repeat(min, max).flatten(message);
+  }
+
+  /**
    * Returns a parser that accepts the receiver followed by {@code others}. The
    * resulting parser returns a list of the parse result of the receiver
    * followed by the parse result of {@code others}.

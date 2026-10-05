@@ -93,7 +93,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
 
 ## Phase 2: High-Performance Character Repeaters & Separated Sequences
 
-- [ ] **Task 2.1: RepeatingCharacterParser (Zero-List Lexing)**
+- [x] **Task 2.1: RepeatingCharacterParser (Zero-List Lexing)**
   - Implement `org.petitparser.parser.repeating.RepeatingCharacterParser` directly returning a `String` via `buffer.substring(start, position)` without intermediate `List<Character>` allocations.
   - Add `starString()`, `starString(String message)` to `Parser`.
   - Add `plusString()`, `plusString(String message)` to `Parser`.

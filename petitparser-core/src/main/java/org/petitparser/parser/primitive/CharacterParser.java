@@ -4,6 +4,8 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 
+import org.petitparser.parser.repeating.RepeatingCharacterParser;
+
 import java.util.Objects;
 
 /**
@@ -194,6 +196,25 @@ public class CharacterParser extends Parser {
   public int fastParseOn(String buffer, int position) {
     return position < buffer.length() && matcher.test(buffer.charAt(position)) ?
         position + 1 : -1;
+  }
+
+  public CharacterPredicate getMatcher() {
+    return matcher;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  @Override
+  public Parser repeatString(int min, int max) {
+    return repeatString(min, max, null);
+  }
+
+  @Override
+  public Parser repeatString(int min, int max, String message) {
+    return new RepeatingCharacterParser(
+        matcher, message != null ? message : this.message, min, max);
   }
 
   @Override
