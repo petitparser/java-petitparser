@@ -7,6 +7,15 @@ import java.util.Objects;
  */
 public class RangeCharPredicate implements CharacterPredicate {
 
+  public static CharacterPredicate optimizedRanges(java.util.List<RangeCharPredicate> ranges) {
+    return CharacterPredicate.optimizedRanges(ranges);
+  }
+
+  public static CharacterPredicate optimizedRanges(
+      java.util.List<RangeCharPredicate> ranges, boolean unicode) {
+    return CharacterPredicate.optimizedRanges(ranges, unicode);
+  }
+
   private final int start;
   private final int stop;
 

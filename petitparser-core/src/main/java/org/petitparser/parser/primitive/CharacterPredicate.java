@@ -2,8 +2,8 @@ package org.petitparser.parser.primitive;
 
 import org.petitparser.parser.Parser;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Character predicate.
@@ -23,10 +23,7 @@ public interface CharacterPredicate {
    * string}.
    */
   static CharacterPredicate anyOf(String string) {
-    List<CharacterRange> ranges = string.chars()
-        .mapToObj(value -> new CharacterRange((char) value, (char) value))
-        .collect(Collectors.toList());
-    return CharacterRange.toCharacterPredicate(ranges);
+    return optimizedString(string);
   }
 
   /**
@@ -72,6 +69,103 @@ public interface CharacterPredicate {
    */
   static CharacterPredicate pattern(String pattern) {
     return PatternParser.PATTERN.parse(pattern).get();
+  }
+
+  /**
+   * Creates an optimized character predicate from a string.
+   */
+  static CharacterPredicate optimizedString(String string) {
+    return optimizedString(string, false, false);
+  }
+
+  /**
+   * Creates an optimized character predicate from a string with case-insensitivity option.
+   */
+  static CharacterPredicate optimizedString(String string, boolean ignoreCase) {
+    return optimizedString(string, ignoreCase, false);
+  }
+
+  /**
+   * Creates an optimized character predicate from a string with case-insensitivity and unicode options.
+   */
+  static CharacterPredicate optimizedString(
+      String string, boolean ignoreCase, boolean unicode) {
+    if (ignoreCase) {
+      string = string.toLowerCase() + string.toUpperCase();
+    }
+    List<RangeCharPredicate> ranges = new ArrayList<>();
+    if (unicode) {
+      string.codePoints().forEach(cp -> ranges.add(new RangeCharPredicate(cp, cp)));
+    } else {
+      for (int i = 0; i < string.length(); i++) {
+        char c = string.charAt(i);
+        ranges.add(new RangeCharPredicate(c, c));
+      }
+    }
+    return optimizedRanges(ranges, unicode);
+  }
+
+  /**
+   * Creates an optimized character predicate from a list of range predicates.
+   */
+  static CharacterPredicate optimizedRanges(List<RangeCharPredicate> ranges) {
+    return optimizedRanges(ranges, false);
+  }
+
+  /**
+   * Creates an optimized character predicate from a list of range predicates with unicode option.
+   */
+  static CharacterPredicate optimizedRanges(
+      List<RangeCharPredicate> ranges, boolean unicode) {
+    // 1. Sort the ranges
+    List<RangeCharPredicate> sortedRanges = new ArrayList<>(ranges);
+    sortedRanges.sort((first, second) -> {
+      if (first.getStart() != second.getStart()) {
+        return Integer.compare(first.getStart(), second.getStart());
+      }
+      return Integer.compare(first.getStop(), second.getStop());
+    });
+
+    // 2. Merge adjacent or overlapping ranges
+    List<RangeCharPredicate> mergedRanges = new ArrayList<>();
+    for (RangeCharPredicate thisRange : sortedRanges) {
+      if (mergedRanges.isEmpty()) {
+        mergedRanges.add(thisRange);
+      } else {
+        RangeCharPredicate lastRange = mergedRanges.get(mergedRanges.size() - 1);
+        if (lastRange.getStop() + 1 >= thisRange.getStart()) {
+          RangeCharPredicate merged = new RangeCharPredicate(
+              lastRange.getStart(),
+              Math.max(lastRange.getStop(), thisRange.getStop()));
+          mergedRanges.set(mergedRanges.size() - 1, merged);
+        } else {
+          mergedRanges.add(thisRange);
+        }
+      }
+    }
+
+    // 3. Build the best resulting predicate
+    if (mergedRanges.isEmpty()) {
+      return ConstantCharPredicate.none();
+    } else if (mergedRanges.size() == 1) {
+      RangeCharPredicate range = mergedRanges.get(0);
+      if (range.getStart() <= 0 &&
+          range.getStop() >= (unicode ? 0x10ffff : 0xffff)) {
+        return ConstantCharPredicate.any();
+      } else if (range.getStart() == range.getStop()) {
+        return new SingleCharPredicate(range.getStart());
+      } else {
+        return range;
+      }
+    } else {
+      int lookupBytes = (mergedRanges.get(mergedRanges.size() - 1).getStop()
+          - mergedRanges.get(0).getStart() + 32) >> 3;
+      int rangesBytes = mergedRanges.size() * 8;
+      if (lookupBytes > 1024 && rangesBytes < (lookupBytes >> 3)) {
+        return RangesCharPredicate.fromRanges(mergedRanges);
+      }
+      return LookupCharPredicate.fromRanges(mergedRanges);
+    }
   }
 
   class PatternParser {

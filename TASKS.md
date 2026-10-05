@@ -208,7 +208,7 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
     - Reusable singleton constants: `DigitCharPredicate`, `LetterCharPredicate`, `LowercaseCharPredicate`, `UppercaseCharPredicate`, `WhitespaceCharPredicate`, `WordCharPredicate`, `ConstantCharPredicate.any`, `ConstantCharPredicate.none`.
   - Update `CharacterParser` factories (`digit()`, `letter()`, etc.) to use AST singletons so `p.isEqualTo(p)` succeeds across separate calls.
 
-- [ ] **Task 5.2: Range Merging & Character Optimization**
+- [x] **Task 5.2: Range Merging & Character Optimization**
   - Implement `optimizedRanges(List<RangeCharPredicate> ranges)`:
     - Sort ranges by start and stop.
     - Merge adjacent and overlapping ranges to minimize runtime branch tests.

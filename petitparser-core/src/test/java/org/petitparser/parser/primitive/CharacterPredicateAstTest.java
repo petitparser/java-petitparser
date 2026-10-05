@@ -276,4 +276,126 @@ public class CharacterPredicateAstTest {
     assertFalse(CharacterParser.of('a').isEqualTo(CharacterParser.of('b')));
     assertFalse(CharacterParser.range('a', 'z').isEqualTo(CharacterParser.range('a', 'y')));
   }
+
+  @Test
+  public void testOptimizedRangesFullRangeWithoutZero() {
+    CharacterPredicate predicate = CharacterPredicate.optimizedRanges(
+        List.of(new RangeCharPredicate(1, 65535)), false);
+    assertFalse(predicate.test(0));
+    assertTrue(predicate.test(1));
+    assertTrue(predicate.test(65535));
+    assertFalse(predicate.isEqualTo(ConstantCharPredicate.any()));
+  }
+
+  @Test
+  public void testOptimizedRangesDisjointSummingToFullCount() {
+    CharacterPredicate predicate = CharacterPredicate.optimizedRanges(
+        List.of(new RangeCharPredicate(1, 32768),
+            new RangeCharPredicate(32770, 65535)), false);
+    assertFalse(predicate.test(0));
+    assertFalse(predicate.test(32769));
+    assertTrue(predicate.test(1));
+    assertTrue(predicate.test(32768));
+    assertTrue(predicate.test(32770));
+    assertFalse(predicate.isEqualTo(ConstantCharPredicate.any()));
+  }
+
+  @Test
+  public void testOptimizedRangesUnicodeFullRangeWithoutZero() {
+    CharacterPredicate predicate = CharacterPredicate.optimizedRanges(
+        List.of(new RangeCharPredicate(1, 0x10ffff)), true);
+    assertFalse(predicate.test(0));
+    assertTrue(predicate.test(1));
+    assertTrue(predicate.test(0x10ffff));
+    assertFalse(predicate.isEqualTo(ConstantCharPredicate.any()));
+  }
+
+  @Test
+  public void testOptimizedRangesCoversEverything() {
+    CharacterPredicate predicate = CharacterPredicate.optimizedRanges(
+        List.of(new RangeCharPredicate(0, 0xffff)), false);
+    assertTrue(predicate.isEqualTo(ConstantCharPredicate.any()));
+  }
+
+  @Test
+  public void testOptimizedRangesCoversEverythingUnicode() {
+    CharacterPredicate predicate = CharacterPredicate.optimizedRanges(
+        List.of(new RangeCharPredicate(0, 0x10ffff)), true);
+    assertTrue(predicate.isEqualTo(ConstantCharPredicate.any()));
+  }
+
+  @Test
+  public void testOptimizedRangesSelectsLookupForDenseRanges() {
+    CharacterPredicate predicate = CharacterPredicate.optimizedRanges(
+        List.of(
+            new RangeCharPredicate(48, 57),
+            new RangeCharPredicate(65, 90),
+            new RangeCharPredicate(97, 122)), false);
+    assertTrue(predicate instanceof LookupCharPredicate);
+    assertTrue(predicate.test('a'));
+    assertTrue(predicate.test('Z'));
+    assertTrue(predicate.test('0'));
+    assertFalse(predicate.test('?'));
+  }
+
+  @Test
+  public void testOptimizedRangesSelectsRangesForSparseRangesWithLargeSpan() {
+    CharacterPredicate predicate = CharacterPredicate.optimizedRanges(
+        List.of(
+            new RangeCharPredicate(97, 97),
+            new RangeCharPredicate(0x10000, 0x10000)), true);
+    assertTrue(predicate instanceof RangesCharPredicate);
+    assertTrue(predicate.test(97));
+    assertTrue(predicate.test(0x10000));
+    assertFalse(predicate.test(98));
+    assertFalse(predicate.test(0));
+  }
+
+  @Test
+  public void testOptimizedRangesEmptyAndSingle() {
+    CharacterPredicate empty = CharacterPredicate.optimizedRanges(List.of());
+    assertTrue(empty.isEqualTo(ConstantCharPredicate.none()));
+
+    CharacterPredicate single = CharacterPredicate.optimizedRanges(
+        List.of(new RangeCharPredicate('a', 'a')));
+    assertTrue(single instanceof SingleCharPredicate);
+    assertEquals('a', ((SingleCharPredicate) single).getValue());
+
+    CharacterPredicate range = CharacterPredicate.optimizedRanges(
+        List.of(new RangeCharPredicate('a', 'z')));
+    assertTrue(range instanceof RangeCharPredicate);
+  }
+
+  @Test
+  public void testOptimizedRangesOverlappingAndAdjacent() {
+    CharacterPredicate predicate = CharacterPredicate.optimizedRanges(
+        List.of(
+            new RangeCharPredicate('a', 'c'),
+            new RangeCharPredicate('c', 'e'),
+            new RangeCharPredicate('b', 'd')));
+    assertTrue(predicate instanceof RangeCharPredicate);
+    assertEquals('a', ((RangeCharPredicate) predicate).getStart());
+    assertEquals('e', ((RangeCharPredicate) predicate).getStop());
+  }
+
+  @Test
+  public void testOptimizedString() {
+    CharacterPredicate pred = CharacterPredicate.optimizedString("abc");
+    assertTrue(pred.test('a'));
+    assertTrue(pred.test('b'));
+    assertTrue(pred.test('c'));
+    assertFalse(pred.test('d'));
+
+    CharacterPredicate ignoreCase = CharacterPredicate.optimizedString("ab", true);
+    assertTrue(ignoreCase.test('a'));
+    assertTrue(ignoreCase.test('A'));
+    assertTrue(ignoreCase.test('b'));
+    assertTrue(ignoreCase.test('B'));
+    assertFalse(ignoreCase.test('c'));
+
+    CharacterPredicate unicode = CharacterPredicate.optimizedString("a\uD83D\uDE80", false, true);
+    assertTrue(unicode.test('a'));
+    assertTrue(unicode.test(0x1F680));
+    assertFalse(unicode.test('b'));
+  }
 }
