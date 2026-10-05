@@ -4,9 +4,6 @@ import org.junit.Test;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.parser.primitive.StringParser;
-import org.petitparser.utils.tuples.Tuple2;
-import org.petitparser.utils.tuples.Tuple3;
-import org.petitparser.utils.tuples.Tuple4;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,6 +14,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.petitparser.Assertions.assertFailure;
@@ -405,7 +403,7 @@ public class IndentTest {
     // decrease() pops from stack
     org.petitparser.context.Result decreaseResult = indent.decrease().parse("");
     assertTrue(decreaseResult.isSuccess());
-    assertEquals(null, decreaseResult.get());
+    assertNull(decreaseResult.get());
     assertEquals(0, decreaseResult.getPosition());
     assertEquals("", indent.getCurrent());
     assertTrue(indent.getStack().isEmpty());

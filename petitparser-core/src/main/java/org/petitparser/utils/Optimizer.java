@@ -40,7 +40,9 @@ public class Optimizer {
 
   public Optimizer(Iterable<? extends OptimizeRule> rules) {
     if (rules != null) {
-      addAll(rules);
+      for (OptimizeRule rule : rules) {
+        this.rules.add(Objects.requireNonNull(rule, "Undefined rule"));
+      }
     }
   }
 

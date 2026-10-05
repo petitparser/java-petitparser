@@ -2,7 +2,6 @@ package org.petitparser;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.primitive.CharacterParser;
 
 import static org.petitparser.Assertions.assertFailure;
 import static org.petitparser.Assertions.assertSuccess;
@@ -420,5 +419,12 @@ public class CharacterTest {
     assertSuccess(parser, "0", '0');
     assertFailure(parser, "-", "wrong");
     assertFailure(parser, "", "wrong");
+  }
+
+  @Test
+  public void testPatternUnicodeCaseInsensitive() {
+    Parser parser = org.petitparser.parser.primitive.CharacterParser.pattern("A-Z", "error", true, true);
+    assertSuccess(parser, "a", "a");
+    assertSuccess(parser, "A", "A");
   }
 }

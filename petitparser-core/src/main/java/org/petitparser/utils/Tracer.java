@@ -14,6 +14,8 @@ import java.util.stream.Stream;
  */
 public class Tracer {
 
+  private Tracer() {}
+
   /**
    * Returns a parser that calls the provided consumer with a {@link TraceEvent}
    * whenever a parser is activated or returning.

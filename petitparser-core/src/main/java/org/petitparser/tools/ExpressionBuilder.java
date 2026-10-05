@@ -422,7 +422,6 @@ public class ExpressionBuilder<T> {
       return this;
     }
 
-    @SuppressWarnings("unchecked")
     private Parser buildRight(Parser inner) {
       if (right.isEmpty()) {
         return inner;
@@ -455,7 +454,6 @@ public class ExpressionBuilder<T> {
       return this;
     }
 
-    @SuppressWarnings("unchecked")
     private Parser buildLeft(Parser inner) {
       if (left.isEmpty()) {
         return inner;

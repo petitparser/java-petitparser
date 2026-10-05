@@ -5,9 +5,6 @@ import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 import org.petitparser.utils.tuples.Tuple2;
 
-import java.util.Objects;
-import java.util.function.BiFunction;
-
 /**
  * A parser that parses a sequence of 2 parsers and produces a {@link Tuple2}.
  *

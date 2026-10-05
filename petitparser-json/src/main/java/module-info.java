@@ -1,4 +1,4 @@
 module petitparser.json {
-  requires petitparser.core;
+  requires transitive petitparser.core;
   exports org.petitparser.grammar.json;
 }

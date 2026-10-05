@@ -1,7 +1,6 @@
 package org.petitparser;
 
 import org.junit.Test;
-import org.petitparser.context.Result;
 import org.petitparser.parser.MatchesIterable;
 import org.petitparser.parser.MatchesIterator;
 import org.petitparser.parser.MatchesSpliterator;
@@ -19,7 +18,6 @@ import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.petitparser.parser.primitive.CharacterParser.digit;

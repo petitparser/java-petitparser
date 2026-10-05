@@ -21,9 +21,8 @@ import static org.petitparser.parser.primitive.CharacterParser.word;
 public class XmlCharacterParser extends Parser {
 
   // character mapping
-  @SuppressWarnings("DoubleBraceInitialization")
   private static final Map<String, Character> NAME_TO_CHAR =
-      new HashMap<String, Character>() {{
+      new HashMap<>() {{
 
         // xml entities
         put("lt", '<');

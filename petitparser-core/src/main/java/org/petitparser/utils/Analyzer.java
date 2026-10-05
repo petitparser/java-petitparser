@@ -702,9 +702,12 @@ public class Analyzer {
 
     for (Parser p : seen) {
       for (Parser child : p.getChildren()) {
-        Parser replacement = mapping.get(child);
-        if (replacement != null) {
-          p.replace(child, replacement);
+        if (child instanceof ResolvableParser) {
+          @SuppressWarnings("unlikely-arg-type")
+          Parser replacement = mapping.get(child);
+          if (replacement != null) {
+            p.replace(child, replacement);
+          }
         }
       }
     }

@@ -6,13 +6,10 @@ import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.utils.linter.CharacterRepeaterRule;
 import org.petitparser.utils.linter.DuplicateParserRule;
 import org.petitparser.utils.linter.LinterIssue;
-import org.petitparser.utils.linter.LinterRule;
-import org.petitparser.utils.linter.LinterType;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
@@ -97,5 +94,13 @@ public class LinterTest {
         .lint();
     assertEquals(1, issues.size());
     assertEquals("Character repeater", issues.get(0).getTitle());
+
+    List<LinterIssue> listRules = Linter.query(parser)
+        .rules(Collections.singletonList(new CharacterRepeaterRule()))
+        .lint();
+    assertEquals(1, listRules.size());
+
+    List<LinterIssue> defaultIssues = Linter.query(of('a')).lint();
+    assertTrue(defaultIssues.isEmpty());
   }
 }

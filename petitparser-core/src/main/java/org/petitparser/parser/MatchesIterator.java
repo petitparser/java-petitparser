@@ -40,7 +40,6 @@ public class MatchesIterator<T> implements Iterator<T> {
     this.overlapping = overlapping;
   }
 
-  @SuppressWarnings("unchecked")
   private void advance() {
     while (current <= input.length()) {
       Result result = parser.parseOn(new Context(input, current));

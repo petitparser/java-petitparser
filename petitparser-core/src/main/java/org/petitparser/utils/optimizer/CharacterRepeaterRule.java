@@ -6,7 +6,6 @@ import org.petitparser.parser.combinators.DelegateParser;
 import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.parser.repeating.PossessiveRepeatingParser;
-import org.petitparser.parser.repeating.RepeatingCharacterParser;
 
 import java.util.HashSet;
 import java.util.Set;

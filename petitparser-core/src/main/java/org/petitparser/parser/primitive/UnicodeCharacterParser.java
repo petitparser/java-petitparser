@@ -5,8 +5,6 @@ import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.repeating.RepeatingCharacterParser;
 
-import java.util.Objects;
-
 /**
  * Parser for an individual Unicode code point (including surrogate pairs)
  * satisfying a specified {@link CharacterPredicate}.

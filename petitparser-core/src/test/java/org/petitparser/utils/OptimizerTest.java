@@ -577,28 +577,29 @@ public class OptimizerTest {
   }
 
   @Test
+  @SuppressWarnings({ "EqualsBetweenInconvertibleTypes", "unlikely-arg-type" })
   public void testFailureJoinerEdgeCases() {
     FailureJoiner.SelectFirst sf = new FailureJoiner.SelectFirst();
     assertTrue(sf.equals(sf));
     assertFalse(sf.equals(null));
-    assertFalse(sf.equals("other"));
+    assertFalse(sf.equals((Object) "other"));
 
     FailureJoiner.SelectLast sl = new FailureJoiner.SelectLast();
     assertTrue(sl.equals(sl));
     assertFalse(sl.equals(null));
-    assertFalse(sl.equals("other"));
+    assertFalse(sl.equals((Object) "other"));
 
     FailureJoiner.SelectFarthest sfarthest = new FailureJoiner.SelectFarthest();
     assertTrue(sfarthest.equals(sfarthest));
     assertFalse(sfarthest.equals(null));
-    assertFalse(sfarthest.equals("other"));
+    assertFalse(sfarthest.equals((Object) "other"));
 
     FailureJoiner.SelectFarthestJoined sfjDefault = new FailureJoiner.SelectFarthestJoined();
     FailureJoiner.SelectFarthestJoined sfjCustom = new FailureJoiner.SelectFarthestJoined(" OR ");
     assertTrue(sfjDefault.equals(sfjDefault));
     assertTrue(sfjDefault.equals(sfjCustom));
     assertFalse(sfjDefault.equals(null));
-    assertFalse(sfjDefault.equals("other"));
+    assertFalse(sfjDefault.equals((Object) "other"));
   }
 
   @Test
@@ -704,5 +705,13 @@ public class OptimizerTest {
     d1.replace(a, d2);
     d2.replace(b, d1);
     assertSame(d1, rule.apply(d1));
+  }
+
+  @Test
+  public void testOptimizerAddFunction() {
+    Optimizer opt = new Optimizer().add(p -> p);
+    assertNotNull(opt);
+    Parser parser = of('a');
+    assertTrue(parser.isEqualTo(opt.transform(parser)));
   }
 }

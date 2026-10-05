@@ -18,6 +18,8 @@ import java.util.Collection;
  */
 public class XmlBuilder implements XmlCallback<XmlName, XmlNode, XmlAttribute> {
 
+  public XmlBuilder() {}
+
   @Override
   public XmlNode createAttribute(XmlName name, String text) {
     return new XmlAttribute(name, text);

@@ -38,7 +38,6 @@ public class MatchesSpliterator<T> implements Spliterator<T> {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public boolean tryAdvance(Consumer<? super T> action) {
     Objects.requireNonNull(action, "action must not be null");
     while (current <= input.length()) {
@@ -61,7 +60,6 @@ public class MatchesSpliterator<T> implements Spliterator<T> {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public void forEachRemaining(Consumer<? super T> action) {
     Objects.requireNonNull(action, "action must not be null");
     while (current <= input.length()) {

@@ -3,7 +3,6 @@ package org.petitparser.parser.combinators;
 import org.junit.Test;
 import org.petitparser.context.Context;
 import org.petitparser.context.Result;
-import org.petitparser.parser.Parser;
 import org.petitparser.parser.primitive.CharacterParser;
 
 import static org.junit.Assert.assertEquals;

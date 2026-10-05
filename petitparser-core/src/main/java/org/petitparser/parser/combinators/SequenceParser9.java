@@ -4,10 +4,6 @@ import org.petitparser.context.Context;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 import org.petitparser.utils.tuples.Tuple9;
-import org.petitparser.utils.functions.Function9;
-
-import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * A parser that parses a sequence of 9 parsers and produces a {@link Tuple9}.

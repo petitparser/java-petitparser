@@ -3,14 +3,10 @@ package org.petitparser.utils.tuples;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests {@link Tuple} hierarchy (Tuple2 to Tuple9).
@@ -46,6 +42,7 @@ public class TupleTest {
     Tuple2<String, String> nullTuple2 = new Tuple2<>(null, null);
     assertEquals(nullTuple1, nullTuple2);
     assertEquals(Arrays.asList(null, null), nullTuple1);
+    assertEquals(Arrays.asList(null, null).hashCode(), nullTuple1.hashCode());
   }
 
   @Test(expected = IndexOutOfBoundsException.class)
@@ -92,6 +89,9 @@ public class TupleTest {
     assertNotEquals(t, Arrays.asList("a", 1, 2.5, "extra"));
     assertNotEquals(t, "str");
     assertNotEquals(t, null);
+
+    Tuple3<String, String, String> nullTuple = new Tuple3<>(null, null, null);
+    assertEquals(Arrays.asList(null, null, null).hashCode(), nullTuple.hashCode());
 
     Tuple3<Object, Object, Object> nullT = new Tuple3<>(null, null, null);
     assertEquals(nullT, Arrays.asList(null, null, null));

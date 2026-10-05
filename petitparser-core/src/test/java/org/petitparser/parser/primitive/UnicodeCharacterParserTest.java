@@ -16,7 +16,6 @@ public class UnicodeCharacterParserTest {
   private static final String ROCKET = "\uD83D\uDE80";       // U+1F680
   private static final String SMILEY = "\uD83D\uDE03";       // U+1F603
   private static final String GRIN = "\uD83D\uDE01";         // U+1F601
-  private static final String BEAMING = "\uD83D\uDE01";      // U+1F601
   private static final String GRINNING = "\uD83D\uDE00";     // U+1F600
   private static final String SWEAT_SMILE = "\uD83D\uDE05";  // U+1F605
 

@@ -10,3 +10,4 @@ bazel-out
 bazel-petitparser
 bazel-testlogs
 target/
+.vscode/

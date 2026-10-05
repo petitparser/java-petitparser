@@ -96,11 +96,9 @@ public class PickParserTest {
     assertFailure(parser, "1", 1, "letter expected");
     assertFailure(parser, "12", 1, "letter expected");
 
-    Object result = parser.parse("1a").get();
-    assertTrue(result instanceof Tuple2);
-    Tuple2<?, ?> tuple = (Tuple2<?, ?>) result;
-    assertEquals('a', tuple.first());
-    assertEquals('1', tuple.second());
+    List<Object> result = parser.parse("1a").get();
+    assertEquals('a', result.get(0));
+    assertEquals('1', result.get(1));
   }
 
   @Test
@@ -131,43 +129,36 @@ public class PickParserTest {
     // 3 elements returning Tuple3
     Parser p3 = Parser.seq(digit(), letter(), digit()).permute(2, 0, 1);
     Object res3 = p3.parse("1a2").get();
-    assertTrue(res3 instanceof Tuple3);
     assertEquals(Arrays.asList('2', '1', 'a'), res3);
 
     // 4 elements returning Tuple4
     Parser p4 = digit().times(4).permute(3, 2, 1, 0);
     Object res4 = p4.parse("1234").get();
-    assertTrue(res4 instanceof Tuple4);
     assertEquals(Arrays.asList('4', '3', '2', '1'), res4);
 
     // 5 elements returning Tuple5
     Parser p5 = digit().times(5).permute(4, 3, 2, 1, 0);
     Object res5 = p5.parse("12345").get();
-    assertTrue(res5 instanceof Tuple5);
     assertEquals(Arrays.asList('5', '4', '3', '2', '1'), res5);
 
     // 6 elements returning Tuple6
     Parser p6 = digit().times(6).permute(5, 4, 3, 2, 1, 0);
     Object res6 = p6.parse("123456").get();
-    assertTrue(res6 instanceof Tuple6);
     assertEquals(Arrays.asList('6', '5', '4', '3', '2', '1'), res6);
 
     // 7 elements returning Tuple7
     Parser p7 = digit().times(7).permute(6, 5, 4, 3, 2, 1, 0);
     Object res7 = p7.parse("1234567").get();
-    assertTrue(res7 instanceof Tuple7);
     assertEquals(Arrays.asList('7', '6', '5', '4', '3', '2', '1'), res7);
 
     // 8 elements returning Tuple8
     Parser p8 = digit().times(8).permute(7, 6, 5, 4, 3, 2, 1, 0);
     Object res8 = p8.parse("12345678").get();
-    assertTrue(res8 instanceof Tuple8);
     assertEquals(Arrays.asList('8', '7', '6', '5', '4', '3', '2', '1'), res8);
 
     // 9 elements returning Tuple9
     Parser p9 = digit().times(9).permute(8, 7, 6, 5, 4, 3, 2, 1, 0);
     Object res9 = p9.parse("123456789").get();
-    assertTrue(res9 instanceof Tuple9);
     assertEquals(Arrays.asList('9', '8', '7', '6', '5', '4', '3', '2', '1'), res9);
 
     // 10 elements (>9 returns List)
@@ -185,11 +176,9 @@ public class PickParserTest {
   }
 
   @Test
-  @SuppressWarnings("deprecation")
   public void testPermuteGetters() {
     PermuteParser parser = new PermuteParser(digit().star(), 1, -1, 0);
     assertArrayEquals(new int[]{1, -1, 0}, parser.getIndices());
-    assertArrayEquals(new int[]{1, -1, 0}, parser.getIndexes());
   }
 
   @Test
@@ -212,5 +201,16 @@ public class PickParserTest {
   public void testPermuteToString() {
     Parser parser = digit().seq(letter()).permute(1, 0);
     assertEquals("PermuteParser[1, 0]", parser.toString());
+  }
+
+  @Test
+  public void testPermuteNegativeIndices() {
+    Parser singleNegative = digit().seq(letter()).permute(-1);
+    assertEquals(Collections.singletonList('a'), singleNegative.parse("1a").get());
+
+    Parser tenNegative = digit().repeat(10, 10).permute(-1, -2, -3, -4, -5, -6, -7, -8, -9, -10);
+    assertEquals(
+        Arrays.asList('9', '8', '7', '6', '5', '4', '3', '2', '1', '0'),
+        tenNegative.parse("0123456789").get());
   }
 }

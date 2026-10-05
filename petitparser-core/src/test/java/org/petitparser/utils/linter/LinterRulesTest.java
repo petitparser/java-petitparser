@@ -4,14 +4,10 @@ import org.junit.Test;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.combinators.ChoiceParser;
 import org.petitparser.parser.combinators.SettableParser;
-import org.petitparser.parser.primitive.CharacterParser;
-import org.petitparser.parser.primitive.EpsilonParser;
-import org.petitparser.parser.primitive.StringParser;
 import org.petitparser.utils.Analyzer;
 import org.petitparser.utils.Linter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +20,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.petitparser.parser.primitive.CharacterParser.any;
 import static org.petitparser.parser.primitive.CharacterParser.digit;
 import static org.petitparser.parser.primitive.CharacterParser.newline;
@@ -35,7 +30,7 @@ import static org.petitparser.parser.primitive.StringParser.of;
 /**
  * Unit tests for {@link Linter} and all 13 {@link LinterRule} implementations.
  */
-public class LinterTest {
+public class LinterRulesTest {
 
   // --------------------------------------------------------------------------
   // Architecture Tests
@@ -302,10 +297,10 @@ public class LinterTest {
   public void testNestedChoiceRuleNegative() {
     List<LinterRule> rules = List.of(new NestedChoiceRule());
 
-    Parser p1 = of('1').or(of('2').or(of('3')).flatten(), of('4'));
+    Parser p1 = Parser.or(of('1'), of('2').or(of('3')).flatten(), of('4'));
     assertTrue(Linter.lint(p1, rules).isEmpty());
 
-    Parser p2 = of('1').or(of('2'), of('3'), of('4'));
+    Parser p2 = Parser.or(of('1'), of('2'), of('3'), of('4'));
     assertTrue(Linter.lint(p2, rules).isEmpty());
   }
 
@@ -352,7 +347,8 @@ public class LinterTest {
   public void testOverlappingChoiceRulePositive() {
     List<LinterRule> rules = List.of(new OverlappingChoiceRule());
 
-    Parser p = of('1').or(
+    Parser p = Parser.or(
+        of('1'),
         of('2').seq(of('a')),
         of('2').seq(of('b')),
         of('3')
@@ -369,7 +365,7 @@ public class LinterTest {
   public void testOverlappingChoiceRuleNegative() {
     List<LinterRule> rules = List.of(new OverlappingChoiceRule());
 
-    Parser p = of('1').or(of('2'), of('3'));
+    Parser p = Parser.or(of('1'), of('2'), of('3'));
     assertTrue(Linter.lint(p, rules).isEmpty());
   }
 
@@ -394,7 +390,7 @@ public class LinterTest {
   public void testRepeatedChoiceRuleNegative() {
     List<LinterRule> rules = List.of(new RepeatedChoiceRule());
 
-    Parser p = of('1').or(of('2'), of('3'), of('4'));
+    Parser p = Parser.or(of('1'), of('2'), of('3'), of('4'));
     assertTrue(Linter.lint(p, rules).isEmpty());
   }
 
@@ -512,11 +508,11 @@ public class LinterTest {
   public void testUnreachableChoiceRuleNegative() {
     List<LinterRule> rules = List.of(new UnreachableChoiceRule());
 
-    Parser p1 = of('1').or(of('2'), of('3'));
+    Parser p1 = Parser.or(of('1'), of('2'), of('3'));
     assertTrue(Linter.lint(p1, rules).isEmpty());
 
     // Nullable choice as the last option is reachable and fine
-    Parser p2 = of('1').or(of('2'), epsilon());
+    Parser p2 = Parser.or(of('1'), of('2'), epsilon());
     assertTrue(Linter.lint(p2, rules).isEmpty());
   }
 

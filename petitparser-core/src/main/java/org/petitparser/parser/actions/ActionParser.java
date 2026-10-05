@@ -60,6 +60,7 @@ public class ActionParser<T, R> extends DelegateParser {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   protected boolean hasEqualProperties(Parser other) {
     return super.hasEqualProperties(other) &&
         Objects.equals(function, ((ActionParser<T, R>) other).function) &&

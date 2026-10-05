@@ -200,7 +200,7 @@ public class ExamplesTest {
         .seq(recursion)
         .seq(of(')')).map((List<Double> values) -> values.get(1));
 
-    ExpressionBuilder builder = new ExpressionBuilder();
+    ExpressionBuilder<Double> builder = new ExpressionBuilder<>();
     builder.group()
         .primitive(bracket.or(DOUBLE));
 
@@ -214,7 +214,7 @@ public class ExamplesTest {
 
   @Test
   public void testExpressionBuilderWithWrapperExample() throws Exception {
-    ExpressionBuilder builder = new ExpressionBuilder();
+    ExpressionBuilder<Double> builder = new ExpressionBuilder<>();
     builder.group()
         .primitive(DOUBLE)
         .wrapper(of('(').trim(), of(')').trim(),
@@ -226,7 +226,7 @@ public class ExamplesTest {
     assertCalculatorExample(parser);
   }
 
-  private void initOperators(ExpressionBuilder builder) {
+  private void initOperators(ExpressionBuilder<Double> builder) {
     // negation is a prefix operator
     builder.group()
         .prefix(of('-').trim(), (List<Double> values) -> -values.get(1));

@@ -1,7 +1,5 @@
 package org.petitparser.parser.primitive;
 
-import java.util.Objects;
-
 /**
  * Character predicate matching a single character.
  */

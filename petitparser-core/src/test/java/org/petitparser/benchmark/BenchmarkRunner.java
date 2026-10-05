@@ -11,7 +11,6 @@ public class BenchmarkRunner {
 
   private BenchmarkRunner() {}
 
-  private static final Object THREAD_MX_BEAN;
   private static final MethodHandle GET_THREAD_ALLOCATED_BYTES_MH;
 
   static {
@@ -42,7 +41,6 @@ public class BenchmarkRunner {
       bean = null;
       mh = null;
     }
-    THREAD_MX_BEAN = bean;
     GET_THREAD_ALLOCATED_BYTES_MH = mh;
   }
 
@@ -50,6 +48,7 @@ public class BenchmarkRunner {
     return GET_THREAD_ALLOCATED_BYTES_MH != null;
   }
 
+  @SuppressWarnings("deprecation")
   public static long getThreadAllocatedBytes() {
     if (GET_THREAD_ALLOCATED_BYTES_MH != null) {
       try {

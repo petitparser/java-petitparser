@@ -2,10 +2,8 @@ package org.petitparser.parser.combinators;
 
 import org.junit.Test;
 import org.petitparser.parser.Parser;
-import org.petitparser.parser.actions.TrimmingParser;
 import org.petitparser.parser.primitive.CharacterParser;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.petitparser.Assertions.assertFailure;

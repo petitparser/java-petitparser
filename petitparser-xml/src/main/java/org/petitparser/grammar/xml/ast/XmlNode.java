@@ -10,6 +10,8 @@ import java.util.List;
  */
 public abstract class XmlNode implements Iterable<XmlNode> {
 
+  protected XmlNode() {}
+
   private XmlNode parent;
 
   /**

@@ -8,4 +8,7 @@ module petitparser.core {
   exports org.petitparser.tools;
   exports org.petitparser.utils;
   exports org.petitparser.utils.functions;
+  exports org.petitparser.utils.linter;
+  exports org.petitparser.utils.optimizer;
+  exports org.petitparser.utils.tuples;
 }

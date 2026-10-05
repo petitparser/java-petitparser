@@ -6,8 +6,6 @@ import org.petitparser.parser.primitive.CharacterParser;
 import org.petitparser.parser.primitive.CharacterPredicate;
 import org.petitparser.parser.primitive.LookupCharPredicate;
 import org.petitparser.parser.primitive.RangesCharPredicate;
-import org.petitparser.parser.primitive.StringParser;
-import org.petitparser.parser.repeating.RepeatingCharacterParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +22,6 @@ public class BenchmarkSuite {
 
   private static final String PREDICATE_INPUT =
       "aB3_!@#xY9$%-+zK7*&^~12345abcdefghijKLMNOPQRST".repeat(30);
-
-  private static final String GRAMMAR_INPUT =
-      "identifier123 = otherIdentifier + 42 * 99;".repeat(20);
 
   public static List<BenchmarkResult> runAll(int warmup, int iterations) {
     List<BenchmarkResult> results = new ArrayList<>();

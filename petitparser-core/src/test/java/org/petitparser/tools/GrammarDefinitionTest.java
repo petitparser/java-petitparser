@@ -185,7 +185,7 @@ public class GrammarDefinitionTest {
   }
 
   @Test
-  @SuppressWarnings("EqualsBetweenInconvertibleTypes")
+  @SuppressWarnings({ "EqualsBetweenInconvertibleTypes", "unlikely-arg-type" })
   public void testReferenceEquals() {
     Parser reference = buggedDefinition.ref("start");
     assertFalse(Objects.equals(reference, null));

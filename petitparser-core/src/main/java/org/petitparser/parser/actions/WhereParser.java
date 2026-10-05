@@ -111,6 +111,7 @@ public class WhereParser<T> extends DelegateParser {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   protected boolean hasEqualProperties(Parser other) {
     return super.hasEqualProperties(other) &&
         Objects.equals(predicate, ((WhereParser<T>) other).predicate) &&

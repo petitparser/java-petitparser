@@ -17,8 +17,6 @@ import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.petitparser.parser.primitive.CharacterParser.digit;
-import static org.petitparser.parser.primitive.CharacterParser.letter;
 import static org.petitparser.parser.primitive.CharacterParser.of;
 
 /**
@@ -58,7 +56,7 @@ public class SequenceParserNTest {
 
   @Test(expected = NullPointerException.class)
   public void testSequenceParser2NullMap() {
-    Parser.seq(of('a'), of('b')).map((java.util.function.BiFunction) null);
+    Parser.seq(of('a'), of('b')).map((java.util.function.BiFunction<Character, Character, String>) null);
   }
 
   @Test
@@ -97,7 +95,7 @@ public class SequenceParserNTest {
 
   @Test(expected = NullPointerException.class)
   public void testSequenceParser3NullMap() {
-    Parser.seq(of('a'), of('b'), of('c')).map((org.petitparser.utils.functions.Function3) null);
+    Parser.seq(of('a'), of('b'), of('c')).map((org.petitparser.utils.functions.Function3<Character, Character, Character, String>) null);
   }
 
   @Test
@@ -140,7 +138,7 @@ public class SequenceParserNTest {
 
   @Test(expected = NullPointerException.class)
   public void testSequenceParser4NullMap() {
-    Parser.seq(of('a'), of('b'), of('c'), of('d')).map((org.petitparser.utils.functions.Function4) null);
+    Parser.seq(of('a'), of('b'), of('c'), of('d')).map((org.petitparser.utils.functions.Function4<Character, Character, Character, Character, String>) null);
   }
 
   @Test
@@ -180,7 +178,7 @@ public class SequenceParserNTest {
 
   @Test(expected = NullPointerException.class)
   public void testSequenceParser5NullMap() {
-    Parser.seq(of('a'), of('b'), of('c'), of('d'), of('e')).map((org.petitparser.utils.functions.Function5) null);
+    Parser.seq(of('a'), of('b'), of('c'), of('d'), of('e')).map((org.petitparser.utils.functions.Function5<Character, Character, Character, Character, Character, String>) null);
   }
 
   @Test
@@ -222,7 +220,7 @@ public class SequenceParserNTest {
 
   @Test(expected = NullPointerException.class)
   public void testSequenceParser6NullMap() {
-    Parser.seq(of('a'), of('b'), of('c'), of('d'), of('e'), of('f')).map((org.petitparser.utils.functions.Function6) null);
+    Parser.seq(of('a'), of('b'), of('c'), of('d'), of('e'), of('f')).map((org.petitparser.utils.functions.Function6<Character, Character, Character, Character, Character, Character, String>) null);
   }
 
   @Test
@@ -266,7 +264,7 @@ public class SequenceParserNTest {
 
   @Test(expected = NullPointerException.class)
   public void testSequenceParser7NullMap() {
-    Parser.seq(of('a'), of('b'), of('c'), of('d'), of('e'), of('f'), of('g')).map((org.petitparser.utils.functions.Function7) null);
+    Parser.seq(of('a'), of('b'), of('c'), of('d'), of('e'), of('f'), of('g')).map((org.petitparser.utils.functions.Function7<Character, Character, Character, Character, Character, Character, Character, String>) null);
   }
 
   @Test
@@ -313,7 +311,7 @@ public class SequenceParserNTest {
 
   @Test(expected = NullPointerException.class)
   public void testSequenceParser8NullMap() {
-    Parser.seq(of('a'), of('b'), of('c'), of('d'), of('e'), of('f'), of('g'), of('h')).map((org.petitparser.utils.functions.Function8) null);
+    Parser.seq(of('a'), of('b'), of('c'), of('d'), of('e'), of('f'), of('g'), of('h')).map((org.petitparser.utils.functions.Function8<Character, Character, Character, Character, Character, Character, Character, Character, String>) null);
   }
 
   @Test
@@ -369,7 +367,7 @@ public class SequenceParserNTest {
 
   @Test(expected = NullPointerException.class)
   public void testSequenceParser9NullMap() {
-    Parser.seq(of('a'), of('b'), of('c'), of('d'), of('e'), of('f'), of('g'), of('h'), of('i')).map((org.petitparser.utils.functions.Function9) null);
+    Parser.seq(of('a'), of('b'), of('c'), of('d'), of('e'), of('f'), of('g'), of('h'), of('i')).map((org.petitparser.utils.functions.Function9<Character, Character, Character, Character, Character, Character, Character, Character, Character, String>) null);
   }
 
   @Test
@@ -455,41 +453,41 @@ public class SequenceParserNTest {
 
   @Test(expected = NullPointerException.class)
   public void testNullBiFunctionMap() {
-    of('a').map((java.util.function.BiFunction) null);
+    of('a').map((java.util.function.BiFunction<Character, Character, String>) null);
   }
 
   @Test(expected = NullPointerException.class)
   public void testNullFunction4Map() {
-    of('a').map((org.petitparser.utils.functions.Function4) null);
+    of('a').map((org.petitparser.utils.functions.Function4<Character, Character, Character, Character, String>) null);
   }
 
   @Test(expected = NullPointerException.class)
   public void testNullFunction5Map() {
-    of('a').map((org.petitparser.utils.functions.Function5) null);
+    of('a').map((org.petitparser.utils.functions.Function5<Character, Character, Character, Character, Character, String>) null);
   }
 
   @Test(expected = NullPointerException.class)
   public void testNullFunction6Map() {
-    of('a').map((org.petitparser.utils.functions.Function6) null);
+    of('a').map((org.petitparser.utils.functions.Function6<Character, Character, Character, Character, Character, Character, String>) null);
   }
 
   @Test(expected = NullPointerException.class)
   public void testNullFunction7Map() {
-    of('a').map((org.petitparser.utils.functions.Function7) null);
+    of('a').map((org.petitparser.utils.functions.Function7<Character, Character, Character, Character, Character, Character, Character, String>) null);
   }
 
   @Test(expected = NullPointerException.class)
   public void testNullFunction3Map() {
-    of('a').map((org.petitparser.utils.functions.Function3) null);
+    of('a').map((org.petitparser.utils.functions.Function3<Character, Character, Character, String>) null);
   }
 
   @Test(expected = NullPointerException.class)
   public void testNullFunction8Map() {
-    of('a').map((org.petitparser.utils.functions.Function8) null);
+    of('a').map((org.petitparser.utils.functions.Function8<Character, Character, Character, Character, Character, Character, Character, Character, String>) null);
   }
 
   @Test(expected = NullPointerException.class)
   public void testNullFunction9Map() {
-    of('a').map((org.petitparser.utils.functions.Function9) null);
+    of('a').map((org.petitparser.utils.functions.Function9<Character, Character, Character, Character, Character, Character, Character, Character, Character, String>) null);
   }
 }

@@ -1,7 +1,5 @@
 package org.petitparser.utils;
 
-import org.petitparser.parser.Parser;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;

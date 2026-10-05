@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Verifies raw-type compilation and runtime compatibility for legacy codebases.
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({"rawtypes"})
 public class RawTypeCompatibilityTest {
 
   @Test

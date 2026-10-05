@@ -31,6 +31,7 @@ public class ExpressionBuilderTest {
   Parser parser;
 
   @Before
+  @SuppressWarnings("rawtypes")
   public void setUpParser() {
     ExpressionBuilder builder = new ExpressionBuilder();
     builder.group()
@@ -64,7 +65,7 @@ public class ExpressionBuilderTest {
 
   @Before
   public void setUpEvaluator() {
-    ExpressionBuilder builder = new ExpressionBuilder();
+    ExpressionBuilder<Double> builder = new ExpressionBuilder<>();
     builder.group()
         .primitive(digit().plus().seq(of('.')
                 .seq(digit().plus()).optional())

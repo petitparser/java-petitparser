@@ -290,6 +290,7 @@ public interface CharacterPredicate {
    */
   @Deprecated(since = "2.5.0")
   class NotCharacterPredicate extends NotCharPredicate {
+    @Deprecated(since = "2.5.0")
     public NotCharacterPredicate(CharacterPredicate predicate) {
       super(predicate);
     }

@@ -131,7 +131,7 @@ public class SeparatedList<R, S> implements Iterable<Object> {
 
   @Override
   public Iterator<Object> iterator() {
-    return new Iterator<Object>() {
+    return new Iterator<>() {
       private int index = 0;
 
       @Override
