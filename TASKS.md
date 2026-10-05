@@ -137,14 +137,14 @@ Roadmap to bring `petitparser-core` to feature parity with the canonical Dart im
     - `Function3<T1, T2, T3, R>`, `Function4<T1, T2, T3, T4, R>`, ... `Function9<...>`.
   - Ensure compatibility with Java 11 `BiFunction` for arity-2 sequences.
 
-- [ ] **Task 3.3: Typed Sequence Combinators (`SequenceParser2` to `SequenceParser9`)**
+- [x] **Task 3.3: Typed Sequence Combinators (`SequenceParser2` to `SequenceParser9`)**
   - Implement `SequenceParser2<T1, T2>` through `SequenceParser9<...>` implementing `SequentialParser`.
   - Add fluent `.then(Parser<TN> next)` on `Parser` and sequence parsers, automatically flattening into `SequenceParser3`, `SequenceParser4`, etc. up to 9 elements.
   - Add strongly-typed `.map(BiFunction<? super T1, ? super T2, ? extends R> function)` on `SequenceParser2`.
   - Add strongly-typed `.map(Function3<...>)` through `.map(Function9<...>)` on `SequenceParser3` through `SequenceParser9`, eliminating the need for users to manually unpack tuple or list elements.
   - Implement zero-allocation `fastParseOn`, `copy`, and equality methods.
 
-- [ ] **Task 3.4: Static Sequence Factories**
+- [x] **Task 3.4: Static Sequence Factories**
   - Add static factories `Parser.seq(Parser<T1> p1, Parser<T2> p2)` returning `SequenceParser2<T1, T2>`.
   - Add static factories `Parser.seq(p1, p2, p3)` through `Parser.seq(p1, ..., p9)` returning corresponding typed sequence parsers.
   - Retain existing `Parser.seq(Parser... parsers)` and instance method `seq(Parser other)` returning `SequenceParser` (`Parser<List<Object>>`) for backward compatibility.

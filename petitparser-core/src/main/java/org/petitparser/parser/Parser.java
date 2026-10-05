@@ -16,6 +16,14 @@ import org.petitparser.parser.combinators.LabelParser;
 import org.petitparser.parser.combinators.NotParser;
 import org.petitparser.parser.combinators.OptionalParser;
 import org.petitparser.parser.combinators.SequenceParser;
+import org.petitparser.parser.combinators.SequenceParser2;
+import org.petitparser.parser.combinators.SequenceParser3;
+import org.petitparser.parser.combinators.SequenceParser4;
+import org.petitparser.parser.combinators.SequenceParser5;
+import org.petitparser.parser.combinators.SequenceParser6;
+import org.petitparser.parser.combinators.SequenceParser7;
+import org.petitparser.parser.combinators.SequenceParser8;
+import org.petitparser.parser.combinators.SequenceParser9;
 import org.petitparser.parser.combinators.SettableParser;
 import org.petitparser.parser.combinators.SkipParser;
 import org.petitparser.parser.primitive.CharacterParser;
@@ -169,6 +177,71 @@ public abstract class Parser {
   public static Parser failure(String message) {
     return FailureParser.withMessage(message);
   }
+
+  /**
+   * Creates a sequence parser of 2 parsers.
+   */
+  public static <T1, T2> SequenceParser2<T1, T2> seq(
+      Parser p1, Parser p2) {
+    return new SequenceParser2<>(p1, p2);
+  }
+
+  /**
+   * Creates a sequence parser of 3 parsers.
+   */
+  public static <T1, T2, T3> SequenceParser3<T1, T2, T3> seq(
+      Parser p1, Parser p2, Parser p3) {
+    return new SequenceParser3<>(p1, p2, p3);
+  }
+
+  /**
+   * Creates a sequence parser of 4 parsers.
+   */
+  public static <T1, T2, T3, T4> SequenceParser4<T1, T2, T3, T4> seq(
+      Parser p1, Parser p2, Parser p3, Parser p4) {
+    return new SequenceParser4<>(p1, p2, p3, p4);
+  }
+
+  /**
+   * Creates a sequence parser of 5 parsers.
+   */
+  public static <T1, T2, T3, T4, T5> SequenceParser5<T1, T2, T3, T4, T5> seq(
+      Parser p1, Parser p2, Parser p3, Parser p4, Parser p5) {
+    return new SequenceParser5<>(p1, p2, p3, p4, p5);
+  }
+
+  /**
+   * Creates a sequence parser of 6 parsers.
+   */
+  public static <T1, T2, T3, T4, T5, T6> SequenceParser6<T1, T2, T3, T4, T5, T6> seq(
+      Parser p1, Parser p2, Parser p3, Parser p4, Parser p5, Parser p6) {
+    return new SequenceParser6<>(p1, p2, p3, p4, p5, p6);
+  }
+
+  /**
+   * Creates a sequence parser of 7 parsers.
+   */
+  public static <T1, T2, T3, T4, T5, T6, T7> SequenceParser7<T1, T2, T3, T4, T5, T6, T7> seq(
+      Parser p1, Parser p2, Parser p3, Parser p4, Parser p5, Parser p6, Parser p7) {
+    return new SequenceParser7<>(p1, p2, p3, p4, p5, p6, p7);
+  }
+
+  /**
+   * Creates a sequence parser of 8 parsers.
+   */
+  public static <T1, T2, T3, T4, T5, T6, T7, T8> SequenceParser8<T1, T2, T3, T4, T5, T6, T7, T8> seq(
+      Parser p1, Parser p2, Parser p3, Parser p4, Parser p5, Parser p6, Parser p7, Parser p8) {
+    return new SequenceParser8<>(p1, p2, p3, p4, p5, p6, p7, p8);
+  }
+
+  /**
+   * Creates a sequence parser of 9 parsers.
+   */
+  public static <T1, T2, T3, T4, T5, T6, T7, T8, T9> SequenceParser9<T1, T2, T3, T4, T5, T6, T7, T8, T9> seq(
+      Parser p1, Parser p2, Parser p3, Parser p4, Parser p5, Parser p6, Parser p7, Parser p8, Parser p9) {
+    return new SequenceParser9<>(p1, p2, p3, p4, p5, p6, p7, p8, p9);
+  }
+
 
   /**
    * Returns new parser that accepts the receiver, if possible. The resulting
@@ -373,6 +446,74 @@ public abstract class Parser {
     parsers[0] = this;
     System.arraycopy(others, 0, parsers, 1, others.length);
     return new SequenceParser(parsers);
+  }
+
+  /**
+   * Chains this parser with {@code next}, returning a sequence parser. Automatically
+   * flattens into {@link SequenceParser3} through {@link SequenceParser9} up to 9 elements.
+   *
+   * @param next the next parser in the sequence.
+   * @param <S> the sequence parser type.
+   * @return a sequence parser.
+   */
+  @SuppressWarnings("unchecked")
+  public <S extends Parser> S then(Parser next) {
+    if (this instanceof SequenceParser8) {
+      SequenceParser8<?, ?, ?, ?, ?, ?, ?, ?> s = (SequenceParser8<?, ?, ?, ?, ?, ?, ?, ?>) this;
+      List<Parser> c = s.getChildren();
+      return (S) new SequenceParser9<>(
+          c.get(0), c.get(1), c.get(2), c.get(3),
+          c.get(4), c.get(5), c.get(6), c.get(7), next);
+    }
+    if (this instanceof SequenceParser7) {
+      SequenceParser7<?, ?, ?, ?, ?, ?, ?> s = (SequenceParser7<?, ?, ?, ?, ?, ?, ?>) this;
+      List<Parser> c = s.getChildren();
+      return (S) new SequenceParser8<>(
+          c.get(0), c.get(1), c.get(2), c.get(3),
+          c.get(4), c.get(5), c.get(6), next);
+    }
+    if (this instanceof SequenceParser6) {
+      SequenceParser6<?, ?, ?, ?, ?, ?> s = (SequenceParser6<?, ?, ?, ?, ?, ?>) this;
+      List<Parser> c = s.getChildren();
+      return (S) new SequenceParser7<>(
+          c.get(0), c.get(1), c.get(2), c.get(3),
+          c.get(4), c.get(5), next);
+    }
+    if (this instanceof SequenceParser5) {
+      SequenceParser5<?, ?, ?, ?, ?> s = (SequenceParser5<?, ?, ?, ?, ?>) this;
+      List<Parser> c = s.getChildren();
+      return (S) new SequenceParser6<>(
+          c.get(0), c.get(1), c.get(2), c.get(3),
+          c.get(4), next);
+    }
+    if (this instanceof SequenceParser4) {
+      SequenceParser4<?, ?, ?, ?> s = (SequenceParser4<?, ?, ?, ?>) this;
+      List<Parser> c = s.getChildren();
+      return (S) new SequenceParser5<>(
+          c.get(0), c.get(1), c.get(2), c.get(3), next);
+    }
+    if (this instanceof SequenceParser3) {
+      SequenceParser3<?, ?, ?> s = (SequenceParser3<?, ?, ?>) this;
+      List<Parser> c = s.getChildren();
+      return (S) new SequenceParser4<>(
+          c.get(0), c.get(1), c.get(2), next);
+    }
+    if (this instanceof SequenceParser2) {
+      SequenceParser2<?, ?> s = (SequenceParser2<?, ?>) this;
+      List<Parser> c = s.getChildren();
+      return (S) new SequenceParser3<>(c.get(0), c.get(1), next);
+    }
+    if (this instanceof SequenceParser9) {
+      SequenceParser9<?, ?, ?, ?, ?, ?, ?, ?, ?> s = (SequenceParser9<?, ?, ?, ?, ?, ?, ?, ?, ?>) this;
+      List<Parser> c = s.getChildren();
+      Parser[] array = new Parser[c.size() + 1];
+      for (int i = 0; i < c.size(); i++) {
+        array[i] = c.get(i);
+      }
+      array[c.size()] = next;
+      return (S) new SequenceParser(array);
+    }
+    return (S) new SequenceParser2<>(this, next);
   }
 
   /**
